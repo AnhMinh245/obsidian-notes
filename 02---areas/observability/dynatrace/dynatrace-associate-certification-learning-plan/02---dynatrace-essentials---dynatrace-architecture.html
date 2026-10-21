@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>02 - Dynatrace Essentials - Dynatrace Architecture</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="02 - Dynatrace Essentials - Dynatrace Architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="02 - Dynatrace Essentials - Dynatrace Architecture"/><meta name="twitter:description" content="# Kiến Trúc Dynatrace Dynatrace lưu trữ và kết nối tất cả data thu thập được (logs, metrics, traces, events, user interactions) trong một nền tảng gọi là Grail."/><meta property="og:description" content="# Kiến Trúc Dynatrace Dynatrace lưu trữ và kết nối tất cả data thu thập được (logs, metrics, traces, events, user interactions) trong một nền tảng gọi là Grail."/><meta property="og:image:alt" content="# Kiến Trúc Dynatrace Dynatrace lưu trữ và kết nối tất cả data thu thập được (logs, metrics, traces, events, user interactions) trong một nền tảng gọi là Grail."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/02---dynatrace-essentials---dynatrace-architecture"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/02---dynatrace-essentials---dynatrace-architecture"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="# Kiến Trúc Dynatrace Dynatrace lưu trữ và kết nối tất cả data thu thập được (logs, metrics, traces, events, user interactions) trong một nền tảng gọi là Grail."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/02---dynatrace-essentials---dynatrace-architecture" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-407" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-407" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/">Dynatrace</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/">Dynatrace Associate Certification Learning Plan</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>02 - Dynatrace Essentials - Dynatrace Architecture</a></div></nav><h1 class="article-title">02 - Dynatrace Essentials - Dynatrace Architecture</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/dynatrace" class="internal internal-link tag-link">domain/dynatrace</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-03-31T17:00:00.000Z">01 thg 4, 2026</time><span>14 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p>﻿# Kiến Trúc Dynatrace</p>
+<p>Dynatrace lưu trữ và kết nối tất cả data thu thập được (logs, metrics, traces, events, user interactions) trong một nền tảng gọi là <strong>Grail</strong>. Hiểu cách Dynatrace kết nối các dữ liệu sẽ giúp chẩn đoán vấn đề nhanh chóng và có insights sâu về ứng dụng.</p>
+<h2 id="mục-tiêu-bài-học">Mục Tiêu Bài Học<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mục-tiêu-bài-học" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau khi hoàn thành, bạn sẽ có khả năng:</p>
+<ol>
+<li>Giải thích Dynatrace Apps và Grail là gì, chức năng và cách chúng hỗ trợ observability</li>
+<li>Xác định các monitoring modes của OneAgent và mô tả platforms/environments được hỗ trợ</li>
+</ol>
+<hr/>
+<h1 id="phần-1-dynatrace-saas-platform">Phần 1: Dynatrace SaaS Platform<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-1-dynatrace-saas-platform" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="saas-là-gì">SaaS là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#saas-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>SaaS (Software as a Service)</strong> = phần mềm chạy trên cloud, truy cập qua internet — không cần cài đặt hay tự vận hành.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>SaaS</th><th>On-premise</th></tr></thead><tbody><tr><td><strong>Hosting</strong></td><td>Cloud (nhà cung cấp quản lý)</td><td>Tự cài trên server riêng</td></tr><tr><td><strong>Cập nhật</strong></td><td>Tự động</td><td>Tự làm</td></tr><tr><td><strong>Bảo trì</strong></td><td>Nhà cung cấp lo</td><td>Tự lo</td></tr><tr><td><strong>Truy cập</strong></td><td>Browser + internet</td><td>Qua mạng nội bộ</td></tr></tbody></table></div>
+<p><strong>Ví dụ SaaS quen thuộc:</strong> Gmail, Google Drive, Spotify web.</p>
+<p><strong>Dynatrace SaaS</strong> hoạt động tương tự:</p>
+<ul>
+<li>Không cần cài server nặng</li>
+<li>Chỉ cần trình duyệt + internet</li>
+<li>Dynatrace lo mọi thứ: lưu trữ, xử lý, phân tích data</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>TIP</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Vai trò của OneAgent trong mô hình SaaS:</strong><br/>
+OneAgent chỉ <strong>thu thập data</strong> rồi gửi lên cloud. Mọi việc xử lý nặng (analysis, AI, visualization) đều do <strong>Dynatrace platform trên cloud</strong> thực hiện → server của bạn không bị ảnh hưởng hiệu suất.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="grail--data-lakehouse-">Grail — Data Lakehouse ⭐<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#grail--data-lakehouse-" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="grail-là-gì">Grail là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#grail-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote>
+<p><em>“Grail is a causational data Lakehouse with a massively parallel processing (MPP) analytics engine.”</em><br/>
+— Dynatrace Blog</p>
+</blockquote>
+<p><strong>Hiểu đơn giản:</strong> Grail là hệ thống lưu trữ và phân tích <strong>thống nhất</strong> cho TẤT CẢ data trong Dynatrace — được thiết kế để xử lý <strong>lượng data khổng lồ</strong> với tốc độ cực nhanh.</p>
+<h3 id="cách-grail-hoạt-động">Cách Grail hoạt động<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-grail-hoạt-động" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Khi bạn query data trên Grail:
+
+  Request &quot;tìm tất cả error logs trong 24h qua&quot;
+      │
+      ▼
+  ┌───────────────────────────────────────────┐
+  │        GRAIL - Massively Parallel          │
+  │                                            │
+  │  Helper Server 1 → scan chunk 1            │
+  │  Helper Server 2 → scan chunk 2            │
+  │  Helper Server 3 → scan chunk 3            │
+  │  ...                                       │
+  │  Helper Server N → scan chunk N            │
+  │                                            │
+  │  → Gom kết quả → Trả về cho bạn           │
+  └───────────────────────────────────────────┘
+
+  Hàng chục đến hàng TRĂM servers làm việc ĐỒNG THỜI
+  → Tìm kiếm hàng trăm TB/giây
+</code></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>TIP</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Ví von cửa hàng kính thiên văn:</strong></p>
+<ul>
+<li><strong>Lúc đầu:</strong> Bạn tự đóng gói, gửi hàng, trả lời khách hàng — một mình</li>
+<li><strong>Khi đơn hàng tăng:</strong> Quá nhiều việc cho 1 người</li>
+<li><strong>Giải pháp:</strong> Thuê team nhiều người làm song song → nhanh gấp bội</li>
+</ul>
+<p>Grail hoạt động tương tự: scale helper servers lên để xử lý song song → query nhanh bất kể data lớn cỡ nào.</p>
+</div>
+</blockquote>
+<h3 id="các-đặc-điểm-kỹ-thuật-quan-trọng-của-grail">Các đặc điểm kỹ thuật quan trọng của Grail<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-đặc-điểm-kỹ-thuật-quan-trọng-của-grail" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Unified storage</strong></td><td>Tất cả data (logs, metrics, traces, events) lưu cùng một nơi</td></tr><tr><td><strong>Schema-on-read</strong></td><td>Không cần define schema trước — linh hoạt khi query</td></tr><tr><td><strong>Indexless (Datawarping)</strong></td><td>Không cần tạo index — scan trực tiếp song song</td></tr><tr><td><strong>MPP</strong></td><td>Massively Parallel Processing — hàng trăm servers cùng query</td></tr><tr><td><strong>Exabyte-scale</strong></td><td>Xử lý được lượng data cực lớn</td></tr></tbody></table></div>
+<hr/>
+<h2 id="grail-buckets--tổ-chức-data-">Grail Buckets — Tổ Chức Data ⭐<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#grail-buckets--tổ-chức-data-" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="buckets-là-gì">Buckets là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#buckets-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Tất cả data trong Grail được phân loại và tổ chức vào các <strong>buckets</strong> khác nhau. Mỗi bucket quản lý:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thuộc tính</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Retention</strong></td><td>Data được giữ bao lâu</td></tr><tr><td><strong>Permissions</strong></td><td>Ai được truy cập</td></tr><tr><td><strong>Organization</strong></td><td>Data được tổ chức như thế nào</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>TIP</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Ví von tủ hồ sơ:</strong><br/>
+Buckets giống như <strong>ngăn kéo</strong> trong tủ hồ sơ. Mỗi ngăn chứa loại thông tin khác nhau, và một số ngăn cần <strong>chìa khóa riêng</strong> (permissions) mới mở được.</p>
+</div>
+</blockquote>
+<h3 id="ví-dụ-thực-tế">Ví dụ thực tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ví-dụ-thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Giám sát 2 ứng dụng: App A và App B, quản lý bởi 2 team khác nhau.
+
+Bucket &quot;App_A&quot;                    Bucket &quot;App_B&quot;
+┌───────────────────┐            ┌───────────────────┐
+│ Data từ App A     │            │ Data từ App B     │
+│ Team A truy cập ✅ │            │ Team B truy cập ✅ │
+│ Team B truy cập ❌ │            │ Team A truy cập ❌ │
+│ Retention: 35 ngày│            │ Retention: 100 ngày│
+└───────────────────┘            └───────────────────┘
+
+→ Mỗi team chỉ thấy data LIÊN QUAN đến ứng dụng của mình
+→ Mỗi bucket có thể set retention KHÁC NHAU
+</code></pre>
+<h3 id="tại-sao-giới-hạn-retention">Tại sao giới hạn retention?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-giới-hạn-retention" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Lý do</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Chi phí</strong></td><td>Càng nhiều data giữ lại → càng tốn license</td></tr><tr><td><strong>Bảo mật</strong></td><td>Data nhạy cảm nên tách bucket riêng và giới hạn thời gian lưu</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Ví dụ:</strong> Logs thường → bucket retention 35 ngày. Logs quan trọng (audit, compliance) → bucket retention 100+ ngày.</p>
+</blockquote>
+<hr/>
+<h2 id="dynatrace-apps">Dynatrace Apps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dynatrace-apps" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Dynatrace Apps</strong> = ứng dụng tương tác chạy <strong>bên trong</strong> nền tảng Dynatrace, giúp mở rộng chức năng, visualize data, và tạo workflows phù hợp.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Mô tả</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>Prebuilt App</strong></td><td>App có sẵn, dùng ngay</td><td>Analyze user sessions, view service performance, explore logs</td></tr><tr><td><strong>Custom-Built App</strong></td><td>App team tự build cho nhu cầu riêng</td><td>Dashboard riêng cho business metrics, custom workflow</td></tr></tbody></table></div>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>NOTE</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Custom-built apps cho phép bạn kiểm soát hoàn toàn data nào hiển thị và cách trình bày — phù hợp cho yêu cầu business/technical đặc thù.</p>
+</div>
+</blockquote>
+<hr/>
+<h1 id="phần-2-oneagent-monitoring-modes-">Phần 2: OneAgent Monitoring Modes ⭐<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-2-oneagent-monitoring-modes-" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="ba-chế-độ-giám-sát">Ba Chế Độ Giám Sát<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ba-chế-độ-giám-sát" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>OneAgent có 3 monitoring modes chính, mỗi mode thu thập <strong>mức độ data khác nhau</strong>:</p>
+<h3 id="bảng-so-sánh">Bảng So Sánh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-so-sánh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khả năng</th><th>Foundation &amp; Discovery</th><th>Infrastructure Only</th><th>Full-Stack</th></tr></thead><tbody><tr><td><strong>Host metrics</strong> (CPU, RAM, disk)</td><td>✅</td><td>✅</td><td>✅</td></tr><tr><td><strong>Host topology &amp; criticality</strong></td><td>✅</td><td>✅</td><td>✅</td></tr><tr><td><strong>Process metrics</strong></td><td>❌</td><td>✅</td><td>✅</td></tr><tr><td><strong>Log management</strong></td><td>Thủ công bật</td><td>Tùy chọn</td><td>✅</td></tr><tr><td><strong>Service-level tracing (PurePath)</strong></td><td>❌</td><td>❌</td><td>✅</td></tr><tr><td><strong>Code-level profiling</strong></td><td>❌</td><td>❌</td><td>✅</td></tr><tr><td><strong>Application Security</strong></td><td>❌</td><td>❌</td><td>Tùy chọn</td></tr><tr><td><strong>Khuyến nghị dùng cho</strong></td><td>Kiosks, POS, endpoints kiểm tra availability</td><td>Database servers, hạ tầng không cần APM</td><td>Business-critical apps</td></tr><tr><td><strong>Chi phí monitoring</strong></td><td>Thấp nhất</td><td>Trung bình</td><td>Cao nhất</td></tr></tbody></table></div>
+<h3 id="chi-tiết-từng-mode">Chi Tiết Từng Mode<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chi-tiết-từng-mode" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Foundation &amp; Discovery</strong> — Mode nhẹ nhất</p>
+<ul>
+<li>Chỉ thu thập metrics cơ bản về <strong>host</strong> (CPU, RAM, disk, network)</li>
+<li>Topology data và host criticality</li>
+<li><strong>KHÔNG</strong> thu thập process metrics hoặc traces</li>
+<li><strong>Use case:</strong> Chỉ cần biết host có sống hay không (kiosks, POS systems)</li>
+</ul>
+<p><strong>Infrastructure Only</strong> — Mode trung gian</p>
+<ul>
+<li>Thu thập metrics từ <strong>host + processes</strong></li>
+<li>Biết được processes nào đang chạy và resource usage</li>
+<li><strong>KHÔNG</strong> thu thập traces (PurePath)</li>
+<li><strong>Use case:</strong> Database servers, servers không cần code-level analysis</li>
+</ul>
+<p><strong>Full-Stack</strong> — Mode toàn diện nhất ⭐</p>
+<ul>
+<li>Thu thập <strong>tất cả</strong>: host metrics + process metrics + traces + code profiling</li>
+<li>Auto-instrumentation → tạo PurePath (distributed traces)</li>
+<li>Hỗ trợ bật thêm: log management, application security</li>
+<li><strong>Use case:</strong> Business-critical applications (default khuyến nghị)</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>IMPORTANT</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Tại sao không luôn dùng Full-Stack?</strong></p>
+<ul>
+<li>Không phải system nào cũng cần full observability</li>
+<li><strong>Cost optimization</strong>: mode thấp hơn = ít license hơn</li>
+<li><strong>Cân bằng</strong> giữa visibility, performance, và cost</li>
+</ul>
+<p>→ Chọn mode phù hợp với <strong>mức độ quan trọng</strong> của system.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="platform--technology-support">Platform &amp; Technology Support<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#platform--technology-support" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>OneAgent hỗ trợ rất nhiều platforms:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Platforms</th></tr></thead><tbody><tr><td><strong>Server OS</strong></td><td>Linux, Windows</td></tr><tr><td><strong>Cloud</strong></td><td>AWS, Azure, Google Cloud Platform</td></tr><tr><td><strong>Container/Orchestration</strong></td><td>Kubernetes, OpenShift, Docker</td></tr><tr><td><strong>Kiến trúc</strong></td><td>x86_64, ARM</td></tr></tbody></table></div>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>NOTE</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Không cần nhớ hết tất cả platforms. Chỉ cần biết rằng OneAgent hỗ trợ <strong>hầu hết</strong> on-premise và cloud architectures phổ biến. Khi không chắc → kiểm tra <a href="https://docs.dynatrace.com" class="external external-link">Dynatrace Documentation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+</div>
+</blockquote>
+<hr/>
+<h1 id="knowledge-check">Knowledge Check<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#knowledge-check" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h3 id="q1-what-makes-dynatrace-a-saas-platform">Q1: What makes Dynatrace a SaaS platform?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q1-what-makes-dynatrace-a-saas-platform" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>A. It requires a powerful on-prem server to run.</li>
+<li>B. It must be manually updated and managed.</li>
+<li>C. It runs in the cloud and is accessed through a browser.</li>
+<li>D. It is only available as a downloadable desktop application.</li>
+</ul>
+<blockquote>
+<p><strong>Đáp án: C</strong> — It runs in the cloud and is accessed through a browser (Chạy trên cloud và truy cập qua trình duyệt).</p>
+</blockquote>
+<p><strong>Tại sao C đúng?</strong></p>
+<p>SaaS (Software as a Service) là mô hình phần mềm mà nhà cung cấp <strong>host mọi thứ trên cloud</strong> — bạn chỉ cần <strong>trình duyệt + internet</strong> là dùng được. Dynatrace SaaS hoạt động hoàn toàn theo mô hình này:</p>
+<ul>
+<li><strong>Lưu trữ data</strong>: Dynatrace cloud lo (Grail data lakehouse)</li>
+<li><strong>Xử lý &amp; phân tích</strong>: Dynatrace cloud lo (Davis AI, DQL engine)</li>
+<li><strong>Cập nhật phần mềm</strong>: Dynatrace tự cập nhật, bạn không cần can thiệp</li>
+<li><strong>Bảo trì hạ tầng</strong>: Dynatrace quản lý toàn bộ servers</li>
+</ul>
+<p>Bạn chỉ cần cài <strong>OneAgent</strong> trên hosts cần giám sát — phần còn lại đều trên cloud.</p>
+<p><strong>Giải thích các lựa chọn sai:</strong></p>
+<ul>
+<li><strong>A. Requires powerful on-prem server</strong>: Sai hoàn toàn. SaaS có nghĩa là KHÔNG cần server on-prem. Đây là đặc điểm của <strong>Dynatrace Managed</strong> (phiên bản on-premise), không phải SaaS.</li>
+<li><strong>B. Must be manually updated</strong>: Ngược lại — lợi thế lớn của SaaS là <strong>tự động cập nhật</strong>. Bạn không phải lo về patching, upgrade version hay downtime cho maintenance.</li>
+<li><strong>D. Downloadable desktop application</strong>: SaaS truy cập qua <strong>web browser</strong>, không phải ứng dụng desktop. Giống Gmail hay Google Docs — bạn mở trình duyệt và dùng, không cần cài gì.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Lời khuyên thi:</strong> Nhớ keyword <strong>SaaS = Cloud + Browser + No maintenance</strong>. Bất kỳ đáp án nào nói đến “install on your server”, “manually manage”, “download” đều sai cho câu hỏi về SaaS.</p>
+</blockquote>
+<hr/>
+<h3 id="q2-what-is-the-main-role-of-oneagent">Q2: What is the main role of OneAgent?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q2-what-is-the-main-role-of-oneagent" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>A. To create dashboards for application teams.</li>
+<li>B. To gather data from infrastructure, applications, and user activity.</li>
+<li>C. To store observability data locally.</li>
+<li>D. To replace the need for cloud platforms.</li>
+</ul>
+<blockquote>
+<p><strong>Đáp án: B</strong> — To gather data from infrastructure, applications, and user activity (Thu thập dữ liệu từ hạ tầng, ứng dụng, và hoạt động người dùng).</p>
+</blockquote>
+<p><strong>Tại sao B đúng?</strong></p>
+<p>OneAgent là <strong>bộ thu thập dữ liệu</strong> (data collector) — đây là vai trò duy nhất và cốt lõi của nó. Cụ thể, OneAgent:</p>
+<ul>
+<li><strong>Infrastructure</strong>: Thu thập CPU, RAM, disk I/O, network metrics từ host</li>
+<li><strong>Applications</strong>: Auto-instrument code (Java, .NET, Node.js…) để capture traces, method hotspots, database queries</li>
+<li><strong>User activity</strong>: Inject JavaScript vào web pages để tracking page load, user actions, XHR calls</li>
+</ul>
+<p>Sau khi thu thập, OneAgent <strong>gửi tất cả data</strong> về Dynatrace platform (cloud) qua HTTPS. Mọi việc phân tích, xử lý, visualization đều do <strong>platform phía cloud</strong> thực hiện — KHÔNG phải OneAgent.</p>
+<p><strong>Giải thích các lựa chọn sai:</strong></p>
+<ul>
+<li><strong>A. Create dashboards</strong>: Dashboards được tạo và hiển thị trên <strong>Dynatrace platform</strong> (web UI), không phải bởi OneAgent. OneAgent chỉ cung cấp raw data — phần trình bày data là việc của platform.</li>
+<li><strong>C. Store data locally</strong>: OneAgent <strong>KHÔNG lưu trữ</strong> data trên host. Nó buffer tạm thời rồi gửi lên cloud ngay. Data được lưu trữ chính thức trong <strong>Grail</strong> (trên cloud). Nếu mất kết nối tạm thời, OneAgent chỉ cache rất ngắn.</li>
+<li><strong>D. Replace cloud platforms</strong>: OneAgent là một <strong>thành phần</strong> của hệ sinh thái Dynatrace, nó <strong>cần</strong> cloud platform để gửi data lên. Không có platform thì OneAgent thu thập data mà không có chỗ gửi.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Lời khuyên thi:</strong> Phân biệt rõ vai trò: <strong>OneAgent = Thu thập</strong>, <strong>Platform = Phân tích + Hiển thị</strong>, <strong>Grail = Lưu trữ</strong>. Câu hỏi về “role of OneAgent” luôn xoay quanh từ khóa <strong>gather/collect data</strong>.</p>
+</blockquote>
+<hr/>
+<h3 id="q3-which-of-the-following-are-dynatrace-apps-select-all-that-apply">Q3: Which of the following are Dynatrace apps? (Select all that apply)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q3-which-of-the-following-are-dynatrace-apps-select-all-that-apply" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>✅ Infrastructure &amp; Operations</li>
+<li>✅ Problems</li>
+<li>✅ Hosts Classic</li>
+<li>❌ Time Frame Selector</li>
+</ul>
+<blockquote>
+<p><strong>Đáp án: Infrastructure &amp; Operations, Problems, Hosts Classic</strong></p>
+</blockquote>
+<p><strong>Tại sao 3 đáp án trên đúng?</strong></p>
+<p><strong>Dynatrace Apps</strong> là các <strong>ứng dụng tương tác</strong> chạy <strong>bên trong</strong> nền tảng Dynatrace. Chúng có giao diện riêng, có thể mở, đóng, và tương tác:</p>
+<ul>
+<li><strong>Infrastructure &amp; Operations</strong>: App quản lý và giám sát hạ tầng — hiển thị hosts, network, cloud resources</li>
+<li><strong>Problems</strong>: App hiển thị danh sách các problems mà Davis AI phát hiện — bạn click vào để xem root cause, impact</li>
+<li><strong>Hosts Classic</strong>: App classic view cho hosts — hiển thị host details, performance metrics, processes</li>
+</ul>
+<p>Tất cả đều là <strong>prebuilt apps</strong> có sẵn trong Dynatrace, tìm thấy trong menu navigation hoặc app launcher.</p>
+<p><strong>Tại sao Time Frame Selector sai?</strong></p>
+<p><strong>Time Frame Selector</strong> (bộ chọn khoảng thời gian) chỉ là một <strong>UI component</strong> — một phần tử giao diện nhỏ nằm trên thanh toolbar. Nó cho phép bạn chọn thời gian hiển thị data (last 2 hours, last 7 days…), nhưng nó <strong>KHÔNG phải app</strong> vì:</p>
+<ul>
+<li>Không có giao diện riêng để “mở”</li>
+<li>Không có functionality độc lập</li>
+<li>Chỉ là widget hỗ trợ các apps khác</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Lời khuyên thi:</strong> Phân biệt <strong>App</strong> (có giao diện đầy đủ, mở từ menu/launcher) vs <strong>UI Component</strong> (phần tử nhỏ nằm bên trong app khác, như time selector, filter bar).</p>
+</blockquote>
+<hr/>
+<h3 id="q4-what-is-the-main-purpose-of-grail-in-dynatrace">Q4: What is the main purpose of Grail in Dynatrace?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q4-what-is-the-main-purpose-of-grail-in-dynatrace" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>A. To visualize dashboards across multiple environments.</li>
+<li>B. To store, connect, and analyze observability data in real time.</li>
+<li>C. To install OneAgent on virtual machines.</li>
+<li>D. To create alerts for infrastructure outages only.</li>
+</ul>
+<blockquote>
+<p><strong>Đáp án: B</strong> — To store, connect, and analyze observability data in real time (Lưu trữ, kết nối, và phân tích dữ liệu observability theo thời gian thực).</p>
+</blockquote>
+<p><strong>Tại sao B đúng?</strong></p>
+<p>Grail là <strong>data lakehouse</strong> — công nghệ lưu trữ thống nhất của Dynatrace. Ba chức năng cốt lõi:</p>
+<ol>
+<li><strong>Store (Lưu trữ)</strong>: Tất cả telemetry data (logs, metrics, traces, events, business events, security events) được lưu vào Grail Buckets với configurable retention</li>
+<li><strong>Connect (Kết nối)</strong>: Data từ nhiều nguồn khác nhau được liên kết — ví dụ: error log ← liên kết → trace ← liên kết → host metrics. Nhờ đó bạn query chéo các loại data</li>
+<li><strong>Analyze (Phân tích)</strong>: MPP (Massively Parallel Processing) engine dùng <strong>Datawarping</strong> search song song hàng trăm TB/giây — cho phép phân tích real-time trên lượng data khổng lồ</li>
+</ol>
+<p><strong>Giải thích các lựa chọn sai:</strong></p>
+<ul>
+<li><strong>A. Visualize dashboards</strong>: Dashboards là tính năng <strong>hiển thị</strong> data — thuộc về UI/Apps layer. Grail chỉ <strong>lưu trữ và query</strong> data, việc hiển thị là ở layer trên (Dashboards, Notebooks, Data Explorer sử dụng DQL để query Grail).</li>
+<li><strong>C. Install OneAgent</strong>: Cài đặt OneAgent là quy trình riêng (download installer → chạy trên host). Grail <strong>hoàn toàn không liên quan</strong> đến việc cài đặt — nó chỉ nhận data sau khi OneAgent đã gửi lên.</li>
+<li><strong>D. Create alerts for infra only</strong>: Grail lưu trữ <strong>TẤT CẢ</strong> loại data, không chỉ infrastructure. Và việc tạo alerts thuộc về <strong>Davis AI</strong> và <strong>Alerting Profiles</strong>, không phải Grail.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Lời khuyên thi:</strong> Nhớ 3 keywords: <strong>Store + Connect + Analyze + Real-time</strong>. Grail là <strong>storage engine</strong>, không phải visualization tool hay alert system.</p>
+</blockquote>
+<hr/>
+<h3 id="q5-which-of-the-following-best-describes-a-dynatrace-custom-built-app">Q5: Which of the following best describes a Dynatrace custom-built app?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q5-which-of-the-following-best-describes-a-dynatrace-custom-built-app" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>A. An app that runs outside of the Dynatrace platform.</li>
+<li>B. A preinstalled browser extension.</li>
+<li>C. An app your team builds to meet specific business or technical needs.</li>
+<li>D. An app designed only for data storage.</li>
+</ul>
+<blockquote>
+<p><strong>Đáp án: C</strong> — An app your team builds to meet specific business or technical needs (App mà team bạn tự build để đáp ứng nhu cầu business hoặc technical riêng).</p>
+</blockquote>
+<p><strong>Tại sao C đúng?</strong></p>
+<p>Dynatrace hỗ trợ 2 loại apps:</p>
+<ul>
+<li><strong>Prebuilt apps</strong>: Apps có sẵn (Problems, Hosts Classic, Services…) — dùng ngay không cần code</li>
+<li><strong>Custom-built apps</strong>: Apps mà team <strong>tự phát triển</strong> bằng Dynatrace App Toolkit</li>
+</ul>
+<p>Custom-built apps cho phép:</p>
+<ul>
+<li><strong>Kiểm soát hoàn toàn</strong> data nào hiển thị và cách trình bày</li>
+<li><strong>Sử dụng DQL</strong> để query data từ Grail theo nhu cầu riêng</li>
+<li><strong>Tạo workflow</strong> tùy chỉnh cho business logic cụ thể</li>
+<li><strong>Ví dụ</strong>: Dashboard riêng cho C-level executives chỉ hiển thị business KPIs, hoặc app tự động tạo ticket khi có problem</li>
+</ul>
+<p><strong>Giải thích các lựa chọn sai:</strong></p>
+<ul>
+<li><strong>A. Runs outside the platform</strong>: Sai ngược — custom-built apps chạy <strong>BÊN TRONG</strong> nền tảng Dynatrace. Chúng sử dụng Dynatrace API và DQL để truy cập data, và được host trên Dynatrace platform.</li>
+<li><strong>B. Preinstalled browser extension</strong>: Browser extension là phần mở rộng cho Chrome/Firefox. Custom apps không phải extension — chúng là ứng dụng web chạy trong Dynatrace UI.</li>
+<li><strong>D. Only for data storage</strong>: Custom apps có thể visualize data, tạo workflows, trigger actions, không chỉ lưu trữ. Chức năng storage thuộc về <strong>Grail</strong>, không phải apps.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Lời khuyên thi:</strong> Custom-built app = <strong>inside Dynatrace</strong> + <strong>team builds</strong> + <strong>specific needs</strong>. Nếu đáp án nói “outside”, “preinstalled”, hoặc “only storage” → sai.</p>
+</blockquote>
+<hr/>
+<h1 id="tóm-tắt-bài-học">Tóm Tắt Bài Học<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-bài-học" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Điểm chính</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Dynatrace = SaaS</strong></td><td>Chạy trên cloud, chỉ cần browser + internet, Dynatrace lo mọi thứ</td></tr><tr><td><strong>Grail = Data Lakehouse</strong></td><td>Lưu trữ, kết nối, phân tích TẤT CẢ observability data real-time. MPP, indexless, schema-on-read</td></tr><tr><td><strong>Grail Buckets</strong></td><td>Tổ chức data theo retention, permissions, scope. Giống ngăn kéo tủ hồ sơ</td></tr><tr><td><strong>Dynatrace Apps</strong></td><td>2 loại: Prebuilt (dùng ngay) và Custom-built (tự build)</td></tr><tr><td><strong>OneAgent modes</strong></td><td>Full-Stack (toàn diện, default) > Infrastructure (host+process) > Discovery (host cơ bản)</td></tr><tr><td><strong>Platform support</strong></td><td>Linux, Windows, K8s, AWS, Azure, GCP, và nhiều hơn</td></tr></tbody></table></div>
+<hr/>
+<h1 id="navigation">Navigation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#navigation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Prev</th><th>Next</th></tr></thead><tbody><tr><td>[[01 - Dynatrace Essentials - An Introduction to Dynatrace</td><td>01 - Introduction]]</td></tr></tbody></table></div>
+<p><strong>All modules:</strong> <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/01---dynatrace-essentials---an-introduction-to-dynatrace" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/01---dynatrace-essentials---an-introduction-to-dynatrace">01</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/02---dynatrace-essentials---dynatrace-architecture" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/02---dynatrace-essentials---dynatrace-architecture">02</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/03---dynatrace-essentials---dynatrace-topology" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/03---dynatrace-essentials---dynatrace-topology">03</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/04---dynatrace-essentials---digital-experience-monitoring" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/04---dynatrace-essentials---digital-experience-monitoring">04</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/05---dynatrace-essentials---smart-organization" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/05---dynatrace-essentials---smart-organization">05</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/06---dynatrace-essentials---exploring-problems" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/06---dynatrace-essentials---exploring-problems">06</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/07---dynatrace-essentials---analyzing-your-observability-data" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/07---dynatrace-essentials---analyzing-your-observability-data">07</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/08---dynatrace-essentials---extending-dynatrace" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/08---dynatrace-essentials---extending-dynatrace">08</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/09---associate-certification-learning-path" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/09---associate-certification-learning-path">09</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/10---dql-deep-dive" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/10---dql-deep-dive">10</a></p>
+<p>**See also:*<a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/mind-map---dynatrace-associate" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/mind-map---dynatrace-associate">Mind Map</a>]] | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/00---dynatrace-associate-certification-exam-study-guide" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/00---dynatrace-associate-certification-exam-study-guide">Study Guide</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-357" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-1"><a href="#mục-tiêu-bài-học" data-for="mục-tiêu-bài-học">Mục Tiêu Bài Học</a></li><li class="depth-0"><a href="#phần-1-dynatrace-saas-platform" data-for="phần-1-dynatrace-saas-platform">Phần 1: Dynatrace SaaS Platform</a></li><li class="depth-1"><a href="#saas-là-gì" data-for="saas-là-gì">SaaS là gì?</a></li><li class="depth-1"><a href="#grail--data-lakehouse-" data-for="grail--data-lakehouse-">Grail — Data Lakehouse ⭐</a></li><li class="depth-2"><a href="#grail-là-gì" data-for="grail-là-gì">Grail là gì?</a></li><li class="depth-2"><a href="#cách-grail-hoạt-động" data-for="cách-grail-hoạt-động">Cách Grail hoạt động</a></li><li class="depth-2"><a href="#các-đặc-điểm-kỹ-thuật-quan-trọng-của-grail" data-for="các-đặc-điểm-kỹ-thuật-quan-trọng-của-grail">Các đặc điểm kỹ thuật quan trọng của Grail</a></li><li class="depth-1"><a href="#grail-buckets--tổ-chức-data-" data-for="grail-buckets--tổ-chức-data-">Grail Buckets — Tổ Chức Data ⭐</a></li><li class="depth-2"><a href="#buckets-là-gì" data-for="buckets-là-gì">Buckets là gì?</a></li><li class="depth-2"><a href="#ví-dụ-thực-tế" data-for="ví-dụ-thực-tế">Ví dụ thực tế</a></li><li class="depth-2"><a href="#tại-sao-giới-hạn-retention" data-for="tại-sao-giới-hạn-retention">Tại sao giới hạn retention?</a></li><li class="depth-1"><a href="#dynatrace-apps" data-for="dynatrace-apps">Dynatrace Apps</a></li><li class="depth-0"><a href="#phần-2-oneagent-monitoring-modes-" data-for="phần-2-oneagent-monitoring-modes-">Phần 2: OneAgent Monitoring Modes ⭐</a></li><li class="depth-1"><a href="#ba-chế-độ-giám-sát" data-for="ba-chế-độ-giám-sát">Ba Chế Độ Giám Sát</a></li><li class="depth-2"><a href="#bảng-so-sánh" data-for="bảng-so-sánh">Bảng So Sánh</a></li><li class="depth-2"><a href="#chi-tiết-từng-mode" data-for="chi-tiết-từng-mode">Chi Tiết Từng Mode</a></li><li class="depth-1"><a href="#platform--technology-support" data-for="platform--technology-support">Platform &amp; Technology Support</a></li><li class="depth-0"><a href="#knowledge-check" data-for="knowledge-check">Knowledge Check</a></li><li class="depth-2"><a href="#q1-what-makes-dynatrace-a-saas-platform" data-for="q1-what-makes-dynatrace-a-saas-platform">Q1: What makes Dynatrace a SaaS platform?</a></li><li class="depth-2"><a href="#q2-what-is-the-main-role-of-oneagent" data-for="q2-what-is-the-main-role-of-oneagent">Q2: What is the main role of OneAgent?</a></li><li class="depth-2"><a href="#q3-which-of-the-following-are-dynatrace-apps-select-all-that-apply" data-for="q3-which-of-the-following-are-dynatrace-apps-select-all-that-apply">Q3: Which of the following are Dynatrace apps? (Select all that apply)</a></li><li class="depth-2"><a href="#q4-what-is-the-main-purpose-of-grail-in-dynatrace" data-for="q4-what-is-the-main-purpose-of-grail-in-dynatrace">Q4: What is the main purpose of Grail in Dynatrace?</a></li><li class="depth-2"><a href="#q5-which-of-the-following-best-describes-a-dynatrace-custom-built-app" data-for="q5-which-of-the-following-best-describes-a-dynatrace-custom-built-app">Q5: Which of the following best describes a Dynatrace custom-built app?</a></li><li class="depth-0"><a href="#tóm-tắt-bài-học" data-for="tóm-tắt-bài-học">Tóm Tắt Bài Học</a></li><li class="depth-0"><a href="#navigation" data-for="navigation">Navigation</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/00---dynatrace-associate-certification-exam-study-guide" class="internal">Tổng Quan</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/01---dynatrace-essentials---an-introduction-to-dynatrace" class="internal">Giới Thiệu Dynatrace</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/02---dynatrace-essentials---dynatrace-architecture" class="internal">02 - Dynatrace Essentials - Dynatrace Architecture</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/03---dynatrace-essentials---dynatrace-topology" class="internal">03 - Dynatrace Essentials - Dynatrace Topology</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/04---dynatrace-essentials---digital-experience-monitoring" class="internal">04 - Dynatrace Essentials - Digital Experience Monitoring</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/05---dynatrace-essentials---smart-organization" class="internal">05 - Dynatrace Essentials - Smart Organization</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/06---dynatrace-essentials---exploring-problems" class="internal">06 - Dynatrace Essentials - Exploring Problems</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/07---dynatrace-essentials---analyzing-your-observability-data" class="internal">07 - Dynatrace Essentials - Analyzing Your Observability Data</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/08---dynatrace-essentials---extending-dynatrace" class="internal">08 - Dynatrace Essentials - Extending Dynatrace</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/09---associate-certification-learning-path" class="internal">09 - Associate Certification Learning Path</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/10---dql-deep-dive" class="internal">10 - DQL Deep Dive</a></li><li><a href="../../../../02---areas/observability/dynatrace/labs/00---setup-easytrade--and--oneagent" class="internal">Lab 00 — Setup EasyTrade &amp; OneAgent</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

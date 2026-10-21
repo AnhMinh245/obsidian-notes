@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>19 – Serverless: Lambda, DynamoDB, API Gateway, Step Functions &amp; Cognito</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="19 – Serverless: Lambda, DynamoDB, API Gateway, Step Functions &amp; Cognito"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="19 – Serverless: Lambda, DynamoDB, API Gateway, Step Functions &amp; Cognito"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 19 – Serverless: Lambda, DynamoDB, API Gateway, Step Functions &amp; Cognito Cách đọc note này: (1) Serverless là gì → (2) Lambda cơ bản &amp; giới hạn → (3) Cách Lambda được gọi (3 kiểu) → (4) Concurrency, Throttling, Cold Start → (5) Lambda ở Edge → (6) Lambda ..."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 19 – Serverless: Lambda, DynamoDB, API Gateway, Step Functions &amp; Cognito Cách đọc note này: (1) Serverless là gì → (2) Lambda cơ bản &amp; giới hạn → (3) Cách Lambda được gọi (3 kiểu) → (4) Concurrency, Throttling, Cold Start → (5) Lambda ở Edge → (6) Lambda ..."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 19 – Serverless: Lambda, DynamoDB, API Gateway, Step Functions &amp; Cognito Cách đọc note này: (1) Serverless là gì → (2) Lambda cơ bản &amp; giới hạn → (3) Cách Lambda được gọi (3 kiểu) → (4) Concurrency, Throttling, Cold Start → (5) Lambda ở Edge → (6) Lambda ..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/19---serverless"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/19---serverless"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 19 – Serverless: Lambda, DynamoDB, API Gateway, Step Functions &amp; Cognito Cách đọc note này: (1) Serverless là gì → (2) Lambda cơ bản &amp; giới hạn → (3) Cách Lambda được gọi (3 kiểu) → (4) Concurrency, Throttling, Cold Start → (5) Lambda ở Edge → (6) Lambda ..."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/19---serverless" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-87" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-87" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>19 – Serverless: Lambda, DynamoDB, API Gateway, Step Functions &amp; Cognito</a></div></nav><h1 class="article-title">19 – Serverless: Lambda, DynamoDB, API Gateway, Step Functions &amp; Cognito</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Serverless</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Lambda</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon DynamoDB</span><span class="note-properties-separator">, </span><span class="note-properties-text">API Gateway</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Step Functions</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon Cognito</span><span class="note-properties-separator">, </span><span class="note-properties-text">Lambda@Edge</span><span class="note-properties-separator">, </span><span class="note-properties-text">CloudFront Functions</span><span class="note-properties-separator">, </span><span class="note-properties-text">DynamoDB DAX</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-08-09T17:00:00.000Z">10 thg 8, 2026</time><span>24 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="19--serverless-lambda-dynamodb-api-gateway-step-functions--cognito">19 – Serverless: Lambda, DynamoDB, API Gateway, Step Functions &amp; Cognito<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#19--serverless-lambda-dynamodb-api-gateway-step-functions--cognito" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> (1) Serverless là gì → (2) Lambda cơ bản &amp; giới hạn → (3) Cách Lambda được gọi (3 kiểu) → (4) Concurrency, Throttling, Cold Start → (5) Lambda ở Edge → (6) Lambda + VPC/RDS → (7) DynamoDB → (8) API Gateway → (9) Step Functions → (10) Cognito → (11) So sánh &amp; chọn đáp án thi.</p>
+</blockquote>
+<hr/>
+<h2 id="1-serverless-là-gì">1. Serverless là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-serverless-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Paradigm mà developer <strong>không còn quản lý server</strong> — chỉ deploy <strong>code / function</strong></li>
+<li>Ban đầu: Serverless == <strong>FaaS</strong> (Function as a Service), khai sinh bởi <strong>AWS Lambda</strong></li>
+<li>Hiện nay mở rộng cho <strong>mọi dịch vụ managed</strong>: database, messaging, storage…</li>
+</ul>
+<blockquote>
+<p><strong>Hiểu đúng:</strong> Serverless <strong>không có nghĩa là không có server</strong>. Server vẫn tồn tại — chỉ là bạn <strong>không provision, không quản lý, không nhìn thấy</strong> chúng. AWS lo hết phần đó.</p>
+</blockquote>
+<h3 id="11-các-dịch-vụ-serverless-trên-aws">1.1 Các dịch vụ Serverless trên AWS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-các-dịch-vụ-serverless-trên-aws" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nhóm</th><th>Dịch vụ</th></tr></thead><tbody><tr><td>Compute</td><td><strong>AWS Lambda</strong>, <strong>AWS Fargate</strong></td></tr><tr><td>Database</td><td><strong>DynamoDB</strong>, <strong>Aurora Serverless</strong></td></tr><tr><td>Storage</td><td><strong>Amazon S3</strong></td></tr><tr><td>API / Auth</td><td><strong>API Gateway</strong>, <strong>Amazon Cognito</strong></td></tr><tr><td>Messaging</td><td><strong>SNS</strong>, <strong>SQS</strong>, <strong>Kinesis Data Firehose</strong></td></tr><tr><td>Orchestration</td><td><strong>AWS Step Functions</strong></td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260810152712.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="2-aws-lambda--nền-tảng-của-serverless">2. AWS Lambda — nền tảng của Serverless<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-aws-lambda--nền-tảng-của-serverless" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-vì-sao-dùng-lambda-thay-ec2">2.1 Vì sao dùng Lambda thay EC2?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-vì-sao-dùng-lambda-thay-ec2" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Amazon EC2</strong></th><th><strong>AWS Lambda</strong></th></tr></thead><tbody><tr><td>Bản chất</td><td>Virtual <strong>server</strong> trên cloud</td><td>Virtual <strong>function</strong> — không có server để quản lý</td></tr><tr><td>Giới hạn</td><td>Bị giới hạn bởi RAM &amp; CPU</td><td>Bị giới hạn bởi <strong>thời gian</strong> — chỉ chạy ngắn (tối đa 15 phút)</td></tr><tr><td>Vòng đời</td><td>Chạy <strong>liên tục</strong> (trả tiền kể cả lúc rảnh)</td><td>Chạy <strong>on-demand</strong> — chỉ khi được gọi</td></tr><tr><td>Scaling</td><td>Phải can thiệp (thêm/bớt server)</td><td><strong>Tự động hoàn toàn</strong></td></tr></tbody></table></div>
+<h3 id="22-lợi-ích-chính">2.2 Lợi ích chính<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-lợi-ích-chính" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Pricing đơn giản</strong>: trả theo <strong>số request</strong> + <strong>thời gian compute</strong>
+<ul>
+<li>Free tier: <strong>1.000.000 request</strong> và <strong>400.000 GB-giây</strong> compute mỗi tháng</li>
+</ul>
+</li>
+<li>Tích hợp sẵn với gần như toàn bộ hệ sinh thái AWS</li>
+<li>Hỗ trợ nhiều ngôn ngữ lập trình</li>
+<li>Monitoring dễ dàng qua <strong>CloudWatch</strong></li>
+<li>Tăng tài nguyên đơn giản — lên tới <strong>10 GB RAM</strong>/function</li>
+</ul>
+<blockquote>
+<p><strong>Điểm quan trọng hay ra thi:</strong> Trong Lambda bạn <strong>chỉ chỉnh được RAM</strong>, không chỉnh CPU trực tiếp. <strong>Tăng RAM → CPU và network cũng tăng theo.</strong> Vì vậy câu hỏi kiểu <em>“function chạy chậm vì CPU-bound, làm sao tăng tốc?”</em> → <strong>tăng memory allocation</strong>.</p>
+</blockquote>
+<h3 id="23-ngôn-ngữ-được-hỗ-trợ">2.3 Ngôn ngữ được hỗ trợ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-ngôn-ngữ-được-hỗ-trợ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Node.js (JavaScript), Python, Java, C# (.NET) / PowerShell, Ruby</li>
+<li><strong>Custom Runtime API</strong> — community support (ví dụ Rust, Golang)</li>
+<li><strong>Lambda Container Image</strong> — image phải implement <strong>Lambda Runtime API</strong></li>
+</ul>
+<blockquote>
+<p><strong>Bẫy thi:</strong> Muốn chạy một <strong>Docker image bất kỳ</strong> (không implement Lambda Runtime API) → dùng <strong>ECS / Fargate</strong>, KHÔNG phải Lambda. Lambda container image chỉ dành cho image được viết theo chuẩn Lambda.</p>
+</blockquote>
+<h3 id="24-các-tích-hợp-chính">2.4 Các tích hợp chính<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-các-tích-hợp-chính" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="../../.././../../attachments/pasted-image-20260810152836.png" alt width="auto" height="auto"/></p>
+<p><strong>Ví dụ 1 — Tạo thumbnail serverless:</strong> Upload ảnh lên <strong>S3</strong> → S3 Event trigger <strong>Lambda</strong> → Lambda resize ảnh → ghi thumbnail vào S3 + metadata vào <strong>DynamoDB</strong>.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260810152857.png" alt width="auto" height="auto"/></p>
+<p><strong>Ví dụ 2 — CRON job serverless:</strong> <strong>EventBridge Schedule</strong> (rate/cron expression) → trigger <strong>Lambda</strong> định kỳ. Thay thế cron server chạy 24/7 → chỉ trả tiền vài giây mỗi lần chạy.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260810152909.png" alt width="auto" height="auto"/></p>
+<h3 id="25-pricing-ví-dụ">2.5 Pricing (ví dụ)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#25-pricing-ví-dụ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại phí</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Theo request</strong></td><td>1 triệu request đầu <strong>miễn phí</strong>; sau đó <strong>$0,20 / 1 triệu request</strong></td></tr><tr><td><strong>Theo thời gian chạy</strong> (tính từng <strong>1 ms</strong>)</td><td><strong>400.000 GB-giây/tháng miễn phí</strong><br/>= 400.000 giây nếu function 1 GB RAM<br/>= 3.200.000 giây nếu function 128 MB RAM<br/>Sau đó <strong>$1,00 / 600.000 GB-giây</strong></td></tr></tbody></table></div>
+<blockquote>
+<p>Lambda thường <strong>rất rẻ</strong> — đó là lý do nó phổ biến. Với workload chạy không liên tục, Lambda gần như luôn rẻ hơn EC2.</p>
+</blockquote>
+<h3 id="26-giới-hạn-cần-nhớ-per-region">2.6 Giới hạn cần nhớ (per region)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#26-giới-hạn-cần-nhớ-per-region" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Execution:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Giới hạn</th><th>Giá trị</th></tr></thead><tbody><tr><td>Memory allocation</td><td><strong>128 MB – 10 GB</strong> (bước 1 MB)</td></tr><tr><td>Thời gian chạy tối đa</td><td><strong>900 giây = 15 phút</strong></td></tr><tr><td>Environment variables</td><td><strong>4 KB</strong></td></tr><tr><td>Disk trong <code>/tmp</code> (ephemeral storage)</td><td><strong>512 MB – 10 GB</strong></td></tr><tr><td>Concurrent executions</td><td><strong>1.000</strong> (có thể xin tăng qua support ticket)</td></tr></tbody></table></div>
+<p><strong>Deployment:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Giới hạn</th><th>Giá trị</th></tr></thead><tbody><tr><td>Deployment size (file <code>.zip</code> nén)</td><td><strong>50 MB</strong></td></tr><tr><td>Size sau giải nén (code + dependencies)</td><td><strong>250 MB</strong></td></tr><tr><td>Environment variables</td><td><strong>4 KB</strong></td></tr></tbody></table></div>
+<blockquote>
+<p>Nếu cần file lớn hơn → tải thêm vào thư mục <code>/tmp</code> lúc khởi động (startup).</p>
+</blockquote>
+<p><strong>Payload (hay ra thi):</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Kiểu gọi</th><th>Giới hạn payload</th></tr></thead><tbody><tr><td><strong>Synchronous</strong> (request/response)</td><td><strong>6 MB</strong></td></tr><tr><td><strong>Asynchronous</strong> (event)</td><td><strong>256 KB</strong></td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Tình huống thi kinh điển:</strong> Function cần xử lý file <strong>> 15 phút</strong> hoặc file rất lớn → Lambda <strong>không phù hợp</strong> → chuyển sang <strong>ECS/Fargate</strong>, <strong>AWS Batch</strong>, hoặc <strong>EC2</strong>. Đây là lý do quan trọng nhất khiến đáp án “dùng Lambda” bị loại.</p>
+</blockquote>
+<hr/>
+<h2 id="3-ba-cách-lambda-được-gọi-invocation-types">3. Ba cách Lambda được gọi (Invocation Types)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-ba-cách-lambda-được-gọi-invocation-types" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Đây là nền tảng để hiểu phần throttling &amp; retry ở §4 — rất hay bị bỏ qua.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Kiểu gọi</th><th>Ai gọi</th><th>Hành vi khi lỗi</th></tr></thead><tbody><tr><td><strong>Synchronous</strong></td><td>API Gateway, ALB, gọi trực tiếp qua CLI/SDK</td><td><strong>Client tự retry</strong> — Lambda trả lỗi về ngay</td></tr><tr><td><strong>Asynchronous</strong></td><td>S3 Events, SNS, EventBridge</td><td>Lambda <strong>tự retry 2 lần</strong> (tổng 3 lần), rồi đẩy vào <strong>DLQ</strong> / <strong>Destinations</strong></td></tr><tr><td><strong>Event Source Mapping</strong> (Lambda tự poll)</td><td>SQS, Kinesis Data Streams, DynamoDB Streams</td><td>Lambda <strong>poll</strong> nguồn, xử lý theo batch</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Sync[\&quot;Sync: API Gateway, ALB\&quot;] --> L[\&quot;AWS Lambda\&quot;]\n    Async[\&quot;Async: S3, SNS, EventBridge\&quot;] --> L\n    ESM[\&quot;Event Source Mapping&lt;br/>Lambda poll: SQS, Kinesis, DynamoDB Streams\&quot;] --> L\n    L -->|\&quot;lỗi async\&quot;| DLQ[\&quot;DLQ hoặc Destinations&lt;br/>(SQS / SNS)\&quot;]&quot;">graph LR
+    Sync[&quot;Sync: API Gateway, ALB&quot;] --> L[&quot;AWS Lambda&quot;]
+    Async[&quot;Async: S3, SNS, EventBridge&quot;] --> L
+    ESM[&quot;Event Source Mapping&lt;br/>Lambda poll: SQS, Kinesis, DynamoDB Streams&quot;] --> L
+    L -->|&quot;lỗi async&quot;| DLQ[&quot;DLQ hoặc Destinations&lt;br/>(SQS / SNS)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Lambda Destinations</strong> (mới hơn DLQ): định tuyến kết quả <strong>cả thành công lẫn thất bại</strong> tới SQS/SNS/Lambda/EventBridge. AWS khuyến nghị dùng Destinations thay DLQ vì linh hoạt hơn.</p>
+</blockquote>
+<hr/>
+<h2 id="4-concurrency-throttling--cold-start">4. Concurrency, Throttling &amp; Cold Start<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-concurrency-throttling--cold-start" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-concurrency-limit--throttling">4.1 Concurrency limit &amp; Throttling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-concurrency-limit--throttling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Giới hạn mặc định: <strong>1.000 concurrent executions</strong> / region (dùng chung cho <strong>mọi function</strong> trong region đó)</li>
+<li>Có thể đặt <strong>Reserved Concurrency</strong> ở mức từng function (= vừa <strong>đảm bảo</strong> vừa <strong>giới hạn</strong>)</li>
+<li>Mỗi lần gọi vượt quá giới hạn → bị <strong>Throttle</strong></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810152943.png" alt width="auto" height="auto"/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Kiểu gọi khi bị throttle</th><th>Hành vi</th></tr></thead><tbody><tr><td><strong>Synchronous</strong></td><td>Trả về lỗi <strong>ThrottleError – HTTP 429</strong> ngay</td></tr><tr><td><strong>Asynchronous</strong></td><td><strong>Tự retry</strong>, sau đó đẩy vào <strong>DLQ</strong></td></tr></tbody></table></div>
+<blockquote>
+<p>Cần giới hạn cao hơn 1.000 → mở <strong>support ticket</strong> xin tăng quota.</p>
+</blockquote>
+<h3 id="42-vấn-đề-khi-không-đặt-reserved-concurrency">4.2 Vấn đề khi KHÔNG đặt Reserved Concurrency<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-vấn-đề-khi-không-đặt-reserved-concurrency" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="../../.././../../attachments/pasted-image-20260810153014.png" alt width="auto" height="auto"/></p>
+<p>Nếu không “đặt chỗ” concurrency, một function bị traffic spike có thể <strong>ăn hết 1.000 slot</strong> của cả region → các function khác (kể cả function quan trọng) <strong>bị throttle theo</strong>. Đây là kiểu “hàng xóm ồn ào” (noisy neighbour) trong Lambda.</p>
+<blockquote>
+<p><strong>Cách xử lý:</strong> đặt <strong>Reserved Concurrency</strong> cho từng function → mỗi function có phần riêng, không giẫm chân nhau.</p>
+</blockquote>
+<h3 id="43-concurrency-với-asynchronous-invocation">4.3 Concurrency với Asynchronous Invocation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-concurrency-với-asynchronous-invocation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nếu function <strong>không đủ concurrency</strong> để xử lý hết event → request bị <strong>throttle</strong></li>
+<li>Với lỗi throttling (<strong>429</strong>) và lỗi hệ thống (<strong>5xx</strong>), Lambda <strong>trả event về queue</strong> và thử lại <strong>trong tối đa 6 giờ</strong></li>
+<li>Khoảng cách retry <strong>tăng theo cấp số nhân</strong> (exponential backoff): từ <strong>1 giây</strong> sau lần đầu, tối đa <strong>5 phút</strong></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810153040.png" alt width="auto" height="auto"/></p>
+<h3 id="44-cold-start--provisioned-concurrency">4.4 Cold Start &amp; Provisioned Concurrency<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#44-cold-start--provisioned-concurrency" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Cold Start là gì?</strong></p>
+<ul>
+<li>Instance mới được tạo → phải <strong>load code</strong> và chạy phần <strong>ngoài handler</strong> (init)</li>
+<li>Init nặng (nhiều dependency, SDK…) → mất thời gian đáng kể</li>
+<li>→ <strong>Request đầu tiên</strong> vào instance mới có <strong>latency cao hơn</strong> các request sau</li>
+</ul>
+<p><strong>Provisioned Concurrency — cách khắc phục:</strong></p>
+<ul>
+<li>Concurrency được <strong>cấp phát trước</strong> khi function được gọi</li>
+<li>→ <strong>Cold start không bao giờ xảy ra</strong>, mọi invocation đều low-latency</li>
+<li><strong>Application Auto Scaling</strong> có thể quản lý mức này (theo lịch hoặc target utilization)</li>
+</ul>
+<blockquote>
+<p>Cold start trong VPC đã được cải thiện rất nhiều từ tháng 10–11/2019 (Lambda dùng ENI dùng chung thay vì tạo ENI mỗi lần) — không còn là lý do lớn để tránh Lambda-in-VPC nữa.</p>
+</blockquote>
+<h3 id="45-reserved-vs-provisioned-concurrency--đừng-nhầm">4.5 Reserved vs Provisioned Concurrency — đừng nhầm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#45-reserved-vs-provisioned-concurrency--đừng-nhầm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Reserved Concurrency</strong></th><th><strong>Provisioned Concurrency</strong></th></tr></thead><tbody><tr><td>Mục đích</td><td><strong>Chia phần</strong> concurrency giữa các function</td><td><strong>Loại bỏ cold start</strong></td></tr><tr><td>Cơ chế</td><td>Đặt trần (và sàn) số concurrent execution</td><td>Khởi tạo sẵn N instance đã “warm”</td></tr><tr><td>Chi phí</td><td><strong>Miễn phí</strong></td><td><strong>Tính phí</strong> (trả tiền cho instance giữ sẵn)</td></tr><tr><td>Giải quyết</td><td>Function này không “ăn” hết quota của function khác</td><td>Latency ổn định cho workload nhạy cảm</td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260810153106.png" alt width="auto" height="auto"/></p>
+<h3 id="46-lambda-snapstart">4.6 Lambda SnapStart<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#46-lambda-snapstart" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Cải thiện performance <strong>tới 10 lần</strong>, <strong>không tốn thêm phí</strong> — cho <strong>Java, Python, .NET</strong></li>
+<li>Khi bật: function được gọi từ <strong>trạng thái đã khởi tạo sẵn</strong> (không init lại từ đầu)</li>
+<li>Cơ chế khi publish version mới:
+<ol>
+<li>Lambda <strong>khởi tạo</strong> function</li>
+<li><strong>Chụp snapshot</strong> của memory + disk state sau khởi tạo</li>
+<li>Snapshot được <strong>cache</strong> để truy cập với latency thấp</li>
+</ol>
+</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810153128.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>SnapStart vs Provisioned Concurrency:</strong> SnapStart <strong>miễn phí</strong> nhưng chỉ hỗ trợ Java/Python/.NET; Provisioned Concurrency <strong>tính phí</strong> nhưng dùng được cho mọi runtime. Đề thi hỏi “giảm cold start <strong>không tăng chi phí</strong>” → <strong>SnapStart</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="5-customization-at-the-edge--chạy-code-sát-người-dùng">5. Customization at the Edge — chạy code sát người dùng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-customization-at-the-edge--chạy-code-sát-người-dùng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-edge-function-là-gì">5.1 Edge Function là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-edge-function-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Code bạn viết và <strong>gắn vào CloudFront distribution</strong></li>
+<li>Chạy <strong>gần người dùng</strong> → giảm latency tối đa</li>
+<li>CloudFront cung cấp <strong>2 loại</strong>: <strong>CloudFront Functions</strong> và <strong>Lambda@Edge</strong></li>
+<li>Không quản lý server nào, deploy toàn cầu, trả tiền theo mức dùng — <strong>fully serverless</strong></li>
+</ul>
+<p><strong>Use case chung:</strong> bảo mật &amp; quyền riêng tư website, dynamic web app tại edge, SEO, định tuyến thông minh giữa các origin/data center, chống bot, biến đổi ảnh real-time, A/B testing, xác thực &amp; phân quyền user, ưu tiên user, tracking &amp; analytics.</p>
+<h3 id="52-cloudfront-functions">5.2 CloudFront Functions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-cloudfront-functions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Function <strong>nhẹ</strong>, viết bằng <strong>JavaScript</strong></li>
+<li>Dành cho customization CDN <strong>quy mô lớn, cực nhạy latency</strong></li>
+<li>Startup <strong>dưới 1 ms</strong>, chịu được <strong>hàng triệu request/giây</strong></li>
+<li>Chỉ can thiệp được <strong>2 điểm</strong>:
+<ul>
+<li><strong>Viewer Request</strong> — sau khi CloudFront nhận request từ viewer</li>
+<li><strong>Viewer Response</strong> — trước khi CloudFront trả response về viewer</li>
+</ul>
+</li>
+<li>Là <strong>tính năng native của CloudFront</strong> (quản lý code hoàn toàn trong CloudFront)</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810153210.png" alt width="auto" height="auto"/></p>
+<h3 id="53-lambdaedge">5.3 Lambda@Edge<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-lambdaedge" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Lambda function viết bằng <strong>Node.js hoặc Python</strong></li>
+<li>Scale tới <strong>hàng nghìn</strong> request/giây</li>
+<li>Can thiệp được <strong>cả 4 điểm</strong> trong vòng đời request:
+<ul>
+<li><strong>Viewer Request</strong> — sau khi CloudFront nhận request từ viewer</li>
+<li><strong>Origin Request</strong> — trước khi CloudFront gửi request tới origin</li>
+<li><strong>Origin Response</strong> — sau khi CloudFront nhận response từ origin</li>
+<li><strong>Viewer Response</strong> — trước khi CloudFront trả về viewer</li>
+</ul>
+</li>
+<li>Viết function ở <strong>một region duy nhất: <code>us-east-1</code></strong>, CloudFront tự replicate ra các edge location</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810153229.png" alt width="auto" height="auto"/></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Viewer[\&quot;Viewer\&quot;] -->|\&quot;(1) Viewer Request\&quot;| CF[\&quot;CloudFront Edge\&quot;]\n    CF -->|\&quot;(2) Origin Request\&quot;| Origin[\&quot;Origin&lt;br/>(S3, ALB, HTTP)\&quot;]\n    Origin -->|\&quot;(3) Origin Response\&quot;| CF\n    CF -->|\&quot;(4) Viewer Response\&quot;| Viewer&quot;">graph LR
+    Viewer[&quot;Viewer&quot;] -->|&quot;(1) Viewer Request&quot;| CF[&quot;CloudFront Edge&quot;]
+    CF -->|&quot;(2) Origin Request&quot;| Origin[&quot;Origin&lt;br/>(S3, ALB, HTTP)&quot;]
+    Origin -->|&quot;(3) Origin Response&quot;| CF
+    CF -->|&quot;(4) Viewer Response&quot;| Viewer
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p>CloudFront Functions chỉ chạm được bước <strong>(1)</strong> và <strong>(4)</strong>. Lambda@Edge chạm được cả <strong>(1)(2)(3)(4)</strong>.</p>
+</blockquote>
+<h3 id="54-so-sánh-cloudfront-functions-vs-lambdaedge">5.4 So sánh CloudFront Functions vs Lambda@Edge<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#54-so-sánh-cloudfront-functions-vs-lambdaedge" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="../../.././../../attachments/pasted-image-20260810153323.png" alt width="auto" height="auto"/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th><strong>CloudFront Functions</strong></th><th><strong>Lambda@Edge</strong></th></tr></thead><tbody><tr><td>Runtime</td><td>JavaScript (thuần)</td><td>Node.js, Python</td></tr><tr><td>Scale</td><td><strong>Triệu</strong> request/giây</td><td><strong>Nghìn</strong> request/giây</td></tr><tr><td>Thời gian chạy</td><td><strong>&lt; 1 ms</strong></td><td>Vài <strong>ms</strong> (dài hơn)</td></tr><tr><td>Trigger</td><td>Viewer Request/Response</td><td>Viewer + Origin Request/Response</td></tr><tr><td>Truy cập network</td><td><strong>Không</strong></td><td><strong>Có</strong> (gọi được service khác)</td></tr><tr><td>Truy cập file system / body của request</td><td><strong>Không</strong></td><td><strong>Có</strong></td></tr><tr><td>Thư viện bên thứ 3 (vd AWS SDK)</td><td><strong>Không</strong></td><td><strong>Có</strong></td></tr><tr><td>CPU / Memory</td><td>Cố định</td><td><strong>Điều chỉnh được</strong></td></tr><tr><td>Chi phí</td><td>Rẻ hơn nhiều</td><td>Đắt hơn</td></tr><tr><td>Deploy</td><td>Native trong CloudFront</td><td>Viết ở <code>us-east-1</code>, tự replicate</td></tr></tbody></table></div>
+<p><strong>Dùng CloudFront Functions khi:</strong></p>
+<ul>
+<li><strong>Chuẩn hoá cache key</strong> — biến đổi header/cookie/query string/URL để tạo Cache Key tối ưu</li>
+<li><strong>Thao tác header</strong> — thêm/sửa/xoá HTTP header trong request hoặc response</li>
+<li><strong>URL rewrite / redirect</strong></li>
+<li><strong>Xác thực &amp; phân quyền request</strong> — tạo và validate token do user sinh (ví dụ <strong>JWT</strong>) để cho phép/từ chối request</li>
+</ul>
+<p><strong>Dùng Lambda@Edge khi:</strong></p>
+<ul>
+<li>Cần <strong>thời gian chạy dài hơn</strong> (vài ms)</li>
+<li>Cần <strong>điều chỉnh CPU hoặc memory</strong></li>
+<li>Code <strong>phụ thuộc thư viện bên thứ 3</strong> (vd AWS SDK để gọi service khác)</li>
+<li>Cần <strong>truy cập network</strong> ra ngoài để xử lý</li>
+<li>Cần <strong>truy cập file system</strong> hoặc <strong>đọc body của HTTP request</strong></li>
+</ul>
+<hr/>
+<h2 id="6-lambda--networking">6. Lambda &amp; Networking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-lambda--networking" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-lambda-mặc-định--nằm-ngoài-vpc-của-bạn">6.1 Lambda mặc định — nằm NGOÀI VPC của bạn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-lambda-mặc-định--nằm-ngoài-vpc-của-bạn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Mặc định Lambda chạy trong một <strong>VPC do AWS sở hữu</strong></li>
+<li>→ <strong>Không truy cập được</strong> tài nguyên trong VPC của bạn (RDS, ElastiCache, internal ELB…)</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810153355.png" alt width="auto" height="auto"/></p>
+<h3 id="62-lambda-trong-vpc">6.2 Lambda trong VPC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-lambda-trong-vpc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Phải khai báo <strong>VPC ID</strong>, <strong>Subnets</strong>, và <strong>Security Groups</strong></li>
+<li>Lambda sẽ tạo <strong>ENI</strong> (Elastic Network Interface) trong subnet của bạn</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810153414.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Lưu ý quan trọng:</strong> Lambda đặt trong <strong>private subnet</strong> sẽ <strong>mất kết nối Internet</strong> (kể cả gọi API AWS public như S3, DynamoDB). Muốn có Internet → cần <strong>NAT Gateway</strong>; muốn gọi service AWS mà không qua Internet → dùng <strong>VPC Endpoint</strong>. Đây là bẫy rất hay gặp.</p>
+</blockquote>
+<h3 id="63-lambda-với-rds-proxy">6.3 Lambda với RDS Proxy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#63-lambda-với-rds-proxy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Vấn đề:</strong> Lambda scale tự động → dưới tải cao có thể mở <strong>quá nhiều connection</strong> tới database, làm DB quá tải.</p>
+<p><strong>RDS Proxy giải quyết:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Lợi ích</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Scalability</strong></td><td><strong>Pool và share</strong> connection tới DB thay vì mỗi Lambda mở riêng</td></tr><tr><td><strong>Availability</strong></td><td>Giảm <strong>66%</strong> thời gian failover và <strong>giữ nguyên connection</strong> khi failover</td></tr><tr><td><strong>Security</strong></td><td>Bắt buộc <strong>IAM authentication</strong>, lưu credential trong <strong>Secrets Manager</strong></td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Bắt buộc:</strong> Lambda <strong>phải được deploy trong VPC</strong> của bạn, vì <strong>RDS Proxy không bao giờ truy cập được công khai</strong> (never publicly accessible).</p>
+</blockquote>
+<p><img src="../../.././../../attachments/pasted-image-20260810153513.png" alt width="auto" height="auto"/></p>
+<h3 id="64-gọi-lambda-từ-rds--aurora-chiều-ngược-lại">6.4 Gọi Lambda TỪ RDS &amp; Aurora (chiều ngược lại)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#64-gọi-lambda-từ-rds--aurora-chiều-ngược-lại" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Invoke Lambda function <strong>từ bên trong DB instance</strong></li>
+<li>Cho phép xử lý <strong>data event ngay trong database</strong></li>
+<li>Chỉ hỗ trợ <strong>RDS for PostgreSQL</strong> và <strong>Aurora MySQL</strong></li>
+<li>Yêu cầu:
+<ul>
+<li>DB instance phải có <strong>outbound traffic</strong> tới Lambda (qua Public, <strong>NAT Gateway</strong>, hoặc <strong>VPC Endpoint</strong>)</li>
+<li>DB instance phải có đủ quyền (<strong>Lambda Resource-based Policy</strong> + <strong>IAM Policy</strong>)</li>
+</ul>
+</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810153534.png" alt width="auto" height="auto"/></p>
+<h3 id="65-rds-event-notifications">6.5 RDS Event Notifications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#65-rds-event-notifications" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Thông báo về <strong>bản thân DB instance</strong> (created, stopped, started…)</li>
+<li><strong>Không</strong> cho biết gì về <strong>dữ liệu bên trong</strong> — muốn theo dõi dữ liệu phải dùng cách khác (vd Lambda invocation ở §6.4)</li>
+<li>Subscribe theo các nhóm event: DB instance, DB snapshot, DB Parameter Group, DB Security Group, RDS Proxy, Custom Engine Version</li>
+<li><strong>Near real-time</strong> — độ trễ tới <strong>5 phút</strong></li>
+<li>Gửi thông báo tới <strong>SNS</strong>, hoặc subscribe event qua <strong>EventBridge</strong></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810153613.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="7-amazon-dynamodb--nosql-serverless">7. Amazon DynamoDB — NoSQL serverless<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-amazon-dynamodb--nosql-serverless" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="71-tổng-quan">7.1 Tổng quan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#71-tổng-quan" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Fully managed</strong>, <strong>highly available</strong> với replication qua <strong>nhiều AZ</strong> (mặc định 3 AZ)</li>
+<li>Database <strong>NoSQL</strong> — <strong>không phải relational</strong> — nhưng <strong>có hỗ trợ transaction</strong></li>
+<li>Scale tới khối lượng khổng lồ, database <strong>phân tán</strong>:
+<ul>
+<li><strong>Hàng triệu</strong> request/giây, <strong>hàng nghìn tỷ</strong> dòng, <strong>hàng trăm TB</strong> dữ liệu</li>
+</ul>
+</li>
+<li>Performance <strong>nhanh và ổn định</strong> — latency <strong>single-digit millisecond</strong></li>
+<li>Tích hợp <strong>IAM</strong> cho security/authorization/administration</li>
+<li>Chi phí thấp, có <strong>auto-scaling</strong></li>
+<li><strong>Không cần maintenance hay patching</strong>, luôn sẵn sàng</li>
+<li>Có 2 Table Class: <strong>Standard</strong> và <strong>Infrequent Access (IA)</strong> — IA rẻ hơn khi dữ liệu ít truy cập</li>
+</ul>
+<h3 id="72-kiến-thức-cơ-bản">7.2 Kiến thức cơ bản<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#72-kiến-thức-cơ-bản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>DynamoDB gồm nhiều <strong>Table</strong></li>
+<li>Mỗi table có một <strong>Primary Key</strong> — <strong>phải quyết định lúc tạo table</strong>, không đổi được sau</li>
+<li>Mỗi table chứa <strong>số lượng item (= dòng) không giới hạn</strong></li>
+<li>Mỗi item có các <strong>attribute</strong> — có thể thêm dần theo thời gian, có thể null</li>
+<li><strong>Kích thước tối đa của 1 item: 400 KB</strong></li>
+<li>Kiểu dữ liệu hỗ trợ:
+<ul>
+<li><strong>Scalar Types</strong> — String, Number, Binary, Boolean, Null</li>
+<li><strong>Document Types</strong> — List, Map</li>
+<li><strong>Set Types</strong> — String Set, Number Set, Binary Set</li>
+</ul>
+</li>
+<li>→ Nhờ vậy DynamoDB cho phép <strong>thay đổi schema rất nhanh</strong> (schema-less)</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810153657.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Item > 400 KB?</strong> Giống pattern claim-check của SQS — lưu payload lớn lên <strong>S3</strong>, chỉ giữ <strong>pointer</strong> (S3 key) trong DynamoDB.</p>
+</blockquote>
+<h3 id="73-readwrite-capacity-modes">7.3 Read/Write Capacity Modes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#73-readwrite-capacity-modes" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Kiểm soát cách quản lý throughput (read/write) của table:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Provisioned Mode</strong> (mặc định)</th><th><strong>On-Demand Mode</strong></th></tr></thead><tbody><tr><td>Cách hoạt động</td><td>Bạn <strong>tự chỉ định</strong> số read/write mỗi giây</td><td>Tự động scale up/down theo workload</td></tr><tr><td>Lập kế hoạch</td><td>Phải <strong>plan capacity trước</strong></td><td><strong>Không cần</strong> plan gì cả</td></tr><tr><td>Trả tiền</td><td>Theo <strong>RCU</strong> (Read Capacity Unit) &amp; <strong>WCU</strong> (Write Capacity Unit) đã provision</td><td>Trả theo <strong>thực tế dùng</strong> — <strong>đắt hơn</strong></td></tr><tr><td>Auto-scaling</td><td>Có thể bật auto-scaling cho RCU &amp; WCU</td><td>Có sẵn</td></tr><tr><td>Phù hợp</td><td>Workload <strong>ổn định, dự đoán được</strong></td><td>Workload <strong>không dự đoán được</strong>, spike đột ngột</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Tình huống thi:</strong> “traffic không dự đoán được / spike bất chợt / mới launch chưa biết tải” → <strong>On-Demand</strong>. “Traffic ổn định, muốn tối ưu chi phí” → <strong>Provisioned + Auto Scaling</strong>.</p>
+</blockquote>
+<h3 id="74-dynamodb-accelerator-dax">7.4 DynamoDB Accelerator (DAX)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#74-dynamodb-accelerator-dax" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Cache <strong>in-memory</strong> cho DynamoDB: fully managed, highly available, <strong>seamless</strong></li>
+<li>Giải quyết vấn đề <strong>nghẽn đọc</strong> (read congestion) bằng cách cache</li>
+<li>Latency ở mức <strong>microsecond</strong> cho dữ liệu đã cache (so với millisecond của DynamoDB)</li>
+<li><strong>Không cần sửa logic ứng dụng</strong> — tương thích với API DynamoDB hiện có</li>
+<li>TTL cache mặc định: <strong>5 phút</strong></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810153757.png" alt width="auto" height="auto"/></p>
+<p><strong>DAX vs ElastiCache:</strong></p>
+<p><img src="../../.././../../attachments/pasted-image-20260810153852.png" alt width="auto" height="auto"/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>DAX</strong></th><th><strong>ElastiCache</strong></th></tr></thead><tbody><tr><td>Cache cái gì</td><td><strong>Từng object / kết quả Query &amp; Scan</strong> của DynamoDB</td><td><strong>Kết quả tổng hợp</strong> (aggregation), kết quả tính toán phức tạp</td></tr><tr><td>Sửa code</td><td><strong>Không cần</strong> (tương thích API DynamoDB)</td><td><strong>Phải sửa</strong> code để đọc/ghi cache</td></tr><tr><td>Dùng khi</td><td>Chỉ cache DynamoDB</td><td>Cache cho bất kỳ nguồn nào (RDS, kết quả tính toán…)</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Bẫy thi:</strong> cả hai đều là cache, nhưng câu hỏi có chữ <strong>“không muốn sửa application code”</strong> + <strong>DynamoDB</strong> → chọn <strong>DAX</strong>. Câu hỏi có <strong>“lưu kết quả aggregation/leaderboard/session”</strong> → chọn <strong>ElastiCache</strong>.</p>
+</blockquote>
+<h3 id="75-dynamodb-streams--bắt-thay-đổi-dữ-liệu">7.5 DynamoDB Streams — bắt thay đổi dữ liệu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#75-dynamodb-streams--bắt-thay-đổi-dữ-liệu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Luồng <strong>có thứ tự</strong> các thay đổi ở mức <strong>item</strong> (create/update/delete) trong table</li>
+<li><strong>Use case:</strong>
+<ul>
+<li>Phản ứng thay đổi <strong>real-time</strong> (vd gửi email chào mừng khi có user mới)</li>
+<li>Analytics real-time</li>
+<li>Insert vào các bảng phái sinh (derivative tables)</li>
+<li>Triển khai <strong>cross-region replication</strong></li>
+<li>Gọi <strong>AWS Lambda</strong> khi table thay đổi</li>
+</ul>
+</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810154057.png" alt width="auto" height="auto"/></p>
+<p><strong>Hai lựa chọn stream:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>DynamoDB Streams</strong></th><th><strong>Kinesis Data Streams</strong> (mới hơn)</th></tr></thead><tbody><tr><td>Retention</td><td><strong>24 giờ</strong></td><td><strong>1 năm</strong></td></tr><tr><td>Số consumer</td><td><strong>Hạn chế</strong></td><td><strong>Nhiều</strong></td></tr><tr><td>Cách xử lý</td><td><strong>Lambda Trigger</strong>, hoặc DynamoDB Stream Kinesis adapter</td><td>Lambda, Kinesis Data Analytics, Kinesis Data Firehose, AWS Glue Streaming ETL…</td></tr></tbody></table></div>
+<h3 id="76-dynamodb-global-tables">7.6 DynamoDB Global Tables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#76-dynamodb-global-tables" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="../../.././../../attachments/pasted-image-20260810154112.png" alt width="auto" height="auto"/></p>
+<ul>
+<li>Cho phép truy cập table với <strong>latency thấp ở nhiều region</strong></li>
+<li>Replication <strong>Active-Active</strong>: app có thể <strong>READ và WRITE ở bất kỳ region nào</strong></li>
+<li><strong>Điều kiện tiên quyết: phải bật DynamoDB Streams</strong></li>
+</ul>
+<blockquote>
+<p><strong>Tình huống thi:</strong> “user toàn cầu, cần đọc <strong>và ghi</strong> với latency thấp ở nhiều region” → <strong>Global Tables</strong>. (Khác Aurora Global Database — chỉ ghi được ở primary region.)</p>
+</blockquote>
+<h3 id="77-time-to-live-ttl">7.7 Time To Live (TTL)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#77-time-to-live-ttl" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Tự động <strong>xoá item</strong> sau một <strong>timestamp hết hạn</strong></li>
+<li>Use case: giảm dữ liệu lưu trữ (chỉ giữ item còn hiệu lực), tuân thủ quy định pháp lý, quản lý <strong>web session</strong></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810154154.png" alt width="auto" height="auto"/></p>
+<h3 id="78-backup-cho-disaster-recovery">7.8 Backup cho disaster recovery<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#78-backup-cho-disaster-recovery" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại backup</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Continuous backups — Point-in-Time Recovery (PITR)</strong></td><td>Bật tuỳ chọn cho <strong>35 ngày gần nhất</strong>; khôi phục về <strong>bất kỳ thời điểm nào</strong> trong cửa sổ đó</td></tr><tr><td><strong>On-demand backups</strong></td><td>Backup đầy đủ, giữ <strong>lâu dài</strong> cho tới khi bị xoá thủ công; <strong>không ảnh hưởng</strong> performance/latency; quản lý được qua <strong>AWS Backup</strong> (hỗ trợ copy cross-region)</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Cả hai cách khôi phục đều tạo ra một table MỚI</strong>, không ghi đè lên table cũ.</p>
+</blockquote>
+<h3 id="79-tích-hợp-với-amazon-s3">7.9 Tích hợp với Amazon S3<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#79-tích-hợp-với-amazon-s3" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Export to S3</strong> (bắt buộc bật <strong>PITR</strong>):</p>
+<ul>
+<li>Export được <strong>bất kỳ thời điểm nào trong 35 ngày</strong> gần nhất</li>
+<li><strong>Không tiêu tốn read capacity</strong> của table</li>
+<li>Dùng để: phân tích dữ liệu trên DynamoDB, giữ snapshot phục vụ audit, ETL trên S3 rồi import ngược lại</li>
+<li>Định dạng export: <strong>DynamoDB JSON</strong> hoặc <strong>ION</strong></li>
+</ul>
+<p><strong>Import from S3:</strong></p>
+<ul>
+<li>Import được <strong>CSV, DynamoDB JSON, hoặc ION</strong></li>
+<li><strong>Không tiêu tốn write capacity</strong></li>
+<li><strong>Tạo ra một table mới</strong></li>
+<li>Lỗi import được ghi vào <strong>CloudWatch Logs</strong></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810154247.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="8-amazon-api-gateway">8. Amazon API Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-amazon-api-gateway" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="81-vai-trò--tính-năng">8.1 Vai trò &amp; tính năng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#81-vai-trò--tính-năng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Cửa ngõ để expose Lambda (và các backend khác) ra thành REST/WebSocket API.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260810154257.png" alt width="auto" height="auto"/></p>
+<ul>
+<li><strong>Lambda + API Gateway</strong> = <strong>không có hạ tầng nào phải quản lý</strong></li>
+<li>Hỗ trợ <strong>WebSocket Protocol</strong></li>
+<li>Quản lý <strong>versioning API</strong> (v1, v2…) và <strong>nhiều môi trường</strong> (dev, test, prod…)</li>
+<li>Xử lý <strong>security</strong> (Authentication &amp; Authorization)</li>
+<li>Tạo <strong>API keys</strong>, <strong>throttling</strong> request</li>
+<li>Import <strong>Swagger / OpenAPI</strong> để định nghĩa API nhanh</li>
+<li><strong>Transform và validate</strong> request/response</li>
+<li><strong>Sinh SDK</strong> và API specification</li>
+<li><strong>Cache</strong> response của API</li>
+</ul>
+<h3 id="82-các-kiểu-tích-hợp-backend">8.2 Các kiểu tích hợp backend<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#82-các-kiểu-tích-hợp-backend" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tích hợp</th><th>Mô tả</th><th>Vì sao dùng</th></tr></thead><tbody><tr><td><strong>Lambda Function</strong></td><td>Gọi Lambda</td><td>Cách dễ nhất để expose REST API chạy trên Lambda</td></tr><tr><td><strong>HTTP</strong></td><td>Expose HTTP endpoint ở backend (vd HTTP API nội bộ on-premises, ALB)</td><td>Thêm rate limiting, caching, authentication, API keys… cho backend có sẵn</td></tr><tr><td><strong>AWS Service</strong></td><td>Expose <strong>bất kỳ AWS API nào</strong> qua API Gateway (vd start Step Functions workflow, gửi message vào SQS)</td><td>Thêm authentication, deploy public, kiểm soát rate…</td></tr></tbody></table></div>
+<p><strong>Ví dụ tích hợp AWS Service — Kinesis Data Streams:</strong></p>
+<p><img src="../../.././../../attachments/pasted-image-20260810154327.png" alt width="auto" height="auto"/></p>
+<h3 id="83-endpoint-types">8.3 Endpoint Types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#83-endpoint-types" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Đặc điểm</th></tr></thead><tbody><tr><td><strong>Edge-Optimized</strong> (mặc định)</td><td>Cho client <strong>toàn cầu</strong>. Request đi qua <strong>CloudFront Edge location</strong> → giảm latency. <strong>API Gateway vẫn chỉ nằm ở 1 region</strong></td></tr><tr><td><strong>Regional</strong></td><td>Cho client <strong>trong cùng region</strong>. Có thể <strong>tự kết hợp CloudFront</strong> để kiểm soát caching &amp; distribution chi tiết hơn</td></tr><tr><td><strong>Private</strong></td><td>Chỉ truy cập được <strong>từ trong VPC</strong> qua <strong>interface VPC endpoint (ENI)</strong>. Dùng <strong>resource policy</strong> để định nghĩa quyền truy cập</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Hiểu đúng Edge-Optimized:</strong> nó <strong>không</strong> replicate API ra nhiều region — chỉ dùng mạng CloudFront để rút ngắn đường đi. Bản thân API Gateway vẫn ở một region duy nhất.</p>
+</blockquote>
+<h3 id="84-security">8.4 Security<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#84-security" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Authentication user — 3 cách:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cách</th><th>Phù hợp với</th></tr></thead><tbody><tr><td><strong>IAM Roles</strong></td><td>Ứng dụng <strong>nội bộ</strong> (internal application)</td></tr><tr><td><strong>Amazon Cognito</strong></td><td>Identity cho <strong>user bên ngoài</strong> — ví dụ user mobile</td></tr><tr><td><strong>Custom Authorizer</strong> (Lambda Authorizer)</td><td>Logic xác thực <strong>tự viết</strong></td></tr></tbody></table></div>
+<p><strong>Custom Domain Name + HTTPS</strong> qua tích hợp với <strong>AWS Certificate Manager (ACM)</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Endpoint type</th><th>Certificate phải nằm ở</th></tr></thead><tbody><tr><td><strong>Edge-Optimized</strong></td><td><strong><code>us-east-1</code></strong></td></tr><tr><td><strong>Regional</strong></td><td><strong>Chính region của API Gateway</strong></td></tr></tbody></table></div>
+<ul>
+<li>Phải tạo bản ghi <strong>CNAME</strong> hoặc <strong>A-alias</strong> trong <strong>Route 53</strong></li>
+</ul>
+<blockquote>
+<p><strong>Bẫy thi hay gặp:</strong> ACM certificate cho Edge-Optimized endpoint <strong>bắt buộc ở <code>us-east-1</code></strong> (giống CloudFront) — không phải region của API. Nhớ kỹ điểm này.</p>
+</blockquote>
+<hr/>
+<h2 id="9-aws-step-functions--điều-phối-workflow">9. AWS Step Functions — điều phối workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-aws-step-functions--điều-phối-workflow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Xây dựng <strong>workflow trực quan (visual)</strong> serverless để <strong>orchestrate các Lambda function</strong></li>
+<li>Tính năng: chạy <strong>tuần tự (sequence)</strong>, <strong>song song (parallel)</strong>, <strong>điều kiện (conditions)</strong>, <strong>timeout</strong>, <strong>xử lý lỗi (error handling)</strong>…</li>
+<li>Tích hợp được với <strong>EC2, ECS, server on-premises, API Gateway, SQS queue</strong>…</li>
+<li>Hỗ trợ bước <strong>human approval</strong> (chờ người duyệt)</li>
+<li><strong>Use case:</strong> xử lý đơn hàng (order fulfillment), data processing, web application, bất kỳ workflow nào</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810154635.png" alt width="auto" height="auto"/></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Start[\&quot;Start\&quot;] --> S1[\&quot;Lambda: Validate Order\&quot;]\n    S1 --> Choice{\&quot;Hợp lệ?\&quot;}\n    Choice -->|\&quot;Có\&quot;| S2[\&quot;Lambda: Charge Payment\&quot;]\n    Choice -->|\&quot;Không\&quot;| Fail[\&quot;Fail State\&quot;]\n    S2 --> S3[\&quot;Lambda: Ship Order\&quot;]\n    S3 --> End[\&quot;End\&quot;]&quot;">graph LR
+    Start[&quot;Start&quot;] --> S1[&quot;Lambda: Validate Order&quot;]
+    S1 --> Choice{&quot;Hợp lệ?&quot;}
+    Choice -->|&quot;Có&quot;| S2[&quot;Lambda: Charge Payment&quot;]
+    Choice -->|&quot;Không&quot;| Fail[&quot;Fail State&quot;]
+    S2 --> S3[&quot;Lambda: Ship Order&quot;]
+    S3 --> End[&quot;End&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Hai loại workflow (hay ra thi):</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Standard Workflow</strong></th><th><strong>Express Workflow</strong></th></tr></thead><tbody><tr><td>Thời gian chạy tối đa</td><td><strong>1 năm</strong></td><td><strong>5 phút</strong></td></tr><tr><td>Mô hình thực thi</td><td><strong>Exactly-once</strong></td><td>At-least-once (Async) / At-most-once (Sync)</td></tr><tr><td>Tốc độ</td><td>~2.000 execution/giây</td><td><strong>Trên 100.000</strong> execution/giây</td></tr><tr><td>Lịch sử execution</td><td>Xem được trong Step Functions API</td><td>Gửi vào <strong>CloudWatch Logs</strong></td></tr><tr><td>Trả tiền theo</td><td><strong>Số state transition</strong></td><td>Số request + thời gian chạy</td></tr><tr><td>Phù hợp</td><td>Workflow dài, cần audit đầy đủ</td><td>Xử lý event lượng lớn, chạy ngắn (IoT, streaming)</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Vì sao dùng Step Functions thay vì để Lambda gọi Lambda?</strong> Vì Step Functions lo giúp retry, error handling, state, và cho phép <strong>nhìn thấy</strong> workflow đang ở bước nào — Lambda gọi Lambda thì logic đó phải tự viết và rất khó debug.</p>
+</blockquote>
+<hr/>
+<h2 id="10-amazon-cognito--identity-cho-user">10. Amazon Cognito — identity cho user<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-amazon-cognito--identity-cho-user" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Cung cấp <strong>identity</strong> để user tương tác với web/mobile app của bạn.</p>
+<h3 id="101-hai-thành-phần--phân-biệt-cho-rõ">10.1 Hai thành phần — phân biệt cho rõ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#101-hai-thành-phần--phân-biệt-cho-rõ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Cognito User Pools (CUP)</strong></th><th><strong>Cognito Identity Pools (Federated Identities)</strong></th></tr></thead><tbody><tr><td>Trả lời câu hỏi</td><td><strong>”Bạn là ai?”</strong> (Authentication)</td><td><strong>“Bạn được làm gì trên AWS?”</strong> (Authorization)</td></tr><tr><td>Cung cấp</td><td>Chức năng <strong>sign-in</strong> cho app user</td><td><strong>AWS credentials tạm thời</strong> để user truy cập thẳng tài nguyên AWS</td></tr><tr><td>Tích hợp với</td><td><strong>API Gateway</strong> &amp; <strong>Application Load Balancer</strong></td><td>Cognito User Pools (làm identity provider), login bên thứ 3</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Cognito vs IAM:</strong> thấy các cụm từ <strong>“hàng trăm/hàng triệu user”</strong>, <strong>“mobile users”</strong>, <strong>“authenticate với SAML”</strong> → nghĩ ngay tới <strong>Cognito</strong>, không phải IAM. IAM dùng cho user/service <strong>nội bộ</strong> AWS, không scale cho end-user của ứng dụng.</p>
+</blockquote>
+<h3 id="102-cognito-user-pools-cup--tính-năng">10.2 Cognito User Pools (CUP) — tính năng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#102-cognito-user-pools-cup--tính-năng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Tạo <strong>database serverless chứa user</strong> cho web &amp; mobile app</li>
+<li>Đăng nhập đơn giản: <strong>Username (hoặc email) / password</strong></li>
+<li><strong>Reset password</strong></li>
+<li><strong>Xác minh Email &amp; số điện thoại</strong></li>
+<li><strong>Multi-factor authentication (MFA)</strong></li>
+<li><strong>Federated Identities</strong>: user từ <strong>Facebook, Google, SAML</strong>…</li>
+</ul>
+<p><strong>Tích hợp CUP:</strong></p>
+<p><img src="../../.././../../attachments/pasted-image-20260810154701.png" alt width="auto" height="auto"/></p>
+<p><img src="../../.././../../attachments/pasted-image-20260810154723.png" alt width="auto" height="auto"/></p>
+<h3 id="103-cognito-identity-pools-federated-identities">10.3 Cognito Identity Pools (Federated Identities)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#103-cognito-identity-pools-federated-identities" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Cấp identity cho “user” để họ nhận được <strong>AWS credentials tạm thời</strong></li>
+<li>Nguồn user: <strong>Cognito User Pools</strong>, login bên thứ 3…</li>
+<li>User sau đó truy cập <strong>trực tiếp</strong> dịch vụ AWS, hoặc đi qua API Gateway</li>
+<li><strong>IAM policy</strong> áp lên credential được <strong>định nghĩa trong Cognito</strong></li>
+<li>Có thể <strong>tuỳ biến theo <code>user_id</code></strong> → kiểm soát chi tiết (fine-grained control)</li>
+<li>Có sẵn <strong>IAM role mặc định</strong> cho <strong>authenticated user</strong> và <strong>guest user</strong></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260810154753.png" alt width="auto" height="auto"/></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    User[\&quot;User\&quot;] --> CUP[\&quot;Cognito User Pool&lt;br/>(đăng nhập → JWT token)\&quot;]\n    CUP --> CIP[\&quot;Cognito Identity Pool&lt;br/>(đổi token lấy AWS credentials)\&quot;]\n    CIP --> STS[\&quot;AWS STS&lt;br/>(temporary credentials)\&quot;]\n    STS --> AWS[\&quot;S3 / DynamoDB&lt;br/>(theo IAM policy)\&quot;]&quot;">graph LR
+    User[&quot;User&quot;] --> CUP[&quot;Cognito User Pool&lt;br/>(đăng nhập → JWT token)&quot;]
+    CUP --> CIP[&quot;Cognito Identity Pool&lt;br/>(đổi token lấy AWS credentials)&quot;]
+    CIP --> STS[&quot;AWS STS&lt;br/>(temporary credentials)&quot;]
+    STS --> AWS[&quot;S3 / DynamoDB&lt;br/>(theo IAM policy)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Row Level Security trong DynamoDB:</strong></p>
+<p><img src="../../.././../../attachments/pasted-image-20260810154804.png" alt width="auto" height="auto"/></p>
+<p>Dùng IAM policy có điều kiện dựa trên <code>${cognito-identity.amazonaws.com:sub}</code> để mỗi user <strong>chỉ đọc/ghi được đúng dòng của mình</strong> trong DynamoDB — bảo mật ở mức từng row mà không cần backend trung gian.</p>
+<hr/>
+<h2 id="11-so-sánh--chọn-đáp-án-thi">11. So sánh &amp; chọn đáp án thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-so-sánh--chọn-đáp-án-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="111-kiến-trúc-serverless-điển-hình">11.1 Kiến trúc Serverless điển hình<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#111-kiến-trúc-serverless-điển-hình" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Client[\&quot;Client / Mobile\&quot;] --> Cognito[\&quot;Cognito&lt;br/>(auth)\&quot;]\n    Client --> APIGW[\&quot;API Gateway\&quot;]\n    APIGW --> Lambda[\&quot;AWS Lambda\&quot;]\n    Lambda --> DDB[\&quot;DynamoDB\&quot;]\n    Lambda --> S3[\&quot;Amazon S3\&quot;]\n    Lambda --> SFN[\&quot;Step Functions&lt;br/>(workflow dài)\&quot;]&quot;">graph LR
+    Client[&quot;Client / Mobile&quot;] --> Cognito[&quot;Cognito&lt;br/>(auth)&quot;]
+    Client --> APIGW[&quot;API Gateway&quot;]
+    APIGW --> Lambda[&quot;AWS Lambda&quot;]
+    Lambda --> DDB[&quot;DynamoDB&quot;]
+    Lambda --> S3[&quot;Amazon S3&quot;]
+    Lambda --> SFN[&quot;Step Functions&lt;br/>(workflow dài)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="112-chọn-nhanh-theo-nhu-cầu">11.2 Chọn nhanh theo nhu cầu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#112-chọn-nhanh-theo-nhu-cầu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nhu cầu</th><th>Chọn</th></tr></thead><tbody><tr><td>Chạy code ngắn theo event, không quản lý server</td><td><strong>AWS Lambda</strong></td></tr><tr><td>Function CPU-bound chạy chậm</td><td><strong>Tăng memory allocation</strong> (CPU tăng theo)</td></tr><tr><td>Xử lý > 15 phút hoặc file rất lớn</td><td><strong>ECS/Fargate</strong>, <strong>AWS Batch</strong>, hoặc EC2 — <strong>không phải Lambda</strong></td></tr><tr><td>Chạy Docker image bất kỳ</td><td><strong>ECS/Fargate</strong></td></tr><tr><td>Function này không được “ăn” hết quota function khác</td><td><strong>Reserved Concurrency</strong></td></tr><tr><td>Loại bỏ cold start, chấp nhận trả phí</td><td><strong>Provisioned Concurrency</strong></td></tr><tr><td>Giảm cold start Java/Python/.NET <strong>miễn phí</strong></td><td><strong>Lambda SnapStart</strong></td></tr><tr><td>Chỉnh header / rewrite URL / cache key ở CDN, cực nhanh</td><td><strong>CloudFront Functions</strong></td></tr><tr><td>Cần gọi AWS SDK / đọc body request tại edge</td><td><strong>Lambda@Edge</strong></td></tr><tr><td>Lambda cần truy cập RDS trong VPC</td><td>Deploy <strong>Lambda trong VPC</strong> (+ NAT GW nếu cần Internet)</td></tr><tr><td>Quá nhiều DB connection từ Lambda</td><td><strong>RDS Proxy</strong> (Lambda phải trong VPC)</td></tr><tr><td>NoSQL, latency ms, scale khổng lồ</td><td><strong>DynamoDB</strong></td></tr><tr><td>Cache DynamoDB <strong>không sửa code</strong></td><td><strong>DAX</strong></td></tr><tr><td>Cache kết quả aggregation / session</td><td><strong>ElastiCache</strong></td></tr><tr><td>Đọc <strong>và ghi</strong> ở nhiều region, latency thấp</td><td><strong>DynamoDB Global Tables</strong> (bật Streams trước)</td></tr><tr><td>Tự xoá dữ liệu hết hạn</td><td><strong>DynamoDB TTL</strong></td></tr><tr><td>Khôi phục về bất kỳ thời điểm trong 35 ngày</td><td><strong>PITR</strong></td></tr><tr><td>Expose REST API cho Lambda</td><td><strong>API Gateway</strong></td></tr><tr><td>API chỉ dùng nội bộ VPC</td><td>API Gateway <strong>Private endpoint</strong></td></tr><tr><td>Certificate cho Edge-Optimized API</td><td>ACM ở <strong><code>us-east-1</code></strong></td></tr><tr><td>Orchestrate nhiều Lambda có điều kiện/retry/human approval</td><td><strong>Step Functions</strong></td></tr><tr><td>Sign-in cho user mobile/web, MFA, social login</td><td><strong>Cognito User Pools</strong></td></tr><tr><td>Cấp AWS credentials tạm cho end-user</td><td><strong>Cognito Identity Pools</strong></td></tr></tbody></table></div>
+<h3 id="113-tình-huống-thi">11.3 Tình huống thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#113-tình-huống-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đề bài (rút gọn)</th><th>Đáp án</th></tr></thead><tbody><tr><td>Upload ảnh S3 → tự tạo thumbnail</td><td>S3 Event → <strong>Lambda</strong></td></tr><tr><td>Chạy job định kỳ mỗi giờ, không muốn giữ server</td><td><strong>EventBridge Schedule → Lambda</strong></td></tr><tr><td>Lambda bị throttle vì function khác chiếm hết concurrency</td><td>Đặt <strong>Reserved Concurrency</strong></td></tr><tr><td>API latency đầu tiên cao, cần ổn định</td><td><strong>Provisioned Concurrency</strong> (hoặc SnapStart nếu Java/Python/.NET và cần miễn phí)</td></tr><tr><td>Lambda mở quá nhiều connection tới Aurora</td><td><strong>RDS Proxy</strong> + Lambda trong VPC</td></tr><tr><td>Lambda trong private subnet không gọi được S3</td><td>Thêm <strong>VPC Endpoint</strong> (hoặc NAT Gateway)</td></tr><tr><td>App toàn cầu cần đọc/ghi DynamoDB ở nhiều region</td><td><strong>Global Tables</strong></td></tr><tr><td>Cần gửi email khi có item mới trong DynamoDB</td><td><strong>DynamoDB Streams → Lambda</strong></td></tr><tr><td>Muốn phân tích dữ liệu DynamoDB mà không ảnh hưởng table</td><td><strong>Export to S3</strong> (bật PITR) rồi query bằng Athena</td></tr><tr><td>Đọc DynamoDB rất nhiều, muốn latency microsecond, không sửa code</td><td><strong>DAX</strong></td></tr><tr><td>Cần A/B testing / redirect ở CDN với hàng triệu request/s</td><td><strong>CloudFront Functions</strong></td></tr><tr><td>Cần xác thực JWT rồi gọi DynamoDB tại edge</td><td><strong>Lambda@Edge</strong> (cần AWS SDK)</td></tr><tr><td>Workflow đặt hàng nhiều bước, có bước chờ người duyệt</td><td><strong>Step Functions</strong> (Standard)</td></tr><tr><td>Xử lý hàng trăm nghìn event IoT/giây, mỗi cái vài giây</td><td><strong>Step Functions Express</strong></td></tr><tr><td>Cho phép user mobile upload thẳng lên S3 với quyền riêng từng người</td><td><strong>Cognito Identity Pools</strong> + IAM policy theo <code>user_id</code></td></tr></tbody></table></div>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Serverless ≠ không có server — chỉ là <strong>không quản lý</strong> server.</li>
+<li>Lambda: <strong>chỉ chỉnh RAM</strong> (128 MB – 10 GB), <strong>CPU/network tăng theo RAM</strong>; timeout tối đa <strong>15 phút</strong>; <code>/tmp</code> <strong>512 MB – 10 GB</strong>; deployment zip <strong>50 MB</strong> / giải nén <strong>250 MB</strong>; concurrency mặc định <strong>1.000</strong>/region.</li>
+<li>Payload: <strong>sync 6 MB</strong>, <strong>async 256 KB</strong>.</li>
+<li><strong>3 kiểu invoke</strong>: sync (client retry) / async (Lambda retry 2 lần → DLQ) / event source mapping (Lambda poll SQS, Kinesis, DynamoDB Streams).</li>
+<li>Throttle: sync → <strong>429 ThrottleError</strong>; async → retry, tối đa <strong>6 giờ</strong>, backoff từ 1 giây tới 5 phút.</li>
+<li><strong>Reserved Concurrency</strong> (chia quota, miễn phí) ≠ <strong>Provisioned Concurrency</strong> (diệt cold start, tính phí) ≠ <strong>SnapStart</strong> (diệt cold start, miễn phí, chỉ Java/Python/.NET).</li>
+<li><strong>CloudFront Functions</strong>: JS, sub-ms, chỉ Viewer Request/Response, không network/SDK. <strong>Lambda@Edge</strong>: Node/Python, cả 4 trigger, có network/SDK, viết ở <strong><code>us-east-1</code></strong>.</li>
+<li>Lambda mặc định <strong>ngoài VPC</strong> của bạn; đưa vào VPC thì mất Internet → cần <strong>NAT GW</strong> hoặc <strong>VPC Endpoint</strong>.</li>
+<li><strong>RDS Proxy</strong> không public → Lambda <strong>bắt buộc phải trong VPC</strong>; giảm 66% thời gian failover.</li>
+<li>DynamoDB: item tối đa <strong>400 KB</strong>; Primary Key chọn lúc tạo <strong>không đổi được</strong>; Provisioned vs On-Demand; <strong>DAX</strong> cache 5 phút TTL, không sửa code; <strong>Streams 24h</strong> vs Kinesis Data Streams <strong>1 năm</strong>; <strong>Global Tables cần bật Streams</strong>; <strong>PITR 35 ngày</strong>; export/import S3 <strong>không tốn capacity</strong> và <strong>tạo table mới</strong>.</li>
+<li>API Gateway: 3 endpoint type (Edge-Optimized / Regional / Private); ACM cert cho Edge-Optimized phải ở <strong><code>us-east-1</code></strong>; auth qua IAM / Cognito / Custom Authorizer.</li>
+<li>Step Functions: <strong>Standard</strong> (1 năm, exactly-once) vs <strong>Express</strong> (5 phút, throughput cực cao).</li>
+<li>Cognito <strong>User Pools</strong> = authentication (bạn là ai) ≠ <strong>Identity Pools</strong> = AWS credentials tạm (bạn làm được gì).</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Mạch học Serverless: <strong>compute (Lambda) → data (DynamoDB) → cửa vào (API Gateway) → điều phối (Step Functions) → danh tính (Cognito)</strong>.</li>
+<li>Lambda bị loại khỏi đáp án chủ yếu vì <strong>2 lý do</strong>: chạy quá 15 phút, hoặc cần chạy Docker image tuỳ ý. Nhớ 2 cái này là loại nhanh được nhiều đáp án sai.</li>
+<li>3 cơ chế “concurrency” của Lambda rất dễ lẫn — mẹo nhớ: <strong>Reserved = chia phần</strong>, <strong>Provisioned = giữ chỗ nóng sẵn</strong>, <strong>SnapStart = chụp ảnh trạng thái</strong>.</li>
+<li>DynamoDB không phải “RDS phiên bản NoSQL” — thiết kế xoay quanh <strong>access pattern</strong> và <strong>Primary Key chọn một lần là xong</strong>, khác hẳn tư duy relational.</li>
+<li>Cognito User Pools vs Identity Pools: cứ hỏi <em>“đang nói về đăng nhập, hay đang nói về quyền gọi AWS API?”</em> là chọn đúng.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Lambda Invocation Types (sync / async / event source mapping)</li>
+<li>Lambda Limits (memory, timeout, payload, deployment size)</li>
+<li>Lambda Reserved vs Provisioned Concurrency vs SnapStart</li>
+<li>Lambda Cold Start</li>
+<li>CloudFront Functions vs Lambda@Edge</li>
+<li>Lambda trong VPC + RDS Proxy</li>
+<li>DynamoDB Capacity Modes (Provisioned vs On-Demand)</li>
+<li>DynamoDB DAX vs ElastiCache</li>
+<li>DynamoDB Streams vs Kinesis Data Streams</li>
+<li>DynamoDB Global Tables + TTL + PITR</li>
+<li>API Gateway Endpoint Types &amp; Security</li>
+<li>Step Functions Standard vs Express</li>
+<li>Cognito User Pools vs Identity Pools</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-87" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#19--serverless-lambda-dynamodb-api-gateway-step-functions--cognito" data-for="19--serverless-lambda-dynamodb-api-gateway-step-functions--cognito">19 – Serverless: Lambda, DynamoDB, API Gateway, Step Functions &amp; Cognito</a></li><li class="depth-1"><a href="#1-serverless-là-gì" data-for="1-serverless-là-gì">1. Serverless là gì?</a></li><li class="depth-2"><a href="#11-các-dịch-vụ-serverless-trên-aws" data-for="11-các-dịch-vụ-serverless-trên-aws">1.1 Các dịch vụ Serverless trên AWS</a></li><li class="depth-1"><a href="#2-aws-lambda--nền-tảng-của-serverless" data-for="2-aws-lambda--nền-tảng-của-serverless">2. AWS Lambda — nền tảng của Serverless</a></li><li class="depth-2"><a href="#21-vì-sao-dùng-lambda-thay-ec2" data-for="21-vì-sao-dùng-lambda-thay-ec2">2.1 Vì sao dùng Lambda thay EC2?</a></li><li class="depth-2"><a href="#22-lợi-ích-chính" data-for="22-lợi-ích-chính">2.2 Lợi ích chính</a></li><li class="depth-2"><a href="#23-ngôn-ngữ-được-hỗ-trợ" data-for="23-ngôn-ngữ-được-hỗ-trợ">2.3 Ngôn ngữ được hỗ trợ</a></li><li class="depth-2"><a href="#24-các-tích-hợp-chính" data-for="24-các-tích-hợp-chính">2.4 Các tích hợp chính</a></li><li class="depth-2"><a href="#25-pricing-ví-dụ" data-for="25-pricing-ví-dụ">2.5 Pricing (ví dụ)</a></li><li class="depth-2"><a href="#26-giới-hạn-cần-nhớ-per-region" data-for="26-giới-hạn-cần-nhớ-per-region">2.6 Giới hạn cần nhớ (per region)</a></li><li class="depth-1"><a href="#3-ba-cách-lambda-được-gọi-invocation-types" data-for="3-ba-cách-lambda-được-gọi-invocation-types">3. Ba cách Lambda được gọi (Invocation Types)</a></li><li class="depth-1"><a href="#4-concurrency-throttling--cold-start" data-for="4-concurrency-throttling--cold-start">4. Concurrency, Throttling &amp; Cold Start</a></li><li class="depth-2"><a href="#41-concurrency-limit--throttling" data-for="41-concurrency-limit--throttling">4.1 Concurrency limit &amp; Throttling</a></li><li class="depth-2"><a href="#42-vấn-đề-khi-không-đặt-reserved-concurrency" data-for="42-vấn-đề-khi-không-đặt-reserved-concurrency">4.2 Vấn đề khi KHÔNG đặt Reserved Concurrency</a></li><li class="depth-2"><a href="#43-concurrency-với-asynchronous-invocation" data-for="43-concurrency-với-asynchronous-invocation">4.3 Concurrency với Asynchronous Invocation</a></li><li class="depth-2"><a href="#44-cold-start--provisioned-concurrency" data-for="44-cold-start--provisioned-concurrency">4.4 Cold Start &amp; Provisioned Concurrency</a></li><li class="depth-2"><a href="#45-reserved-vs-provisioned-concurrency--đừng-nhầm" data-for="45-reserved-vs-provisioned-concurrency--đừng-nhầm">4.5 Reserved vs Provisioned Concurrency — đừng nhầm</a></li><li class="depth-2"><a href="#46-lambda-snapstart" data-for="46-lambda-snapstart">4.6 Lambda SnapStart</a></li><li class="depth-1"><a href="#5-customization-at-the-edge--chạy-code-sát-người-dùng" data-for="5-customization-at-the-edge--chạy-code-sát-người-dùng">5. Customization at the Edge — chạy code sát người dùng</a></li><li class="depth-2"><a href="#51-edge-function-là-gì" data-for="51-edge-function-là-gì">5.1 Edge Function là gì?</a></li><li class="depth-2"><a href="#52-cloudfront-functions" data-for="52-cloudfront-functions">5.2 CloudFront Functions</a></li><li class="depth-2"><a href="#53-lambdaedge" data-for="53-lambdaedge">5.3 Lambda@Edge</a></li><li class="depth-2"><a href="#54-so-sánh-cloudfront-functions-vs-lambdaedge" data-for="54-so-sánh-cloudfront-functions-vs-lambdaedge">5.4 So sánh CloudFront Functions vs Lambda@Edge</a></li><li class="depth-1"><a href="#6-lambda--networking" data-for="6-lambda--networking">6. Lambda &amp; Networking</a></li><li class="depth-2"><a href="#61-lambda-mặc-định--nằm-ngoài-vpc-của-bạn" data-for="61-lambda-mặc-định--nằm-ngoài-vpc-của-bạn">6.1 Lambda mặc định — nằm NGOÀI VPC của bạn</a></li><li class="depth-2"><a href="#62-lambda-trong-vpc" data-for="62-lambda-trong-vpc">6.2 Lambda trong VPC</a></li><li class="depth-2"><a href="#63-lambda-với-rds-proxy" data-for="63-lambda-với-rds-proxy">6.3 Lambda với RDS Proxy</a></li><li class="depth-2"><a href="#64-gọi-lambda-từ-rds--aurora-chiều-ngược-lại" data-for="64-gọi-lambda-từ-rds--aurora-chiều-ngược-lại">6.4 Gọi Lambda TỪ RDS &amp; Aurora (chiều ngược lại)</a></li><li class="depth-2"><a href="#65-rds-event-notifications" data-for="65-rds-event-notifications">6.5 RDS Event Notifications</a></li><li class="depth-1"><a href="#7-amazon-dynamodb--nosql-serverless" data-for="7-amazon-dynamodb--nosql-serverless">7. Amazon DynamoDB — NoSQL serverless</a></li><li class="depth-2"><a href="#71-tổng-quan" data-for="71-tổng-quan">7.1 Tổng quan</a></li><li class="depth-2"><a href="#72-kiến-thức-cơ-bản" data-for="72-kiến-thức-cơ-bản">7.2 Kiến thức cơ bản</a></li><li class="depth-2"><a href="#73-readwrite-capacity-modes" data-for="73-readwrite-capacity-modes">7.3 Read/Write Capacity Modes</a></li><li class="depth-2"><a href="#74-dynamodb-accelerator-dax" data-for="74-dynamodb-accelerator-dax">7.4 DynamoDB Accelerator (DAX)</a></li><li class="depth-2"><a href="#75-dynamodb-streams--bắt-thay-đổi-dữ-liệu" data-for="75-dynamodb-streams--bắt-thay-đổi-dữ-liệu">7.5 DynamoDB Streams — bắt thay đổi dữ liệu</a></li><li class="depth-2"><a href="#76-dynamodb-global-tables" data-for="76-dynamodb-global-tables">7.6 DynamoDB Global Tables</a></li><li class="depth-2"><a href="#77-time-to-live-ttl" data-for="77-time-to-live-ttl">7.7 Time To Live (TTL)</a></li><li class="depth-2"><a href="#78-backup-cho-disaster-recovery" data-for="78-backup-cho-disaster-recovery">7.8 Backup cho disaster recovery</a></li><li class="depth-2"><a href="#79-tích-hợp-với-amazon-s3" data-for="79-tích-hợp-với-amazon-s3">7.9 Tích hợp với Amazon S3</a></li><li class="depth-1"><a href="#8-amazon-api-gateway" data-for="8-amazon-api-gateway">8. Amazon API Gateway</a></li><li class="depth-2"><a href="#81-vai-trò--tính-năng" data-for="81-vai-trò--tính-năng">8.1 Vai trò &amp; tính năng</a></li><li class="depth-2"><a href="#82-các-kiểu-tích-hợp-backend" data-for="82-các-kiểu-tích-hợp-backend">8.2 Các kiểu tích hợp backend</a></li><li class="depth-2"><a href="#83-endpoint-types" data-for="83-endpoint-types">8.3 Endpoint Types</a></li><li class="depth-2"><a href="#84-security" data-for="84-security">8.4 Security</a></li><li class="depth-1"><a href="#9-aws-step-functions--điều-phối-workflow" data-for="9-aws-step-functions--điều-phối-workflow">9. AWS Step Functions — điều phối workflow</a></li><li class="depth-1"><a href="#10-amazon-cognito--identity-cho-user" data-for="10-amazon-cognito--identity-cho-user">10. Amazon Cognito — identity cho user</a></li><li class="depth-2"><a href="#101-hai-thành-phần--phân-biệt-cho-rõ" data-for="101-hai-thành-phần--phân-biệt-cho-rõ">10.1 Hai thành phần — phân biệt cho rõ</a></li><li class="depth-2"><a href="#102-cognito-user-pools-cup--tính-năng" data-for="102-cognito-user-pools-cup--tính-năng">10.2 Cognito User Pools (CUP) — tính năng</a></li><li class="depth-2"><a href="#103-cognito-identity-pools-federated-identities" data-for="103-cognito-identity-pools-federated-identities">10.3 Cognito Identity Pools (Federated Identities)</a></li><li class="depth-1"><a href="#11-so-sánh--chọn-đáp-án-thi" data-for="11-so-sánh--chọn-đáp-án-thi">11. So sánh &amp; chọn đáp án thi</a></li><li class="depth-2"><a href="#111-kiến-trúc-serverless-điển-hình" data-for="111-kiến-trúc-serverless-điển-hình">11.1 Kiến trúc Serverless điển hình</a></li><li class="depth-2"><a href="#112-chọn-nhanh-theo-nhu-cầu" data-for="112-chọn-nhanh-theo-nhu-cầu">11.2 Chọn nhanh theo nhu cầu</a></li><li class="depth-2"><a href="#113-tình-huống-thi" data-for="113-tình-huống-thi">11.3 Tình huống thi</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/20---serverless-solution-architecture" class="internal">20 – Serverless Solution Architecture: 4 case study kiến trúc</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/21---databases-in-aws" class="internal">21 – Databases in AWS: chọn đúng database cho từng bài toán</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/29---more-solutions-architecture" class="internal">29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

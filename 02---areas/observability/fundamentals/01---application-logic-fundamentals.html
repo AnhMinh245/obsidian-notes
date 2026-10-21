@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Chương 01: Application Logic Fundamentals</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Chương 01: Application Logic Fundamentals"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Chương 01: Application Logic Fundamentals"/><meta name="twitter:description" content="Chương 01: Application Logic Fundamentals &quot;Bạn không thể observe thứ bạn không hiểu.&quot; Trước khi học cách giám sát một ứng dụng, bạn phải hiểu ứng dụng đó hoạt động như thế nào."/><meta property="og:description" content="Chương 01: Application Logic Fundamentals &quot;Bạn không thể observe thứ bạn không hiểu.&quot; Trước khi học cách giám sát một ứng dụng, bạn phải hiểu ứng dụng đó hoạt động như thế nào."/><meta property="og:image:alt" content="Chương 01: Application Logic Fundamentals &quot;Bạn không thể observe thứ bạn không hiểu.&quot; Trước khi học cách giám sát một ứng dụng, bạn phải hiểu ứng dụng đó hoạt động như thế nào."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/01---application-logic-fundamentals"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/01---application-logic-fundamentals"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Chương 01: Application Logic Fundamentals &quot;Bạn không thể observe thứ bạn không hiểu.&quot; Trước khi học cách giám sát một ứng dụng, bạn phải hiểu ứng dụng đó hoạt động như thế nào."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/fundamentals/01---application-logic-fundamentals" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-436" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-436" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/fundamentals/">Fundamentals</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Chương 01: Application Logic Fundamentals</a></div></nav><h1 class="article-title">Chương 01: Application Logic Fundamentals</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-05T17:00:00.000Z">06 thg 4, 2026</time><span>26 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="chương-01-application-logic-fundamentals">Chương 01: Application Logic Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chương-01-application-logic-fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote class="callout quote" data-callout="quote">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>&quot;Bạn không thể observe thứ bạn không hiểu.&quot; </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Trước khi học cách giám sát một ứng dụng, bạn phải hiểu ứng dụng đó <strong>hoạt động như thế nào</strong>. Chương này xây dựng nền tảng đó — và mọi thứ ở các chương sau đều dựa trên những gì bạn học ở đây.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="1-client-server-architecture--nền-tảng-của-mọi-thứ">1. Client-Server Architecture — Nền tảng của mọi thứ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-client-server-architecture--nền-tảng-của-mọi-thứ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-mô-hình-cơ-bản">1.1 Mô hình cơ bản<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-mô-hình-cơ-bản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hãy tưởng tượng bạn vào một nhà hàng. Bạn (khách hàng) gọi món, phục vụ mang order xuống bếp, bếp nấu xong rồi phục vụ mang món ra cho bạn. Đây chính xác là cách một ứng dụng web hoạt động:</p>
+<pre><code>┌──────────┐     Request      ┌──────────┐
+│  Client  │ ───────────────► │  Server  │
+│ (Browser)│ ◄─────────────── │  (App)   │
+└──────────┘     Response     └──────────┘
+</code></pre>
+<ul>
+<li><strong>Client</strong> (người gọi món): Trình duyệt web, mobile app, hoặc một service khác — bất kỳ thứ gì gửi yêu cầu.</li>
+<li><strong>Server</strong> (nhà bếp): Nhận yêu cầu, xử lý logic, truy xuất dữ liệu, rồi trả về kết quả.</li>
+</ul>
+<p>Mô hình này đơn giản, nhưng chứa đựng một ý tưởng quan trọng: <strong>client không cần biết server xử lý như thế nào bên trong</strong> — nó chỉ cần gửi request đúng format và nhận response. Điều này cho phép client và server phát triển <strong>độc lập</strong>.</p>
+<h3 id="12-tại-sao-mô-hình-này-quan-trọng-cho-observability">1.2 Tại sao mô hình này quan trọng cho Observability?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-tại-sao-mô-hình-này-quan-trọng-cho-observability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi bạn mở Dynatrace hay Datadog, mọi thứ bạn thấy đều xoay quanh mô hình request-response:</p>
+<ul>
+<li><strong>Response time</strong> = thời gian từ lúc server nhận request đến lúc gửi response</li>
+<li><strong>Throughput</strong> = bao nhiêu request/giây server đang xử lý</li>
+<li><strong>Error rate</strong> = bao nhiêu phần trăm requests nhận được response lỗi</li>
+</ul>
+<p>Nếu không hiểu request-response, những con số này vô nghĩa.</p>
+<h3 id="13-kiến-trúc-nhiều-tầng-multi-tier-architecture">1.3 Kiến trúc nhiều tầng (Multi-tier Architecture)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-kiến-trúc-nhiều-tầng-multi-tier-architecture" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Trong thực tế, “server” không phải là một cỗ máy duy nhất. Nó được chia thành nhiều tầng, mỗi tầng có chuyên môn riêng — giống như trong nhà hàng lớn có người tiếp tân (Web Server), đầu bếp chính (Application Server), và kho hàng (Database):</p>
+<pre><code>┌──────────┐    ┌───────────┐    ┌──────────────┐    ┌──────────┐
+│  Client  │───►│ Web Server│───►│ App Server   │───►│ Database │
+│ (Browser)│◄───│ (Nginx)   │◄───│ (Python/Java)│◄───│(Postgres)│
+└──────────┘    └───────────┘    └──────────────┘    └──────────┘
+</code></pre>
+<p><strong>Tầng 1 — Web Server (Nginx, Apache):</strong> Người tiếp tân. Nhận request từ internet, serve các file tĩnh (ảnh, CSS, JS), và chuyển tiếp các dynamic requests đến tầng sau. Nó cũng đóng vai trò <strong>reverse proxy</strong> — che giấu cấu trúc bên trong khỏi thế giới bên ngoài.</p>
+<p><strong>Tầng 2 — Application Server (Python/Flask, Java/Spring):</strong> Đầu bếp chính. Xử lý toàn bộ <strong>business logic</strong> — xác thực user, validate dữ liệu, tính toán giá, gọi các service khác. Đây là nơi phần lớn code ứng dụng chạy.</p>
+<p><strong>Tầng 3 — Database (PostgreSQL, MySQL, MongoDB):</strong> Kho hàng. Lưu trữ dữ liệu lâu dài — thông tin user, sản phẩm, đơn hàng. Application server hỏi database mỗi khi cần đọc hoặc ghi dữ liệu.</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Tại sao chia tầng? </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Mỗi tầng có thể <strong>scale độc lập</strong>. Database chậm? Tăng RAM cho database mà không cần động đến app server. App server quá tải? Thêm app server mà database giữ nguyên. Khi làm Observability, bạn sẽ monitor <strong>từng tầng riêng</strong> vì chúng có performance characteristics hoàn toàn khác nhau.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="2-http-protocol--ngôn-ngữ-giao-tiếp-của-web">2. HTTP Protocol — Ngôn ngữ giao tiếp của Web<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-http-protocol--ngôn-ngữ-giao-tiếp-của-web" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-http-là-gì-và-tại-sao-bạn-phải-hiểu-nó">2.1 HTTP là gì và tại sao bạn phải hiểu nó?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-http-là-gì-và-tại-sao-bạn-phải-hiểu-nó" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>HTTP</strong> (HyperText Transfer Protocol) là “ngôn ngữ” mà client và server dùng để nói chuyện với nhau. Khi bạn mở Dynatrace và thấy “HTTP 502 Bad Gateway”, bạn cần biết ngay đó nghĩa là gì — không phải mở Google tra.</p>
+<p>HTTP có một đặc điểm quan trọng: nó là <strong>stateless</strong> (không trạng thái). Mỗi request là <strong>hoàn toàn độc lập</strong> — server không “nhớ” request trước đó. Giống như mỗi lần bạn gọi phục vụ là một người phục vụ khác, không biết bạn đã gọi gì trước đó.</p>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Vậy làm sao server biết bạn đã đăng nhập? </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Qua <strong>Cookies</strong> hoặc <strong>JWT tokens</strong> gửi kèm trong mỗi request. Client phải <strong>tự nhắc</strong> server “tôi là ai” trong MỌI request. Server không tự nhớ.</p>
+</div>
+</blockquote>
+<h3 id="22-cấu-trúc-một-http-request">2.2 Cấu trúc một HTTP Request<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-cấu-trúc-một-http-request" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi request gửi đi bao gồm 4 phần. Hãy tưởng tượng nó như một bức thư:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="http" data-theme="github-light github-dark"><code data-language="http" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">POST</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> /api/v1/orders HTTP/1.1          ← Dòng 1: &quot;Tôi muốn gì?&quot; (Method + Path)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">Host</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> api.shopvn.com                  ← Headers: metadata (phong bì thư)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">Content-Type</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> application/json        ← cho server biết body là JSON</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">Authorization</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> Bearer eyJhbGci...     ← credentials để xác thực</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">X-Request-ID</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> abc-123-def             ← ID duy nhất cho request này</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{                                      </span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic;" data-token-type="error">←</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic;" data-token-type="error"> Body</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic;" data-token-type="error">nội</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic;" data-token-type="error"> dung</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic;" data-token-type="error"> thực</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic;" data-token-type="error"> sự</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic;" data-token-type="error"> (bức</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic;" data-token-type="error"> thư)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  &quot;product_id&quot;</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic;" data-token-type="error">:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;SP001&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;quantity&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;shipping_address&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;123 Nguyễn Huệ, Q1, HCM&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>Bây giờ hãy nhìn từ <strong>góc nhìn Observability</strong> — mỗi thành phần cho bạn thông tin gì:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thành phần</th><th>Thông tin cho Observability</th></tr></thead><tbody><tr><td><strong>Method</strong> (POST)</td><td>Đây là request <strong>tạo mới</strong> dữ liệu, không phải đọc</td></tr><tr><td><strong>Path</strong> (/api/v1/orders)</td><td>Request đến Order Service, tính năng tạo đơn hàng</td></tr><tr><td><strong>Authorization</strong></td><td>Biết user nào đang gọi — cần thiết khi debug “user X bị lỗi gì?”</td></tr><tr><td><strong>X-Request-ID</strong></td><td><strong>Cực kỳ quan trọng</strong> — ID duy nhất để tìm lại request trong hàng triệu logs</td></tr><tr><td><strong>Body size</strong></td><td>Body lớn = latency cao hơn (serialize/deserialize mất thời gian)</td></tr></tbody></table></div>
+<h3 id="23-http-methods--mỗi-method-nói-lên-điều-gì">2.3 HTTP Methods — Mỗi method nói lên điều gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-http-methods--mỗi-method-nói-lên-điều-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>HTTP có nhiều methods, mỗi method biểu thị một <strong>ý định</strong> khác nhau:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Method</th><th>Ý nghĩa</th><th>Ẩn dụ nhà hàng</th><th>Có thay đổi dữ liệu?</th></tr></thead><tbody><tr><td><strong>GET</strong></td><td>Lấy/đọc dữ liệu</td><td>”Cho xem menu”</td><td>Không</td></tr><tr><td><strong>POST</strong></td><td>Tạo dữ liệu mới</td><td>”Gọi món mới”</td><td>Có</td></tr><tr><td><strong>PUT</strong></td><td>Cập nhật toàn bộ</td><td>”Đổi toàn bộ order”</td><td>Có</td></tr><tr><td><strong>PATCH</strong></td><td>Cập nhật một phần</td><td>”Đổi số lượng 1 món”</td><td>Có</td></tr><tr><td><strong>DELETE</strong></td><td>Xóa dữ liệu</td><td>”Hủy món”</td><td>Có</td></tr></tbody></table></div>
+<p><strong>Tại sao điều này quan trọng cho Observability?</strong> Vì khi phân tích traffic, bạn cần biết <strong>ý nghĩa</strong> của pattern bạn thấy:</p>
+<ul>
+<li><strong>GET chiếm 80% traffic</strong> = bình thường, người dùng đang duyệt web</li>
+<li><strong>POST tăng đột biến vào lúc 12:00</strong> = có thể là flash sale hoặc bot tấn công</li>
+<li><strong>DELETE requests bất thường lúc 3 giờ sáng</strong> = 🔴 có thể ai đó đang xóa dữ liệu trái phép</li>
+</ul>
+<h3 id="24-http-status-codes--bảng-đèn-sức-khỏe-của-ứng-dụng">2.4 HTTP Status Codes — “Bảng đèn sức khỏe” của ứng dụng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-http-status-codes--bảng-đèn-sức-khỏe-của-ứng-dụng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Đây là thứ bạn nhìn <strong>hàng ngày</strong> khi làm Observability. Server trả về một mã số (status code) để nói cho client biết kết quả xử lý. Các status codes được chia thành 5 nhóm:</p>
+<h4 id="-2xx--thành-công">🟢 2xx — Thành công<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-2xx--thành-công" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Khi bạn thấy 2xx, nghĩa là mọi thứ <strong>hoạt động đúng</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Code</th><th>Tên</th><th>Khi nào trả về</th><th>Ví dụ ShopVN</th></tr></thead><tbody><tr><td><strong>200</strong></td><td>OK</td><td>Request xử lý thành công</td><td>GET /products → trả danh sách sản phẩm</td></tr><tr><td><strong>201</strong></td><td>Created</td><td>Tạo mới thành công</td><td>POST /orders → đơn hàng đã tạo</td></tr><tr><td><strong>204</strong></td><td>No Content</td><td>Thành công nhưng không cần trả body</td><td>DELETE /orders/123 → đã xóa</td></tr></tbody></table></div>
+<h4 id="-3xx--chuyển-hướng">🟡 3xx — Chuyển hướng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-3xx--chuyển-hướng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Client được yêu cầu đi đến một URL khác.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Code</th><th>Tên</th><th>Ý nghĩa thực tế</th></tr></thead><tbody><tr><td><strong>301</strong></td><td>Moved Permanently</td><td>”Trang này đã chuyển vĩnh viễn sang URL mới”</td></tr><tr><td><strong>302</strong></td><td>Found</td><td>”Tạm thời chuyển hướng” (phổ biến sau khi login)</td></tr><tr><td><strong>304</strong></td><td>Not Modified</td><td>”Dữ liệu chưa đổi, dùng bản cached” (tiết kiệm bandwidth)</td></tr></tbody></table></div>
+<h4 id="-4xx--lỗi-phía-client">🟠 4xx — Lỗi phía Client<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-4xx--lỗi-phía-client" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Client gửi sai</strong> — server hiểu request nhưng từ chối xử lý.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Code</th><th>Tên</th><th>Nghĩa đời thực</th><th>Khi nào xảy ra ở ShopVN</th></tr></thead><tbody><tr><td><strong>400</strong></td><td>Bad Request</td><td>”Tôi không hiểu bạn gửi gì”</td><td>JSON sai format, thiếu field bắt buộc</td></tr><tr><td><strong>401</strong></td><td>Unauthorized</td><td>”Bạn chưa đăng nhập”</td><td>Token hết hạn hoặc không có token</td></tr><tr><td><strong>403</strong></td><td>Forbidden</td><td>”Bạn đăng nhập rồi nhưng không có quyền”</td><td>User thường truy cập trang admin</td></tr><tr><td><strong>404</strong></td><td>Not Found</td><td>”Không tìm thấy”</td><td>URL sai hoặc sản phẩm đã bị xóa</td></tr><tr><td><strong>429</strong></td><td>Too Many Requests</td><td>”Bạn gửi quá nhiều, chậm lại đi”</td><td>Rate limiting khi bị spam</td></tr></tbody></table></div>
+<h4 id="-5xx--lỗi-phía-server">🔴 5xx — Lỗi phía Server<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-5xx--lỗi-phía-server" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Server bị lỗi</strong> — đây là nơi bạn cần chú ý nhất khi làm Observability.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Code</th><th>Tên</th><th>Nghĩa đời thực</th><th>Nguyên nhân thường gặp</th></tr></thead><tbody><tr><td><strong>500</strong></td><td>Internal Server Error</td><td>”Server bị crash/bug”</td><td>Exception không xử lý, bug trong code</td></tr><tr><td><strong>502</strong></td><td>Bad Gateway</td><td>”Server trung gian nhận response lỗi”</td><td>Upstream service trả lỗi hoặc không response</td></tr><tr><td><strong>503</strong></td><td>Service Unavailable</td><td>”Server quá tải”</td><td>Quá nhiều requests, server đang maintenance</td></tr><tr><td><strong>504</strong></td><td>Gateway Timeout</td><td>”Không nhận response kịp thời”</td><td>Upstream service quá chậm, timeout</td></tr></tbody></table></div>
+<blockquote class="callout danger" data-callout="danger">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Rule quan trọng nhất cho Observability </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>4xx tăng</strong> = có vấn đề UX hoặc API docs sai, khách hàng đang khó chịu</li>
+<li><strong>5xx tăng</strong> = <strong>HỆ THỐNG BỊ LỖI</strong> — cần investigation ngay lập tức</li>
+<li><strong>Error rate</strong> (tỷ lệ 5xx / tổng requests) là một trong những <strong>SLI</strong> (Service Level Indicator) quan trọng nhất mà bạn sẽ học ở <a href="../../../02---areas/observability/fundamentals/06---sli,-slo--and--error-budgets" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/06---sli,-slo--and--error-budgets">06 - SLI, SLO &amp; Error Budgets</a></li>
+</ul>
+</div>
+</blockquote>
+<blockquote class="callout example" data-callout="example">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Phân biệt 502 vs 503 vs 504 </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Cả ba đều liên quan đến “server downstream có vấn đề”, nhưng chi tiết khác nhau:</p>
+<ul>
+<li><strong>502</strong>: Gateway nhận được response từ upstream, nhưng response đó <strong>không hợp lệ</strong> (ví dụ: upstream trả HTML thay vì JSON)</li>
+<li><strong>503</strong>: Server <strong>tự biết</strong> nó đang quá tải hoặc đang maintenance, chủ động từ chối</li>
+<li><strong>504</strong>: Gateway <strong>không nhận được response nào</strong> trong thời gian cho phép (timeout)</li>
+</ul>
+<p>Khi debug, sự phân biệt này giúp bạn biết nên nhìn vào <strong>đâu</strong> — upstream service (502/504) hay chính service đó (503).</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="3-request-lifecycle--hành-trình-chi-tiết-của-một-request">3. Request Lifecycle — Hành trình chi tiết của một Request<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-request-lifecycle--hành-trình-chi-tiết-của-một-request" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Bây giờ hãy theo dõi <strong>từng bước</strong> khi một request thực sự đi qua hệ thống. Hiểu được điều này, bạn sẽ biết cần observe <strong>ở đâu</strong> và <strong>cái gì</strong>.</p>
+<h3 id="31-ví-dụ-khi-bạn-bấm-đặt-hàng-trên-shopvn">3.1 Ví dụ: “Khi bạn bấm ‘Đặt hàng’ trên ShopVN”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-ví-dụ-khi-bạn-bấm-đặt-hàng-trên-shopvn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Bước 1: DNS Resolution (1-50ms)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Browser hỏi DNS: &quot;shopvn.com ở đâu?&quot;
+DNS trả lời:     &quot;IP: 203.0.113.50&quot;
+→ Giống tra danh bạ để tìm số điện thoại từ tên người
+
+Bước 2: TCP + TLS Handshake (50-150ms)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Browser mở kết nối TCP đến IP:Port
+Sau đó TLS handshake để mã hóa kết nối (HTTPS)
+→ Giống bắt tay + trao đổi mật khẩu bí mật trước khi nói chuyện
+
+Bước 3: HTTP Request (&lt; 1ms)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+POST /api/v1/orders
+Body: { &quot;product_id&quot;: &quot;SP001&quot;, &quot;quantity&quot;: 2 }
+→ Gửi yêu cầu thực sự
+
+Bước 4: Load Balancer (1-5ms)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LB nhận request, chọn 1 trong N app servers (ít tải nhất)
+→ Giống lễ tân chọn bàn còn trống
+
+Bước 5: App Server xử lý (50-500ms)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  5a. Parse JWT token → xác thực user
+  5b. Validate input data
+  5c. Gọi Product Service → kiểm tra tồn kho (50-100ms)
+  5d. Gọi Payment Service → xử lý thanh toán (100-500ms)
+  5e. Ghi database → INSERT order (5-50ms)
+  5f. Gọi Notification Service → gửi email (fire-and-forget)
+
+Bước 6: Response
+━━━━━━━━━━━━━━━━
+HTTP 201 Created
+{ &quot;order_id&quot;: &quot;ORD-2026-001&quot;, &quot;status&quot;: &quot;confirmed&quot; }
+
+Bước 7: Browser render
+━━━━━━━━━━━━━━━━━━━━━
+&quot;Đặt hàng thành công! 🎉&quot;
+</code></pre>
+<h3 id="32-tại-sao-phải-hiểu-điều-này">3.2 Tại sao phải hiểu điều này?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-tại-sao-phải-hiểu-điều-này" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Nhìn vào request lifecycle, bạn thấy ngay một sự thật: <strong>kiểm soát mỗi bước là điều kiện tiên quyết để observe</strong>. Nếu request tổng cộng mất 3 giây, bạn cần biết 3 giây đó <strong>chia như thế nào</strong> giữa các bước:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Bước</th><th>Thời gian điển hình</th><th>Ai chịu trách nhiệm?</th></tr></thead><tbody><tr><td>DNS</td><td>1-50ms</td><td>Infra / DNS provider</td></tr><tr><td>TCP + TLS</td><td>50-150ms</td><td>Infra / Network</td></tr><tr><td>App Processing</td><td>50-500ms</td><td>Development team</td></tr><tr><td>Database</td><td>5-100ms</td><td>DBA / Development</td></tr><tr><td>External API calls</td><td>50-2000ms</td><td><strong>Không kiểm soát được — rủi ro lớn nhất</strong></td></tr></tbody></table></div>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>External dependencies là rủi ro lớn nhất </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Trong ví dụ trên, Payment Service gọi đến Bank API (bên thứ 3). Bạn không kiểm soát được Bank API — nếu nó chậm hoặc chết, ShopVN cũng bị ảnh hưởng. Đây là lý do cần <strong>circuit breaker</strong> và <strong>timeout</strong> (phần 10).</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="4-giới-thiệu-shopvn--ví-dụ-xuyên-suốt">4. Giới thiệu ShopVN — Ví dụ xuyên suốt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-giới-thiệu-shopvn--ví-dụ-xuyên-suốt" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Xuyên suốt bộ tài liệu này, chúng ta sẽ dùng <strong>ShopVN</strong> — một nền tảng e-commerce Việt Nam giả lập — để minh họa mọi khái niệm. ShopVN được thiết kế với kiến trúc microservices, giống như các ứng dụng thực tế bạn sẽ gặp trong công việc.</p>
+<h3 id="41-kiến-trúc-tổng-quan">4.1 Kiến trúc tổng quan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-kiến-trúc-tổng-quan" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>                         ┌─────────────┐
+                         │   Browser   │
+                         └──────┬──────┘
+                                │
+                         ┌──────▼──────┐
+                         │ API Gateway │
+                         │   (Nginx)   │
+                         └──────┬──────┘
+              ┌─────────────────┼─────────────────┐
+              │                 │                  │
+       ┌──────▼──────┐  ┌──────▼──────┐  ┌───────▼───────┐
+       │   Product   │  │    Order    │  │     User      │
+       │   Service   │  │   Service   │  │   Service     │
+       │   :5001     │  │   :5000     │  │   :5004       │
+       └──────┬──────┘  └──────┬──────┘  └───────┬───────┘
+              │                │                   │
+       ┌──────▼──────┐  ┌─────▼──────┐   ┌───────▼───────┐
+       │  Product DB │  │  Order DB  │   │   User DB     │
+       │ (PostgreSQL)│  │(PostgreSQL)│   │ (PostgreSQL)  │
+       └─────────────┘  └──────┬─────┘   └───────────────┘
+                               │
+                        ┌──────▼──────┐
+                        │  Payment    │
+                        │  Service    │
+                        │  :5002      │
+                        └──────┬──────┘
+                               │
+                    ┌──────────▼──────────┐
+                    │  Bank API (External)│
+                    │  KHÔNG kiểm soát    │
+                    └──────────┬──────────┘
+                               │
+                        ┌──────▼──────┐
+                        │Notification │
+                        │  Service    │
+                        │  :5003      │
+                        └─────────────┘
+</code></pre>
+<p><strong>Tại sao kiến trúc này?</strong></p>
+<p>Mỗi service có <strong>trách nhiệm riêng biệt</strong> (Single Responsibility). Điều này nghĩa là:</p>
+<ul>
+<li><strong>Product Service</strong> chỉ quản lý sản phẩm, tồn kho</li>
+<li><strong>Order Service</strong> chỉ xử lý đặt hàng</li>
+<li><strong>Payment Service</strong> chỉ xử lý thanh toán</li>
+<li>Mỗi service có <strong>database riêng</strong> — không chia sẻ database (Database per Service pattern)</li>
+</ul>
+<p>Lợi ích: Mỗi team phát triển độc lập, deploy độc lập. Nhược điểm: <strong>Debugging trở nên khó hơn nhiều</strong> — request đi qua nhiều services, lỗi có thể ở bất kỳ đâu. Đây chính xác là lý do Observability trở nên <strong>thiết yếu</strong> với microservices.</p>
+<h3 id="42-shopvn-order-service--code-cơ-bản">4.2 ShopVN Order Service — Code cơ bản<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-shopvn-order-service--code-cơ-bản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Đây là code Python cơ bản của Order Service. Bạn không cần nhớ mọi dòng — hãy tập trung vào <strong>flow</strong>: request đến → validate → gọi services khác → ghi DB → trả response.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># order_service.py — ShopVN Order Service</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Phiên bản v1: Chưa có logging, metrics, hay tracing</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># (Sẽ thêm dần ở các chương tiếp theo)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> flask </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Flask, request, jsonify</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> requests</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> psycopg2</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> datetime </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> datetime</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">app </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> Flask(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="normal">__name__</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> get_db_connection</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">():</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;&quot;&quot;Mở kết nối đến Order Database&quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> psycopg2.connect(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        host</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;order-db&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">database</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;shopvn_orders&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        user</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;app_user&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">password</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;secret&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    )</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="punctuation">@app.route</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;/api/v1/orders&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">methods</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;POST&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">])</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> create_order</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">():</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    Tạo đơn hàng mới.</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    Flow: Validate → Check inventory → Payment → Save DB → Notify</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    data </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> request.get_json()</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # ── Bước 1: Validate input ──────────────────────────</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Kiểm tra client gửi đúng format không</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    product_id </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> data.get(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;product_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    quantity </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> data.get(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;quantity&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> not</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> product_id:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> jsonify({</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;error&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;product_id is required&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}), </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">400</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # → 400 Bad Request: Client gửi sai, thiếu field</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # ── Bước 2: Kiểm tra tồn kho ───────────────────────</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Gọi Product Service qua HTTP (synchronous call)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    inventory_resp </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> requests.get(</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;http://product-service:5001/api/v1/products/</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">{</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">product_id</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">}</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    )</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> inventory_resp.status_code </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 404</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> jsonify({</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;error&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Product not found&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}), </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">404</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # → 404: Sản phẩm không tồn tại</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    product </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> inventory_resp.json()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> product[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;stock&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> quantity:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> jsonify({</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;error&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Insufficient stock&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}), </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">409</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # → 409 Conflict: Không đủ hàng</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # ── Bước 3: Xử lý thanh toán ───────────────────────</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Gọi Payment Service (cũng synchronous)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    payment_resp </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> requests.post(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;http://payment-service:5002/api/v1/payments&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        json</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;amount&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: product[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;price&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> quantity, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;currency&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;VND&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    )</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> payment_resp.status_code </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 200</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> jsonify({</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;error&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Payment failed&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}), </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">502</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # → 502 Bad Gateway: Payment service trả lỗi</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # ── Bước 4: Lưu vào database ───────────────────────</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    conn </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> get_db_connection()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    cursor </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> conn.cursor()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    cursor.execute(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;&quot;&quot;INSERT INTO orders (product_id, quantity, total_amount, </span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">           status, created_at) VALUES (</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">%s</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">%s</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">%s</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">%s</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">%s</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">) RETURNING id&quot;&quot;&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">        (product_id, quantity, product[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;price&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> quantity, </span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">         &quot;confirmed&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, datetime.now())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    )</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    order_id </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> cursor.fetchone()[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    conn.commit()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    cursor.close()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    conn.close()</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # ── Bước 5: Gửi thông báo (fire and forget) ────────</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Không cần chờ kết quả — email gửi muộn vài giây là OK</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    requests.post(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;http://notification-service:5003/api/v1/notify&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        json</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;order_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: order_id, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;order_confirmation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">})</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # ── Bước 6: Trả response thành công ────────────────</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> jsonify({</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;order_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: order_id,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;confirmed&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;total_amount&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: product[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;price&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> quantity</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    }), </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">201</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # → 201 Created: Tạo thành công</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">if</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="normal"> __name__</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> ==</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;__main__&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    app.run(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">host</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;0.0.0.0&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">port</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5000</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span></code></pre></figure>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Bạn thấy vấn đề gì không? </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Code trên <strong>hoạt động</strong> nhưng hoàn toàn <strong>mù</strong> khi có lỗi:</p>
+<ul>
+<li>Không có <strong>log</strong> nào → không biết request nào đã chạy, lỗi ở đâu</li>
+<li>Không có <strong>metrics</strong> → không biết bao nhiêu orders/phút, latency trung bình bao nhiêu</li>
+<li>Không có <strong>tracing</strong> → không biết request chậm ở bước nào (Product? Payment? DB?)</li>
+</ul>
+<p>Các chương tiếp theo sẽ <strong>lần lượt thêm từng lớp observability</strong> vào chính đoạn code này.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="5-sync-vs-async--hai-cách-services-nói-chuyện">5. Sync vs Async — Hai cách services “nói chuyện”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-sync-vs-async--hai-cách-services-nói-chuyện" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Trong kiến trúc microservices, services cần giao tiếp với nhau. Có hai cách chính, và mỗi cách ảnh hưởng đến cách bạn observe hệ thống.</p>
+<h3 id="51-synchronous-đồng-bộ--gọi-điện-thoại">5.1 Synchronous (Đồng bộ) — “Gọi điện thoại”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-synchronous-đồng-bộ--gọi-điện-thoại" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Client gửi request rồi <strong>đứng chờ</strong> cho đến khi nhận response. Giống gọi điện — bạn phải đợi người kia trả lời mới nói tiếp được.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Order Service gọi Product Service — PHẢI CHỜ kết quả</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">product_resp </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> requests.get(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;http://product-service:5001/api/v1/products/</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">{</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">product_id</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">}</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ⏳ Code DỪNG ở đây. Không làm gì khác cho đến khi nhận response.</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Nếu Product Service mất 2 giây → Order Service cũng bị block 2 giây.</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">product </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> product_resp.json()</span></span></code></pre></figure>
+<p><strong>Ưu điểm</strong>: Đơn giản, kết quả ngay lập tức, dễ debug.<br/>
+<strong>Nhược điểm</strong>: <strong>Cascade effect</strong> — nếu Product Service chậm → Order Service chậm → Client chờ → User bực mình.</p>
+<h3 id="52-asynchronous-bất-đồng-bộ--gửi-tin-nhắn">5.2 Asynchronous (Bất đồng bộ) — “Gửi tin nhắn”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-asynchronous-bất-đồng-bộ--gửi-tin-nhắn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Client gửi message vào <strong>message queue</strong> rồi <strong>tiếp tục làm việc khác</strong> ngay. Giống gửi tin nhắn — bạn gửi xong là đi làm việc khác, không cần chờ reply.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Order Service gửi notification — KHÔNG CHỜ kết quả</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> pika  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># RabbitMQ client</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">channel.basic_publish(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">    exchange</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">    routing_key</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;notification_queue&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Đẩy message vào queue</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">    body</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">'{&quot;order_id&quot;: &quot;ORD-001&quot;, &quot;type&quot;: &quot;order_confirmation&quot;}'</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ✅ Code tiếp tục NGAY LẬP TỨC</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Notification Service sẽ lấy message từ queue và xử lý SAU</span></span></code></pre></figure>
+<p><strong>Ưu điểm</strong>: Không bị block, xử lý được traffic burst, retry tự động.<br/>
+<strong>Nhược điểm</strong>: Khó debug hơn, kết quả không ngay, <strong>trace bị đứt</strong> qua queue.</p>
+<h3 id="53-shopvn-dùng-cả-hai">5.3 ShopVN dùng cả hai<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-shopvn-dùng-cả-hai" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Giao tiếp</th><th>Kiểu</th><th>Lý do</th></tr></thead><tbody><tr><td>Order → Product</td><td><strong>Sync</strong></td><td><strong>Phải</strong> biết ngay còn hàng không — không thể tạo đơn mà không biết</td></tr><tr><td>Order → Payment</td><td><strong>Sync</strong></td><td><strong>Phải</strong> biết ngay thanh toán thành công không — tạo đơn mà chưa trả tiền thì loạn</td></tr><tr><td>Order → Notification</td><td><strong>Async</strong></td><td>Email xác nhận gửi muộn 5-10 giây cũng OK — không urgent</td></tr></tbody></table></div>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Tác động đến Observability </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>Sync</strong>: Distributed tracing hoạt động <strong>tự nhiên</strong> — request A gọi service B, trace_id truyền qua HTTP header. Dễ theo dõi.</li>
+<li><strong>Async</strong>: Trace bị <strong>đứt</strong> tại message queue. Message vào queue rồi, consumer lấy ra sau — làm sao liên kết? Cần kỹ thuật đặc biệt gọi là <strong>context propagation qua message</strong> (sẽ học ở <a href="../../../02---areas/observability/fundamentals/04---three-pillars-deep-dive---traces" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/04---three-pillars-deep-dive---traces">04 - Three Pillars Deep Dive - Traces</a>).</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="6-database--nơi-50-80-performance-issues-bắt-nguồn">6. Database — Nơi 50-80% Performance Issues bắt nguồn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-database--nơi-50-80-performance-issues-bắt-nguồn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Trong kinh nghiệm thực tế, hơn nửa số performance issues đều liên quan đến database. Hiểu database ở mức cần thiết cho Observability là bắt buộc.</p>
+<h3 id="61-connection-pooling--tại-sao-không-mở-connection-mới-mỗi-lần">6.1 Connection Pooling — Tại sao không mở connection mới mỗi lần?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-connection-pooling--tại-sao-không-mở-connection-mới-mỗi-lần" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mở một database connection rất <strong>tốn kém</strong> — cần TCP handshake, authentication, allocate memory. Mất khoảng 20-50ms mỗi lần. Nếu mỗi request mở connection mới rồi đóng, 1000 requests/giây = 1000 lần mở/đóng = rất lãng phí.</p>
+<p><strong>Connection Pool</strong> giải quyết vấn đề này: tạo sẵn một “bể” connections, tái sử dụng chúng.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ❌ BAD: Mỗi request tạo connection MỚI</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> create_order</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">():</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    conn </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> psycopg2.connect(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">host</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;order-db&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 20-50ms mỗi lần!</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    cursor </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> conn.cursor()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    cursor.execute(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;INSERT INTO orders ...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    conn.close()  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Đóng luôn, lần sau tạo lại từ đầu</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ✅ GOOD: Dùng connection pool</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> psycopg2 </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> pool</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">connection_pool </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> pool.ThreadedConnectionPool(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">    minconn</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,      </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Luôn giữ sẵn ít nhất 5 connections</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">    maxconn</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">20</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,     </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Tối đa 20 connections đồng thời</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">    host</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;order-db&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">database</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;shopvn_orders&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> create_order</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">():</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    conn </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> connection_pool.getconn()  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Lấy connection có sẵn ~ 0ms!</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    try</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        cursor </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> conn.cursor()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        cursor.execute(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;INSERT INTO orders ...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        conn.commit()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    finally</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        connection_pool.putconn(conn)  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Trả lại pool, KHÔNG đóng</span></span></code></pre></figure>
+<blockquote class="callout danger" data-callout="danger">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Connection Pool Exhaustion — một nguyên nhân outage phổ biến </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nếu <code>maxconn=20</code> nhưng có 50 requests đồng thời, 30 requests phải <strong>chờ</strong> connection. Kết quả: latency tăng vọt, rồi timeout → 504 Gateway Timeout.</p>
+<p><strong>Trong Observability, bạn cần monitor:</strong></p>
+<ul>
+<li><code>pool.active_connections</code> — bao nhiêu đang được dùng</li>
+<li><code>pool.idle_connections</code> — bao nhiêu đang “rảnh”</li>
+<li><code>pool.waiting_requests</code> — bao nhiêu đang chờ → nếu > 0 = <strong>cảnh báo</strong></li>
+</ul>
+</div>
+</blockquote>
+<h3 id="62-n1-query-problem--kẻ-giết-performance-âm-thầm">6.2 N+1 Query Problem — Kẻ giết performance âm thầm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-n1-query-problem--kẻ-giết-performance-âm-thầm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Đây là lỗi mà developer rất hay mắc phải mà không biết:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ❌ N+1 Problem</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Bước 1: Lấy 100 đơn hàng (1 query)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">orders </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> db.execute(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;SELECT * FROM orders LIMIT 100&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Bước 2: Với MỖI đơn hàng, query lại DB để lấy thông tin sản phẩm</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> order </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> orders:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    product </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> db.execute(</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;SELECT * FROM products WHERE id = '</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">{</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">order.product_id</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">}</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">'&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    )</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Tổng cộng: 1 + 100 = 101 queries!!! 💀</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Nếu 1000 orders → 1001 queries</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ✅ Giải pháp: Dùng JOIN — 1 query duy nhất lấy hết</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">orders_with_products </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> db.execute(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    SELECT o.*, p.name, p.price </span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    FROM orders o </span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    JOIN products p ON o.product_id = p.id</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    LIMIT 100</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;&quot;&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 1 query thay vì 101 ✅</span></span></code></pre></figure>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Phát hiện N+1 bằng Observability </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Trong Distributed Tracing (Chương 04), N+1 hiện ra rõ ràng: bạn thấy <strong>hàng trăm spans database query</strong> (mỗi span = 1 query) bên trong 1 request. Pattern này cực dễ nhận ra. Cả Dynatrace lẫn Datadog đều có khả năng <strong>tự động phát hiện</strong> N+1.</p>
+</div>
+</blockquote>
+<h3 id="63-database-indexing--mục-lục-cho-database">6.3 Database Indexing — “Mục lục” cho database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#63-database-indexing--mục-lục-cho-database" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi bảng có 10 triệu rows, tìm kiếm không có index = quét <strong>toàn bộ</strong> 10 triệu rows. Có index = nhảy thẳng đến kết quả.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="sql" data-theme="github-light github-dark"><code data-language="sql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">-- Không index: Database phải quét 10 triệu rows → 5-10 giây 💀</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">SELECT</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> *</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> orders </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">WHERE</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> customer_id </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> 'C001'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">-- Tạo index:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">CREATE</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> INDEX</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> idx_orders_customer</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> ON</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> orders(customer_id);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">-- Có index: Nhảy thẳng đến kết quả → 5-10ms ✅</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">SELECT</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> *</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> orders </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">WHERE</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> customer_id </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> 'C001'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span></code></pre></figure>
+<p><strong>Ẩn dụ</strong>: Index giống <strong>mục lục cuối sách</strong>. Muốn tìm chủ đề “TCP handshake”? Thay vì lật từng trang (full table scan), bạn mở mục lục → thấy “TCP handshake: trang 45” → nhảy thẳng đến trang 45.</p>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Slow queries trong Observability </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Mọi tool Observability đều có <strong>slow query detection</strong>. Dynatrace hiển thị top slow queries kèm execution plan. Khi bạn thấy query chậm, bước đầu tiên luôn là kiểm tra: <strong>có index chưa?</strong></p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="7-caching--tại-sao-lại-cần-bộ-nhớ-tạm">7. Caching — Tại sao lại cần “bộ nhớ tạm”?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-caching--tại-sao-lại-cần-bộ-nhớ-tạm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="71-vấn-đề">7.1 Vấn đề<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#71-vấn-đề" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Nếu 1000 người cùng xem sản phẩm SP001 trong 1 phút, không lẽ query database 1000 lần cho cùng 1 kết quả? Database vốn đã là bottleneck — đừng làm nó nặng thêm.</p>
+<h3 id="72-giải-pháp-cache">7.2 Giải pháp: Cache<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#72-giải-pháp-cache" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Cache = <strong>lưu kết quả đã tính xong</strong> vào bộ nhớ nhanh (RAM), phục vụ từ cache thay vì tính lại.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> redis</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">cache </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> redis.Redis(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">host</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;redis-cache&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">port</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">6379</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">CACHE_TTL</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> =</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 300</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Giữ cache 5 phút, sau đó tự xóa</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> get_product</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(product_id: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="property">str</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">):</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Bước 1: Kiểm tra cache TRƯỚC</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    cached </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> cache.get(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;product:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">{</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">product_id</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">}</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> cached:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # Cache HIT — có trong cache, trả về ngay</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # Thời gian: ~0.1ms (so với 5-50ms query DB)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> json.loads(cached)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Bước 2: Cache MISS — không có trong cache, phải query DB</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    conn </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> get_db_connection()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    cursor </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> conn.cursor()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    cursor.execute(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;SELECT * FROM products WHERE id = </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">%s</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, (product_id,))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    product </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> cursor.fetchone()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    conn.close()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Bước 3: Lưu kết quả vào cache cho lần sau</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    cache.set(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;product:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">{</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">product_id</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">}</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, json.dumps(product), </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">ex</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">CACHE_TTL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> product</span></span></code></pre></figure>
+<h3 id="73-cache-metrics--monitor-cache-có-đang-hiệu-quả-không">7.3 Cache Metrics — Monitor cache CÓ ĐANG HIỆU QUẢ KHÔNG?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#73-cache-metrics--monitor-cache-có-đang-hiệu-quả-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Metric</th><th>Công thức</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>Hit Rate</strong></td><td>hits ÷ (hits + misses) × 100%</td><td><strong>Trên 90%</strong> = tốt. <strong>Dưới 50%</strong> = cache gần như vô dụng, cần review strategy</td></tr><tr><td><strong>Eviction Rate</strong></td><td>Số items bị xóa khỏi cache / phút</td><td>Cao = cache bị đầy, cần tăng memory</td></tr><tr><td><strong>TTL Effectiveness</strong></td><td>Tỷ lệ expired vs evicted</td><td>Giúp tune TTL cho phù hợp</td></tr></tbody></table></div>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Cache Invalidation </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Khi dữ liệu database thay đổi (ví dụ: giá sản phẩm đổi), cache vẫn giữ <strong>giá cũ</strong> cho đến khi TTL hết. Đây là trade-off: tốc độ vs freshness. Trong Observability, cần alert khi cache có stale data quá lâu.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="8-error-handling--resilience-patterns">8. Error Handling &amp; Resilience Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-error-handling--resilience-patterns" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Trong microservices, lỗi là <strong>chuyện bình thường</strong>. Service nào cũng có thể chết bất cứ lúc nào. Câu hỏi là: khi một service chết, <strong>phần còn lại có chết theo không?</strong></p>
+<h3 id="81-circuit-breaker--cầu-dao-tự-động">8.1 Circuit Breaker — “Cầu dao tự động”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#81-circuit-breaker--cầu-dao-tự-động" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Vấn đề</strong>: Payment Service bị chậm (mất 30 giây mỗi request). Nếu Order Service cứ tiếp tục gọi → 100 requests đều bị block 30 giây → thread pool cạn kiệt → Order Service cũng chết → <strong>cascade failure</strong>.</p>
+<p><strong>Giải pháp</strong>: Circuit Breaker — tự động ngắt gọi khi phát hiện service downstream đang lỗi.</p>
+<pre><code>Trạng thái CLOSED (bình thường):
+  Mọi request đi qua bình thường
+  Đếm số lần fail liên tiếp
+
+  → Fail > 5 lần liên tiếp?
+  
+Chuyển sang OPEN (ngắt mạch):
+  CHẶN MỌI REQUEST → trả lỗi ngay lập tức (không đợi timeout)
+  Tiết kiệm resource, không làm tình hình tệ hơn
+  
+  → Sau 30 giây...
+  
+Chuyển sang HALF-OPEN (thử lại):
+  Cho 1 request thử đi qua
+  - Thành công? → Quay lại CLOSED ✅
+  - Vẫn fail? → Quay lại OPEN ⏳
+</code></pre>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> circuitbreaker </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> circuit</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="punctuation">@circuit</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">failure_threshold</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">recovery_timeout</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">30</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> call_payment_service</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(amount):</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    Gọi Payment Service với circuit breaker protection.</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    - Nếu fail 5 lần liên tiếp → circuit OPEN → trả lỗi ngay</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    - Sau 30 giây → thử lại 1 lần</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    resp </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> requests.post(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;http://payment-service:5002/api/v1/payments&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        json</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;amount&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: amount, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;currency&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;VND&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">},</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        timeout</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Timeout 5 giây</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    )</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    resp.raise_for_status()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> resp.json()</span></span></code></pre></figure>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Circuit Breaker trong Observability </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Circuit state (CLOSED/OPEN/HALF-OPEN) là một metric quan trọng cần monitor.</strong> Nếu circuit OPEN → bạn biết ngay service downstream đang có vấn đề nghiêm trọng — mà không cần chờ alert từ service đó.</p>
+</div>
+</blockquote>
+<h3 id="82-retry-với-exponential-backoff">8.2 Retry với Exponential Backoff<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#82-retry-với-exponential-backoff" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi request fail, thử lại là ý tưởng tốt. Nhưng thử lại <strong>ngay lập tức</strong> thì không — nếu service đang quá tải, bạn retry ngay chỉ khiến nó quá tải HƠN.</p>
+<p><strong>Exponential Backoff</strong>: Chờ lâu hơn giữa mỗi lần retry — 1 giây, 2 giây, 4 giây…</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> time</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> random</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> call_with_retry</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(url, max_retries</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">3</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> attempt </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">in</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function"> range</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(max_retries):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        try</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            resp </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> requests.get(url, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">timeout</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            resp.raise_for_status()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> resp.json()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        except</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (requests.Timeout, requests.HTTPError):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> attempt </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> max_retries </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">                raise</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Hết retry, raise lỗi</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">            # Exponential backoff + jitter (random)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            wait </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> **</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> attempt) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">+</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> random.uniform(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">            # Attempt 0: chờ ~1.x giây</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">            # Attempt 1: chờ ~2.x giây</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">            # Attempt 2: chờ ~4.x giây</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            time.sleep(wait)</span></span></code></pre></figure>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Tại sao phải thêm random (jitter)? </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Tưởng tượng 1000 clients đều fail cùng lúc. Nếu tất cả retry sau đúng 1 giây → <strong>thundering herd</strong> — 1000 requests đập vào server cùng lúc → lại fail. Thêm random để phân tán retry ra → giảm tải cho server.</p>
+</div>
+</blockquote>
+<h3 id="83-timeout--đừng-chờ-mãi">8.3 Timeout — Đừng chờ mãi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#83-timeout--đừng-chờ-mãi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Timeout phải GIẢM DẦN theo chiều sâu:
+
+Client (30s) → API Gateway (15s) → Order Service (10s) → Payment (5s) → Bank API (3s)
+   ▲                                                                          ▲
+   │                                                                          │
+ Outer timeout > Inner timeout         Payment không nên chờ Bank quá 3 giây
+</code></pre>
+<p><strong>Tại sao?</strong> Nếu innermost timeout = 30 giây (bằng client timeout), khi Bank API chậm → Payment chờ 30 giây → Order chờ 30 giây → Client cũng chờ 30 giây → user đã bỏ đi từ lâu.</p>
+<hr/>
+<h2 id="9-authentication--load-balancing--ngắn-gọn">9. Authentication &amp; Load Balancing — Ngắn gọn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-authentication--load-balancing--ngắn-gọn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="91-authentication-authn-vs-authorization-authz">9.1 Authentication (AuthN) vs Authorization (AuthZ)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#91-authentication-authn-vs-authorization-authz" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>AuthN</strong> = “Bạn là ai?” → Xác minh danh tính qua JWT Token</li>
+<li><strong>AuthZ</strong> = “Bạn được phép làm gì?” → Kiểm tra quyền (role: admin, user, guest)</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="punctuation">@app.route</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;/api/v1/admin/orders&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">methods</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;DELETE&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">])</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> delete_all_orders</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">():</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    user </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> get_current_user()       </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># AuthN: biết là Minh</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> user.role </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;admin&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:        </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># AuthZ: Minh có phải admin không?</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> jsonify({</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;error&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Forbidden&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}), </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">403</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # ...</span></span></code></pre></figure>
+<p><strong>Observability signals</strong>: 401 tăng đột biến = token hết hạn hàng loạt hoặc auth service down. 403 tăng = có thể unauthorized access attempt.</p>
+<h3 id="92-load-balancing--health-checks">9.2 Load Balancing &amp; Health Checks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#92-load-balancing--health-checks" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Load Balancer phân phối traffic đến nhiều app servers. Nó kiểm tra sức khỏe servers qua <strong>health check endpoint</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="punctuation">@app.route</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;/health&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> health_check</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">():</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;&quot;&quot;Load balancer gọi endpoint này mỗi 10 giây.</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    Nếu trả 200 → healthy, tiếp tục gửi traffic.</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    Nếu trả 503 hoặc không trả lời → unhealthy, ngừng gửi traffic.&quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    try</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        conn </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> get_db_connection()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        conn.close()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> jsonify({</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;healthy&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;database&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;connected&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}), </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">200</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    except</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="property"> Exception</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> jsonify({</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;unhealthy&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;database&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;disconnected&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}), </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">503</span></span></code></pre></figure>
+<hr/>
+<h2 id="10-concurrency--tại-sao-server-chỉ-xử-lý-được-n-requests-cùng-lúc">10. Concurrency — Tại sao server chỉ xử lý được N requests cùng lúc<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-concurrency--tại-sao-server-chỉ-xử-lý-được-n-requests-cùng-lúc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># gunicorn.conf.py — App server configuration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">workers </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 4</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # 4 worker processes</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">threads </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 2</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # Mỗi worker có 2 threads</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Tổng cộng: 4 × 2 = 8 requests đồng thời</span></span></code></pre></figure>
+<p>Nếu có 20 requests cùng lúc nhưng chỉ 8 slots → 12 requests <strong>xếp hàng chờ</strong> → latency tăng. Nếu chờ quá lâu → timeout.</p>
+<p>Đây là <strong>Saturation</strong> — 1 trong 4 Golden Signals mà bạn sẽ học ở <a href="../../../02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics">03 - Three Pillars Deep Dive - Metrics</a>.</p>
+<hr/>
+<h2 id="11-tổng-kết--map-kiến-thức-với-observability">11. Tổng Kết — Map kiến thức với Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-tổng-kết--map-kiến-thức-với-observability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau chương này, bạn đã có “bản đồ” đầy đủ về cách một ứng dụng web hoạt động. Bảng sau tóm tắt <strong>tại sao mỗi khái niệm quan trọng cho Observability</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khái niệm</th><th>Bạn sẽ observe cái gì?</th><th>Ở tool nào?</th></tr></thead><tbody><tr><td>HTTP Status Codes</td><td>Error rate (5xx/total)</td><td>Dashboard, SLI/SLO</td></tr><tr><td>Request Lifecycle</td><td>Latency breakdown per step</td><td>Distributed Tracing</td></tr><tr><td>Sync vs Async</td><td>Trace continuity, queue depth</td><td>Tracing, Metrics</td></tr><tr><td>Database</td><td>Slow queries, connection pool</td><td>APM, Database Monitoring</td></tr><tr><td>Caching</td><td>Hit rate, eviction</td><td>Metrics dashboard</td></tr><tr><td>Circuit Breaker</td><td>Circuit state, failure count</td><td>Metrics, Events</td></tr><tr><td>Error Handling</td><td>Retry count, timeout rate</td><td>Logs, Metrics</td></tr><tr><td>Concurrency</td><td>Worker saturation, queue length</td><td>Infrastructure Metrics</td></tr></tbody></table></div>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>ShopVN sau Chương 01 </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Bạn hiểu kiến trúc ShopVN và cách request đi qua hệ thống. Nhưng hiện tại, khi có lỗi xảy ra, bạn <strong>hoàn toàn mù</strong> — không có log nào nói cho bạn biết lỗi ở đâu, không có metrics nào cho bạn biết xu hướng.</p>
+<p>👉 Chương tiếp theo <a href="../../../02---areas/observability/fundamentals/02---three-pillars-deep-dive---logs" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/02---three-pillars-deep-dive---logs">02 - Three Pillars Deep Dive - Logs</a>: Thêm <strong>Logging</strong> — bước đầu tiên để ShopVN “biết nói”.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mapping-sang-dynatrace--datadog" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept trong chương</th><th>Dynatrace</th><th>Datadog</th></tr></thead><tbody><tr><td>Request/Response Lifecycle</td><td><strong>PurePath</strong> — trace toàn bộ request từ browser → backend → DB</td><td><strong>APM Traces</strong> — flamegraph cho mỗi request</td></tr><tr><td>HTTP Status Codes</td><td><strong>Service analysis</strong> → tab “Response codes”</td><td><strong>APM Service page</strong> → “Errors” panel</td></tr><tr><td>Service Dependencies</td><td><strong>Smartscape</strong> — auto-discover topology 3D</td><td><strong>Service Map</strong> — dependency graph từ traces</td></tr><tr><td>Database Queries</td><td><strong>Database services</strong> — tự phát hiện và track mọi DB calls</td><td><strong>DBM (Database Monitoring)</strong> — query analysis</td></tr><tr><td>Resilience (timeout, retry)</td><td><strong>Service flow</strong> — thấy failed calls giữa services</td><td><strong>APM → Error Tracking</strong> — group errors theo type</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-demo--chạy-thử-shopvn-v1">🧪 Demo — Chạy thử ShopVN v1<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-demo--chạy-thử-shopvn-v1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Lý thuyết chương này được minh họa bằng code chạy được trong <a href="../../../02---areas/observability/fundamentals/demo/readme" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/demo/readme">demo/</a>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>File</th><th>Mô tả</th></tr></thead><tbody><tr><td><code>demo/v1_basic_app.py</code></td><td>ShopVN v1: Flask app với Product/Payment/DB service, <strong>không có observability</strong></td></tr><tr><td><code>demo/simulate_traffic.py</code></td><td>Gửi traffic giả lập, hiển thị status codes và latency</td></tr></tbody></table></div>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Terminal 1: Chạy server</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">source</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> .env/bin/activate</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">python3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> v1_basic_app.py</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Terminal 2: Gửi traffic</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">source</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> .env/bin/activate</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">python3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> simulate_traffic.py</span></span></code></pre></figure>
+<p><strong>Quan sát</strong>: Terminal server chỉ hiện Flask default log — status codes, không chi tiết. Bạn <strong>không biết</strong> user nào, product nào, tại sao lỗi. Đây chính là vấn đề mà các chương tiếp theo giải quyết.</p>
+<p><strong>Mapping lý thuyết → code:</strong></p>
+<ul>
+<li><strong>Request Lifecycle</strong> (phần 2) → xem hàm <code>create_order()</code>: validate → check product → payment → DB save</li>
+<li><strong>HTTP Status Codes</strong> (phần 3) → xem các return <code>jsonify(...)</code>: 201 (success), 400 (not found), 504 (timeout), 500 (server error)</li>
+<li><strong>Resilience Patterns</strong> (phần 6) → xem <code>payment_service_process()</code>: timeout 5%, reject 3%, simulate retry scenarios</li>
+<li><strong>Database</strong> (phần 7) → xem <code>db_save_order()</code>: simulated connection pool exhaustion</li>
+</ul>
+<hr/>
+<h2 id="-tham-khảo">📚 Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP" class="external external-link">MDN Web Docs — HTTP<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://httpstatuses.com/" class="external external-link">HTTP Status Codes Reference<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://martinfowler.com/bliki/CircuitBreaker.html" class="external external-link">Circuit Breaker Pattern — Martin Fowler<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.postgresql.org/docs/current/runtime-config-connection.html" class="external external-link">PostgreSQL Connection Pooling<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.aws.amazon.com/general/latest/gr/api-retries.html" class="external external-link">Exponential Backoff — AWS<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-386" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#chương-01-application-logic-fundamentals" data-for="chương-01-application-logic-fundamentals">Chương 01: Application Logic Fundamentals</a></li><li class="depth-1"><a href="#1-client-server-architecture--nền-tảng-của-mọi-thứ" data-for="1-client-server-architecture--nền-tảng-của-mọi-thứ">1. Client-Server Architecture — Nền tảng của mọi thứ</a></li><li class="depth-2"><a href="#11-mô-hình-cơ-bản" data-for="11-mô-hình-cơ-bản">1.1 Mô hình cơ bản</a></li><li class="depth-2"><a href="#12-tại-sao-mô-hình-này-quan-trọng-cho-observability" data-for="12-tại-sao-mô-hình-này-quan-trọng-cho-observability">1.2 Tại sao mô hình này quan trọng cho Observability?</a></li><li class="depth-2"><a href="#13-kiến-trúc-nhiều-tầng-multi-tier-architecture" data-for="13-kiến-trúc-nhiều-tầng-multi-tier-architecture">1.3 Kiến trúc nhiều tầng (Multi-tier Architecture)</a></li><li class="depth-1"><a href="#2-http-protocol--ngôn-ngữ-giao-tiếp-của-web" data-for="2-http-protocol--ngôn-ngữ-giao-tiếp-của-web">2. HTTP Protocol — Ngôn ngữ giao tiếp của Web</a></li><li class="depth-2"><a href="#21-http-là-gì-và-tại-sao-bạn-phải-hiểu-nó" data-for="21-http-là-gì-và-tại-sao-bạn-phải-hiểu-nó">2.1 HTTP là gì và tại sao bạn phải hiểu nó?</a></li><li class="depth-2"><a href="#22-cấu-trúc-một-http-request" data-for="22-cấu-trúc-một-http-request">2.2 Cấu trúc một HTTP Request</a></li><li class="depth-2"><a href="#23-http-methods--mỗi-method-nói-lên-điều-gì" data-for="23-http-methods--mỗi-method-nói-lên-điều-gì">2.3 HTTP Methods — Mỗi method nói lên điều gì?</a></li><li class="depth-2"><a href="#24-http-status-codes--bảng-đèn-sức-khỏe-của-ứng-dụng" data-for="24-http-status-codes--bảng-đèn-sức-khỏe-của-ứng-dụng">2.4 HTTP Status Codes — “Bảng đèn sức khỏe” của ứng dụng</a></li><li class="depth-1"><a href="#3-request-lifecycle--hành-trình-chi-tiết-của-một-request" data-for="3-request-lifecycle--hành-trình-chi-tiết-của-một-request">3. Request Lifecycle — Hành trình chi tiết của một Request</a></li><li class="depth-2"><a href="#31-ví-dụ-khi-bạn-bấm-đặt-hàng-trên-shopvn" data-for="31-ví-dụ-khi-bạn-bấm-đặt-hàng-trên-shopvn">3.1 Ví dụ: “Khi bạn bấm ‘Đặt hàng’ trên ShopVN”</a></li><li class="depth-2"><a href="#32-tại-sao-phải-hiểu-điều-này" data-for="32-tại-sao-phải-hiểu-điều-này">3.2 Tại sao phải hiểu điều này?</a></li><li class="depth-1"><a href="#4-giới-thiệu-shopvn--ví-dụ-xuyên-suốt" data-for="4-giới-thiệu-shopvn--ví-dụ-xuyên-suốt">4. Giới thiệu ShopVN — Ví dụ xuyên suốt</a></li><li class="depth-2"><a href="#41-kiến-trúc-tổng-quan" data-for="41-kiến-trúc-tổng-quan">4.1 Kiến trúc tổng quan</a></li><li class="depth-2"><a href="#42-shopvn-order-service--code-cơ-bản" data-for="42-shopvn-order-service--code-cơ-bản">4.2 ShopVN Order Service — Code cơ bản</a></li><li class="depth-1"><a href="#5-sync-vs-async--hai-cách-services-nói-chuyện" data-for="5-sync-vs-async--hai-cách-services-nói-chuyện">5. Sync vs Async — Hai cách services “nói chuyện”</a></li><li class="depth-2"><a href="#51-synchronous-đồng-bộ--gọi-điện-thoại" data-for="51-synchronous-đồng-bộ--gọi-điện-thoại">5.1 Synchronous (Đồng bộ) — “Gọi điện thoại”</a></li><li class="depth-2"><a href="#52-asynchronous-bất-đồng-bộ--gửi-tin-nhắn" data-for="52-asynchronous-bất-đồng-bộ--gửi-tin-nhắn">5.2 Asynchronous (Bất đồng bộ) — “Gửi tin nhắn”</a></li><li class="depth-2"><a href="#53-shopvn-dùng-cả-hai" data-for="53-shopvn-dùng-cả-hai">5.3 ShopVN dùng cả hai</a></li><li class="depth-1"><a href="#6-database--nơi-50-80-performance-issues-bắt-nguồn" data-for="6-database--nơi-50-80-performance-issues-bắt-nguồn">6. Database — Nơi 50-80% Performance Issues bắt nguồn</a></li><li class="depth-2"><a href="#61-connection-pooling--tại-sao-không-mở-connection-mới-mỗi-lần" data-for="61-connection-pooling--tại-sao-không-mở-connection-mới-mỗi-lần">6.1 Connection Pooling — Tại sao không mở connection mới mỗi lần?</a></li><li class="depth-2"><a href="#62-n1-query-problem--kẻ-giết-performance-âm-thầm" data-for="62-n1-query-problem--kẻ-giết-performance-âm-thầm">6.2 N+1 Query Problem — Kẻ giết performance âm thầm</a></li><li class="depth-2"><a href="#63-database-indexing--mục-lục-cho-database" data-for="63-database-indexing--mục-lục-cho-database">6.3 Database Indexing — “Mục lục” cho database</a></li><li class="depth-1"><a href="#7-caching--tại-sao-lại-cần-bộ-nhớ-tạm" data-for="7-caching--tại-sao-lại-cần-bộ-nhớ-tạm">7. Caching — Tại sao lại cần “bộ nhớ tạm”?</a></li><li class="depth-2"><a href="#71-vấn-đề" data-for="71-vấn-đề">7.1 Vấn đề</a></li><li class="depth-2"><a href="#72-giải-pháp-cache" data-for="72-giải-pháp-cache">7.2 Giải pháp: Cache</a></li><li class="depth-2"><a href="#73-cache-metrics--monitor-cache-có-đang-hiệu-quả-không" data-for="73-cache-metrics--monitor-cache-có-đang-hiệu-quả-không">7.3 Cache Metrics — Monitor cache CÓ ĐANG HIỆU QUẢ KHÔNG?</a></li><li class="depth-1"><a href="#8-error-handling--resilience-patterns" data-for="8-error-handling--resilience-patterns">8. Error Handling &amp; Resilience Patterns</a></li><li class="depth-2"><a href="#81-circuit-breaker--cầu-dao-tự-động" data-for="81-circuit-breaker--cầu-dao-tự-động">8.1 Circuit Breaker — “Cầu dao tự động”</a></li><li class="depth-2"><a href="#82-retry-với-exponential-backoff" data-for="82-retry-với-exponential-backoff">8.2 Retry với Exponential Backoff</a></li><li class="depth-2"><a href="#83-timeout--đừng-chờ-mãi" data-for="83-timeout--đừng-chờ-mãi">8.3 Timeout — Đừng chờ mãi</a></li><li class="depth-1"><a href="#9-authentication--load-balancing--ngắn-gọn" data-for="9-authentication--load-balancing--ngắn-gọn">9. Authentication &amp; Load Balancing — Ngắn gọn</a></li><li class="depth-2"><a href="#91-authentication-authn-vs-authorization-authz" data-for="91-authentication-authn-vs-authorization-authz">9.1 Authentication (AuthN) vs Authorization (AuthZ)</a></li><li class="depth-2"><a href="#92-load-balancing--health-checks" data-for="92-load-balancing--health-checks">9.2 Load Balancing &amp; Health Checks</a></li><li class="depth-1"><a href="#10-concurrency--tại-sao-server-chỉ-xử-lý-được-n-requests-cùng-lúc" data-for="10-concurrency--tại-sao-server-chỉ-xử-lý-được-n-requests-cùng-lúc">10. Concurrency — Tại sao server chỉ xử lý được N requests cùng lúc</a></li><li class="depth-1"><a href="#11-tổng-kết--map-kiến-thức-với-observability" data-for="11-tổng-kết--map-kiến-thức-với-observability">11. Tổng Kết — Map kiến thức với Observability</a></li><li class="depth-1"><a href="#-mapping-sang-dynatrace--datadog" data-for="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog</a></li><li class="depth-1"><a href="#-demo--chạy-thử-shopvn-v1" data-for="-demo--chạy-thử-shopvn-v1">🧪 Demo — Chạy thử ShopVN v1</a></li><li class="depth-1"><a href="#-tham-khảo" data-for="-tham-khảo">📚 Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/observability/datadog/labs/08---slos--and--database-monitoring" class="internal">Lab 08 — SLOs &amp; Database Monitoring (Kubernetes)</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/01---host-monitoring--and--smartscape-topology" class="internal">Lab 01 — Host Monitoring &amp; Smartscape Topology</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/02---services,-purepath--and--database" class="internal">Lab 02 — Services, PurePath &amp; Database</a></li><li><a href="../../../02---areas/observability/fundamentals/00---mục-lục--and--lộ-trình-học" class="internal">Observability Fundamentals — Mục Lục &amp; Lộ Trình Học</a></li><li><a href="../../../02---areas/observability/fundamentals/02---three-pillars-deep-dive---logs" class="internal">Chương 02: Three Pillars Deep Dive — Logs</a></li><li><a href="../../../02---areas/observability/fundamentals/demo/readme" class="internal">ShopVN Demo — Hands-on Lab Guide</a></li><li><a href="../../../02---areas/observability/labs/00---lab-overview--and--roadmap" class="internal">Observability Platform Labs — Tổng Quan &amp; Lộ Trình</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

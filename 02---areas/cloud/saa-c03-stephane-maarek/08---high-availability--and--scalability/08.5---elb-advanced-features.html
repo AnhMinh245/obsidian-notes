@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>8.5 – ELB Advanced Features: Sticky Sessions, Cross-Zone, SSL, Connection Draining</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="8.5 – ELB Advanced Features: Sticky Sessions, Cross-Zone, SSL, Connection Draining"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="8.5 – ELB Advanced Features: Sticky Sessions, Cross-Zone, SSL, Connection Draining"/><meta name="twitter:description" content="← 8."/><meta property="og:description" content="← 8."/><meta property="og:image:alt" content="← 8."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.5---elb-advanced-features"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.5---elb-advanced-features"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="← 8."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.5---elb-advanced-features" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-59" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-59" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/">08 - High Availability &amp; Scalability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>8.5 – ELB Advanced Features: Sticky Sessions, Cross-Zone, SSL, Connection Draining</a></div></nav><h1 class="article-title">8.5 – ELB Advanced Features: Sticky Sessions, Cross-Zone, SSL, Connection Draining</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">ELB Advanced Features</span><span class="note-properties-separator">, </span><span class="note-properties-text">Sticky Sessions</span><span class="note-properties-separator">, </span><span class="note-properties-text">Cross-Zone Load Balancing</span><span class="note-properties-separator">, </span><span class="note-properties-text">Connection Draining</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-09-12T17:00:00.000Z">13 thg 9, 2026</time><span>6 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.0---ha--and--scalability-index" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.0---ha--and--scalability-index">← 8. High Availability &amp; Scalability</a></p>
+<h1 id="85--elb-advanced-features">8.5 – ELB Advanced Features<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#85--elb-advanced-features" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> 4 tính năng độc lập nhau (Sticky Sessions, Cross-Zone, SNI, Connection Draining) — đề thi thường hỏi riêng lẻ từng cái kèm bẫy tên gọi (vd Connection Draining vs Deregistration Delay). Học theo bảng, không cần nhớ theo thứ tự trình bày.</p>
+</blockquote>
+<h2 id="1-sticky-sessions-session-affinity">1. Sticky Sessions (Session Affinity)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-sticky-sessions-session-affinity" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="sticky-sessions-là-gì">Sticky Sessions là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sticky-sessions-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Sticky Sessions</strong> là cơ chế gắn một client vào <strong>một backend instance cố định</strong> phía sau load balancer.</p>
+<blockquote>
+<p>Cùng một client → luôn được forward đến cùng một EC2 instance trong suốt thời gian session còn hiệu lực.</p>
+</blockquote>
+<h3 id="tại-sao-cần">Tại sao cần?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-cần" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Một số ứng dụng cũ <strong>lưu session trong bộ nhớ local</strong> của từng instance (không phải distributed cache). Nếu load balancer chuyển request sang instance khác → user <strong>mất session, bị logout, mất giỏ hàng</strong>.</p>
+<p>Sticky Sessions ngăn điều đó xảy ra.</p>
+<blockquote>
+<p><strong>Thực hành tốt hơn:</strong> Lưu session vào <strong>ElastiCache Redis</strong> hoặc <strong>DynamoDB</strong> để ứng dụng stateless hoàn toàn → không cần Sticky Sessions.</p>
+</blockquote>
+<h3 id="hỗ-trợ-theo-loại-lb">Hỗ trợ theo loại LB<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hỗ-trợ-theo-loại-lb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Load Balancer</th><th>Hỗ trợ?</th></tr></thead><tbody><tr><td><strong>ALB</strong></td><td>✔ Có</td></tr><tr><td><strong>CLB</strong></td><td>✔ Có</td></tr><tr><td><strong>NLB</strong></td><td>✔ Có (chỉ TCP Stickiness)</td></tr><tr><td><strong>GWLB</strong></td><td>❌ Không</td></tr></tbody></table></div>
+<h3 id="nhược-điểm">Nhược điểm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nhược-điểm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Mất cân bằng tải</strong> — một số instance phục vụ nhiều client hơn.</li>
+<li>Không nên dùng nếu ứng dụng đã có: distributed session, session replication, DynamoDB/ElastiCache session store.</li>
+</ul>
+<h3 id="các-loại-cookie-trong-sticky-sessions">Các loại Cookie trong Sticky Sessions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-loại-cookie-trong-sticky-sessions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Nhóm 1 — Application-based Cookies (do application tạo):</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cookie</th><th>Tạo bởi</th><th>Tên cookie</th><th>Ghi chú</th></tr></thead><tbody><tr><td><strong>Custom Cookie</strong></td><td>Backend application</td><td>Tùy chọn (không dùng <code>AWSALB</code>, <code>AWSALBAPP</code>, <code>AWSALBTG</code>)</td><td>Có thể chứa attribute tùy chỉnh</td></tr><tr><td><strong>Application Cookie</strong></td><td>Load Balancer (theo logic app)</td><td><code>AWSALBAPP</code></td><td>LB tạo nhưng theo lifecycle của app</td></tr></tbody></table></div>
+<p><strong>Nhóm 2 — Duration-based Cookies (LB tự tạo, có thời gian hết hạn):</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>LB</th><th>Tên cookie</th></tr></thead><tbody><tr><td><strong>ALB</strong></td><td><code>AWSALB</code></td></tr><tr><td><strong>CLB</strong></td><td><code>AWSELB</code></td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Trong thi hay hỏi nhất:</strong> Duration-based cookie do LB tạo (<code>AWSALB</code> / <code>AWSELB</code>).</p>
+</blockquote>
+<hr/>
+<h2 id="2-cross-zone-load-balancing">2. Cross-Zone Load Balancing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-cross-zone-load-balancing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="là-gì">Là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Cross-Zone LB</strong> cho phép <strong>mỗi LB node phân phối traffic đồng đều đến tất cả backend instances trong mọi AZ</strong>, không chỉ trong AZ của nó.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TB\n    subgraph withCZ [\&quot;Có Cross-Zone LB\&quot;]\n        LB_AZ1a[\&quot;LB Node AZ1\&quot;] --> EC_AZ1[\&quot;EC2 AZ1 (2 inst)\&quot;]\n        LB_AZ1a --> EC_AZ2[\&quot;EC2 AZ2 (4 inst)\&quot;]\n        LB_AZ2a[\&quot;LB Node AZ2\&quot;] --> EC_AZ1\n        LB_AZ2a --> EC_AZ2\n    end\n    subgraph withoutCZ [\&quot;Không có Cross-Zone LB\&quot;]\n        LB_AZ1b[\&quot;LB Node AZ1\&quot;] --> EC_AZ1b[\&quot;EC2 AZ1 (2 inst)&lt;br/>nhận 50% traffic → quá tải\&quot;]\n        LB_AZ2b[\&quot;LB Node AZ2\&quot;] --> EC_AZ2b[\&quot;EC2 AZ2 (8 inst)&lt;br/>nhận 50% traffic → nhàn rỗi\&quot;]\n    end&quot;">graph TB
+    subgraph withCZ [&quot;Có Cross-Zone LB&quot;]
+        LB_AZ1a[&quot;LB Node AZ1&quot;] --> EC_AZ1[&quot;EC2 AZ1 (2 inst)&quot;]
+        LB_AZ1a --> EC_AZ2[&quot;EC2 AZ2 (4 inst)&quot;]
+        LB_AZ2a[&quot;LB Node AZ2&quot;] --> EC_AZ1
+        LB_AZ2a --> EC_AZ2
+    end
+    subgraph withoutCZ [&quot;Không có Cross-Zone LB&quot;]
+        LB_AZ1b[&quot;LB Node AZ1&quot;] --> EC_AZ1b[&quot;EC2 AZ1 (2 inst)&lt;br/>nhận 50% traffic → quá tải&quot;]
+        LB_AZ2b[&quot;LB Node AZ2&quot;] --> EC_AZ2b[&quot;EC2 AZ2 (8 inst)&lt;br/>nhận 50% traffic → nhàn rỗi&quot;]
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><img src="../../../.././../../attachments/pasted-image-20260913004150.png" alt width="auto" height="auto"/></p>
+<p><em>Ảnh gốc: có Cross-Zone (trái) mỗi instance chỉ nhận 6.25 request bất kể ở AZ nào; không có Cross-Zone (phải) AZ ít instance hơn (2 inst) phải gánh 25 request/instance — gấp 4 lần AZ kia (6.25/instance).</em></p>
+<h3 id="mặc-định-và-chi-phí-theo-loại-lb">Mặc định và chi phí theo loại LB<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mặc-định-và-chi-phí-theo-loại-lb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Load Balancer</th><th>Mặc định</th><th>Bật/Tắt?</th><th>Chi phí Inter-AZ</th></tr></thead><tbody><tr><td><strong>ALB</strong></td><td>✔ <strong>Enabled</strong></td><td>Có thể tắt</td><td><strong>Miễn phí</strong></td></tr><tr><td><strong>NLB</strong></td><td>❌ Disabled</td><td>Có thể bật</td><td><strong>Tính phí</strong></td></tr><tr><td><strong>GWLB</strong></td><td>❌ Disabled</td><td>Có thể bật</td><td><strong>Tính phí</strong></td></tr><tr><td><strong>CLB</strong></td><td>❌ Disabled</td><td>Có thể bật</td><td><strong>Miễn phí</strong></td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Điểm thi:</strong> ALB mặc định bật Cross-Zone <strong>và miễn phí</strong>. NLB/GWLB mặc định tắt <strong>và tính phí</strong> khi bật.</p>
+</blockquote>
+<hr/>
+<h2 id="3-ssl-certificates--sni">3. SSL Certificates &amp; SNI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-ssl-certificates--sni" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ssltls-là-gì-trong-context-của-lb">SSL/TLS là gì trong context của LB?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ssltls-là-gì-trong-context-của-lb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>SSL/TLS mã hóa traffic giữa client và load balancer (in-transit encryption).</p>
+<ul>
+<li><strong>SSL</strong> = Secure Sockets Layer (cũ).</li>
+<li><strong>TLS</strong> = Transport Layer Security (mới, an toàn hơn).</li>
+<li>Mọi người vẫn hay nói “SSL” nhưng thực chất là TLS.</li>
+</ul>
+<h3 id="quản-lý-ssl-certificates">Quản lý SSL Certificates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quản-lý-ssl-certificates" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>LB dùng <strong>X.509 certificate</strong> (SSL/TLS server certificate).</li>
+<li>Quản lý tại <strong>ACM (AWS Certificate Manager)</strong> — tự động renew.</li>
+<li>Hoặc upload certificate riêng lên LB.</li>
+</ul>
+<h3 id="https-listener-yêu-cầu">HTTPS Listener yêu cầu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#https-listener-yêu-cầu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Phải có <strong>default certificate</strong>.</li>
+<li>Có thể gắn thêm certificate để hỗ trợ multi-domain.</li>
+<li>Hỗ trợ nhiều phiên bản TLS qua <strong>Security Policy</strong>.</li>
+</ul>
+<h3 id="server-name-indication-sni">Server Name Indication (SNI)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#server-name-indication-sni" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Vấn đề:</strong> 1 server cũ chỉ phục vụ được 1 certificate.</p>
+<p><strong>SNI giải quyết:</strong> cho phép 1 LB phục vụ <strong>nhiều domain với nhiều certificate</strong> — client gửi hostname ngay trong TLS handshake, LB chọn đúng certificate.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant C as Client\n    participant ALB as ALB\n    participant B1 as Backend shop.com\n    participant B2 as Backend api.com\n\n    C->>ALB: TLS Handshake (SNI: shop.example.com)\n    ALB->>ALB: Chọn cert cho shop.example.com\n    ALB->>B1: HTTP request (decrypted)&quot;">sequenceDiagram
+    participant C as Client
+    participant ALB as ALB
+    participant B1 as Backend shop.com
+    participant B2 as Backend api.com
+
+    C->>ALB: TLS Handshake (SNI: shop.example.com)
+    ALB->>ALB: Chọn cert cho shop.example.com
+    ALB->>B1: HTTP request (decrypted)
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="sni-hỗ-trợ-theo-lb">SNI hỗ trợ theo LB<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sni-hỗ-trợ-theo-lb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>LB</th><th>Hỗ trợ SNI?</th></tr></thead><tbody><tr><td><strong>ALB (v2)</strong></td><td>✔ Có</td></tr><tr><td><strong>NLB (v2)</strong></td><td>✔ Có</td></tr><tr><td><strong>CloudFront</strong></td><td>✔ Có</td></tr><tr><td><strong>CLB (v1)</strong></td><td>❌ Không — chỉ 1 cert/listener</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Điểm thi:</strong> NLB cũng hỗ trợ SNI — thường bị bỏ sót! CLB không hỗ trợ SNI.</p>
+</blockquote>
+<p><img src="../../../.././../../attachments/pasted-image-20260913004151.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="4-connection-draining--deregistration-delay">4. Connection Draining / Deregistration Delay<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-connection-draining--deregistration-delay" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="là-gì-1">Là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#là-gì-1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi một EC2 instance <strong>deregister</strong> hoặc <strong>unhealthy</strong>, ta không muốn cắt ngang các request đang xử lý dở (in-flight requests).</p>
+<p><strong>Connection Draining</strong> đảm bảo:</p>
+<blockquote>
+<p>Instance được rút khỏi LB <strong>một cách an toàn</strong> — cho phép xử lý xong request hiện tại, nhưng <strong>không nhận request mới</strong>.</p>
+</blockquote>
+<h3 id="hai-tên-gọi-cùng-một-tính-năng">Hai tên gọi, cùng một tính năng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hai-tên-gọi-cùng-một-tính-năng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Load Balancer</th><th>Tên tính năng</th></tr></thead><tbody><tr><td><strong>CLB</strong></td><td><em>Connection Draining</em></td></tr><tr><td><strong>ALB + NLB</strong></td><td><em>Deregistration Delay</em></td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Bài thi cố đánh lừa</strong> bằng cách dùng cả hai tên — phải biết đây là cùng một cơ chế.</p>
+</blockquote>
+<h3 id="cơ-chế-hoạt-động">Cơ chế hoạt động<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cơ-chế-hoạt-động" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant LB as Load Balancer\n    participant EC2 as EC2 Instance\n    participant NewEC2 as EC2 Instances Khác\n\n    Note over EC2: Instance deregister hoặc fail health check\n    LB->>EC2: Ngừng gửi request mới\n    LB->>NewEC2: Chuyển tất cả request mới sang đây\n    Note over EC2: Đang trong trạng thái \&quot;draining\&quot;\n    EC2->>EC2: Xử lý nốt request đang dở\n    Note over EC2: Hết delay hoặc xử lý xong → bị remove hoàn toàn&quot;">sequenceDiagram
+    participant LB as Load Balancer
+    participant EC2 as EC2 Instance
+    participant NewEC2 as EC2 Instances Khác
+
+    Note over EC2: Instance deregister hoặc fail health check
+    LB->>EC2: Ngừng gửi request mới
+    LB->>NewEC2: Chuyển tất cả request mới sang đây
+    Note over EC2: Đang trong trạng thái &quot;draining&quot;
+    EC2->>EC2: Xử lý nốt request đang dở
+    Note over EC2: Hết delay hoặc xử lý xong → bị remove hoàn toàn
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="thời-gian-chờ-delay-time">Thời gian chờ (Delay Time)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#thời-gian-chờ-delay-time" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cấu hình</th><th>Giá trị</th></tr></thead><tbody><tr><td>Default</td><td><strong>300 giây (5 phút)</strong></td></tr><tr><td>Tối thiểu</td><td>1 giây</td></tr><tr><td>Tối đa</td><td>3600 giây</td></tr><tr><td>Tắt</td><td>Set = <strong>0</strong></td></tr></tbody></table></div>
+<p><strong>Hướng dẫn sử dụng:</strong></p>
+<ul>
+<li><strong>Set thấp</strong> (10–60s): request ngắn hạn như REST API (50–200ms).</li>
+<li><strong>Set cao</strong> (600–3600s): long-running jobs hoặc upload lớn.</li>
+</ul>
+<h3 id="khi-nào-cần-dùng">Khi nào cần dùng?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-nào-cần-dùng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Deploy version mới → remove instance cũ từ LB.</li>
+<li>Scale-in Auto Scaling Group.</li>
+<li>Instance unhealthy nhưng đang còn request đang xử lý.</li>
+<li>Tắt/terminate EC2 để bảo trì.</li>
+</ul>
+<h2 id="bảng-từ-khoá-đề-thi">Bảng từ khoá đề thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-từ-khoá-đề-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Từ khoá trong đề</th><th>Chọn</th></tr></thead><tbody><tr><td>”App cũ lưu session local, mất giỏ hàng khi đổi server”</td><td><strong>Sticky Sessions</strong></td></tr><tr><td>”Cookie do LB tự tạo, có hạn dùng”</td><td><code>AWSALB</code> (ALB) / <code>AWSELB</code> (CLB) — <strong>Duration-based cookie</strong></td></tr><tr><td>”AZ ít instance bị quá tải trong khi AZ khác rảnh”</td><td>Bật <strong>Cross-Zone Load Balancing</strong></td></tr><tr><td>”NLB/GWLB bật Cross-Zone có mất phí không?”</td><td><strong>Có tính phí</strong> (khác ALB — miễn phí)</td></tr><tr><td>“1 LB phục vụ nhiều domain HTTPS, nhiều cert”</td><td><strong>SNI</strong> (ALB, NLB, CloudFront — không phải CLB)</td></tr><tr><td>“Instance sắp bị remove, đừng cắt ngang request đang chạy”</td><td><strong>Connection Draining / Deregistration Delay</strong> (default 300s)</td></tr></tbody></table></div>
+<p>Xem thêm domain-based: <a href="../../../.././../aws-saa-c03/domain-2---resilient-architectures/2.1---elb---elastic-load-balancing" class="internal internal-link alias" data-slug="aws-saa-c03/domain-2---resilient-architectures/2.1---elb---elastic-load-balancing">2.1 – ELB</a>.</p>
+<h2 id="điểm-hay-ra-thi-tổng-hợp-section-này">Điểm hay ra thi (tổng hợp section này)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi-tổng-hợp-section-này" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Sticky Sessions</strong> gây mất cân bằng tải — chỉ dùng cho app cũ chưa migrate sang distributed session.</li>
+<li><code>AWSALB</code> = ALB duration cookie; <code>AWSELB</code> = CLB duration cookie.</li>
+<li><strong>Cross-Zone LB</strong>: ALB bật mặc định và miễn phí; NLB/GWLB tắt mặc định và tính phí.</li>
+<li><strong>Connection Draining = Deregistration Delay</strong> — hai tên một tính năng.</li>
+<li><strong>CLB không hỗ trợ SNI</strong> → chỉ 1 cert/listener → lỗi thời.</li>
+<li>Default Deregistration Delay = <strong>300 giây</strong>.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Nhớ bảng Cross-Zone theo LB type (default + chi phí) vì hay ra thi phân biệt.</li>
+<li>SNI là tính năng giúp 1 ALB phục vụ nhiều domain HTTPS — thay vì cần nhiều LB.</li>
+<li>Connection Draining giúp deploy zero-downtime bằng cách graceful remove instance.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Bảng so sánh Cross-Zone LB default + chi phí theo loại LB</li>
+<li>Cookie types trong Sticky Sessions (Application vs Duration)</li>
+<li>SNI — multi-cert trên 1 ALB</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-59" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#85--elb-advanced-features" data-for="85--elb-advanced-features">8.5 – ELB Advanced Features</a></li><li class="depth-1"><a href="#1-sticky-sessions-session-affinity" data-for="1-sticky-sessions-session-affinity">1. Sticky Sessions (Session Affinity)</a></li><li class="depth-2"><a href="#sticky-sessions-là-gì" data-for="sticky-sessions-là-gì">Sticky Sessions là gì?</a></li><li class="depth-2"><a href="#tại-sao-cần" data-for="tại-sao-cần">Tại sao cần?</a></li><li class="depth-2"><a href="#hỗ-trợ-theo-loại-lb" data-for="hỗ-trợ-theo-loại-lb">Hỗ trợ theo loại LB</a></li><li class="depth-2"><a href="#nhược-điểm" data-for="nhược-điểm">Nhược điểm</a></li><li class="depth-2"><a href="#các-loại-cookie-trong-sticky-sessions" data-for="các-loại-cookie-trong-sticky-sessions">Các loại Cookie trong Sticky Sessions</a></li><li class="depth-1"><a href="#2-cross-zone-load-balancing" data-for="2-cross-zone-load-balancing">2. Cross-Zone Load Balancing</a></li><li class="depth-2"><a href="#là-gì" data-for="là-gì">Là gì?</a></li><li class="depth-2"><a href="#mặc-định-và-chi-phí-theo-loại-lb" data-for="mặc-định-và-chi-phí-theo-loại-lb">Mặc định và chi phí theo loại LB</a></li><li class="depth-1"><a href="#3-ssl-certificates--sni" data-for="3-ssl-certificates--sni">3. SSL Certificates &amp; SNI</a></li><li class="depth-2"><a href="#ssltls-là-gì-trong-context-của-lb" data-for="ssltls-là-gì-trong-context-của-lb">SSL/TLS là gì trong context của LB?</a></li><li class="depth-2"><a href="#quản-lý-ssl-certificates" data-for="quản-lý-ssl-certificates">Quản lý SSL Certificates</a></li><li class="depth-2"><a href="#https-listener-yêu-cầu" data-for="https-listener-yêu-cầu">HTTPS Listener yêu cầu</a></li><li class="depth-2"><a href="#server-name-indication-sni" data-for="server-name-indication-sni">Server Name Indication (SNI)</a></li><li class="depth-2"><a href="#sni-hỗ-trợ-theo-lb" data-for="sni-hỗ-trợ-theo-lb">SNI hỗ trợ theo LB</a></li><li class="depth-1"><a href="#4-connection-draining--deregistration-delay" data-for="4-connection-draining--deregistration-delay">4. Connection Draining / Deregistration Delay</a></li><li class="depth-2"><a href="#là-gì-1" data-for="là-gì-1">Là gì?</a></li><li class="depth-2"><a href="#hai-tên-gọi-cùng-một-tính-năng" data-for="hai-tên-gọi-cùng-một-tính-năng">Hai tên gọi, cùng một tính năng</a></li><li class="depth-2"><a href="#cơ-chế-hoạt-động" data-for="cơ-chế-hoạt-động">Cơ chế hoạt động</a></li><li class="depth-2"><a href="#thời-gian-chờ-delay-time" data-for="thời-gian-chờ-delay-time">Thời gian chờ (Delay Time)</a></li><li class="depth-2"><a href="#khi-nào-cần-dùng" data-for="khi-nào-cần-dùng">Khi nào cần dùng?</a></li><li class="depth-1"><a href="#bảng-từ-khoá-đề-thi" data-for="bảng-từ-khoá-đề-thi">Bảng từ khoá đề thi</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi-tổng-hợp-section-này" data-for="điểm-hay-ra-thi-tổng-hợp-section-này">Điểm hay ra thi (tổng hợp section này)</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.0---ha--and--scalability-index" class="internal">8. High Availability &amp; Scalability – Index</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.2---elastic-load-balancing-overview" class="internal">8.2 – Elastic Load Balancing (ELB) – Tổng quan</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.3---application-load-balancer" class="internal">8.3 – Application Load Balancer (ALB)</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

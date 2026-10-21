@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>04.3 - Chuyển đổi ứng dụng và DNS</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="04.3 - Chuyển đổi ứng dụng và DNS"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="04.3 - Chuyển đổi ứng dụng và DNS"/><meta name="twitter:description" content="AD 2025 - Chuyển đổi ứng dụng và DNS Tóm tắt nhanh Application migration yêu cầu audit dependency kỹ lưỡng — xác định ứng dụng nào kết nối AD qua LDAP, Kerberos, hay NTLM SPN và Kerberos Delegation theo service account, không theo DC — migration DC thường không ảnh hưởng nếu app dùng domain FQDN DNS..."/><meta property="og:description" content="AD 2025 - Chuyển đổi ứng dụng và DNS Tóm tắt nhanh Application migration yêu cầu audit dependency kỹ lưỡng — xác định ứng dụng nào kết nối AD qua LDAP, Kerberos, hay NTLM SPN và Kerberos Delegation theo service account, không theo DC — migration DC thường không ảnh hưởng nếu app dùng domain FQDN DNS..."/><meta property="og:image:alt" content="AD 2025 - Chuyển đổi ứng dụng và DNS Tóm tắt nhanh Application migration yêu cầu audit dependency kỹ lưỡng — xác định ứng dụng nào kết nối AD qua LDAP, Kerberos, hay NTLM SPN và Kerberos Delegation theo service account, không theo DC — migration DC thường không ảnh hưởng nếu app dùng domain FQDN DNS..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.3---chuyển-đổi-ứng-dụng-và-dns"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.3---chuyển-đổi-ứng-dụng-và-dns"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="AD 2025 - Chuyển đổi ứng dụng và DNS Tóm tắt nhanh Application migration yêu cầu audit dependency kỹ lưỡng — xác định ứng dụng nào kết nối AD qua LDAP, Kerberos, hay NTLM SPN và Kerberos Delegation theo service account, không theo DC — migration DC thường không ảnh hưởng nếu app dùng domain FQDN DNS..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.3---chuyển-đổi-ứng-dụng-và-dns" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-484" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-484" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/">Windows Servers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/">AD Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/">04 - Nâng cấp và chuyển đổi</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>04.3 - Chuyển đổi ứng dụng và DNS</a></div></nav><h1 class="article-title">04.3 - Chuyển đổi ứng dụng và DNS</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/windows-server" class="internal internal-link tag-link">domain/windows-server</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">App Migration AD 2025</span><span class="note-properties-separator">, </span><span class="note-properties-text">DNS Cutover 2025</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>15 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="ad-2025---chuyển-đổi-ứng-dụng-và-dns">AD 2025 - Chuyển đổi ứng dụng và DNS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ad-2025---chuyển-đổi-ứng-dụng-và-dns" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tóm-tắt-nhanh">Tóm tắt nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Application migration yêu cầu <strong>audit dependency kỹ lưỡng</strong> — xác định ứng dụng nào kết nối AD qua LDAP, Kerberos, hay NTLM</li>
+<li><strong>SPN và Kerberos Delegation</strong> theo service account, không theo DC — migration DC thường không ảnh hưởng nếu app dùng domain FQDN</li>
+<li>DNS cutover ưu tiên qua <strong>DHCP option 006</strong> cho DHCP client, GPO cho static client</li>
+<li>Nguyên tắc vàng: ứng dụng nên dùng <strong>domain FQDN</strong> (<code>ldap://domain.local</code>) thay vì hardcode tên DC cụ thể</li>
+<li><strong>LDAP signing và channel binding</strong> mặc định stricter trên Server 2025 — audit app compatibility là critical</li>
+</ul>
+<hr/>
+<h2 id="application-migration--chuyển-đổi-ứng-dụng">Application Migration — Chuyển đổi ứng dụng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#application-migration--chuyển-đổi-ứng-dụng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tại-sao-application-audit-là-bước-quan-trọng-nhất">Tại sao Application Audit là bước quan trọng nhất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-application-audit-là-bước-quan-trọng-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Analogie: DC migration giống như <strong>đổi tổng đài điện thoại</strong> — nếu mọi người gọi bằng số nội bộ (domain FQDN) → tổng đài mới tự chuyển đúng. Nhưng nếu ai đó ghi <strong>số đường dây trực tiếp</strong> (hardcode DC name) vào sổ → khi đổi tổng đài, cuộc gọi sẽ fail.</p>
+<p><strong>Audit trước migration</strong> để tìm “số đường dây trực tiếp” đó và sửa trước.</p>
+<h3 id="audit-dependency-ứng-dụng-nào-kết-nối-ad">Audit Dependency: ứng dụng nào kết nối AD?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#audit-dependency-ứng-dụng-nào-kết-nối-ad" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Trước khi decommission DC cũ, cần xác định <strong>mọi</strong> ứng dụng kết nối AD:</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    AUDIT[\&quot;Application&lt;br/>Dependency Audit\&quot;] --> Q1{\&quot;How does the app&lt;br/>connect to AD?\&quot;}\n\n    Q1 --> LDAP[\&quot;LDAP Bind&lt;br/>Port 389/636\&quot;]\n    Q1 --> KERB[\&quot;Kerberos Auth&lt;br/>Port 88\&quot;]\n    Q1 --> NTLM[\&quot;NTLM Fallback\&quot;]\n    Q1 --> RADIUS[\&quot;RADIUS/NPS&lt;br/>802.1X\&quot;]\n\n    LDAP --> L1{\&quot;Uses domain FQDN&lt;br/>or DC name?\&quot;}\n    L1 -->|\&quot;domain.local\&quot;| SAFE[\&quot;SAFE&lt;br/>No changes needed\&quot;]\n    L1 -->|\&quot;DC-OLD-01.domain.local\&quot;| RISK[\&quot;AT RISK&lt;br/>Must update connection string\&quot;]\n    L1 -->|\&quot;IP address\&quot;| HIGH_RISK[\&quot;HIGH RISK&lt;br/>Must switch to FQDN now\&quot;]\n\n    KERB --> K1{\&quot;SPN on service&lt;br/>account or DC?\&quot;}\n    K1 -->|\&quot;Service Account\&quot;| SAFE2[\&quot;SAFE&lt;br/>SPN follows account, not DC\&quot;]\n    K1 -->|\&quot;DC computer account\&quot;| SAFE3[\&quot;SAFE&lt;br/>New DC auto-registers SPN\&quot;]\n\n    NTLM --> N1[\&quot;Check NTLM policy&lt;br/>on new DC&lt;br/>Server 2025 may restrict\&quot;]\n\n    style SAFE fill:#e8f5e9,stroke:#4caf50\n    style SAFE2 fill:#e8f5e9,stroke:#4caf50\n    style SAFE3 fill:#e8f5e9,stroke:#4caf50\n    style RISK fill:#fff3cd,stroke:#ffc107\n    style HIGH_RISK fill:#ffcccc,stroke:#cc0000&quot;">graph TD
+    AUDIT[&quot;Application&lt;br/>Dependency Audit&quot;] --> Q1{&quot;How does the app&lt;br/>connect to AD?&quot;}
+
+    Q1 --> LDAP[&quot;LDAP Bind&lt;br/>Port 389/636&quot;]
+    Q1 --> KERB[&quot;Kerberos Auth&lt;br/>Port 88&quot;]
+    Q1 --> NTLM[&quot;NTLM Fallback&quot;]
+    Q1 --> RADIUS[&quot;RADIUS/NPS&lt;br/>802.1X&quot;]
+
+    LDAP --> L1{&quot;Uses domain FQDN&lt;br/>or DC name?&quot;}
+    L1 -->|&quot;domain.local&quot;| SAFE[&quot;SAFE&lt;br/>No changes needed&quot;]
+    L1 -->|&quot;DC-OLD-01.domain.local&quot;| RISK[&quot;AT RISK&lt;br/>Must update connection string&quot;]
+    L1 -->|&quot;IP address&quot;| HIGH_RISK[&quot;HIGH RISK&lt;br/>Must switch to FQDN now&quot;]
+
+    KERB --> K1{&quot;SPN on service&lt;br/>account or DC?&quot;}
+    K1 -->|&quot;Service Account&quot;| SAFE2[&quot;SAFE&lt;br/>SPN follows account, not DC&quot;]
+    K1 -->|&quot;DC computer account&quot;| SAFE3[&quot;SAFE&lt;br/>New DC auto-registers SPN&quot;]
+
+    NTLM --> N1[&quot;Check NTLM policy&lt;br/>on new DC&lt;br/>Server 2025 may restrict&quot;]
+
+    style SAFE fill:#e8f5e9,stroke:#4caf50
+    style SAFE2 fill:#e8f5e9,stroke:#4caf50
+    style SAFE3 fill:#e8f5e9,stroke:#4caf50
+    style RISK fill:#fff3cd,stroke:#ffc107
+    style HIGH_RISK fill:#ffcccc,stroke:#cc0000
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="phân-loại-ứng-dụng-theo-mức-độ-rủi-ro-migration">Phân loại ứng dụng theo mức độ rủi ro migration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phân-loại-ứng-dụng-theo-mức-độ-rủi-ro-migration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Category</th><th>Ví dụ</th><th>Rủi ro migration</th><th>Hành động</th></tr></thead><tbody><tr><td><strong>Cat 1: Tự động</strong></td><td>App dùng domain FQDN, Windows Integrated Auth</td><td>Thấp</td><td>Không cần thay đổi, chỉ test</td></tr><tr><td><strong>Cat 2: Config change</strong></td><td>App hardcode DC name trong config file</td><td>Trung bình</td><td>Đổi connection string, test</td></tr><tr><td><strong>Cat 3: Code change</strong></td><td>App hardcode DC name trong source code</td><td>Cao</td><td>Sửa code, rebuild, test</td></tr><tr><td><strong>Cat 4: Incompatible</strong></td><td>App chỉ support NTLM, không support LDAP signing</td><td>Rất cao</td><td>Test compatibility, có thể cần upgrade app</td></tr><tr><td><strong>Cat 5: External</strong></td><td>App từ vendor, không có source code</td><td>Tùy</td><td>Liên hệ vendor, test trong lab</td></tr></tbody></table></div>
+<h3 id="các-loại-kết-nối-ad-chi-tiết">Các loại kết nối AD chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-loại-kết-nối-ad-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="ldap-bind">LDAP Bind<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ldap-bind" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Domain FQDN</strong> (best practice): <code>LDAP://domain.local</code> → DNS SRV record tự trỏ về DC khả dụng. Khi DC cũ offline, DNS tự loại bỏ SRV record → client tự tìm DC mới</li>
+<li><strong>Hardcoded DC name</strong>: <code>LDAP://DC-OLD-01.domain.local:389</code> → <strong>phải đổi</strong> sang domain FQDN hoặc DC mới. Đây là pattern phổ biến nhất gây issue khi migration</li>
+<li><strong>IP address</strong>: <code>LDAP://10.1.1.5:389</code> → <strong>phải đổi</strong> — tệ nhất, không fallback, không load balance</li>
+<li><strong>LDAP over SSL</strong> (LDAPS port 636): kiểm tra certificate trên DC mới đã có — DC mới cần certificate để serve LDAPS</li>
+<li><strong>Serverless bind</strong>: app dùng ADSI/System.DirectoryServices mà không chỉ định server → AD SDK tự locate DC qua DNS → <strong>an toàn</strong></li>
+</ul>
+<p><strong>LDAP Referral</strong>: khi DC nhận query mà object nằm ở domain khác, DC trả về referral → client tự theo referral. Trong <strong>single-domain forest</strong>, referral ít xảy ra.</p>
+<h4 id="ldap-query-compatibility-giữa-2012r2-và-2025">LDAP Query Compatibility giữa 2012R2 và 2025<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ldap-query-compatibility-giữa-2012r2-và-2025" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Server 2025 có thay đổi LDAP behavior</strong> cần lưu ý:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thay đổi</th><th>2012R2 Default</th><th>2025 Default</th><th>Impact</th></tr></thead><tbody><tr><td>LDAP Signing</td><td>Not required</td><td><strong>Required</strong></td><td>App dùng simple bind không sign → bị reject</td></tr><tr><td>LDAP Channel Binding</td><td>Not required</td><td><strong>Required</strong></td><td>App không support channel binding → fail</td></tr><tr><td>LDAP authentication</td><td>Allow unsigned</td><td><strong>Require signing</strong></td><td>Legacy app có thể bị ảnh hưởng</td></tr><tr><td>MaxPageSize</td><td>1000</td><td>1000</td><td>Không thay đổi</td></tr><tr><td>MaxValRange</td><td>1500</td><td>1500</td><td>Không thay đổi</td></tr></tbody></table></div>
+<p><strong>Cách audit LDAP compatibility trước migration</strong>:</p>
+<ol>
+<li><strong>Enable LDAP signing audit</strong> trên DC 2012R2: GPO → <code>Network security: LDAP client signing requirements</code> = <code>Require signing</code> (trong <strong>audit mode</strong> trước)</li>
+<li><strong>Monitor Event Log</strong>: Event ID 2889 trong Directory Service log → liệt kê client nào dùng unsigned LDAP bind</li>
+<li><strong>Fix</strong>: cập nhật app để dùng LDAP signing, hoặc upgrade LDAP client library</li>
+<li><strong>Nếu không fix được</strong>: có thể tạm disable LDAP signing requirement trên DC 2025 qua GPO — nhưng đây là <strong>security risk</strong></li>
+</ol>
+<h4 id="kerberos-authentication">Kerberos Authentication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kerberos-authentication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Kerberos dùng <strong>SPN</strong> (Service Principal Name) để identify service — client request <strong>TGS ticket</strong> cho SPN từ KDC (DC)</li>
+<li>Khi DC thay đổi, Kerberos <strong>không bị ảnh hưởng</strong> nếu:
+<ul>
+<li>App dùng domain FQDN (KDC lookup qua DNS SRV record)</li>
+<li>Service account không đổi (SPN register trên service account)</li>
+<li>SPN vẫn registered đúng (không duplicate, không missing)</li>
+</ul>
+</li>
+</ul>
+<h4 id="kerberos-armoring-fast">Kerberos Armoring (FAST)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kerberos-armoring-fast" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Flexible Authentication Secure Tunneling (FAST)</strong> — hay gọi là <strong>Kerberos Armoring</strong>:</p>
+<ul>
+<li><strong>Chức năng</strong>: bảo vệ Kerberos pre-authentication exchange khỏi offline dictionary attack</li>
+<li><strong>Server 2025</strong>: có thể <strong>enforce FAST</strong> mặc định hoặc qua policy</li>
+<li><strong>Impact khi migration</strong>: nếu DC 2025 enforce FAST mà client/app chưa support → authentication fail</li>
+<li><strong>Mitigation</strong>: test FAST support trên client và app trước khi enable; deploy FAST từ từ qua GPO</li>
+</ul>
+<h4 id="claims-based-authentication">Claims-Based Authentication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#claims-based-authentication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Server 2012+ giới thiệu <strong>Dynamic Access Control</strong> với claims-based authorization:</p>
+<ul>
+<li><strong>Claims</strong> = attribute từ AD user/device được nhúng vào Kerberos ticket</li>
+<li><strong>Impact khi migration</strong>: nếu đang dùng claims → verify claims policy replicate đúng sang DC 2025</li>
+<li><strong>Compound authentication</strong>: kết hợp user claim + device claim → verify device join đúng domain</li>
+</ul>
+<blockquote>
+<p><strong>Trong dự án này</strong>: nếu chưa dùng claims → không cần lo. Nếu đang dùng → test kỹ trên DC 2025 trước khi decommission DC cũ.</p>
+</blockquote>
+<h4 id="ntlm-fallback">NTLM Fallback<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ntlm-fallback" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>NTLM là fallback khi Kerberos fail (thường do SPN issue, network, hoặc app không support Kerberos)</li>
+<li>NTLM xác thực qua <strong>Netlogon secure channel</strong> đến DC — với DC mới, Netlogon channel tự thiết lập → NTLM vẫn hoạt động</li>
+<li><strong>Lưu ý quan trọng</strong>: Server 2025 có <strong>NTLM restriction policies</strong> mạnh hơn:
+<ul>
+<li>Có thể audit/block NTLM authentication</li>
+<li>Legacy app dùng NTLM exclusively có thể bị ảnh hưởng</li>
+<li><strong>Audit trước</strong>: enable NTLM auditing GPO → monitor Event ID 4624 với LogonType NTLM → xác định app nào dùng NTLM</li>
+</ul>
+</li>
+</ul>
+<h3 id="spn-service-principal-name-considerations">SPN (Service Principal Name) Considerations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spn-service-principal-name-considerations" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>SPN là “địa chỉ” của service trong Kerberos. Ví dụ:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>SPN Pattern</th><th>Ý nghĩa</th><th>Registered trên</th></tr></thead><tbody><tr><td><code>HTTP/webserver.domain.local</code></td><td>Web service trên webserver</td><td>Service account hoặc computer account</td></tr><tr><td><code>MSSQLSvc/sqlserver.domain.local:1433</code></td><td>SQL Server instance</td><td>SQL service account</td></tr><tr><td><code>HOST/dc01.domain.local</code></td><td>DC computer account services</td><td>DC computer account (auto)</td></tr><tr><td><code>ldap/dc01.domain.local</code></td><td>LDAP service trên DC</td><td>DC computer account (auto)</td></tr><tr><td><code>DNS/dc01.domain.local</code></td><td>DNS service trên DC</td><td>DC computer account (auto)</td></tr></tbody></table></div>
+<p><strong>Khi migration DC</strong>:</p>
+<ul>
+<li>SPN trên <strong>DC computer account</strong> (<code>HOST/</code>, <code>ldap/</code>, <code>DNS/</code>, <code>GC/</code>) → DC mới <strong>tự register</strong> khi promote — <strong>không cần action thủ công</strong></li>
+<li>SPN trên <strong>service account</strong> (SQL, Exchange, custom app) → <strong>không đổi</strong> vì SPN theo account, không theo DC</li>
+<li><strong>Duplicate SPN</strong> là lỗi phổ biến nhất: <code>setspn -X</code> để detect duplicate trước VÀ sau migration</li>
+</ul>
+<h3 id="kerberos-delegation-chi-tiết">Kerberos Delegation chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kerberos-delegation-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Delegation cho phép service <strong>impersonate user</strong> để truy cập service khác (multi-tier application). Ví dụ: Web App → impersonate user → query SQL Server.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph delegationFlow[\&quot;Multi-tier App - Delegation Flow\&quot;]\n        User[\&quot;User\&quot;] -->|\&quot;1. Authenticate\&quot;| WebApp[\&quot;Web App&lt;br/>Front-end\&quot;]\n        WebApp -->|\&quot;2. Delegate&lt;br/>user identity\&quot;| SQLServer[\&quot;SQL Server&lt;br/>Back-end\&quot;]\n        SQLServer -->|\&quot;3. Return data&lt;br/>as user\&quot;| WebApp\n    end&quot;">graph LR
+    subgraph delegationFlow[&quot;Multi-tier App - Delegation Flow&quot;]
+        User[&quot;User&quot;] -->|&quot;1. Authenticate&quot;| WebApp[&quot;Web App&lt;br/>Front-end&quot;]
+        WebApp -->|&quot;2. Delegate&lt;br/>user identity&quot;| SQLServer[&quot;SQL Server&lt;br/>Back-end&quot;]
+        SQLServer -->|&quot;3. Return data&lt;br/>as user&quot;| WebApp
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>So sánh 3 loại Delegation</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Cách cấu hình</th><th>Scope</th><th>Rủi ro</th><th>Recommendation</th></tr></thead><tbody><tr><td><strong>Unconstrained</strong></td><td>Checkbox “Trust this computer for delegation to any service”</td><td>Delegate đến <strong>bất kỳ</strong> service</td><td><strong>Cao</strong> — service có TGT, có thể impersonate đến mọi nơi</td><td><strong>Tránh dùng</strong> — legacy</td></tr><tr><td><strong>Constrained (KCD)</strong></td><td><code>msDS-AllowedToDelegateTo</code> attribute</td><td>Delegate đến <strong>danh sách SPN cụ thể</strong></td><td><strong>Trung bình</strong></td><td>Phổ biến, acceptable</td></tr><tr><td><strong>Resource-Based (RBCD)</strong></td><td><code>msDS-AllowedToActOnBehalfOfOtherIdentity</code> trên resource</td><td>Resource tự quyết định ai được delegate</td><td><strong>Thấp</strong></td><td><strong>Khuyến nghị</strong> — Server 2012+</td></tr></tbody></table></div>
+<p><strong>Tác động đến migration</strong>:</p>
+<ul>
+<li><strong>Unconstrained Delegation</strong>: cấu hình trên <strong>computer/service account</strong> → nếu account không đổi → <strong>không cần thay đổi</strong></li>
+<li><strong>KCD</strong>: <code>msDS-AllowedToDelegateTo</code> chứa <strong>SPN list</strong> → chỉ cần update nếu SPN đích chứa tên DC cũ (ví dụ <code>ldap/DC-OLD-01.domain.local</code>)</li>
+<li><strong>RBCD</strong>: cấu hình trên resource (target), theo account identity → <strong>không cần thay đổi</strong> khi DC migration</li>
+</ul>
+<h3 id="ldap-connection-string--cập-nhật-chi-tiết">LDAP Connection String — Cập nhật chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ldap-connection-string--cập-nhật-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Trường hợp</th><th>Cần thay đổi?</th><th>Hành động</th><th>Độ ưu tiên</th></tr></thead><tbody><tr><td>App dùng <code>LDAP://domain.local</code></td><td>Không</td><td>DNS tự resolve DC mới</td><td>N/A</td></tr><tr><td>App dùng <code>LDAP://DC-OLD.domain.local</code></td><td><strong>Có</strong></td><td>Đổi sang <code>LDAP://domain.local</code> (best) hoặc DC mới</td><td><strong>P1</strong></td></tr><tr><td>App dùng IP address</td><td><strong>Có</strong></td><td>Đổi sang domain FQDN</td><td><strong>P1</strong></td></tr><tr><td>App dùng <code>LDAP://domain.local:389</code></td><td>Không</td><td>Port mặc định, DNS resolve</td><td>N/A</td></tr><tr><td>App dùng serverless bind</td><td>Không</td><td>AD SDK tự tìm DC</td><td>N/A</td></tr><tr><td>App dùng LDAPS <code>LDAP://DC-OLD:636</code></td><td><strong>Có</strong></td><td>Đổi sang domain FQDN + verify cert</td><td><strong>P1</strong></td></tr><tr><td>App dùng GC query port 3268</td><td>Không</td><td>GC trên tất cả DC mới</td><td>N/A</td></tr></tbody></table></div>
+<p><strong>Workaround tạm thời</strong>: nếu không thể đổi connection string ngay → tạo <strong>DNS CNAME record</strong> trỏ tên DC cũ về DC mới. Ví dụ: <code>DC-OLD-01.domain.local</code> → CNAME → <code>DC2025-ROOT-01.domain.local</code>. <strong>Nhưng đây chỉ là tạm</strong> — cần fix root cause.</p>
+<h3 id="common-applications-cần-audit">Common Applications cần Audit<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-applications-cần-audit" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="enterprise-applications">Enterprise Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#enterprise-applications" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Ứng dụng</th><th>Kết nối AD qua</th><th>Lưu ý khi migration</th><th>Rủi ro</th></tr></thead><tbody><tr><td><strong>Exchange Server</strong></td><td>LDAP + Kerberos + SPN</td><td>Service account SPNs, Autodiscover SCP, Outlook Anywhere auth</td><td>Cao</td></tr><tr><td><strong>SharePoint</strong></td><td>Kerberos + KCD</td><td>People Picker, search crawl account delegation, UPS sync</td><td>Cao</td></tr><tr><td><strong>SQL Server</strong></td><td>Kerberos + SPN</td><td>MSSQLSvc SPN trên service account, Always On AG listener SPN</td><td>Trung bình</td></tr><tr><td><strong>SCCM/MECM</strong></td><td>LDAP + Kerberos</td><td>Management Point, Distribution Point, SQL backend</td><td>Trung bình</td></tr><tr><td><strong>Print Server</strong></td><td>NTLM/Kerberos</td><td>Print queue published trong AD</td><td>Thấp</td></tr></tbody></table></div>
+<h4 id="infrastructure-services">Infrastructure Services<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#infrastructure-services" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Ứng dụng</th><th>Kết nối AD qua</th><th>Lưu ý khi migration</th><th>Rủi ro</th></tr></thead><tbody><tr><td><strong>RADIUS / NPS</strong></td><td>LDAP bind + certificate</td><td>Connection string, certificate auth (nếu dùng EAP-TLS)</td><td>Trung bình</td></tr><tr><td><strong>VPN Server</strong></td><td>RADIUS → AD</td><td>Thông qua NPS, verify RADIUS secret và AD binding</td><td>Trung bình</td></tr><tr><td><strong>Backup Software</strong></td><td>LDAP + Kerberos</td><td>Service account, AD agent, backup job configuration</td><td>Thấp</td></tr><tr><td><strong>Monitoring (SCOM, Zabbix)</strong></td><td>LDAP bind</td><td>Service account, AD integration</td><td>Thấp</td></tr></tbody></table></div>
+<h4 id="custom-và-legacy-applications">Custom và Legacy Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#custom-và-legacy-applications" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Ứng dụng</th><th>Kết nối AD qua</th><th>Lưu ý khi migration</th><th>Rủi ro</th></tr></thead><tbody><tr><td><strong>Custom Web Apps</strong></td><td>LDAP bind / Windows Auth</td><td><strong>Nhiều khả năng hardcode DC name</strong> — cần audit code/config</td><td>Cao</td></tr><tr><td><strong>Java Apps (JNDI)</strong></td><td>LDAP via JNDI</td><td>Connection string trong <code>jndi.properties</code> hoặc code</td><td>Cao</td></tr><tr><td><strong>Python/PHP Apps</strong></td><td>LDAP bind</td><td>Connection string trong config file</td><td>Trung bình</td></tr><tr><td><strong>Legacy LOB Apps</strong></td><td>NTLM, possibly LDAP</td><td>Có thể không support Kerberos, chỉ NTLM</td><td>Cao</td></tr></tbody></table></div>
+<h4 id="sql-server-always-on-ag-với-ad-dependency">SQL Server Always On AG với AD Dependency<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sql-server-always-on-ag-với-ad-dependency" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Nếu có SQL Server Always On Availability Group:</p>
+<ul>
+<li><strong>Listener SPN</strong>: AG Listener có SPN riêng → verify SPN registered đúng sau migration</li>
+<li><strong>Kerberos Authentication</strong>: AG Listener dùng Kerberos → SPN phải trên đúng service account</li>
+<li><strong>AD dependency</strong>: AG rely on AD cho authentication → DC mới phải healthy trước khi test AG failover</li>
+<li><strong>Computer account</strong>: AG VNN (Virtual Network Name) có computer account trong AD → verify account intact</li>
+</ul>
+<h3 id="exchange-server-integration-nếu-có">Exchange Server Integration (nếu có)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exchange-server-integration-nếu-có" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Exchange Server có <strong>deep dependency</strong> với AD:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Component</th><th>AD Dependency</th><th>Migration Impact</th></tr></thead><tbody><tr><td><strong>Autodiscover SCP</strong></td><td>SCP object trong AD trỏ đến Exchange server</td><td>Verify SCP records intact sau DC migration</td></tr><tr><td><strong>Address Book</strong></td><td>Global Address List từ GC query</td><td>Verify GC trên DC mới serve ABG đúng</td></tr><tr><td><strong>Mail routing</strong></td><td>AD site membership quyết định routing</td><td>Verify Exchange server nằm đúng site</td></tr><tr><td><strong>Kerberos auth</strong></td><td>Outlook Anywhere, OWA dùng Kerberos</td><td>Verify SPN trên Exchange service account</td></tr><tr><td><strong>Certificate</strong></td><td>Exchange cần certificate từ CA</td><td>Verify certificate chain sau CA migration</td></tr></tbody></table></div>
+<hr/>
+<h2 id="dns-migration">DNS Migration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-migration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ad-integrated-dns-zone-replication">AD-Integrated DNS Zone Replication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ad-integrated-dns-zone-replication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi DC 2025 được promote với DNS role, DNS data tự replicate:</p>
+<ul>
+<li><strong>Forward Lookup Zone</strong> tự replicate qua AD replication — mọi record (A, CNAME, MX, TXT, SRV)</li>
+<li><strong>Reverse Lookup Zone</strong> tự replicate (nếu AD-integrated, không phải file-based legacy zone)</li>
+<li>Replication partition:
+<ul>
+<li><code>DomainDnsZones</code> — replicate đến tất cả DC có DNS role trong domain</li>
+<li><code>ForestDnsZones</code> — replicate đến tất cả DC có DNS role trong forest</li>
+</ul>
+</li>
+</ul>
+<p>→ <strong>Không cần “migrate” DNS data thủ công</strong> — AD replication lo phần này. Chỉ cần verify data đồng bộ đúng.</p>
+<h3 id="client-dns-cutover-strategy">Client DNS Cutover Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#client-dns-cutover-strategy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    START[\&quot;DNS Cutover&lt;br/>Point clients to new DNS\&quot;] --> TYPE{\&quot;Client type?\&quot;}\n\n    TYPE -->|\&quot;DHCP Client\&quot;| METHOD1[\&quot;Method 1: DHCP Option 006&lt;br/>Preferred DNS Server\&quot;]\n    TYPE -->|\&quot;Static IP Server\&quot;| METHOD2[\&quot;Method 2: GPO Push&lt;br/>DNS Client Settings\&quot;]\n    TYPE -->|\&quot;Standalone/Legacy\&quot;| METHOD3[\&quot;Method 3: Manual Update&lt;br/>Change manually\&quot;]\n\n    METHOD1 --> M1A[\&quot;Update DHCP Scope Option&lt;br/>DNS Server = DC 2025 IPs\&quot;]\n    M1A --> M1B[\&quot;Clients receive new DNS&lt;br/>on lease renewal\&quot;]\n    M1B --> M1C[\&quot;Force renew: ipconfig /renew&lt;br/>or wait for lease expiry\&quot;]\n\n    METHOD2 --> M2A[\&quot;Create GPO: DNS Client Settings&lt;br/>Computer Config > Network\&quot;]\n    M2A --> M2B[\&quot;Link GPO to OU with servers\&quot;]\n    M2B --> M2C[\&quot;gpupdate /force on servers\&quot;]\n\n    METHOD3 --> M3A[\&quot;Change DNS in NIC properties\&quot;]\n    M3A --> M3B[\&quot;Verify with&lt;br/>nslookup domain.local\&quot;]\n\n    M1C --> VALIDATE[\&quot;Validate:&lt;br/>nslookup domain.local&lt;br/>Resolve-DnsName _ldap._tcp...\&quot;]\n    M2C --> VALIDATE\n    M3B --> VALIDATE\n\n    style METHOD1 fill:#e8f5e9,stroke:#4caf50&quot;">flowchart TD
+    START[&quot;DNS Cutover&lt;br/>Point clients to new DNS&quot;] --> TYPE{&quot;Client type?&quot;}
+
+    TYPE -->|&quot;DHCP Client&quot;| METHOD1[&quot;Method 1: DHCP Option 006&lt;br/>Preferred DNS Server&quot;]
+    TYPE -->|&quot;Static IP Server&quot;| METHOD2[&quot;Method 2: GPO Push&lt;br/>DNS Client Settings&quot;]
+    TYPE -->|&quot;Standalone/Legacy&quot;| METHOD3[&quot;Method 3: Manual Update&lt;br/>Change manually&quot;]
+
+    METHOD1 --> M1A[&quot;Update DHCP Scope Option&lt;br/>DNS Server = DC 2025 IPs&quot;]
+    M1A --> M1B[&quot;Clients receive new DNS&lt;br/>on lease renewal&quot;]
+    M1B --> M1C[&quot;Force renew: ipconfig /renew&lt;br/>or wait for lease expiry&quot;]
+
+    METHOD2 --> M2A[&quot;Create GPO: DNS Client Settings&lt;br/>Computer Config > Network&quot;]
+    M2A --> M2B[&quot;Link GPO to OU with servers&quot;]
+    M2B --> M2C[&quot;gpupdate /force on servers&quot;]
+
+    METHOD3 --> M3A[&quot;Change DNS in NIC properties&quot;]
+    M3A --> M3B[&quot;Verify with&lt;br/>nslookup domain.local&quot;]
+
+    M1C --> VALIDATE[&quot;Validate:&lt;br/>nslookup domain.local&lt;br/>Resolve-DnsName _ldap._tcp...&quot;]
+    M2C --> VALIDATE
+    M3B --> VALIDATE
+
+    style METHOD1 fill:#e8f5e9,stroke:#4caf50
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="dns-cutover--rollout-theo-site">DNS Cutover — Rollout theo site<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-cutover--rollout-theo-site" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Không đổi DNS cho tất cả client cùng lúc</strong> — rollout theo site:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thứ tự</th><th>Site</th><th>Hành động</th><th>Fallback</th></tr></thead><tbody><tr><td>1</td><td>ROOT</td><td>Cập nhật DHCP option 006 tại ROOT</td><td>Nếu fail → revert về DNS cũ</td></tr><tr><td>2</td><td>TW</td><td>Cập nhật DHCP option 006 tại TW</td><td>Nếu fail → revert TW, ROOT vẫn OK</td></tr><tr><td>3</td><td>MB</td><td>Cập nhật DHCP option 006 tại MB</td><td>Nếu fail → revert MB</td></tr><tr><td>4</td><td>MN</td><td>Cập nhật DHCP option 006 tại MN</td><td>Nếu fail → revert MN</td></tr></tbody></table></div>
+<h3 id="conditional-forwarder-và-stub-zone">Conditional Forwarder và Stub Zone<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conditional-forwarder-và-stub-zone" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thành phần</th><th>Cần update?</th><th>Hành động</th><th>Chi tiết</th></tr></thead><tbody><tr><td>Conditional Forwarder</td><td>Có (nếu trỏ về DC cũ)</td><td>Cập nhật IP sang DC 2025</td><td>Ví dụ: forwarder cho partner domain</td></tr><tr><td>Stub Zone</td><td>Có (nếu NS record trỏ DC cũ)</td><td>Cập nhật NS record</td><td>Stub zone tự update nếu NS trỏ đúng</td></tr><tr><td>Root Hints</td><td>Thường không</td><td>Root hints trỏ internet root DNS</td><td>Chỉ update nếu dùng custom root hints</td></tr><tr><td>Zone Delegation</td><td>Có (nếu NS trỏ DC cũ)</td><td>Cập nhật NS record trong parent zone</td><td>Ví dụ: <code>sub.domain.local</code> delegated zone</td></tr></tbody></table></div>
+<h3 id="split-brain-dns-handling">Split-Brain DNS Handling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#split-brain-dns-handling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Split-brain DNS</strong> = cùng zone name nhưng resolve khác nhau tùy client location (internal vs external).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Scenario</th><th>Internal DNS (AD-integrated)</th><th>External DNS (public)</th><th>Impact khi migration</th></tr></thead><tbody><tr><td><code>domain.com</code></td><td>Resolve về internal server IP</td><td>Resolve về public IP</td><td>AD DNS migration chỉ ảnh hưởng internal — verify external DNS không bị động</td></tr><tr><td>Autodiscover</td><td>Internal CA cert</td><td>Public CA cert</td><td>Verify cả 2 path sau migration</td></tr></tbody></table></div>
+<p><strong>Khi migration</strong>: chỉ thay đổi <strong>internal AD-integrated DNS</strong> — external DNS <strong>không bị ảnh hưởng</strong>. Nhưng cần verify rằng changes không leak ra external.</p>
+<h3 id="dns-scavenging">DNS Scavenging<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-scavenging" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Scavenging</strong> tự động xoá DNS record quá hạn (stale) — quan trọng để giữ DNS sạch sau migration</li>
+<li>Cần cấu hình trên DC 2025 mới:
+<ul>
+<li><strong>Server-level</strong>: enable scavenging trên DC</li>
+<li><strong>Zone-level</strong>: enable aging trên zone</li>
+<li><strong>Timing</strong>: No-refresh interval (7 ngày) + Refresh interval (7 ngày) = record stale sau 14 ngày</li>
+</ul>
+</li>
+<li><strong>Chỉ enable scavenging trên 1-2 DC</strong> — tránh race condition xoá record (nhiều DC scavenge cùng lúc có thể xoá record valid)</li>
+<li><strong>Sau migration</strong>: scavenging sẽ tự cleanup record của DC cũ sau 14 ngày (nếu DC cũ đã offline)</li>
+</ul>
+<h3 id="legacy-dns-cleanup-sau-khi-decommission-dc-cũ">Legacy DNS Cleanup (sau khi decommission DC cũ)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#legacy-dns-cleanup-sau-khi-decommission-dc-cũ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Sau khi DC cũ đã demoted và tắt, cleanup thủ công nếu record chưa tự xoá:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Record Type</th><th>Record Name</th><th>Cleanup Action</th></tr></thead><tbody><tr><td>A record</td><td>DC-OLD-01.domain.local</td><td>Xoá trong forward lookup zone</td></tr><tr><td>PTR record</td><td>IP cũ của DC</td><td>Xoá trong reverse lookup zone</td></tr><tr><td>SRV records</td><td><code>_ldap._tcp.dc._msdcs.&lt;domain></code></td><td>Xoá entry cho DC cũ</td></tr><tr><td>SRV records</td><td><code>_kerberos._tcp.dc._msdcs.&lt;domain></code></td><td>Xoá entry cho DC cũ</td></tr><tr><td>SRV records</td><td><code>_gc._tcp.&lt;forest></code></td><td>Xoá entry cho DC cũ</td></tr><tr><td>SRV records</td><td><code>_ldap._tcp.&lt;site>._sites.dc._msdcs.&lt;domain></code></td><td>Xoá entry cho DC cũ</td></tr><tr><td>NS record</td><td>Zone properties</td><td>Xoá NS pointing đến DC cũ</td></tr><tr><td>CNAME</td><td><code>_msdcs</code> DC GUID</td><td>Nên tự cleanup khi demote, verify</td></tr></tbody></table></div>
+<h3 id="dns-validation-sau-migration">DNS Validation sau Migration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-validation-sau-migration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>#</th><th>Test</th><th>Mục đích</th><th>Kết quả mong đợi</th></tr></thead><tbody><tr><td>1</td><td><code>nslookup domain.local</code></td><td>Forward lookup</td><td>Resolve về IP DC 2025</td></tr><tr><td>2</td><td><code>nslookup &lt;DC-2025-IP></code></td><td>Reverse lookup</td><td>Trả về hostname DC 2025</td></tr><tr><td>3</td><td><code>nslookup -type=SRV _ldap._tcp.dc._msdcs.domain.local</code></td><td>SRV LDAP</td><td>Liệt kê <strong>chỉ</strong> DC 2025</td></tr><tr><td>4</td><td><code>nslookup -type=SRV _kerberos._tcp.dc._msdcs.domain.local</code></td><td>SRV Kerberos</td><td>Liệt kê <strong>chỉ</strong> DC 2025</td></tr><tr><td>5</td><td><code>nslookup -type=SRV _gc._tcp.&lt;forest></code></td><td>Global Catalog</td><td>Liệt kê tất cả GC 2025</td></tr><tr><td>6</td><td>Dynamic Update test</td><td>Client registration</td><td>Client tạo A + PTR thành công</td></tr><tr><td>7</td><td>Conditional forwarder test</td><td>Forward query đúng</td><td>Query resolve đúng đích</td></tr><tr><td>8</td><td>Site-specific SRV</td><td>DC trong mỗi site</td><td>Mỗi site có SRV cho DC local</td></tr><tr><td>9</td><td><code>nslookup DC-OLD-01</code></td><td>Old DC cleanup</td><td><strong>Không resolve</strong> hoặc trả về error</td></tr></tbody></table></div>
+<hr/>
+<h2 id="câu-hỏi-thường-gặp">Câu hỏi thường gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-thường-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="q-app-hardcode-dc-name-nhưng-không-có-source-code-vendor-app--làm-thế-nào">Q: App hardcode DC name nhưng không có source code (vendor app) — làm thế nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-app-hardcode-dc-name-nhưng-không-có-source-code-vendor-app--làm-thế-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>A</strong>: Nhiều options:</p>
+<ol>
+<li><strong>Config file</strong>: tìm connection string trong config file (web.config, app.config, .ini, .properties) → đổi</li>
+<li><strong>DNS CNAME workaround</strong>: tạo CNAME record trỏ tên DC cũ về DC mới → app vẫn resolve được. <strong>Tạm thời</strong> nhưng effective</li>
+<li><strong>Liên hệ vendor</strong>: hỏi vendor cách cập nhật DC connection — vendor app thường có admin guide</li>
+<li><strong>Registry</strong>: một số app lưu DC name trong registry → tìm bằng <code>reg query</code> hoặc Process Monitor</li>
+</ol>
+<h3 id="q-ldap-signing-requirement-trên-2025-có-bắt-buộc-không-có-thể-tắt-không">Q: LDAP signing requirement trên 2025 có bắt buộc không? Có thể tắt không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-ldap-signing-requirement-trên-2025-có-bắt-buộc-không-có-thể-tắt-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>A</strong>: Server 2025 <strong>mặc định require LDAP signing</strong>. Có thể tạm disable qua GPO (<code>Network security: LDAP client signing requirements</code> = <code>None</code>), nhưng:</p>
+<ul>
+<li>Đây là <strong>security risk</strong> — unsigned LDAP cho phép man-in-the-middle attack</li>
+<li>Microsoft khuyến nghị <strong>fix app</strong> thay vì disable requirement</li>
+<li>Plan: enable audit mode → identify non-compliant apps → fix → enforce</li>
+</ul>
+<h3 id="q-dns-cutover-có-gây-downtime-không">Q: DNS cutover có gây downtime không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-dns-cutover-có-gây-downtime-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>A</strong>: <strong>Không</strong>, nếu làm đúng:</p>
+<ul>
+<li>DNS zone data đã replicate sẵn trên DC 2025 (AD-integrated) → DC 2025 có đầy đủ DNS records</li>
+<li>Client chuyển DNS server (qua DHCP renew) → query DNS mới → resolve đúng ngay</li>
+<li><strong>Parallel run</strong>: DNS cũ vẫn hoạt động trong khi client chuyển dần → zero downtime</li>
+</ul>
+<hr/>
+<h2 id="lưu-ý-quan-trọng">Lưu ý quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Audit ứng dụng TRƯỚC khi chuyển đổi</strong> — đừng decommission DC cũ rồi mới phát hiện app hardcode tên DC → fix reactive rất costly</li>
+<li><strong>LDAP signing và channel binding</strong> có thể strict hơn trên Server 2025 — <strong>bắt buộc audit</strong> trước, enable audit mode trên DC hiện tại</li>
+<li><strong>DNS cutover nên rollout theo site</strong> — ROOT trước, sau đó MB, MN, TW. Không đổi tất cả cùng lúc</li>
+<li><strong>Giữ DNS trên DC cũ hoạt động</strong> trong parallel run — client chưa cập nhật vẫn resolve được</li>
+<li><strong>SPN duplicate</strong> là nguồn lỗi Kerberos phổ biến — chạy <code>setspn -X</code> để detect duplicate trước VÀ sau migration</li>
+<li><strong>NTLM restriction</strong>: Server 2025 mặc định có thể restrict NTLM mạnh hơn 2012R2 — audit app nào còn dùng NTLM (Event ID 4624)</li>
+<li><strong>Kerberos FAST</strong>: nếu DC 2025 enforce FAST → legacy client/app có thể fail auth. Test trước khi enable</li>
+</ul>
+<hr/>
+<h2 id="liên-kết">Liên kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#liên-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services">02.1 - AD DS - Active Directory Domain Services</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory">01.7 - DNS trong Active Directory</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad">01.3 - Domain Controller - Trái tim của AD</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers">04.1 - Triển khai Additional Domain Controllers</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server">04.2 - Chuyển đổi FSMO và Certificate Server</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration">04.4 - DHCP và RDS Migration</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện">04.5 - Kiểm thử toàn diện</a></li>
+<li><a href="../../../../moc---windows-server-ad-2025" class="internal internal-link alias" data-slug="moc---windows-server-ad-2025">MOC - Windows Server AD 2025</a></li>
+</ul>
+<hr/>
+<h2 id="tham-khảo">Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/service-principal-names" class="external external-link">Service Principal Names (SPNs)<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-constrained-delegation-overview" class="external external-link">Kerberos Constrained Delegation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-resource-based-constrained-delegation" class="external external-link">Resource-Based Constrained Delegation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/networking/dns/dns-migration" class="external external-link">DNS Migration Guide<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/networking/dns/aging-and-scavenging" class="external external-link">DNS Scavenging<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/enable-ldap-signing" class="external external-link">LDAP Signing Requirements<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview" class="external external-link">Kerberos Armoring (FAST)<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-434" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#ad-2025---chuyển-đổi-ứng-dụng-và-dns" data-for="ad-2025---chuyển-đổi-ứng-dụng-và-dns">AD 2025 - Chuyển đổi ứng dụng và DNS</a></li><li class="depth-1"><a href="#tóm-tắt-nhanh" data-for="tóm-tắt-nhanh">Tóm tắt nhanh</a></li><li class="depth-1"><a href="#application-migration--chuyển-đổi-ứng-dụng" data-for="application-migration--chuyển-đổi-ứng-dụng">Application Migration — Chuyển đổi ứng dụng</a></li><li class="depth-2"><a href="#tại-sao-application-audit-là-bước-quan-trọng-nhất" data-for="tại-sao-application-audit-là-bước-quan-trọng-nhất">Tại sao Application Audit là bước quan trọng nhất</a></li><li class="depth-2"><a href="#audit-dependency-ứng-dụng-nào-kết-nối-ad" data-for="audit-dependency-ứng-dụng-nào-kết-nối-ad">Audit Dependency: ứng dụng nào kết nối AD?</a></li><li class="depth-2"><a href="#phân-loại-ứng-dụng-theo-mức-độ-rủi-ro-migration" data-for="phân-loại-ứng-dụng-theo-mức-độ-rủi-ro-migration">Phân loại ứng dụng theo mức độ rủi ro migration</a></li><li class="depth-2"><a href="#các-loại-kết-nối-ad-chi-tiết" data-for="các-loại-kết-nối-ad-chi-tiết">Các loại kết nối AD chi tiết</a></li><li class="depth-2"><a href="#spn-service-principal-name-considerations" data-for="spn-service-principal-name-considerations">SPN (Service Principal Name) Considerations</a></li><li class="depth-2"><a href="#kerberos-delegation-chi-tiết" data-for="kerberos-delegation-chi-tiết">Kerberos Delegation chi tiết</a></li><li class="depth-2"><a href="#ldap-connection-string--cập-nhật-chi-tiết" data-for="ldap-connection-string--cập-nhật-chi-tiết">LDAP Connection String — Cập nhật chi tiết</a></li><li class="depth-2"><a href="#common-applications-cần-audit" data-for="common-applications-cần-audit">Common Applications cần Audit</a></li><li class="depth-2"><a href="#exchange-server-integration-nếu-có" data-for="exchange-server-integration-nếu-có">Exchange Server Integration (nếu có)</a></li><li class="depth-1"><a href="#dns-migration" data-for="dns-migration">DNS Migration</a></li><li class="depth-2"><a href="#ad-integrated-dns-zone-replication" data-for="ad-integrated-dns-zone-replication">AD-Integrated DNS Zone Replication</a></li><li class="depth-2"><a href="#client-dns-cutover-strategy" data-for="client-dns-cutover-strategy">Client DNS Cutover Strategy</a></li><li class="depth-2"><a href="#dns-cutover--rollout-theo-site" data-for="dns-cutover--rollout-theo-site">DNS Cutover — Rollout theo site</a></li><li class="depth-2"><a href="#conditional-forwarder-và-stub-zone" data-for="conditional-forwarder-và-stub-zone">Conditional Forwarder và Stub Zone</a></li><li class="depth-2"><a href="#split-brain-dns-handling" data-for="split-brain-dns-handling">Split-Brain DNS Handling</a></li><li class="depth-2"><a href="#dns-scavenging" data-for="dns-scavenging">DNS Scavenging</a></li><li class="depth-2"><a href="#legacy-dns-cleanup-sau-khi-decommission-dc-cũ" data-for="legacy-dns-cleanup-sau-khi-decommission-dc-cũ">Legacy DNS Cleanup (sau khi decommission DC cũ)</a></li><li class="depth-2"><a href="#dns-validation-sau-migration" data-for="dns-validation-sau-migration">DNS Validation sau Migration</a></li><li class="depth-1"><a href="#câu-hỏi-thường-gặp" data-for="câu-hỏi-thường-gặp">Câu hỏi thường gặp</a></li><li class="depth-2"><a href="#q-app-hardcode-dc-name-nhưng-không-có-source-code-vendor-app--làm-thế-nào" data-for="q-app-hardcode-dc-name-nhưng-không-có-source-code-vendor-app--làm-thế-nào">Q: App hardcode DC name nhưng không có source code (vendor app) — làm thế nào?</a></li><li class="depth-2"><a href="#q-ldap-signing-requirement-trên-2025-có-bắt-buộc-không-có-thể-tắt-không" data-for="q-ldap-signing-requirement-trên-2025-có-bắt-buộc-không-có-thể-tắt-không">Q: LDAP signing requirement trên 2025 có bắt buộc không? Có thể tắt không?</a></li><li class="depth-2"><a href="#q-dns-cutover-có-gây-downtime-không" data-for="q-dns-cutover-có-gây-downtime-không">Q: DNS cutover có gây downtime không?</a></li><li class="depth-1"><a href="#lưu-ý-quan-trọng" data-for="lưu-ý-quan-trọng">Lưu ý quan trọng</a></li><li class="depth-1"><a href="#liên-kết" data-for="liên-kết">Liên kết</a></li><li class="depth-1"><a href="#tham-khảo" data-for="tham-khảo">Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers" class="internal">04.1 - Triển khai Additional Domain Controllers</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server" class="internal">04.2 - Chuyển đổi FSMO và Certificate Server</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal">04.4 - DHCP và RDS Migration</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal">04.5 - Kiểm thử toàn diện</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>01.7 - DNS trong Active Directory</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="01.7 - DNS trong Active Directory"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="01.7 - DNS trong Active Directory"/><meta name="twitter:description" content="DNS trong Active Directory Tóm tắt nhanh Active Directory phụ thuộc hoàn toàn vào DNS — không có DNS = AD không hoạt động Domain name trong AD chính là DNS domain name; DC locator dựa trên DNS SRV records AD-integrated DNS zones lưu trong AD database (không phải zone file), replicate theo AD replica..."/><meta property="og:description" content="DNS trong Active Directory Tóm tắt nhanh Active Directory phụ thuộc hoàn toàn vào DNS — không có DNS = AD không hoạt động Domain name trong AD chính là DNS domain name; DC locator dựa trên DNS SRV records AD-integrated DNS zones lưu trong AD database (không phải zone file), replicate theo AD replica..."/><meta property="og:image:alt" content="DNS trong Active Directory Tóm tắt nhanh Active Directory phụ thuộc hoàn toàn vào DNS — không có DNS = AD không hoạt động Domain name trong AD chính là DNS domain name; DC locator dựa trên DNS SRV records AD-integrated DNS zones lưu trong AD database (không phải zone file), replicate theo AD replica..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="DNS trong Active Directory Tóm tắt nhanh Active Directory phụ thuộc hoàn toàn vào DNS — không có DNS = AD không hoạt động Domain name trong AD chính là DNS domain name; DC locator dựa trên DNS SRV records AD-integrated DNS zones lưu trong AD database (không phải zone file), replicate theo AD replica..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-473" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-473" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/">Windows Servers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/">AD Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/">01 - Nền tảng</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>01.7 - DNS trong Active Directory</a></div></nav><h1 class="article-title">01.7 - DNS trong Active Directory</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/windows-server" class="internal internal-link tag-link">domain/windows-server</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">AD DNS</span><span class="note-properties-separator">, </span><span class="note-properties-text">DNS and Active Directory</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>15 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="dns-trong-active-directory">DNS trong Active Directory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-trong-active-directory" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tóm-tắt-nhanh">Tóm tắt nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Active Directory <strong>phụ thuộc hoàn toàn vào DNS</strong> — không có DNS = AD không hoạt động</li>
+<li>Domain name trong AD chính là DNS domain name; DC locator dựa trên <strong>DNS SRV records</strong></li>
+<li><strong>AD-integrated DNS zones</strong> lưu trong AD database (không phải zone file), replicate theo AD replication</li>
+<li>Client tìm DC thông qua DNS SRV records trong subdomain <code>_msdcs</code> — đây là cơ chế cốt lõi cho domain join và logon</li>
+<li><strong>Scavenging</strong> (dọn dẹp records cũ) cần được bật thủ công — mặc định tắt, dễ gây tích tụ stale records</li>
+<li><strong>Secure Dynamic Updates</strong> đảm bảo chỉ authenticated machines mới cập nhật được DNS records</li>
+</ul>
+<h2 id="vì-sao-ad-phụ-thuộc-dns">Vì sao AD phụ thuộc DNS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vì-sao-ad-phụ-thuộc-dns" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dns-là-nền-tảng-của-ad">DNS là nền tảng của AD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-là-nền-tảng-của-ad" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Chức năng</th><th>DNS làm gì cho AD</th><th>Nếu DNS hỏng</th></tr></thead><tbody><tr><td><strong>Naming</strong></td><td>AD domain name = DNS domain name (<code>corp.example.com</code>)</td><td>Domain không resolve được</td></tr><tr><td><strong>DC Locator</strong></td><td>Client tìm DC bằng DNS SRV records, không phải broadcast (như NT4 WINS)</td><td>Client không tìm được DC → logon fail</td></tr><tr><td><strong>Kerberos</strong></td><td>Kerberos realm = DNS domain name viết HOA</td><td>Kerberos authentication fail</td></tr><tr><td><strong>Replication</strong></td><td>DC tìm replication partners qua DNS</td><td>Replication dừng</td></tr><tr><td><strong>Site awareness</strong></td><td>Client query DNS → nhận DC SRV records → chọn DC trong cùng site</td><td>Client authenticate với DC ở xa</td></tr><tr><td><strong>Service discovery</strong></td><td>GC, KDC, LDAP services đều đăng ký SRV records</td><td>Services không được tìm thấy</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Quy tắc vàng</strong>: Nếu DNS hỏng, AD hỏng. Troubleshoot AD <strong>luôn bắt đầu bằng kiểm tra DNS</strong>. Đây là rule #1 trong AD troubleshooting.</p>
+</blockquote>
+<h3 id="dns-vs-wins-lịch-sử">DNS vs WINS (lịch sử)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-vs-wins-lịch-sử" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>WINS (NT4)</th><th>DNS (AD)</th></tr></thead><tbody><tr><td>Resolution type</td><td>NetBIOS name (flat)</td><td>FQDN (hierarchical)</td></tr><tr><td>Discovery</td><td>Broadcast + WINS server</td><td>SRV records (standards-based)</td></tr><tr><td>Scalability</td><td>Hạn chế</td><td>Rất tốt</td></tr><tr><td>Standards</td><td>Proprietary</td><td>RFC-based</td></tr><tr><td>Còn dùng?</td><td>Chỉ legacy apps</td><td><strong>Bắt buộc cho AD</strong></td></tr></tbody></table></div>
+<ul>
+<li><strong>NT4</strong> dùng <strong>WINS (Windows Internet Name Service)</strong> — NetBIOS name resolution, broadcast-based</li>
+<li><strong>AD (từ Windows 2000)</strong> chuyển hoàn toàn sang <strong>DNS</strong> — hierarchical, standards-based, scalable</li>
+<li>WINS vẫn có thể tồn tại cho backward compatibility nhưng <strong>không liên quan đến AD operations</strong></li>
+</ul>
+<h2 id="ad-integrated-dns-zones">AD-Integrated DNS Zones<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ad-integrated-dns-zones" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="so-sánh-zone-types">So sánh zone types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh-zone-types" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>Standard Primary</th><th>AD-Integrated</th></tr></thead><tbody><tr><td><strong>Lưu trữ</strong></td><td>File zone (<code>*.dns</code>) trên 1 server</td><td>Trong AD database (NTDS.DIT)</td></tr><tr><td><strong>Replication</strong></td><td>Zone transfer (AXFR/IXFR)</td><td>AD replication (cùng với domain/forest data)</td></tr><tr><td><strong>Multi-master</strong></td><td>Chỉ 1 primary server ghi được</td><td><strong>Mọi DC có DNS role đều ghi được</strong></td></tr><tr><td><strong>Security</strong></td><td>Không có secure updates mặc định</td><td>Hỗ trợ <strong>Secure Dynamic Updates</strong></td></tr><tr><td><strong>Availability</strong></td><td>Single point of failure</td><td>HA nhờ multi-master</td></tr><tr><td><strong>Cleanup</strong></td><td>Thủ công</td><td>Scavenging tích hợp</td></tr><tr><td><strong>Encryption</strong></td><td>Không</td><td>Encrypted trong AD replication</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Best practice</strong>: <strong>Luôn dùng AD-Integrated zones</strong> cho AD domain DNS. Standard Primary chỉ dùng cho zones không liên quan đến AD (ví dụ: public DNS zone).</p>
+</blockquote>
+<h3 id="replication-scope">Replication Scope<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#replication-scope" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AD-integrated zones có thể cấu hình <strong>replicate theo scope</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Scope</th><th>Replicate đến</th><th>Dùng khi</th><th>Application Partition</th></tr></thead><tbody><tr><td><strong>DomainDnsZones</strong></td><td>Mọi DC có DNS role trong domain</td><td>Zone chỉ phục vụ 1 domain (mặc định cho forward lookup zone)</td><td><code>DC=DomainDnsZones,DC=corp,DC=example,DC=com</code></td></tr><tr><td><strong>ForestDnsZones</strong></td><td>Mọi DC có DNS role trong forest</td><td>Zone cần accessible từ mọi domain (mặc định cho <code>_msdcs</code> zone)</td><td><code>DC=ForestDnsZones,DC=corp,DC=example,DC=com</code></td></tr><tr><td><strong>Domain partition</strong> (legacy)</td><td>Mọi DC trong domain (kể cả không có DNS role)</td><td>Tương thích Windows 2000</td><td>Domain NC</td></tr><tr><td><strong>Custom Application Partition</strong></td><td>DC được chỉ định</td><td>Kiểm soát chi tiết replication scope</td><td>Custom-defined</td></tr></tbody></table></div>
+<h3 id="secure-dynamic-updates">Secure Dynamic Updates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#secure-dynamic-updates" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="cơ-chế-hoạt-động">Cơ chế hoạt động<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cơ-chế-hoạt-động" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant Client as \&quot;Domain-joined PC\&quot;\n    participant DNS as \&quot;AD-Integrated DNS Server\&quot;\n    participant KDC as \&quot;KDC (DC)\&quot;\n\n    Client->>DNS: Dynamic Update request&lt;br/>\&quot;Create/update A record for pc-01\&quot;\n    DNS->>Client: \&quot;Zone requires Secure Update.&lt;br/>Authenticate first!\&quot;\n    \n    Client->>KDC: Kerberos AS-REQ&lt;br/>\&quot;Authenticate for DNS update\&quot;\n    KDC->>Client: TGT\n    Client->>KDC: TGS-REQ for DNS service\n    KDC->>Client: Service Ticket for DNS\n\n    Client->>DNS: GSS-TSIG signed update&lt;br/>+ Service Ticket\n    DNS->>DNS: Verify Kerberos ticket&lt;br/>Check ACL on record\n    DNS->>Client: Update accepted&quot;">sequenceDiagram
+    participant Client as &quot;Domain-joined PC&quot;
+    participant DNS as &quot;AD-Integrated DNS Server&quot;
+    participant KDC as &quot;KDC (DC)&quot;
+
+    Client->>DNS: Dynamic Update request&lt;br/>&quot;Create/update A record for pc-01&quot;
+    DNS->>Client: &quot;Zone requires Secure Update.&lt;br/>Authenticate first!&quot;
+    
+    Client->>KDC: Kerberos AS-REQ&lt;br/>&quot;Authenticate for DNS update&quot;
+    KDC->>Client: TGT
+    Client->>KDC: TGS-REQ for DNS service
+    KDC->>Client: Service Ticket for DNS
+
+    Client->>DNS: GSS-TSIG signed update&lt;br/>+ Service Ticket
+    DNS->>DNS: Verify Kerberos ticket&lt;br/>Check ACL on record
+    DNS->>Client: Update accepted
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>Khi zone là AD-integrated, có thể bật <strong>Secure Dynamic Updates Only</strong></li>
+<li>Chỉ authenticated computers (joined domain) mới được tạo/cập nhật DNS records</li>
+<li>Record owner = computer account tạo record → chỉ owner mới update được</li>
+<li>Ngăn chặn rogue devices đăng ký DNS records giả</li>
+</ul>
+<h4 id="vấn-đề-stale-ownership">Vấn đề “stale ownership”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề-stale-ownership" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Nếu computer bị rebuild (reinstall OS) → new computer account → không phải owner cũ → không update được DNS record cũ</li>
+<li><strong>Fix</strong>: admin xoá record cũ thủ công, hoặc dùng <strong>DnsUpdateProxy</strong> group</li>
+<li><strong>DnsUpdateProxy group</strong>: members tạo records không được set làm owner → mọi authenticated user đều update được
+<ul>
+<li>Thường dùng cho DHCP server — DHCP register DNS thay cho clients</li>
+<li><strong>Cẩn thận</strong>: records không có owner → bất kỳ ai cũng sửa được (less secure)</li>
+</ul>
+</li>
+</ul>
+<h2 id="dns-records-quan-trọng-cho-ad">DNS Records quan trọng cho AD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-records-quan-trọng-cho-ad" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="cấu-trúc-dns-records">Cấu trúc DNS Records<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-trúc-dns-records" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    zone[\&quot;Zone: corp.example.com\&quot;]\n    \n    subgraph msdcs[\&quot;_msdcs.corp.example.com&lt;br/>(DC Locator Records)\&quot;]\n        dcRec[\&quot;dc._msdcs&lt;br/>CNAME: DC GUIDs\&quot;]\n        \n        subgraph dcByType[\&quot;By DC Type\&quot;]\n            gc[\&quot;gc._msdcs&lt;br/>SRV: Global Catalog servers\&quot;]\n            pdc[\&quot;_ldap._tcp.pdc._msdcs&lt;br/>SRV: PDC Emulator\&quot;]\n        end\n\n        subgraph dcBySite[\&quot;By Site\&quot;]\n            siteHCM[\&quot;_ldap._tcp.HCM._sites&lt;br/>SRV: DCs in site HCM\&quot;]\n            siteHN[\&quot;_ldap._tcp.HN._sites&lt;br/>SRV: DCs in site HN\&quot;]\n        end\n    end\n\n    subgraph srvRecords[\&quot;Key SRV Records\&quot;]\n        ldap[\&quot;_ldap._tcp&lt;br/>SRV: all DCs\&quot;]\n        kerb[\&quot;_kerberos._tcp&lt;br/>SRV: all KDCs\&quot;]\n        kpwd[\&quot;_kpasswd._tcp&lt;br/>SRV: password change\&quot;]\n    end\n\n    subgraph hostRecords[\&quot;Host Records\&quot;]\n        dcA[\&quot;DC-01&lt;br/>A: 10.1.1.10\&quot;]\n        dcA2[\&quot;DC-02&lt;br/>A: 10.1.1.11\&quot;]\n    end\n\n    zone --> msdcs\n    zone --> srvRecords\n    zone --> hostRecords&quot;">graph TD
+    zone[&quot;Zone: corp.example.com&quot;]
+    
+    subgraph msdcs[&quot;_msdcs.corp.example.com&lt;br/>(DC Locator Records)&quot;]
+        dcRec[&quot;dc._msdcs&lt;br/>CNAME: DC GUIDs&quot;]
+        
+        subgraph dcByType[&quot;By DC Type&quot;]
+            gc[&quot;gc._msdcs&lt;br/>SRV: Global Catalog servers&quot;]
+            pdc[&quot;_ldap._tcp.pdc._msdcs&lt;br/>SRV: PDC Emulator&quot;]
+        end
+
+        subgraph dcBySite[&quot;By Site&quot;]
+            siteHCM[&quot;_ldap._tcp.HCM._sites&lt;br/>SRV: DCs in site HCM&quot;]
+            siteHN[&quot;_ldap._tcp.HN._sites&lt;br/>SRV: DCs in site HN&quot;]
+        end
+    end
+
+    subgraph srvRecords[&quot;Key SRV Records&quot;]
+        ldap[&quot;_ldap._tcp&lt;br/>SRV: all DCs&quot;]
+        kerb[&quot;_kerberos._tcp&lt;br/>SRV: all KDCs&quot;]
+        kpwd[&quot;_kpasswd._tcp&lt;br/>SRV: password change&quot;]
+    end
+
+    subgraph hostRecords[&quot;Host Records&quot;]
+        dcA[&quot;DC-01&lt;br/>A: 10.1.1.10&quot;]
+        dcA2[&quot;DC-02&lt;br/>A: 10.1.1.11&quot;]
+    end
+
+    zone --> msdcs
+    zone --> srvRecords
+    zone --> hostRecords
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="key-srv-records">Key SRV Records<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-srv-records" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>SRV Record</th><th>Mục đích</th><th>Ai đăng ký</th></tr></thead><tbody><tr><td><code>_ldap._tcp.corp.example.com</code></td><td>Tìm DC cung cấp LDAP service</td><td>Mọi DC</td></tr><tr><td><code>_kerberos._tcp.corp.example.com</code></td><td>Tìm KDC cho Kerberos authentication</td><td>Mọi DC</td></tr><tr><td><code>_ldap._tcp.&lt;SiteName>._sites.corp.example.com</code></td><td>Tìm DC trong site cụ thể</td><td>DC trong site đó</td></tr><tr><td><code>_gc._tcp.corp.example.com</code></td><td>Tìm Global Catalog server</td><td>Chỉ GC server</td></tr><tr><td><code>_ldap._tcp.pdc._msdcs.corp.example.com</code></td><td>Tìm PDC Emulator</td><td>Chỉ 1 DC giữ PDC Emulator role</td></tr><tr><td><code>_kerberos._tcp.dc._msdcs.corp.example.com</code></td><td>Tìm DC qua GUID-based DNS name</td><td>Replication partner discovery</td></tr></tbody></table></div>
+<h3 id="srv-record-format">SRV Record Format<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#srv-record-format" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>_ldap._tcp.corp.example.com  SRV  0  100  389  dc-01.corp.example.com
+</code></pre>
+<ul>
+<li><strong>Priority (0)</strong>: ưu tiên (thấp hơn = ưu tiên hơn)</li>
+<li><strong>Weight (100)</strong>: load balancing giữa các records cùng priority</li>
+<li><strong>Port (389)</strong>: LDAP port</li>
+<li><strong>Target</strong>: FQDN của DC</li>
+</ul>
+<h3 id="_msdcs-subdomain">_msdcs Subdomain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#_msdcs-subdomain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><code>_msdcs.corp.example.com</code> là <strong>subdomain đặc biệt</strong> chứa DC locator records</li>
+<li>Forest Root Domain sở hữu zone <code>_msdcs.&lt;ForestRootDomain></code> — replicate toàn forest (ForestDnsZones)</li>
+<li>Đây là zone <strong>quan trọng nhất</strong> — xoá hoặc corrupt zone này = AD ngừng hoạt động</li>
+<li>Chứa GUID-based CNAME records cho mỗi DC — dùng cho replication partner discovery</li>
+</ul>
+<h2 id="dns-resolution-flow-cho-logon">DNS Resolution Flow cho Logon<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-resolution-flow-cho-logon" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant Client\n    participant DNS as \&quot;DNS Server\&quot;\n    participant DC as \&quot;Domain Controller\&quot;\n\n    Note over Client: Client boots up&lt;br/>or user presses Ctrl+Alt+Del\n\n    rect rgb(230, 245, 255)\n        Note over Client, DNS: Step 1 - Find DC via DNS\n        Client->>DNS: SRV query: _ldap._tcp.HCM._sites.corp.example.com&lt;br/>\&quot;Find DC in site HCM\&quot;\n        DNS->>Client: SRV response: dc-01.corp.example.com (port 389)&lt;br/>+ Additional: A record 10.1.1.10\n    end\n\n    rect rgb(255, 245, 230)\n        Note over Client, DC: Step 2 - LDAP Ping (DC Locator)\n        Client->>DC: LDAP UDP ping to 10.1.1.10&lt;br/>\&quot;Confirm DC alive and correct site\&quot;\n        DC->>Client: LDAP response: \&quot;I am DC for corp.example.com,&lt;br/>site HCM, capabilities: GC, KDC, ...\&quot;\n    end\n\n    rect rgb(230, 255, 230)\n        Note over Client, DC: Step 3 - Kerberos Authentication\n        Client->>DC: Kerberos AS-REQ&lt;br/>Authenticate user\n        DC->>Client: AS-REP: TGT\n    end\n\n    rect rgb(245, 230, 255)\n        Note over Client, DC: Step 4 - Group Policy\n        Client->>DC: LDAP query: \&quot;GPOs linked to my OU?\&quot;\n        DC->>Client: GPO list + paths\n        Client->>DC: SMB: Download GPO files from SYSVOL\n    end&quot;">sequenceDiagram
+    participant Client
+    participant DNS as &quot;DNS Server&quot;
+    participant DC as &quot;Domain Controller&quot;
+
+    Note over Client: Client boots up&lt;br/>or user presses Ctrl+Alt+Del
+
+    rect rgb(230, 245, 255)
+        Note over Client, DNS: Step 1 - Find DC via DNS
+        Client->>DNS: SRV query: _ldap._tcp.HCM._sites.corp.example.com&lt;br/>&quot;Find DC in site HCM&quot;
+        DNS->>Client: SRV response: dc-01.corp.example.com (port 389)&lt;br/>+ Additional: A record 10.1.1.10
+    end
+
+    rect rgb(255, 245, 230)
+        Note over Client, DC: Step 2 - LDAP Ping (DC Locator)
+        Client->>DC: LDAP UDP ping to 10.1.1.10&lt;br/>&quot;Confirm DC alive and correct site&quot;
+        DC->>Client: LDAP response: &quot;I am DC for corp.example.com,&lt;br/>site HCM, capabilities: GC, KDC, ...&quot;
+    end
+
+    rect rgb(230, 255, 230)
+        Note over Client, DC: Step 3 - Kerberos Authentication
+        Client->>DC: Kerberos AS-REQ&lt;br/>Authenticate user
+        DC->>Client: AS-REP: TGT
+    end
+
+    rect rgb(245, 230, 255)
+        Note over Client, DC: Step 4 - Group Policy
+        Client->>DC: LDAP query: &quot;GPOs linked to my OU?&quot;
+        DC->>Client: GPO list + paths
+        Client->>DC: SMB: Download GPO files from SYSVOL
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="khi-client-không-tìm-được-dc-trong-site">Khi client không tìm được DC trong site<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-client-không-tìm-được-dc-trong-site" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Client query <code>_ldap._tcp.&lt;SiteName>._sites.corp.example.com</code> → <strong>không có kết quả</strong></li>
+<li>Fallback: query <code>_ldap._tcp.corp.example.com</code> → nhận <strong>bất kỳ DC nào</strong> trong domain</li>
+<li>DC trả về site name đúng cho client (dựa trên IP subnet mapping)</li>
+<li>Client <strong>cache site info</strong> và lần sau query đúng site</li>
+<li>Nếu subnet chưa được mapping vào site → client <strong>luôn dùng random DC</strong> → performance kém, WAN traffic không cần thiết</li>
+</ol>
+<blockquote>
+<p><strong>Lưu ý</strong>: Đây là lý do <strong>phải map mọi subnet vào site</strong> trong AD Sites and Services. Subnet chưa mapped = client “đi lạc”.</p>
+</blockquote>
+<h2 id="dynamic-dns-update">Dynamic DNS Update<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dynamic-dns-update" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="quy-trình-dynamic-update">Quy trình Dynamic Update<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quy-trình-dynamic-update" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Khi computer <strong>join domain</strong> hoặc <strong>renew DHCP lease</strong> hoặc <strong>khởi động</strong>:
+<ol>
+<li>Computer gửi <strong>SOA query</strong> để tìm DNS server authoritative cho zone</li>
+<li>Computer gửi <strong>Dynamic Update</strong> request (RFC 2136) đến DNS server</li>
+<li>Nếu <strong>Secure Dynamic Updates</strong>: DNS server yêu cầu Kerberos authentication trước khi chấp nhận update</li>
+<li>DNS server tạo/cập nhật A record (và PTR record nếu configured)</li>
+</ol>
+</li>
+<li><strong>DHCP server</strong> cũng có thể đăng ký DNS records thay cho client (cho clients không hỗ trợ dynamic update)
+<ul>
+<li>DHCP đăng ký cả A và PTR records cho non-Windows clients</li>
+<li>Windows clients tự đăng ký A record, DHCP đăng ký PTR record</li>
+</ul>
+</li>
+</ul>
+<h3 id="dc-registration">DC Registration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dc-registration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Mỗi DC chạy service <strong>Netlogon</strong> để đăng ký SRV records vào DNS</li>
+<li>Netlogon đăng ký records mỗi <strong>1 giờ</strong> (re-registration interval)</li>
+<li>Nếu DC không đăng ký được SRV records → clients không tìm được DC → <strong>logon fail</strong></li>
+<li>Troubleshoot: kiểm tra file <code>%SystemRoot%\System32\config\Netlogon.dns</code> — chứa danh sách records DC cần đăng ký
+<ul>
+<li>Nếu file này đúng nhưng DNS không có records → Netlogon service hoặc DNS service có vấn đề</li>
+<li>Event ID 5774, 5775 trong System log = Netlogon registration issues</li>
+</ul>
+</li>
+</ul>
+<h2 id="scavenging--dọn-dẹp-records-cũ">Scavenging — Dọn dẹp Records cũ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scavenging--dọn-dẹp-records-cũ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="vấn-đề">Vấn đề<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Khi computer bị decommission nhưng không cleanup DNS → <strong>stale records</strong> tồn tại mãi</li>
+<li>Stale records gây: DNS query trả về IP cũ, LDAP/Kerberos timeout, logon chậm, application errors</li>
+</ul>
+<h3 id="aging-và-scavenging--cơ-chế-chi-tiết">Aging và Scavenging — Cơ chế chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aging-và-scavenging--cơ-chế-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph timeline[\&quot;DNS Record Lifecycle\&quot;]\n        create[\&quot;Record created&lt;br/>Timestamp = T0\&quot;]\n        noRefresh[\&quot;No-Refresh Interval&lt;br/>(7 days default)&lt;br/>Record CANNOT be&lt;br/>refreshed during this period\&quot;]\n        refresh[\&quot;Refresh Interval&lt;br/>(7 days default)&lt;br/>Record CAN be&lt;br/>refreshed by client\&quot;]\n        scavenge[\&quot;Scavenging eligible&lt;br/>If not refreshed&lt;br/>during Refresh Interval&lt;br/>= Record DELETED\&quot;]\n    end\n\n    create --> noRefresh\n    noRefresh --> refresh\n    refresh --> scavenge&quot;">graph LR
+    subgraph timeline[&quot;DNS Record Lifecycle&quot;]
+        create[&quot;Record created&lt;br/>Timestamp = T0&quot;]
+        noRefresh[&quot;No-Refresh Interval&lt;br/>(7 days default)&lt;br/>Record CANNOT be&lt;br/>refreshed during this period&quot;]
+        refresh[&quot;Refresh Interval&lt;br/>(7 days default)&lt;br/>Record CAN be&lt;br/>refreshed by client&quot;]
+        scavenge[&quot;Scavenging eligible&lt;br/>If not refreshed&lt;br/>during Refresh Interval&lt;br/>= Record DELETED&quot;]
+    end
+
+    create --> noRefresh
+    noRefresh --> refresh
+    refresh --> scavenge
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>Aging</strong>: mỗi DNS record có <strong>timestamp</strong> ghi lần cập nhật cuối</li>
+<li><strong>No-Refresh Interval</strong> (mặc định 7 ngày): khoảng thời gian record <strong>không được refresh</strong> — giảm replication traffic không cần thiết (client cố refresh nhưng bị từ chối)</li>
+<li><strong>Refresh Interval</strong> (mặc định 7 ngày): sau No-Refresh, record <strong>có thể được refresh</strong> bởi client</li>
+<li><strong>Scavenging</strong>: sau No-Refresh + Refresh interval (14 ngày mặc định), records không được refresh sẽ bị <strong>xoá tự động</strong></li>
+</ul>
+<h3 id="cấu-hình-scavenging--phải-bật-2-nơi">Cấu hình Scavenging — Phải bật 2 nơi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-hình-scavenging--phải-bật-2-nơi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nơi bật</th><th>Cách bật</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>DNS Server level</strong></td><td>DNS Manager → Server Properties → Advanced → Enable automatic scavenging</td><td>Cho phép server chạy scavenging process</td></tr><tr><td><strong>Zone level</strong></td><td>DNS Manager → Zone Properties → General → Aging</td><td>Cho phép zone đó bị scavenge</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Cả 2 đều phải bật</strong> mới hoạt động. Chỉ bật 1 trong 2 = scavenging không chạy.</p>
+</blockquote>
+<h3 id="scavenging-configuration-best-practices">Scavenging Configuration Best Practices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scavenging-configuration-best-practices" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Setting</th><th>Giá trị khuyến nghị</th><th>Giải thích</th></tr></thead><tbody><tr><td>No-Refresh Interval</td><td><strong>7 ngày</strong> (mặc định)</td><td>Giảm replication traffic</td></tr><tr><td>Refresh Interval</td><td><strong>7 ngày</strong> (mặc định)</td><td>Đủ thời gian cho client refresh</td></tr><tr><td>Scavenging Period</td><td><strong>7 ngày</strong></td><td>Server chạy cleanup mỗi 7 ngày</td></tr><tr><td>Scavenging server</td><td><strong>1 DC duy nhất</strong></td><td>Tránh race condition giữa nhiều DC</td></tr></tbody></table></div>
+<h3 id="lưu-ý-về-scavenging">Lưu ý về Scavenging<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-về-scavenging" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Mặc định TẮT</strong> — admin phải bật thủ công trên cả DNS server và từng zone</li>
+<li>Nếu không bật → stale records tích tụ vĩnh viễn → DNS ngày càng “bẩn”</li>
+<li>Nếu bật quá aggressive (interval quá ngắn) → có thể xoá records hợp lệ của máy tạm offline</li>
+<li><strong>Static A records</strong> (tạo thủ công, timestamp = 0) <strong>không bị scavenging xoá</strong> — cần cleanup thủ công</li>
+<li><strong>Best practice</strong>: bật scavenging, giữ interval 7+7 ngày mặc định, monitor trước khi áp production
+<ul>
+<li>Chạy <code>dnscmd /ageallrecords</code> trên zone test trước → xem records nào sẽ bị ảnh hưởng</li>
+</ul>
+</li>
+</ul>
+<h2 id="split-brain-dns">Split-Brain DNS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#split-brain-dns" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="vấn-đề-1">Vấn đề<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề-1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Khi domain AD dùng <strong>cùng DNS namespace</strong> với domain public (ví dụ: AD domain = <code>viettech.com</code>, website cũng = <code>viettech.com</code>)</li>
+<li>Internal clients query <code>viettech.com</code> → nhận AD DNS records (internal)</li>
+<li>External clients query <code>viettech.com</code> → nhận public DNS records (external)</li>
+<li>Đây gọi là <strong>split-brain DNS</strong> (hay split-horizon DNS)</li>
+</ul>
+<h3 id="giải-pháp">Giải pháp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#giải-pháp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph internal[\&quot;Internal Network\&quot;]\n        intClient[\&quot;Internal Client\&quot;]\n        intDNS[\&quot;AD-Integrated DNS&lt;br/>Zone: viettech.com&lt;br/>Records: DC, servers, internal apps\&quot;]\n    end\n\n    subgraph external[\&quot;Internet\&quot;]\n        extClient[\&quot;External Client\&quot;]\n        extDNS[\&quot;Public DNS&lt;br/>(Cloudflare, Route53)&lt;br/>Zone: viettech.com&lt;br/>Records: website, mail MX\&quot;]\n    end\n\n    intClient -->|\&quot;Query viettech.com\&quot;| intDNS\n    intDNS -->|\&quot;Returns internal IP\&quot;| intClient\n\n    extClient -->|\&quot;Query viettech.com\&quot;| extDNS\n    extDNS -->|\&quot;Returns public IP\&quot;| extClient&quot;">graph TD
+    subgraph internal[&quot;Internal Network&quot;]
+        intClient[&quot;Internal Client&quot;]
+        intDNS[&quot;AD-Integrated DNS&lt;br/>Zone: viettech.com&lt;br/>Records: DC, servers, internal apps&quot;]
+    end
+
+    subgraph external[&quot;Internet&quot;]
+        extClient[&quot;External Client&quot;]
+        extDNS[&quot;Public DNS&lt;br/>(Cloudflare, Route53)&lt;br/>Zone: viettech.com&lt;br/>Records: website, mail MX&quot;]
+    end
+
+    intClient -->|&quot;Query viettech.com&quot;| intDNS
+    intDNS -->|&quot;Returns internal IP&quot;| intClient
+
+    extClient -->|&quot;Query viettech.com&quot;| extDNS
+    extDNS -->|&quot;Returns public IP&quot;| extClient
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cách tiếp cận</th><th>Mô tả</th><th>Ưu điểm</th><th>Nhược điểm</th></tr></thead><tbody><tr><td><strong>Split-brain</strong></td><td>Internal DNS và Public DNS cùng zone name, records khác nhau</td><td>UPN đẹp (<code>user@viettech.com</code>)</td><td>Phải maintain 2 zone song song, dễ miss records</td></tr><tr><td><strong>Subdomain</strong></td><td>AD dùng <code>ad.viettech.com</code> hoặc <code>corp.viettech.com</code></td><td>Tách biệt rõ ràng, không conflict</td><td>UPN dài hơn (<code>user@ad.viettech.com</code>)</td></tr><tr><td><strong>Pinpoint DNS</strong></td><td>Tạo A records cụ thể trong AD zone cho public services</td><td>Giải quyết case-by-case</td><td>Phải thêm record thủ công cho mỗi public service</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Khuyến nghị</strong>: dùng <strong>subdomain</strong> (<code>ad.viettech.com</code> hoặc <code>corp.viettech.com</code>) để tránh split-brain hoàn toàn. Nếu đã dùng split-brain → phải đảm bảo internal zone có records cho public services (ví dụ: <code>www.viettech.com</code> A record trỏ đến public IP).</p>
+</blockquote>
+<h2 id="dnssec-trong-ad">DNSSEC trong AD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dnssec-trong-ad" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dnssec-là-gì">DNSSEC là gì<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dnssec-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>DNS Security Extensions</strong>: thêm chữ ký số (digital signatures) vào DNS responses</li>
+<li>Ngăn chặn: DNS spoofing, cache poisoning, man-in-the-middle attacks trên DNS</li>
+<li>AD DNS hỗ trợ DNSSEC từ <strong>Server 2012</strong></li>
+</ul>
+<h3 id="dnssec-trong-ad--thực-tế">DNSSEC trong AD — Thực tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dnssec-trong-ad--thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khía cạnh</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Có cần cho internal AD?</strong></td><td>Tuỳ — nếu mạng internal tin tưởng (trusted), DNSSEC thêm complexity mà ít lợi ích</td></tr><tr><td><strong>Key management</strong></td><td>DNSSEC keys lưu trong AD → replicate tự động → dễ quản lý hơn standalone</td></tr><tr><td><strong>Trust anchors</strong></td><td>Phân phối qua Group Policy (auto) hoặc manual</td></tr><tr><td><strong>Performance impact</strong></td><td>Responses lớn hơn (thêm RRSIG records), CPU overhead cho signing</td></tr><tr><td><strong>Recommendation</strong></td><td><strong>Không bắt buộc</strong> cho internal AD DNS. Cân nhắc cho zones public hoặc khi có compliance requirement</td></tr></tbody></table></div>
+<h3 id="khi-nào-nên-dùng-dnssec-trong-ad">Khi nào nên dùng DNSSEC trong AD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-nào-nên-dùng-dnssec-trong-ad" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>✅ <strong>Regulatory compliance</strong> yêu cầu DNS integrity</li>
+<li>✅ <strong>High-security environments</strong> (quân sự, tài chính)</li>
+<li>✅ <strong>Public-facing AD zones</strong> (nếu có)</li>
+<li>❌ <strong>AD internal DNS thông thường</strong> — overhead không đáng, LDAP signing + Kerberos đã bảo vệ tốt</li>
+<li>❌ <strong>Nếu chưa có PKI</strong> — DNSSEC cần key management tốt</li>
+</ul>
+<h2 id="conditional-forwarders-stub-zones-delegation">Conditional Forwarders, Stub Zones, Delegation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conditional-forwarders-stub-zones-delegation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="so-sánh-3-cơ-chế">So sánh 3 cơ chế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh-3-cơ-chế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cơ chế</th><th>Cách hoạt động</th><th>Khi nào dùng</th><th>Tự động cập nhật</th></tr></thead><tbody><tr><td><strong>Conditional Forwarder</strong></td><td>Forward queries cho domain cụ thể đến DNS server chỉ định</td><td>Forest Trust, partner DNS</td><td><strong>Không</strong> — phải update IP thủ công</td></tr><tr><td><strong>Stub Zone</strong></td><td>Chứa SOA, NS, glue A records — tự query NS records mới</td><td>Awareness về zone khác, linh hoạt hơn CF</td><td><strong>Có</strong> — tự update NS records</td></tr><tr><td><strong>Delegation</strong></td><td>NS record trong parent zone trỏ đến child DNS</td><td>Child domains trong tree</td><td><strong>Tự động</strong> khi tạo child domain</td></tr></tbody></table></div>
+<h3 id="conditional-forwarders">Conditional Forwarders<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conditional-forwarders" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>DNS server forward queries cho <strong>domain cụ thể</strong> đến DNS server chỉ định</li>
+<li>Dùng khi: cần resolve DNS name của forest/domain khác (ví dụ khi thiết lập Forest Trust)</li>
+<li>Ví dụ: DNS server của <code>corp.example.com</code> forward queries cho <code>partner.com</code> đến <code>10.5.5.1</code></li>
+<li><strong>Phải tạo ở cả 2 phía</strong> khi thiết lập Forest Trust — thiếu 1 phía = trust verification fail</li>
+<li>Có thể lưu trong AD (replicate đến mọi DC) hoặc lưu local trên server</li>
+</ul>
+<h3 id="stub-zones">Stub Zones<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#stub-zones" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Chứa <strong>SOA, NS, và glue A records</strong> của zone khác (không chứa full zone data)</li>
+<li>Tự động cập nhật khi NS records thay đổi ở zone gốc</li>
+<li>Nhẹ hơn secondary zone, linh hoạt hơn conditional forwarder</li>
+<li>Dùng khi cần maintain awareness về DNS servers của zone khác mà không cần full zone copy</li>
+<li><strong>Ưu điểm so với Conditional Forwarder</strong>: nếu partner đổi DNS server IP → stub zone tự biết</li>
+</ul>
+<h3 id="delegation">Delegation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#delegation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Tạo <strong>NS record</strong> trong parent zone trỏ đến DNS server quản lý child zone</li>
+<li>Ví dụ: zone <code>corp.example.com</code> delegate <code>hr.corp.example.com</code> đến DNS server riêng</li>
+<li>AD tự động tạo delegation khi tạo child domain (nếu DNS server của parent domain reachable)</li>
+<li>Nếu delegation hỏng → child domain DNS không resolve được từ parent</li>
+</ul>
+<h2 id="câu-hỏi-thường-gặp">Câu hỏi thường gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-thường-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dns-server-nên-chạy-trên-dc-hay-server-riêng">DNS server nên chạy trên DC hay server riêng?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-server-nên-chạy-trên-dc-hay-server-riêng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Trên DC</strong> — đây là Microsoft Best Practice</li>
+<li>AD-integrated DNS chỉ hoạt động trên DC</li>
+<li>Lợi ích: multi-master updates, secure dynamic updates, replicate tự động</li>
+<li>Chạy DNS trên non-DC → phải dùng Standard Primary → single point of failure</li>
+</ul>
+<h3 id="nếu-dns-server-chết-client-có-logon-được-không">Nếu DNS server chết, client có logon được không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nếu-dns-server-chết-client-có-logon-được-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Không</strong> — client cần DNS để tìm DC</li>
+<li>Mỗi client nên cấu hình <strong>ít nhất 2 DNS servers</strong> (primary + alternate)</li>
+<li>DNS servers nên đặt ở sites khác nhau nếu có thể</li>
+<li>Client cache DNS responses → nếu DNS chết nhưng client đã cache DC address → có thể logon tạm</li>
+</ul>
+<h3 id="tôi-có-nên-forward-internal-dns-ra-internet-không">Tôi có nên forward internal DNS ra Internet không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tôi-có-nên-forward-internal-dns-ra-internet-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Có</strong> — internal DNS server cần resolve Internet names cho clients</li>
+<li>Cấu hình <strong>root hints</strong> hoặc <strong>forwarder</strong> đến DNS provider (ví dụ: <code>8.8.8.8</code>, ISP DNS)</li>
+<li><strong>Không</strong> forward Internet traffic ngược lại — external DNS không nên resolve internal names</li>
+</ul>
+<h3 id="records-dc-quan-trọng-nhất-mà-tôi-phải-kiểm-tra-là-gì">Records DC quan trọng nhất mà tôi phải kiểm tra là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#records-dc-quan-trọng-nhất-mà-tôi-phải-kiểm-tra-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><code>_ldap._tcp.dc._msdcs.&lt;DomainDNSName></code> — SRV records cho DCs</li>
+<li><code>_kerberos._tcp.dc._msdcs.&lt;DomainDNSName></code> — KDC records</li>
+<li>A records cho mỗi DC</li>
+<li><code>_msdcs.&lt;ForestRootDomain></code> zone tồn tại và có records</li>
+</ol>
+<h2 id="lưu-ý-quan-trọng">Lưu ý quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Luôn cài DNS role trên DC</strong> — AD-integrated DNS là best practice. Tránh dùng DNS server standalone cho AD zone</li>
+<li><strong>Conditional forwarders phải được tạo ở cả 2 phía</strong> khi thiết lập Forest Trust — thiếu 1 phía = trust verification fail</li>
+<li><strong>Đừng xoá zone <code>_msdcs</code></strong> — đây là zone quan trọng nhất cho DC locator</li>
+<li><strong>Static A records</strong> (tạo thủ công, không có timestamp) <strong>không bị scavenging xoá</strong> — cần cleanup thủ công</li>
+<li><strong>DNS debug logging</strong> rất hữu ích cho troubleshoot nhưng <strong>tạo file log rất lớn</strong> — chỉ bật tạm thời</li>
+<li><strong>Mỗi client nên cấu hình 2 DNS servers</strong> — nếu chỉ có 1 DNS = single point of failure</li>
+<li><strong>Scavenging</strong> phải bật ở <strong>cả server level VÀ zone level</strong> mới hoạt động</li>
+<li>DNS client settings trên DC: <strong>preferred DNS = chính nó</strong> (127.0.0.1 hoặc IP riêng), alternate = DC khác</li>
+</ul>
+<h2 id="liên-kết">Liên kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#liên-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.1---active-directory---tổng-quan-và-kiến-trúc" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.1---active-directory---tổng-quan-và-kiến-trúc">01.1 - Active Directory - Tổng quan và kiến trúc</a> — DNS là 1 trong 3 protocols nền tảng</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad">01.3 - Domain Controller - Trái tim của AD</a> — DC thường kiêm DNS server</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication">01.6 - Global Catalog và Sites - Tìm kiếm và Replication</a> — client dùng DNS SRV records để tìm GC và DC theo site</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.2---domain---đơn-vị-quản-lý-cốt-lõi" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.2---domain---đơn-vị-quản-lý-cốt-lõi">01.2 - Domain - Đơn vị quản lý cốt lõi</a> — domain name = DNS name</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.5---trust-relationships---quan-hệ-tin-tưởng" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.5---trust-relationships---quan-hệ-tin-tưởng">01.5 - Trust Relationships - Quan hệ tin tưởng</a> — Trust cần DNS conditional forwarders</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.3---dhcp---kiến-trúc-và-nguyên-lý" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.3---dhcp---kiến-trúc-và-nguyên-lý">02.3 - DHCP - Kiến trúc và nguyên lý</a> — DHCP cấp DNS server address cho clients</li>
+<li><a href="../../../../moc---windows-server-ad-2025" class="internal internal-link alias" data-slug="moc---windows-server-ad-2025">MOC - Windows Server AD 2025</a></li>
+</ul>
+<h2 id="tham-khảo">Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/dns-and-ad-ds" class="external external-link">DNS Support for Active Directory — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc759550(v=ws.10)" class="external external-link">How DNS Support for Active Directory Works — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/networking/dns/troubleshoot/aging-and-scavenging" class="external external-link">Understanding Aging and Scavenging — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/networking/dns/deploy/dnssec" class="external external-link">DNSSEC in Windows Server — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-423" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#dns-trong-active-directory" data-for="dns-trong-active-directory">DNS trong Active Directory</a></li><li class="depth-1"><a href="#tóm-tắt-nhanh" data-for="tóm-tắt-nhanh">Tóm tắt nhanh</a></li><li class="depth-1"><a href="#vì-sao-ad-phụ-thuộc-dns" data-for="vì-sao-ad-phụ-thuộc-dns">Vì sao AD phụ thuộc DNS</a></li><li class="depth-2"><a href="#dns-là-nền-tảng-của-ad" data-for="dns-là-nền-tảng-của-ad">DNS là nền tảng của AD</a></li><li class="depth-2"><a href="#dns-vs-wins-lịch-sử" data-for="dns-vs-wins-lịch-sử">DNS vs WINS (lịch sử)</a></li><li class="depth-1"><a href="#ad-integrated-dns-zones" data-for="ad-integrated-dns-zones">AD-Integrated DNS Zones</a></li><li class="depth-2"><a href="#so-sánh-zone-types" data-for="so-sánh-zone-types">So sánh zone types</a></li><li class="depth-2"><a href="#replication-scope" data-for="replication-scope">Replication Scope</a></li><li class="depth-2"><a href="#secure-dynamic-updates" data-for="secure-dynamic-updates">Secure Dynamic Updates</a></li><li class="depth-1"><a href="#dns-records-quan-trọng-cho-ad" data-for="dns-records-quan-trọng-cho-ad">DNS Records quan trọng cho AD</a></li><li class="depth-2"><a href="#cấu-trúc-dns-records" data-for="cấu-trúc-dns-records">Cấu trúc DNS Records</a></li><li class="depth-2"><a href="#key-srv-records" data-for="key-srv-records">Key SRV Records</a></li><li class="depth-2"><a href="#srv-record-format" data-for="srv-record-format">SRV Record Format</a></li><li class="depth-2"><a href="#_msdcs-subdomain" data-for="_msdcs-subdomain">_msdcs Subdomain</a></li><li class="depth-1"><a href="#dns-resolution-flow-cho-logon" data-for="dns-resolution-flow-cho-logon">DNS Resolution Flow cho Logon</a></li><li class="depth-2"><a href="#khi-client-không-tìm-được-dc-trong-site" data-for="khi-client-không-tìm-được-dc-trong-site">Khi client không tìm được DC trong site</a></li><li class="depth-1"><a href="#dynamic-dns-update" data-for="dynamic-dns-update">Dynamic DNS Update</a></li><li class="depth-2"><a href="#quy-trình-dynamic-update" data-for="quy-trình-dynamic-update">Quy trình Dynamic Update</a></li><li class="depth-2"><a href="#dc-registration" data-for="dc-registration">DC Registration</a></li><li class="depth-1"><a href="#scavenging--dọn-dẹp-records-cũ" data-for="scavenging--dọn-dẹp-records-cũ">Scavenging — Dọn dẹp Records cũ</a></li><li class="depth-2"><a href="#vấn-đề" data-for="vấn-đề">Vấn đề</a></li><li class="depth-2"><a href="#aging-và-scavenging--cơ-chế-chi-tiết" data-for="aging-và-scavenging--cơ-chế-chi-tiết">Aging và Scavenging — Cơ chế chi tiết</a></li><li class="depth-2"><a href="#cấu-hình-scavenging--phải-bật-2-nơi" data-for="cấu-hình-scavenging--phải-bật-2-nơi">Cấu hình Scavenging — Phải bật 2 nơi</a></li><li class="depth-2"><a href="#scavenging-configuration-best-practices" data-for="scavenging-configuration-best-practices">Scavenging Configuration Best Practices</a></li><li class="depth-2"><a href="#lưu-ý-về-scavenging" data-for="lưu-ý-về-scavenging">Lưu ý về Scavenging</a></li><li class="depth-1"><a href="#split-brain-dns" data-for="split-brain-dns">Split-Brain DNS</a></li><li class="depth-2"><a href="#vấn-đề-1" data-for="vấn-đề-1">Vấn đề</a></li><li class="depth-2"><a href="#giải-pháp" data-for="giải-pháp">Giải pháp</a></li><li class="depth-1"><a href="#dnssec-trong-ad" data-for="dnssec-trong-ad">DNSSEC trong AD</a></li><li class="depth-2"><a href="#dnssec-là-gì" data-for="dnssec-là-gì">DNSSEC là gì</a></li><li class="depth-2"><a href="#dnssec-trong-ad--thực-tế" data-for="dnssec-trong-ad--thực-tế">DNSSEC trong AD — Thực tế</a></li><li class="depth-2"><a href="#khi-nào-nên-dùng-dnssec-trong-ad" data-for="khi-nào-nên-dùng-dnssec-trong-ad">Khi nào nên dùng DNSSEC trong AD</a></li><li class="depth-1"><a href="#conditional-forwarders-stub-zones-delegation" data-for="conditional-forwarders-stub-zones-delegation">Conditional Forwarders, Stub Zones, Delegation</a></li><li class="depth-2"><a href="#so-sánh-3-cơ-chế" data-for="so-sánh-3-cơ-chế">So sánh 3 cơ chế</a></li><li class="depth-2"><a href="#conditional-forwarders" data-for="conditional-forwarders">Conditional Forwarders</a></li><li class="depth-2"><a href="#stub-zones" data-for="stub-zones">Stub Zones</a></li><li class="depth-2"><a href="#delegation" data-for="delegation">Delegation</a></li><li class="depth-1"><a href="#câu-hỏi-thường-gặp" data-for="câu-hỏi-thường-gặp">Câu hỏi thường gặp</a></li><li class="depth-2"><a href="#dns-server-nên-chạy-trên-dc-hay-server-riêng" data-for="dns-server-nên-chạy-trên-dc-hay-server-riêng">DNS server nên chạy trên DC hay server riêng?</a></li><li class="depth-2"><a href="#nếu-dns-server-chết-client-có-logon-được-không" data-for="nếu-dns-server-chết-client-có-logon-được-không">Nếu DNS server chết, client có logon được không?</a></li><li class="depth-2"><a href="#tôi-có-nên-forward-internal-dns-ra-internet-không" data-for="tôi-có-nên-forward-internal-dns-ra-internet-không">Tôi có nên forward internal DNS ra Internet không?</a></li><li class="depth-2"><a href="#records-dc-quan-trọng-nhất-mà-tôi-phải-kiểm-tra-là-gì" data-for="records-dc-quan-trọng-nhất-mà-tôi-phải-kiểm-tra-là-gì">Records DC quan trọng nhất mà tôi phải kiểm tra là gì?</a></li><li class="depth-1"><a href="#lưu-ý-quan-trọng" data-for="lưu-ý-quan-trọng">Lưu ý quan trọng</a></li><li class="depth-1"><a href="#liên-kết" data-for="liên-kết">Liên kết</a></li><li class="depth-1"><a href="#tham-khảo" data-for="tham-khảo">Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.1---active-directory---tổng-quan-và-kiến-trúc" class="internal">01.1 - Active Directory - Tổng quan và kiến trúc</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal">01.3 - Domain Controller - Trái tim của AD</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.5---trust-relationships---quan-hệ-tin-tưởng" class="internal">01.5 - Trust Relationships - Quan hệ tin tưởng</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication" class="internal">01.6 - Global Catalog và Sites - Tìm kiếm và Replication</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal">02.1 - AD DS - Active Directory Domain Services</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki" class="internal">02.2 - AD CS - Certificate Services và PKI</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.3---dhcp---kiến-trúc-và-nguyên-lý" class="internal">02.3 - DHCP - Kiến trúc và nguyên lý</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services" class="internal">02.4 - RDS - Remote Desktop Services</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers" class="internal">04.1 - Triển khai Additional Domain Controllers</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.3---chuyển-đổi-ứng-dụng-và-dns" class="internal">04.3 - Chuyển đổi ứng dụng và DNS</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal">04.5 - Kiểm thử toàn diện</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

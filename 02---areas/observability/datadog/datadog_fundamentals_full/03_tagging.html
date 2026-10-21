@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Phần 3: Tagging — Hệ Thống Tổ Chức Dữ Liệu</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Phần 3: Tagging — Hệ Thống Tổ Chức Dữ Liệu"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Phần 3: Tagging — Hệ Thống Tổ Chức Dữ Liệu"/><meta name="twitter:description" content="Phần 3: Tagging — Hệ Thống Tổ Chức Dữ Liệu Tỷ trọng ước tính: ~10-12% đề thi · Độ khó: Trung bình 3.1 Vấn Đề Mà Tagging Giải Quyết Bức tranh trước khi có tagging Hãy tưởng tượng Datadog là một kho hàng khổng lồ: 500 hosts gửi data lên Mỗi host gửi 100 metrics × 4 lần/phút × 60 phút/giờ = 24,000 data..."/><meta property="og:description" content="Phần 3: Tagging — Hệ Thống Tổ Chức Dữ Liệu Tỷ trọng ước tính: ~10-12% đề thi · Độ khó: Trung bình 3.1 Vấn Đề Mà Tagging Giải Quyết Bức tranh trước khi có tagging Hãy tưởng tượng Datadog là một kho hàng khổng lồ: 500 hosts gửi data lên Mỗi host gửi 100 metrics × 4 lần/phút × 60 phút/giờ = 24,000 data..."/><meta property="og:image:alt" content="Phần 3: Tagging — Hệ Thống Tổ Chức Dữ Liệu Tỷ trọng ước tính: ~10-12% đề thi · Độ khó: Trung bình 3.1 Vấn Đề Mà Tagging Giải Quyết Bức tranh trước khi có tagging Hãy tưởng tượng Datadog là một kho hàng khổng lồ: 500 hosts gửi data lên Mỗi host gửi 100 metrics × 4 lần/phút × 60 phút/giờ = 24,000 data..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/datadog_fundamentals_full/03_tagging"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/datadog_fundamentals_full/03_tagging"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Phần 3: Tagging — Hệ Thống Tổ Chức Dữ Liệu Tỷ trọng ước tính: ~10-12% đề thi · Độ khó: Trung bình 3.1 Vấn Đề Mà Tagging Giải Quyết Bức tranh trước khi có tagging Hãy tưởng tượng Datadog là một kho hàng khổng lồ: 500 hosts gửi data lên Mỗi host gửi 100 metrics × 4 lần/phút × 60 phút/giờ = 24,000 data..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/datadog/datadog_fundamentals_full/03_tagging" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-302" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-302" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/">Datadog</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/datadog_fundamentals_full/">datadog_fundamentals_full</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Phần 3: Tagging — Hệ Thống Tổ Chức Dữ Liệu</a></div></nav><h1 class="article-title">Phần 3: Tagging — Hệ Thống Tổ Chức Dữ Liệu</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/datadog" class="internal internal-link tag-link">domain/datadog</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-11T17:00:00.000Z">12 thg 6, 2026</time><span>11 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="phần-3-tagging--hệ-thống-tổ-chức-dữ-liệu">Phần 3: Tagging — Hệ Thống Tổ Chức Dữ Liệu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-3-tagging--hệ-thống-tổ-chức-dữ-liệu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Tỷ trọng ước tính</strong>: ~10-12% đề thi · <strong>Độ khó</strong>: Trung bình</p>
+</blockquote>
+<hr/>
+<h2 id="31-vấn-đề-mà-tagging-giải-quyết">3.1 Vấn Đề Mà Tagging Giải Quyết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-vấn-đề-mà-tagging-giải-quyết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="bức-tranh-trước-khi-có-tagging">Bức tranh trước khi có tagging<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bức-tranh-trước-khi-có-tagging" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hãy tưởng tượng Datadog là một kho hàng khổng lồ:</p>
+<ul>
+<li>500 hosts gửi data lên</li>
+<li>Mỗi host gửi 100 metrics × 4 lần/phút × 60 phút/giờ = 24,000 data points/host/giờ</li>
+<li>500 hosts × 24,000 = <strong>12 triệu data points mỗi giờ</strong></li>
+</ul>
+<p>Không có tags, khi bạn vào Datadog và hỏi “CPU của servers production đang như thế nào?” — bạn không thể filter vì không biết host nào là production.</p>
+<p><strong>Tags là metadata gắn vào data</strong> — giúp bạn sau này truy vấn, lọc, nhóm data theo bất kỳ chiều nào bạn muốn.</p>
+<blockquote>
+<p>💡 <strong>Analogy</strong>: Tags giống như <strong>metadata của file Excel</strong>. Mỗi row có cột “Bộ phận”, “Khu vực”, “Tháng”. Sau đó bạn có thể filter, pivot, group theo bất kỳ cột nào.</p>
+</blockquote>
+<hr/>
+<h2 id="32-format-và-cơ-chế-xử-lý-tags">3.2 Format và Cơ Chế Xử Lý Tags<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-format-và-cơ-chế-xử-lý-tags" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="format-keyvalue">Format: <code>key:value</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#format-keyvalue" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>env:production
+service:web-api
+team:backend
+region:us-east-1
+version:2.1.0
+</code></pre>
+<h3 id="tại-sao-lowercase-bắt-buộc">Tại sao lowercase bắt buộc?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-lowercase-bắt-buộc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Datadog tự động <strong>lowercase</strong> tất cả tags trước khi store:</p>
+<pre><code>Input:   Env:Production
+Stored:  env:production
+
+Input:   Team:BackEnd
+Stored:  team:backend
+</code></pre>
+<p><strong>Lý do</strong>: Nếu không, <code>env:production</code> và <code>env:Production</code> sẽ là 2 tags khác nhau → data bị phân mảnh, filter không thể match.</p>
+<h3 id="tại-sao-phải-bắt-đầu-bằng-chữ-cái">Tại sao phải bắt đầu bằng chữ cái?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-phải-bắt-đầu-bằng-chữ-cái" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Tags được dùng làm <strong>identifiers</strong> trong hệ thống. Bắt đầu bằng số có thể gây ambiguity về type:</p>
+<pre><code>123:value   ← Số? String? 
+env:value   ← Rõ ràng là string identifier
+</code></pre>
+<h3 id="tại-sao-tối-đa-80-ký-tự">Tại sao tối đa 80 ký tự?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-tối-đa-80-ký-tự" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Tổng chiều dài tag (bao gồm <code>key:value</code>) tối đa <strong>80 ký tự</strong> (không phải 200). Storage và indexing optimization — tag quá dài tốn storage, ảnh hưởng performance query.</p>
+<hr/>
+<h2 id="33-unified-service-tagging--cơ-chế-correlation">3.3 Unified Service Tagging — Cơ Chế Correlation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-unified-service-tagging--cơ-chế-correlation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="vấn-đề-khi-thiếu-ust">Vấn đề khi thiếu UST<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề-khi-thiếu-ust" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Scenario: Sau deployment phiên bản mới, user báo lỗi.
+
+Không có UST:
+  Logs:    service=order-backend, version=unknown
+  Metrics: host=web-prod-01, service=unknown
+  Traces:  service=orders, version=v2.1
+
+  → Không thể biết: Lỗi này thuộc version nào? Chỉ ảnh hưởng production?
+  → Phải thủ công correlate từng nguồn dữ liệu
+</code></pre>
+<h3 id="giải-pháp-ba-tags-bắt-buộc-cùng-tên--giá-trị">Giải pháp: Ba Tags Bắt Buộc Cùng Tên + Giá Trị<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#giải-pháp-ba-tags-bắt-buộc-cùng-tên--giá-trị" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>env:production
+service:order-backend
+version:2.1.0
+</code></pre>
+<p><strong>Khi 3 tags này có mặt trên TẤT CẢ ba pillars</strong>, Datadog có thể tự động:</p>
+<pre><code>Flow sau khi có UST:
+
+1. Anomaly alert: &quot;order-backend metrics bất thường lúc 14:30&quot;
+   → Filter: service=order-backend, env=production, version=2.1.0
+
+2. Click &quot;See Traces&quot; → APM tự filter đúng service + version + environment
+
+3. Click &quot;See Logs&quot; từ trace → Log Explorer tự filter đúng service + version
+
+4. So sánh version:
+   avg:system.cpu.user{service:order-backend, env:production, version:2.0.0}  ← baseline
+   avg:system.cpu.user{service:order-backend, env:production, version:2.1.0}  ← sau deploy
+</code></pre>
+<h3 id="semantic-của-mỗi-tag">Semantic của mỗi tag<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#semantic-của-mỗi-tag" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tag</th><th>Gắn cho loại entity nào</th><th>Mô tả</th></tr></thead><tbody><tr><td><code>env</code></td><td>TẤT CẢ (host, service, container)</td><td>Deployment environment — phân biệt prod/staging/dev</td></tr><tr><td><code>service</code></td><td><strong>Application services</strong></td><td>Logical service name — không gắn cho hosts nếu host chạy nhiều services</td></tr><tr><td><code>version</code></td><td><strong>Application services</strong></td><td>Semantic versioning của application binary</td></tr></tbody></table></div>
+<p><strong>★ Exam note</strong>: <code>version</code> tag <strong>không nên</strong> gắn cho infrastructure (hosts, databases) — chỉ gắn cho application services.</p>
+<hr/>
+<h2 id="34-cardinality--nguyên-lý-kinh-tế-của-tags">3.4 Cardinality — Nguyên Lý Kinh Tế Của Tags<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#34-cardinality--nguyên-lý-kinh-tế-của-tags" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="từ-tag-đến-timeseries--cơ-chế-nội-bộ">Từ tag đến timeseries — cơ chế nội bộ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#từ-tag-đến-timeseries--cơ-chế-nội-bộ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Datadog lưu metrics dưới dạng <strong>timeseries</strong> — mỗi unique combination của metric name + tags = 1 timeseries riêng biệt.</p>
+<pre><code>Metric: http.requests
+Tags: env, service, host
+
+Timeseries được tạo ra:
+  http.requests {env:production, service:web, host:web-01}   ← timeseries 1
+  http.requests {env:production, service:web, host:web-02}   ← timeseries 2
+  http.requests {env:production, service:api, host:api-01}   ← timeseries 3
+  http.requests {env:staging, service:web, host:stg-web-01}  ← timeseries 4
+  ...
+
+Tổng: 2 envs × 3 services × 50 hosts = 300 timeseries cho 1 metric
+→ 300 timeseries là hoàn toàn manageable!
+</code></pre>
+<h3 id="high-cardinality-gây-ra-gì">High cardinality gây ra gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#high-cardinality-gây-ra-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Thêm tag request_id (có 1 triệu unique values mỗi ngày):
+
+http.requests {env:production, service:web, host:web-01, request_id:abc123}
+http.requests {env:production, service:web, host:web-01, request_id:def456}
+...
+
+Tổng: 300 × 1,000,000 = 300,000,000 timeseries!
+→ Chi phí storage tăng 1 triệu lần
+→ Query performance giảm thậm tệ
+→ Datadog có thể từ chối hoặc charge rất nhiều tiền
+</code></pre>
+<h3 id="rule-of-thumb">Rule of thumb<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rule-of-thumb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Số unique values</th><th>Cardinality</th><th>Ví dụ tags phù hợp</th></tr></thead><tbody><tr><td>&lt; 10</td><td>Very low ✅</td><td><code>env</code> (prod/staging/dev)</td></tr><tr><td>10 - 100</td><td>Low ✅</td><td><code>service</code>, <code>region</code>, <code>team</code></td></tr><tr><td>100 - 1,000</td><td>Medium ⚠️</td><td><code>host</code> (nếu cluster nhỏ)</td></tr><tr><td>1,000+</td><td>High ❌</td><td><code>user_id</code>, <code>request_id</code>, <code>ip_address</code></td></tr><tr><td>1M+</td><td>Very high ❌❌</td><td><code>timestamp</code>, <code>uuid</code></td></tr></tbody></table></div>
+<p><strong>★ Exam insight</strong>: Timestamp và request ID là <strong>anti-patterns</strong> nguy hiểm nhất vì chúng có cardinality gần vô hạn.</p>
+<hr/>
+<h2 id="35-cách-gán-tags--luồng-dữ-liệu-đầy-đủ">3.5 Cách Gán Tags — Luồng Dữ Liệu Đầy Đủ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#35-cách-gán-tags--luồng-dữ-liệu-đầy-đủ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="nguồn-1-datadogyaml--áp-dụng-rộng-nhất">Nguồn 1: <code>datadog.yaml</code> — áp dụng rộng nhất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nguồn-1-datadogyaml--áp-dụng-rộng-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># /etc/datadog-agent/datadog.yaml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">tags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">env:production</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">team:platform</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">region:us-east-1</span></span></code></pre></figure>
+<p><strong>Cơ chế</strong>: Collector attach các tags này vào <strong>tất cả data</strong> trước khi gửi cho Forwarder. Mọi metric, log, trace từ host này đều có các tags này.</p>
+<p><strong>Dùng khi</strong>: Host có identity rõ ràng (ví dụ: tất cả servers trong cùng 1 environment/team).</p>
+<h3 id="nguồn-2-integration-config--áp-dụng-hẹp-hơn">Nguồn 2: Integration config — áp dụng hẹp hơn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nguồn-2-integration-config--áp-dụng-hẹp-hơn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># /etc/datadog-agent/conf.d/nginx.d/conf.yaml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">instances</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">nginx_status_url</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">http://localhost/nginx_status</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    tags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">service:web-frontend</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">version:1.5.0</span></span></code></pre></figure>
+<p><strong>Cơ chế</strong>: Chỉ metrics từ <strong>integration NGINX cụ thể</strong> mới có tags này. Metrics từ disk, CPU, MySQL sẽ không có <code>service:web-frontend</code>.</p>
+<p><strong>Dùng khi</strong>: Host chạy nhiều services—cần tag riêng cho mỗi service.</p>
+<h3 id="nguồn-3-automatic-từ-cloud-integrations">Nguồn 3: Automatic từ cloud integrations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nguồn-3-automatic-từ-cloud-integrations" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>AWS EC2 instance có tags:
+  Name: web-server-prod-01
+  Environment: production
+  Team: backend
+  
+↓ Datadog AWS Crawler import:
+
+Datadog metrics từ EC2 này tự động có:
+  host:web-server-prod-01
+  environment:production
+  team:backend
+</code></pre>
+<p><strong>Cơ chế</strong>: Crawler-based integration đọc resource tags từ cloud provider API → tự động gắn vào metrics.</p>
+<h3 id="nguồn-4-kubernetes-labels--tags">Nguồn 4: Kubernetes labels → tags<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nguồn-4-kubernetes-labels--tags" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Kubernetes Pod spec</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  labels</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    tags.datadoghq.com/env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">production        ← Mapping trực tiếp</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    tags.datadoghq.com/service</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">web-api       ← vào Datadog tags!</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    tags.datadoghq.com/version</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;2.1.0&quot;</span></span></code></pre></figure>
+<p>Datadog Agent tự đọc labels này → attach vào tất cả data từ pod đó.</p>
+<hr/>
+<h2 id="36-tagging-examples--tags-ở-từng-tầng-hạ-tầng">3.6 Tagging Examples — Tags Ở Từng Tầng Hạ Tầng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#36-tagging-examples--tags-ở-từng-tầng-hạ-tầng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="mô-hình-phân-tầng-tags">Mô hình phân tầng Tags<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mô-hình-phân-tầng-tags" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Tags không chỉ gắn bừa — mỗi <strong>tầng hạ tầng</strong> có tập tags phù hợp riêng. Hình dung như tầng nhà, tầng dưới cùng bao trùm nhất:</p>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│  DATA CENTER / CLOUD PLATFORM (tầng rộng nhất)                     │
+│  cloud_provider: aws                                                │
+│  availability_zone: us-east-1c                                      │
+│  env: prod                                                          │
+│                                                                     │
+│  ┌──────────────────────┐  ┌──────────────────────────────────────┐ │
+│  │ ORCHESTRATION        │  │ SERVERLESS                          │ │
+│  │ container_platform:  │  │ resource: cart-l2e-prod              │ │
+│  │   ecs                │  │                                      │ │
+│  │ cluster_name:        │  └──────────────────────────────────────┘ │
+│  │   web-store-demo     │                                           │
+│  └──────────────────────┘                                           │
+│                                                                     │
+│  ┌───────────────────────────┐  ┌────────────────────────────────┐  │
+│  │ HOST                      │  │ HOSTED CLOUD SERVICES          │  │
+│  │ host: i-0123c7890d587e34f5│  │ source: rds                    │  │
+│  │                           │  │ dbinstanceidentifier: mysqlrds │  │
+│  └───────────────────────────┘  └────────────────────────────────┘  │
+│                                                                     │
+│  ┌────────────┐  ┌─────────────────────┐  ┌──────────────────────┐ │
+│  │ CONTAINER 1│  │ CONTAINER 2         │  │ LAMBDA SERVICE       │ │
+│  │            │  │ image: prod-123-demo│  │ functionname:        │ │
+│  │            │  │ container_id:       │  │   logs_pusher        │ │
+│  │            │  │   a01bcde23f4       │  │                      │ │
+│  └────────────┘  └─────────────────────┘  └──────────────────────┘ │
+│                                                                     │
+│  ┌────────┐  ┌────────────────────────────────────────────────────┐ │
+│  │SERVICE │  │ SERVICE C                                         │ │
+│  │ A, B   │  │ service: web-store     role: webserver             │ │
+│  │        │  │ source: apache         business_unit: engineering  │ │
+│  │        │  │ team: devops                                      │ │
+│  └────────┘  └────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="tags-phổ-biến-theo-từng-tầng">Tags phổ biến theo từng tầng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tags-phổ-biến-theo-từng-tầng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tầng</th><th>Tags ví dụ</th><th>Giải thích</th></tr></thead><tbody><tr><td><strong>Service</strong></td><td><code>service</code>, <code>role</code>, <code>source</code>, <code>team</code>, <code>business_unit</code></td><td>Mô tả ứng dụng/dịch vụ logic</td></tr><tr><td><strong>Container</strong></td><td><code>image</code>, <code>container_id</code>, <code>container_name</code></td><td>Mô tả container runtime</td></tr><tr><td><strong>Host</strong></td><td><code>host</code>, <code>hostname</code>, <code>instance-type</code></td><td>Mô tả máy chủ vật lý/VM</td></tr><tr><td><strong>Orchestration</strong></td><td><code>container_platform</code>, <code>cluster_name</code>, <code>task_arn</code></td><td>Mô tả platform orchestration</td></tr><tr><td><strong>Serverless</strong></td><td><code>resource</code>, <code>functionname</code>, <code>region</code></td><td>Mô tả Lambda/Cloud Functions</td></tr><tr><td><strong>Hosted Services</strong></td><td><code>source</code>, <code>dbinstanceidentifier</code>, <code>engine</code></td><td>Mô tả managed services (RDS, ElastiCache…)</td></tr><tr><td><strong>Cloud Platform</strong></td><td><code>cloud_provider</code>, <code>availability_zone</code>, <code>env</code></td><td>Mô tả data center/cloud provider</td></tr></tbody></table></div>
+<h3 id="tags-là-dimensions--thêm-chiều-cho-data">Tags Là Dimensions — Thêm Chiều Cho Data<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tags-là-dimensions--thêm-chiều-cho-data" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi bạn gắn tag <code>key:value</code> vào metric, bạn đang thêm <strong>1 chiều mới</strong> (key) với <strong>1 giá trị</strong> (value) vào data. Hãy hình dung data là khối 3D:</p>
+<pre><code>                    AVAILABILITY ZONE
+                         ↑
+                         │   sa-east-1a
+                         │   eu-west-1a
+                         │   us-east-1a
+                         │
+    INSTANCE TYPE ───────┼───────────────────→ ROLE
+    b3.medium            │                     database
+    t2.small             │                     cache
+    c3.large             │                     appserver
+
+Mỗi &quot;ô&quot; trong khối 3D = 1 unique combination:
+  (us-east-1a, t2.small, cache)   ← 1 timeseries
+  (us-east-1a, c3.large, database) ← 1 timeseries khác
+  ...
+
+Tag &quot;key&quot; = chọn CHIỀU nào để nhìn data
+Tag &quot;value&quot; = chọn ĐIỂM nào trên chiều đó
+</code></pre>
+<p><strong>Ví dụ thực tế</strong>:</p>
+<pre><code>Metric: system.cpu.user
+
+Không tag: 1 con số duy nhất → &quot;CPU trung bình toàn hệ thống&quot;
+Thêm role: → Nhìn CPU theo database vs cache vs appserver
+Thêm az:   → Nhìn CPU theo us-east-1a vs eu-west-1a
+Thêm cả 2: → Nhìn CPU theo từng role TRONG từng AZ
+
+→ Càng nhiều tags = càng nhiều chiều = càng chi tiết
+→ Nhưng quá nhiều chiều = high cardinality = tốn tiền! (xem 3.4)
+</code></pre>
+<hr/>
+<h2 id="37-template-variables--cơ-chế-hoạt-động-trên-dashboard">3.7 Template Variables — Cơ Chế Hoạt Động Trên Dashboard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#37-template-variables--cơ-chế-hoạt-động-trên-dashboard" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="bài-toán">Bài toán<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-toán" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bạn có dashboard với 20 widgets, mỗi widget có query như:</p>
+<pre><code>avg:system.cpu.user{env:production, service:web-api} by {host}
+</code></pre>
+<p>Khi muốn xem staging thay vì production, bạn phải sửa <strong>20 queries</strong> một cách thủ công?</p>
+<h3 id="giải-pháp-template-variables">Giải pháp: Template Variables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#giải-pháp-template-variables" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Định nghĩa template variable:
+  Name: $env
+  Default: production
+  Allowed values: production, staging, development
+
+Tất cả widgets tự động sử dụng $env thay vì hardcode:
+  avg:system.cpu.user{env:$env, service:web-api} by {host}
+
+Người dùng chọn &quot;staging&quot; từ dropdown → tất cả 20 widgets tự update!
+</code></pre>
+<p><strong>Cơ chế hoạt động</strong>: Dashboard UI thay thế <code>$env</code> bằng giá trị được chọn trước khi gửi query đến Datadog API. Không cần sửa queries.</p>
+<hr/>
+<h2 id="38-tagging-best-practices--5-nguyên-tắc-vàng">3.8 Tagging Best Practices — 5 Nguyên Tắc Vàng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#38-tagging-best-practices--5-nguyên-tắc-vàng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Datadog khuyến nghị 5 best practices khi thiết kế hệ thống tags:</p>
+<h3 id="1-sử-dụng-tags-nhất-quán--đừng-bỏ-qua-cardinality">1. Sử dụng Tags nhất quán — Đừng bỏ qua cardinality!<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-sử-dụng-tags-nhất-quán--đừng-bỏ-qua-cardinality" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>❌ Sai:  Team A dùng &quot;environment:prod&quot;, Team B dùng &quot;env:production&quot;
+       → 2 tags khác nhau, không filter chung được!
+
+✅ Đúng: Thống nhất toàn org dùng &quot;env:prod&quot;
+       → Tất cả data từ mọi team đều filter được cùng nhau
+
+⚠️ Cardinality: Đừng gắn tag có triệu unique values (user_id, request_id)
+   → Gây bùng nổ timeseries → tốn tiền storage + chậm query
+</code></pre>
+<h3 id="2-chỉ-định-người-sở-hữu-owner-cho-tag-value-propositions">2. Chỉ định người sở hữu (Owner) cho Tag Value Propositions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-chỉ-định-người-sở-hữu-owner-cho-tag-value-propositions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Mỗi tag key nên có 1 team/người chịu trách nhiệm:
+
+  Tag key &quot;env&quot;     → Owner: Platform team (quyết định giá trị nào hợp lệ)
+  Tag key &quot;service&quot; → Owner: Mỗi team sở hữu service của mình
+  Tag key &quot;team&quot;    → Owner: Engineering Manager
+
+Lý do: Tránh ai cũng tạo tag bừa → inconsistency, tag rác
+</code></pre>
+<h3 id="3-tập-trung-vào-required-và-conditionally-required-tags">3. Tập trung vào Required và Conditionally Required Tags<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-tập-trung-vào-required-và-conditionally-required-tags" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Phân loại tags:
+
+  REQUIRED (bắt buộc mọi resource):
+    ✅ env          → prod / staging / dev
+    ✅ service      → tên dịch vụ
+    ✅ team         → team sở hữu
+
+  CONDITIONALLY REQUIRED (bắt buộc tuỳ ngữ cảnh):
+    ✅ version      → chỉ cho application services
+    ✅ cluster_name → chỉ cho Kubernetes resources
+    ✅ db_engine    → chỉ cho database services
+
+  OPTIONAL (tuỳ chọn):
+    ⚠️ cost_center  → nếu cần cost tracking
+    ⚠️ project      → nếu cần project-based grouping
+</code></pre>
+<h3 id="4-bắt-đầu-nhỏ--start-small">4. Bắt đầu nhỏ — Start Small<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-bắt-đầu-nhỏ--start-small" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>❌ Sai:  Ngày đầu tạo 50 tag keys → phức tạp, khó maintain
+
+✅ Đúng: Bắt đầu với 3 UST tags (env, service, version)
+        → Sau đó thêm dần khi có nhu cầu rõ ràng
+
+⚠️ Lưu ý: Thay đổi tag SAU KHI đã deploy → phải update TẤT CẢ:
+   - Agent configs
+   - Dashboard queries  
+   - Monitor definitions
+   - SLOs
+   → Nên nghĩ kỹ trước khi thêm, nhưng đừng overthink
+</code></pre>
+<h3 id="5-thiết-kế-tags-phục-vụ-nhiều-mục-đích">5. Thiết kế tags phục vụ nhiều mục đích<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-thiết-kế-tags-phục-vụ-nhiều-mục-đích" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Tags tốt có thể dùng cho nhiều use cases cùng lúc:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Mục đích</th><th>Tags phù hợp</th><th>Ví dụ sử dụng</th></tr></thead><tbody><tr><td><strong>Access Control</strong></td><td><code>team</code>, <code>env</code></td><td>Chỉ team backend xem data production</td></tr><tr><td><strong>Cost Tracking</strong></td><td><code>service</code>, <code>team</code>, <code>env</code></td><td>Phân bổ chi phí Datadog theo team</td></tr><tr><td><strong>Automation</strong></td><td><code>env</code>, <code>role</code></td><td>Auto-scaling rules theo role</td></tr><tr><td><strong>Organization</strong></td><td><code>service</code>, <code>business_unit</code></td><td>Nhóm services theo business domain</td></tr><tr><td><strong>Troubleshooting</strong></td><td><code>env</code>, <code>service</code>, <code>version</code></td><td>Filter data khi debug</td></tr></tbody></table></div>
+<pre><code>★ Tag &quot;env&quot; phục vụ cả 5 mục đích trên!
+→ Đây là lý do env là 1 trong 3 UST tags bắt buộc
+</code></pre>
+<blockquote>
+<p>📚 Tham khảo: <a href="https://learn.datadoghq.com/courses/tagging-best-practices" class="external external-link">Tagging Best Practices<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> · <a href="https://www.datadoghq.com/blog/tagging-best-practices/" class="external external-link">Power of Tagging<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</blockquote>
+<hr/>
+<h2 id="39-câu-hỏi-thường-gặp">3.9 Câu Hỏi Thường Gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#39-câu-hỏi-thường-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Q: Tại sao tag phải lowercase?</strong><br/>
+→ Để tránh data fragmentation — <code>Env:Prod</code> và <code>env:prod</code> sẽ là 2 tags khác nhau, không filter được cùng nhau</p>
+<p><strong>Q: Tại sao tránh high cardinality tags?</strong><br/>
+→ Mỗi unique tag combination = 1 timeseries riêng biệt → triệu unique values = triệu timeseries → chi phí storage/query khổng lồ</p>
+<p><strong>Q: Tags trong <code>datadog.yaml</code> vs integration config?</strong><br/>
+→ <code>datadog.yaml</code> = TẤT CẢ data từ host. Integration config = ONLY data từ integration đó</p>
+<p><strong>Q: <code>service</code> tag nên gắn cho gì?</strong><br/>
+→ Application services — không phải hosts hoặc infrastructure</p>
+<p><strong>Q: Tag <code>123:value</code> có hợp lệ không?</strong><br/>
+→ Không — tag phải bắt đầu bằng chữ cái</p>
+<p><strong>Q: Auto-tagging từ cloud?</strong><br/>
+→ Crawler integrations (AWS/GCP/Azure) tự import resource tags từ cloud provider API</p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-252" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#phần-3-tagging--hệ-thống-tổ-chức-dữ-liệu" data-for="phần-3-tagging--hệ-thống-tổ-chức-dữ-liệu">Phần 3: Tagging — Hệ Thống Tổ Chức Dữ Liệu</a></li><li class="depth-1"><a href="#31-vấn-đề-mà-tagging-giải-quyết" data-for="31-vấn-đề-mà-tagging-giải-quyết">3.1 Vấn Đề Mà Tagging Giải Quyết</a></li><li class="depth-2"><a href="#bức-tranh-trước-khi-có-tagging" data-for="bức-tranh-trước-khi-có-tagging">Bức tranh trước khi có tagging</a></li><li class="depth-1"><a href="#32-format-và-cơ-chế-xử-lý-tags" data-for="32-format-và-cơ-chế-xử-lý-tags">3.2 Format và Cơ Chế Xử Lý Tags</a></li><li class="depth-2"><a href="#format-keyvalue" data-for="format-keyvalue">Format: key:value</a></li><li class="depth-2"><a href="#tại-sao-lowercase-bắt-buộc" data-for="tại-sao-lowercase-bắt-buộc">Tại sao lowercase bắt buộc?</a></li><li class="depth-2"><a href="#tại-sao-phải-bắt-đầu-bằng-chữ-cái" data-for="tại-sao-phải-bắt-đầu-bằng-chữ-cái">Tại sao phải bắt đầu bằng chữ cái?</a></li><li class="depth-2"><a href="#tại-sao-tối-đa-80-ký-tự" data-for="tại-sao-tối-đa-80-ký-tự">Tại sao tối đa 80 ký tự?</a></li><li class="depth-1"><a href="#33-unified-service-tagging--cơ-chế-correlation" data-for="33-unified-service-tagging--cơ-chế-correlation">3.3 Unified Service Tagging — Cơ Chế Correlation</a></li><li class="depth-2"><a href="#vấn-đề-khi-thiếu-ust" data-for="vấn-đề-khi-thiếu-ust">Vấn đề khi thiếu UST</a></li><li class="depth-2"><a href="#giải-pháp-ba-tags-bắt-buộc-cùng-tên--giá-trị" data-for="giải-pháp-ba-tags-bắt-buộc-cùng-tên--giá-trị">Giải pháp: Ba Tags Bắt Buộc Cùng Tên + Giá Trị</a></li><li class="depth-2"><a href="#semantic-của-mỗi-tag" data-for="semantic-của-mỗi-tag">Semantic của mỗi tag</a></li><li class="depth-1"><a href="#34-cardinality--nguyên-lý-kinh-tế-của-tags" data-for="34-cardinality--nguyên-lý-kinh-tế-của-tags">3.4 Cardinality — Nguyên Lý Kinh Tế Của Tags</a></li><li class="depth-2"><a href="#từ-tag-đến-timeseries--cơ-chế-nội-bộ" data-for="từ-tag-đến-timeseries--cơ-chế-nội-bộ">Từ tag đến timeseries — cơ chế nội bộ</a></li><li class="depth-2"><a href="#high-cardinality-gây-ra-gì" data-for="high-cardinality-gây-ra-gì">High cardinality gây ra gì?</a></li><li class="depth-2"><a href="#rule-of-thumb" data-for="rule-of-thumb">Rule of thumb</a></li><li class="depth-1"><a href="#35-cách-gán-tags--luồng-dữ-liệu-đầy-đủ" data-for="35-cách-gán-tags--luồng-dữ-liệu-đầy-đủ">3.5 Cách Gán Tags — Luồng Dữ Liệu Đầy Đủ</a></li><li class="depth-2"><a href="#nguồn-1-datadogyaml--áp-dụng-rộng-nhất" data-for="nguồn-1-datadogyaml--áp-dụng-rộng-nhất">Nguồn 1: datadog.yaml — áp dụng rộng nhất</a></li><li class="depth-2"><a href="#nguồn-2-integration-config--áp-dụng-hẹp-hơn" data-for="nguồn-2-integration-config--áp-dụng-hẹp-hơn">Nguồn 2: Integration config — áp dụng hẹp hơn</a></li><li class="depth-2"><a href="#nguồn-3-automatic-từ-cloud-integrations" data-for="nguồn-3-automatic-từ-cloud-integrations">Nguồn 3: Automatic từ cloud integrations</a></li><li class="depth-2"><a href="#nguồn-4-kubernetes-labels--tags" data-for="nguồn-4-kubernetes-labels--tags">Nguồn 4: Kubernetes labels → tags</a></li><li class="depth-1"><a href="#36-tagging-examples--tags-ở-từng-tầng-hạ-tầng" data-for="36-tagging-examples--tags-ở-từng-tầng-hạ-tầng">3.6 Tagging Examples — Tags Ở Từng Tầng Hạ Tầng</a></li><li class="depth-2"><a href="#mô-hình-phân-tầng-tags" data-for="mô-hình-phân-tầng-tags">Mô hình phân tầng Tags</a></li><li class="depth-2"><a href="#tags-phổ-biến-theo-từng-tầng" data-for="tags-phổ-biến-theo-từng-tầng">Tags phổ biến theo từng tầng</a></li><li class="depth-2"><a href="#tags-là-dimensions--thêm-chiều-cho-data" data-for="tags-là-dimensions--thêm-chiều-cho-data">Tags Là Dimensions — Thêm Chiều Cho Data</a></li><li class="depth-1"><a href="#37-template-variables--cơ-chế-hoạt-động-trên-dashboard" data-for="37-template-variables--cơ-chế-hoạt-động-trên-dashboard">3.7 Template Variables — Cơ Chế Hoạt Động Trên Dashboard</a></li><li class="depth-2"><a href="#bài-toán" data-for="bài-toán">Bài toán</a></li><li class="depth-2"><a href="#giải-pháp-template-variables" data-for="giải-pháp-template-variables">Giải pháp: Template Variables</a></li><li class="depth-1"><a href="#38-tagging-best-practices--5-nguyên-tắc-vàng" data-for="38-tagging-best-practices--5-nguyên-tắc-vàng">3.8 Tagging Best Practices — 5 Nguyên Tắc Vàng</a></li><li class="depth-2"><a href="#1-sử-dụng-tags-nhất-quán--đừng-bỏ-qua-cardinality" data-for="1-sử-dụng-tags-nhất-quán--đừng-bỏ-qua-cardinality">1. Sử dụng Tags nhất quán — Đừng bỏ qua cardinality!</a></li><li class="depth-2"><a href="#2-chỉ-định-người-sở-hữu-owner-cho-tag-value-propositions" data-for="2-chỉ-định-người-sở-hữu-owner-cho-tag-value-propositions">2. Chỉ định người sở hữu (Owner) cho Tag Value Propositions</a></li><li class="depth-2"><a href="#3-tập-trung-vào-required-và-conditionally-required-tags" data-for="3-tập-trung-vào-required-và-conditionally-required-tags">3. Tập trung vào Required và Conditionally Required Tags</a></li><li class="depth-2"><a href="#4-bắt-đầu-nhỏ--start-small" data-for="4-bắt-đầu-nhỏ--start-small">4. Bắt đầu nhỏ — Start Small</a></li><li class="depth-2"><a href="#5-thiết-kế-tags-phục-vụ-nhiều-mục-đích" data-for="5-thiết-kế-tags-phục-vụ-nhiều-mục-đích">5. Thiết kế tags phục vụ nhiều mục đích</a></li><li class="depth-1"><a href="#39-câu-hỏi-thường-gặp" data-for="39-câu-hỏi-thường-gặp">3.9 Câu Hỏi Thường Gặp</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/datadog/datadog_fundamentals_full/readme" class="internal">Datadog Fundamentals Certification — Bộ Tài Liệu Ôn Thi Đầy Đủ</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

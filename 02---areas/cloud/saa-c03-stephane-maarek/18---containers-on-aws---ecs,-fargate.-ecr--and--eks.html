@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>18 – Containers on AWS: ECS, Fargate, ECR &amp; EKS</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="18 – Containers on AWS: ECS, Fargate, ECR &amp; EKS"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="18 – Containers on AWS: ECS, Fargate, ECR &amp; EKS"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 18 – Containers on AWS: ECS, Fargate, ECR &amp; EKS Cách đọc note này: (1) Vì sao container/Docker → (2) Bản đồ dịch vụ container trên AWS → (3) Khái niệm nền tảng ECS (Cluster/Service/Task/Task Definition) → (4) 2 launch type (EC2 vs Fargate) → (5) IAM roles (đi..."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 18 – Containers on AWS: ECS, Fargate, ECR &amp; EKS Cách đọc note này: (1) Vì sao container/Docker → (2) Bản đồ dịch vụ container trên AWS → (3) Khái niệm nền tảng ECS (Cluster/Service/Task/Task Definition) → (4) 2 launch type (EC2 vs Fargate) → (5) IAM roles (đi..."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 18 – Containers on AWS: ECS, Fargate, ECR &amp; EKS Cách đọc note này: (1) Vì sao container/Docker → (2) Bản đồ dịch vụ container trên AWS → (3) Khái niệm nền tảng ECS (Cluster/Service/Task/Task Definition) → (4) 2 launch type (EC2 vs Fargate) → (5) IAM roles (đi..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/18---containers-on-aws---ecs,-fargate.-ecr--and--eks"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/18---containers-on-aws---ecs,-fargate.-ecr--and--eks"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 18 – Containers on AWS: ECS, Fargate, ECR &amp; EKS Cách đọc note này: (1) Vì sao container/Docker → (2) Bản đồ dịch vụ container trên AWS → (3) Khái niệm nền tảng ECS (Cluster/Service/Task/Task Definition) → (4) 2 launch type (EC2 vs Fargate) → (5) IAM roles (đi..."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/18---containers-on-aws---ecs,-fargate.-ecr--and--eks" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-86" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-86" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>18 – Containers on AWS: ECS, Fargate, ECR &amp; EKS</a></div></nav><h1 class="article-title">18 – Containers on AWS: ECS, Fargate, ECR &amp; EKS</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Containers on AWS</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon ECS</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Fargate</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon ECR</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon EKS</span><span class="note-properties-separator">, </span><span class="note-properties-text">Docker on AWS</span><span class="note-properties-separator">, </span><span class="note-properties-text">Kubernetes on AWS</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-08-01T17:00:00.000Z">02 thg 8, 2026</time><span>12 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="18--containers-on-aws-ecs-fargate-ecr--eks">18 – Containers on AWS: ECS, Fargate, ECR &amp; EKS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#18--containers-on-aws-ecs-fargate-ecr--eks" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> (1) Vì sao container/Docker → (2) Bản đồ dịch vụ container trên AWS → (3) Khái niệm nền tảng ECS (Cluster/Service/Task/Task Definition) → (4) 2 launch type (EC2 vs Fargate) → (5) IAM roles (điểm hay nhầm nhất) → (6) Load Balancer &amp; Data Volumes → (7) Auto Scaling → (8) Event-driven pattern → (9) ECR → (10) EKS → (11) So sánh &amp; chọn đáp án thi.</p>
+</blockquote>
+<hr/>
+<h2 id="1-vì-sao-cần-container-docker-cơ-bản">1. Vì sao cần container? (Docker cơ bản)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-vì-sao-cần-container-docker-cơ-bản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-docker-là-gì">1.1 Docker là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-docker-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nền tảng đóng gói + chạy ứng dụng dưới dạng <strong>container</strong></li>
+<li>Container gồm app + toàn bộ dependency → chạy <strong>giống hệt nhau</strong> trên mọi máy, mọi OS</li>
+<li>Lợi ích: hết lo compatibility, hành vi predictable, dễ maintain &amp; deploy, chạy được bất kỳ ngôn ngữ / OS / công nghệ nào</li>
+<li>Use case: kiến trúc <strong>microservices</strong>, lift-and-shift app on-premises lên AWS</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260802090618.png" alt width="auto" height="auto"/></p>
+<h3 id="12-docker-vs-virtual-machine">1.2 Docker vs Virtual Machine<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-docker-vs-virtual-machine" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Docker (container)</strong></th><th><strong>Virtual Machine</strong></th></tr></thead><tbody><tr><td>Ảo hoá</td><td>”Giống” ảo hoá nhưng không hẳn — <strong>share OS kernel</strong> với host</td><td>Ảo hoá phần cứng đầy đủ, mỗi VM có OS riêng</td></tr><tr><td>Tài nguyên</td><td>Nhiều container <strong>share</strong> tài nguyên trên 1 server</td><td>Mỗi VM có tài nguyên riêng → overhead cao hơn</td></tr><tr><td>Khởi động</td><td>Vài giây</td><td>Vài phút</td></tr><tr><td>Mật độ</td><td>Chạy được nhiều container / server</td><td>Ít VM / server hơn</td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260802090638.png" alt width="auto" height="auto"/></p>
+<p><img src="../../.././../../attachments/pasted-image-20260802090700.png" alt width="auto" height="auto"/></p>
+<h3 id="13-docker-image-lưu-ở-đâu">1.3 Docker image lưu ở đâu?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-docker-image-lưu-ở-đâu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Registry</th><th>Loại</th><th>Ghi chú</th></tr></thead><tbody><tr><td><strong>Docker Hub</strong></td><td>Public</td><td>Base image cho nhiều công nghệ/OS (Ubuntu, MySQL…)</td></tr><tr><td><strong>Amazon ECR</strong></td><td>Private (+ Public Gallery tại <code>gallery.ecr.aws</code>)</td><td>Tích hợp IAM, dùng cho workload trên AWS</td></tr></tbody></table></div>
+<blockquote>
+<p>Push/pull image từ ECR cần auth trước qua <code>aws ecr get-login-password</code>.</p>
+</blockquote>
+<hr/>
+<h2 id="2-chạy-container-trên-aws--bản-đồ-dịch-vụ">2. Chạy container trên AWS — bản đồ dịch vụ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-chạy-container-trên-aws--bản-đồ-dịch-vụ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dịch vụ</th><th>Vai trò</th></tr></thead><tbody><tr><td><strong>Amazon ECS</strong></td><td>Container orchestration “của riêng” AWS</td></tr><tr><td><strong>Amazon EKS</strong></td><td>Managed Kubernetes (mã nguồn mở, cloud-agnostic)</td></tr><tr><td><strong>AWS Fargate</strong></td><td>Compute engine <strong>serverless</strong> — chạy được cả ECS Task lẫn EKS Pod</td></tr><tr><td><strong>Amazon ECR</strong></td><td>Registry lưu Docker image</td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260802090718.png" alt width="auto" height="auto"/></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    Need[\&quot;Cần chạy container trên AWS?\&quot;] --> K8s{\&quot;Đã dùng Kubernetes&lt;br/>on-premises hoặc cloud khác?\&quot;}\n    K8s -->|Có| EKS[\&quot;Amazon EKS\&quot;]\n    K8s -->|Không| ECS[\&quot;Amazon ECS\&quot;]\n    ECS --> Launch{\&quot;Muốn tự quản lý EC2 instance?\&quot;}\n    Launch -->|Không| Fargate[\&quot;Fargate&lt;br/>(serverless)\&quot;]\n    Launch -->|Có| EC2LT[\&quot;EC2 Launch Type\&quot;]\n    EKS --> NodeType{\&quot;Muốn tự quản lý node EC2?\&quot;}\n    NodeType -->|Không| FargateEKS[\&quot;EKS + Fargate\&quot;]\n    NodeType -->|Có| ManagedNode[\&quot;Managed / Self-managed&lt;br/>Node Group\&quot;]&quot;">graph TD
+    Need[&quot;Cần chạy container trên AWS?&quot;] --> K8s{&quot;Đã dùng Kubernetes&lt;br/>on-premises hoặc cloud khác?&quot;}
+    K8s -->|Có| EKS[&quot;Amazon EKS&quot;]
+    K8s -->|Không| ECS[&quot;Amazon ECS&quot;]
+    ECS --> Launch{&quot;Muốn tự quản lý EC2 instance?&quot;}
+    Launch -->|Không| Fargate[&quot;Fargate&lt;br/>(serverless)&quot;]
+    Launch -->|Có| EC2LT[&quot;EC2 Launch Type&quot;]
+    EKS --> NodeType{&quot;Muốn tự quản lý node EC2?&quot;}
+    NodeType -->|Không| FargateEKS[&quot;EKS + Fargate&quot;]
+    NodeType -->|Có| ManagedNode[&quot;Managed / Self-managed&lt;br/>Node Group&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="3-khái-niệm-nền-tảng-ecs--4-thứ-dễ-nhầm">3. Khái niệm nền tảng ECS — 4 thứ dễ nhầm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-khái-niệm-nền-tảng-ecs--4-thứ-dễ-nhầm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Trước khi vào launch type, cần phân biệt rõ 4 khái niệm:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khái niệm</th><th>Là gì</th></tr></thead><tbody><tr><td><strong>Task Definition</strong></td><td>Blueprint dạng JSON: image nào, bao nhiêu CPU/RAM, port, IAM role, volume…</td></tr><tr><td><strong>Task</strong></td><td>Một lần chạy <strong>thực tế</strong> của Task Definition (giống 1 container instance đang sống)</td></tr><tr><td><strong>Service</strong></td><td>Giữ <strong>đúng số Task mong muốn</strong> luôn chạy, tự thay Task chết, gắn Load Balancer</td></tr><tr><td><strong>Cluster</strong></td><td>Nhóm logic chứa Service/Task (và EC2 instance, nếu dùng EC2 launch type)</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    TaskDef[\&quot;Task Definition&lt;br/>(blueprint: image, CPU/RAM, role)\&quot;] -.-> Task1[\&quot;Task 1\&quot;]\n    TaskDef -.-> Task2[\&quot;Task 2\&quot;]\n    Cluster[\&quot;ECS Cluster\&quot;] --> Service[\&quot;ECS Service&lt;br/>(giữ N task chạy)\&quot;]\n    Service --> Task1\n    Service --> Task2&quot;">graph LR
+    TaskDef[&quot;Task Definition&lt;br/>(blueprint: image, CPU/RAM, role)&quot;] -.-> Task1[&quot;Task 1&quot;]
+    TaskDef -.-> Task2[&quot;Task 2&quot;]
+    Cluster[&quot;ECS Cluster&quot;] --> Service[&quot;ECS Service&lt;br/>(giữ N task chạy)&quot;]
+    Service --> Task1
+    Service --> Task2
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Nhớ:</strong> sửa Task Definition <strong>không</strong> đổi Task đang chạy — phải tạo <strong>revision</strong> mới rồi Service tự rolling-update sang Task mới.</p>
+</blockquote>
+<hr/>
+<h2 id="4-amazon-ecs--2-launch-type">4. Amazon ECS — 2 Launch Type<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-amazon-ecs--2-launch-type" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-ec2-launch-type--tự-quản-lý-hạ-tầng">4.1 EC2 Launch Type — tự quản lý hạ tầng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-ec2-launch-type--tự-quản-lý-hạ-tầng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Bạn phải <strong>provision &amp; maintain EC2 instance</strong></li>
+<li>Mỗi EC2 instance phải chạy <strong>ECS Agent</strong> để đăng ký vào Cluster</li>
+<li>AWS chỉ lo phần start/stop container trên các instance đó</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260802090753.png" alt width="auto" height="auto"/></p>
+<h3 id="42-fargate-launch-type--serverless">4.2 Fargate Launch Type — serverless<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-fargate-launch-type--serverless" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Không quản lý EC2</strong> — hoàn toàn serverless</li>
+<li>Chỉ cần tạo <strong>Task Definition</strong>, AWS tự chạy Task theo đúng CPU/RAM khai báo</li>
+<li>Scale = tăng <strong>số lượng Task</strong> — không cần lo thêm EC2 instance</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260802090814.png" alt width="auto" height="auto"/></p>
+<h3 id="43-so-sánh-nhanh">4.3 So sánh nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-so-sánh-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th><strong>EC2 Launch Type</strong></th><th><strong>Fargate</strong></th></tr></thead><tbody><tr><td>Quản lý hạ tầng</td><td>Bạn tự làm (patch OS, scale ASG)</td><td>AWS lo hết</td></tr><tr><td>Billing</td><td>Trả tiền EC2 (kể cả lúc rảnh)</td><td>Trả theo <strong>vCPU/RAM × thời gian Task chạy</strong></td></tr><tr><td>Kiểm soát</td><td>Cao (SSH vào instance, chọn instance type/GPU)</td><td>Thấp — không SSH, không chọn instance type</td></tr><tr><td>Scale</td><td>Phải tự thêm EC2 (ASG / Capacity Provider)</td><td>Chỉ cần tăng số Task</td></tr><tr><td>Networking mode</td><td><code>bridge</code> / <code>host</code> / <code>awsvpc</code></td><td>Bắt buộc <strong><code>awsvpc</code></strong> — mỗi Task có ENI + IP riêng</td></tr><tr><td>Dùng khi</td><td>Cần tối ưu chi phí ở scale lớn, cần GPU/instance đặc thù</td><td>Muốn đơn giản, ít vận hành, workload không liên tục</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Fargate Spot:</strong> chạy Task trên capacity dư thừa, rẻ hơn đáng kể (giống Spot Instance) nhưng có thể bị <strong>interrupt</strong> — chỉ dùng cho workload chịu được gián đoạn.</p>
+</blockquote>
+<hr/>
+<h2 id="5-iam-roles-cho-ecs--điểm-hay-gây-nhầm-lẫn-nhất">5. IAM Roles cho ECS — điểm hay gây nhầm lẫn nhất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-iam-roles-cho-ecs--điểm-hay-gây-nhầm-lẫn-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Role</th><th>Dùng cho</th><th>Ai dùng</th></tr></thead><tbody><tr><td><strong>EC2 Instance Profile</strong> (chỉ EC2 Launch Type)</td><td>Gắn vào EC2 instance chạy ECS Agent</td><td>ECS Agent — gọi API ECS để đăng ký cluster</td></tr><tr><td><strong>Task Execution Role</strong></td><td>Việc “hạ tầng” của Task: pull image từ ECR, gửi log CloudWatch, đọc secret từ Secrets Manager/SSM Parameter Store</td><td>ECS/Fargate thực hiện thay mặt Task — dùng cho <strong>cả 2 launch type</strong></td></tr><tr><td><strong>Task Role</strong></td><td>Việc <strong>code bên trong container</strong> cần làm: gọi S3, DynamoDB…</td><td>Application code chạy trong container</td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260802090841.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Bẫy hay thi:</strong> Task báo lỗi <code>AccessDenied</code> khi <strong>code</strong> gọi S3 → sửa <strong>Task Role</strong>. Task không pull được image ECR hoặc không đọc được secret → sửa <strong>Task Execution Role</strong>. Nhầm 2 role này là lỗi rất phổ biến trong đề thi lẫn thực tế.</p>
+</blockquote>
+<hr/>
+<h2 id="6-load-balancer-cho-ecs">6. Load Balancer cho ECS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-load-balancer-cho-ecs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại LB</th><th>Hỗ trợ Fargate?</th><th>Khi nào dùng</th></tr></thead><tbody><tr><td><strong>Application Load Balancer</strong></td><td>✔</td><td>Mặc định, phù hợp hầu hết use case (HTTP/HTTPS, path-based routing)</td></tr><tr><td><strong>Network Load Balancer</strong></td><td>✔</td><td>Throughput/performance cao, hoặc cần đi kèm <strong>PrivateLink</strong></td></tr><tr><td><strong>Classic Load Balancer</strong></td><td>❌</td><td>Không khuyến nghị — thiếu tính năng nâng cao, <strong>không hỗ trợ Fargate</strong></td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260802090904.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="7-data-volumes-cho-ecs">7. Data Volumes cho ECS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-data-volumes-cho-ecs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Mount <strong>EFS</strong> vào ECS Task — hoạt động với <strong>cả EC2 và Fargate</strong> launch type</li>
+<li>Task chạy ở <strong>AZ khác nhau vẫn share chung data</strong> trên EFS (multi-AZ)</li>
+<li>Fargate + EFS = <strong>hoàn toàn serverless</strong>, không phải tự quản lý storage layer</li>
+<li>Use case: shared storage bền vững giữa nhiều container</li>
+<li><strong>S3 không mount được như file system</strong> — muốn dùng S3 phải gọi qua SDK/API, không phải volume</li>
+</ul>
+<blockquote>
+<p><strong>Ephemeral storage (Fargate):</strong> mỗi Task có sẵn <strong>20 GiB</strong> storage tạm miễn phí, có thể tăng tới <strong>200 GiB</strong> (tính phí thêm) — dùng cho dữ liệu tạm trong lúc container chạy, <strong>mất khi Task dừng</strong>.</p>
+</blockquote>
+<p><img src="../../.././../../attachments/pasted-image-20260802090920.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="8-ecs-service-auto-scaling">8. ECS Service Auto Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-ecs-service-auto-scaling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Tự động tăng/giảm <strong>số Task mong muốn</strong>, dùng nền tảng <strong>AWS Application Auto Scaling</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Metric để scale</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td>ECS Service Average <strong>CPU</strong> Utilization</td><td>Scale theo CPU</td></tr><tr><td>ECS Service Average <strong>Memory</strong> Utilization</td><td>Scale theo RAM</td></tr><tr><td><strong>ALB Request Count Per Target</strong></td><td>Scale theo lượng request ALB đẩy vào</td></tr></tbody></table></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Policy</th><th>Cách hoạt động</th></tr></thead><tbody><tr><td><strong>Target Tracking</strong></td><td>Giữ 1 metric CloudWatch quanh giá trị mục tiêu (giống target tracking của ASG)</td></tr><tr><td><strong>Step Scaling</strong></td><td>Scale theo bậc, dựa trên CloudWatch Alarm</td></tr><tr><td><strong>Scheduled Scaling</strong></td><td>Scale theo thời điểm định trước — hợp với traffic dự đoán được</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>ECS Service Auto Scaling (task-level) ≠ EC2 Auto Scaling (instance-level)</strong> — 2 tầng scale khác nhau, dễ bị đánh lừa trong đề thi.</p>
+<p><strong>Fargate Auto Scaling</strong> setup đơn giản hơn nhiều vì serverless — không phải lo thêm EC2 instance.</p>
+</blockquote>
+<p><img src="../../.././../../attachments/pasted-image-20260802091002.png" alt width="auto" height="auto"/></p>
+<h3 id="81-ec2-launch-type--auto-scaling-cả-ec2-instance">8.1 EC2 Launch Type — Auto Scaling cả EC2 instance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#81-ec2-launch-type--auto-scaling-cả-ec2-instance" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Với EC2 Launch Type, scale Task thôi chưa đủ — phải đảm bảo đủ EC2 instance làm “chỗ chứa”:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cách</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>Auto Scaling Group Scaling</strong></td><td>ASG tự thêm EC2 theo CPU Utilization trung bình của ASG</td></tr><tr><td><strong>ECS Cluster Capacity Provider</strong></td><td>Tự động provision/scale hạ tầng theo <strong>nhu cầu thật của Task</strong> (đi kèm 1 ASG); thêm EC2 khi thiếu capacity (CPU/RAM)</td></tr></tbody></table></div>
+<blockquote>
+<p>Capacity Provider “thông minh” hơn ASG scaling thường vì nhìn thẳng vào nhu cầu của Task (thay vì chỉ CPU trung bình instance) để quyết định scale. Fargate cũng có capacity provider mặc định (<code>FARGATE</code>, <code>FARGATE_SPOT</code>) nhưng thường dùng ngầm, không cần tự cấu hình ASG.</p>
+</blockquote>
+<hr/>
+<h2 id="9-ecs-event-driven--kết-hợp-eventbridge--sqs">9. ECS Event-driven — kết hợp EventBridge &amp; SQS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-ecs-event-driven--kết-hợp-eventbridge--sqs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>ECS Task không nhất thiết phải chạy 24/7 — có thể <strong>trigger theo sự kiện</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Pattern</th><th>Dùng khi</th></tr></thead><tbody><tr><td><strong>EventBridge → chạy ECS Task</strong></td><td>Một sự kiện AWS xảy ra (vd object mới lên S3) cần xử lý bằng container</td></tr><tr><td><strong>EventBridge Schedule → chạy ECS Task</strong></td><td>Cron job định kỳ, không muốn giữ Task chạy sẵn</td></tr><tr><td><strong>SQS → ECS Task poll queue</strong></td><td>Worker xử lý job trong hàng đợi (giống pattern Lambda nhưng chạy container)</td></tr><tr><td><strong>EventBridge bắt sự kiện Task dừng</strong></td><td>Giám sát/alert khi Task chuyển trạng thái <strong>STOPPED</strong> (vd để biết lý do crash)</td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260802091020.png" alt width="auto" height="auto"/></p>
+<p><img src="../../.././../../attachments/pasted-image-20260802091059.png" alt width="auto" height="auto"/></p>
+<p><img src="../../.././../../attachments/pasted-image-20260802091115.png" alt width="auto" height="auto"/></p>
+<p><img src="../../.././../../attachments/pasted-image-20260802091134.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="10-amazon-ecr--registry-lưu-docker-image">10. Amazon ECR — registry lưu Docker image<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-amazon-ecr--registry-lưu-docker-image" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>ECR = <strong>E</strong>lastic <strong>C</strong>ontainer <strong>R</strong>egistry</li>
+<li>Repository <strong>Private</strong> (mặc định) hoặc <strong>Public</strong> (ECR Public Gallery)</li>
+<li>Backed bởi <strong>Amazon S3</strong> — tích hợp sẵn với ECS/EKS/Fargate</li>
+<li>Access control qua <strong>IAM</strong> — lỗi permission khi pull/push → kiểm tra IAM policy trước</li>
+<li>Tính năng: <strong>vulnerability scanning</strong> (Basic scan miễn phí dùng Clair; Enhanced scan trả phí dùng <strong>Amazon Inspector</strong>, quét liên tục), <strong>versioning</strong> (image tag), <strong>lifecycle policy</strong> (tự xoá image cũ để tiết kiệm chi phí lưu trữ)</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260802091151.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="11-amazon-eks--managed-kubernetes">11. Amazon EKS — managed Kubernetes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-amazon-eks--managed-kubernetes" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="111-tổng-quan">11.1 Tổng quan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#111-tổng-quan" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>EKS = cách chạy <strong>Kubernetes cluster được AWS quản lý</strong></li>
+<li>Kubernetes: hệ thống mã nguồn mở tự động deploy/scale/quản lý ứng dụng container hoá (thường là Docker)</li>
+<li><strong>Cùng mục tiêu với ECS nhưng khác API</strong> — Kubernetes <strong>cloud-agnostic</strong> (chạy được trên Azure, GCP, on-premises…)</li>
+<li>Worker node chạy trên <strong>EC2</strong> hoặc <strong>Fargate</strong> (serverless)</li>
+<li><strong>Use case chính:</strong> công ty đã dùng Kubernetes on-premises/cloud khác, muốn migrate sang AWS mà giữ nguyên tooling/API Kubernetes</li>
+<li>Multi-region → deploy <strong>1 EKS cluster / region</strong> (EKS không tự multi-region)</li>
+<li>Logs &amp; metrics → <strong>CloudWatch Container Insights</strong></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260802091217.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Chi phí:</strong> EKS control plane tính phí cố định (~$0.10/giờ/cluster), cộng thêm chi phí worker node (EC2 hoặc Fargate) — khác ECS (control plane <strong>miễn phí</strong>, chỉ trả tiền compute).</p>
+</blockquote>
+<h3 id="112-node-types">11.2 Node Types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#112-node-types" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại Node</th><th>Ai quản lý EC2</th><th>Ghi chú</th></tr></thead><tbody><tr><td><strong>Managed Node Groups</strong></td><td>AWS tạo &amp; quản lý (nằm trong ASG do EKS quản lý)</td><td>Hỗ trợ On-Demand hoặc Spot</td></tr><tr><td><strong>Self-Managed Nodes</strong></td><td>Bạn tự tạo, tự đăng ký vào cluster, tự quản lý qua ASG</td><td>Có thể dùng <strong>Amazon EKS Optimized AMI</strong> dựng sẵn; hỗ trợ On-Demand/Spot</td></tr><tr><td><strong>AWS Fargate</strong></td><td>Không quản lý node nào cả</td><td>Serverless hoàn toàn, không cần maintain</td></tr></tbody></table></div>
+<h3 id="113-data-volumes-cho-eks">11.3 Data Volumes cho EKS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#113-data-volumes-cho-eks" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Cần khai báo <strong>StorageClass manifest</strong> trong cluster</li>
+<li>Dùng driver tuân theo chuẩn <strong>Container Storage Interface (CSI)</strong></li>
+<li>Hỗ trợ: <strong>Amazon EBS</strong>, <strong>Amazon EFS</strong> (dùng được cả với Fargate), <strong>Amazon FSx for Lustre</strong>, <strong>Amazon FSx for NetApp ONTAP</strong></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260802091251.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="12-so-sánh--chọn-đáp-án-thi">12. So sánh &amp; chọn đáp án thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-so-sánh--chọn-đáp-án-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="121-ecs-vs-eks">12.1 ECS vs EKS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#121-ecs-vs-eks" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th><strong>ECS</strong></th><th><strong>EKS</strong></th></tr></thead><tbody><tr><td>API</td><td>AWS proprietary</td><td>Kubernetes API (chuẩn mở)</td></tr><tr><td>Portable sang cloud khác</td><td>Không</td><td>Có (cloud-agnostic)</td></tr><tr><td>Độ phức tạp</td><td>Đơn giản hơn</td><td>Phức tạp hơn, learning curve cao hơn</td></tr><tr><td>Chi phí control plane</td><td>Miễn phí</td><td>~$0.10/giờ/cluster</td></tr><tr><td>Khi nào chọn</td><td>Muốn nhanh, gọn, thuần AWS</td><td>Đã có sẵn Kubernetes / cần portable đa cloud</td></tr></tbody></table></div>
+<h3 id="122-ec2-vs-fargate-áp-dụng-cho-cả-ecs-lẫn-eks">12.2 EC2 vs Fargate (áp dụng cho cả ECS lẫn EKS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#122-ec2-vs-fargate-áp-dụng-cho-cả-ecs-lẫn-eks" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th><strong>EC2 Launch Type / Node</strong></th><th><strong>Fargate</strong></th></tr></thead><tbody><tr><td>Vận hành</td><td>Tự patch OS, tự scale instance</td><td>AWS lo hết</td></tr><tr><td>Kiểm soát</td><td>Cao (SSH, GPU, instance type)</td><td>Thấp</td></tr><tr><td>Phù hợp</td><td>Batch job dài, cần GPU, tối ưu chi phí ở scale lớn</td><td>Muốn đơn giản, workload không liên tục, ít ops</td></tr></tbody></table></div>
+<h3 id="123-tình-huống-thi">12.3 Tình huống thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#123-tình-huống-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đề bài (rút gọn)</th><th>Đáp án</th></tr></thead><tbody><tr><td>Muốn chạy container, không muốn quản lý server nào cả</td><td><strong>ECS/EKS + Fargate</strong></td></tr><tr><td>Company đã dùng Kubernetes on-premises, muốn lift-and-shift lên AWS</td><td><strong>Amazon EKS</strong></td></tr><tr><td>Cần shared storage multi-AZ cho container</td><td>Mount <strong>EFS</strong> vào task/pod</td></tr><tr><td>Task báo lỗi AccessDenied khi code gọi S3</td><td>Sửa <strong>Task Role</strong></td></tr><tr><td>Task không pull được image ECR / không đọc được secret</td><td>Sửa <strong>Task Execution Role</strong></td></tr><tr><td>Cần LB hiệu năng cao hoặc PrivateLink cho ECS</td><td><strong>Network Load Balancer</strong></td></tr><tr><td>Muốn chạy container theo lịch, không giữ tài nguyên 24/7</td><td><strong>EventBridge Schedule → ECS Task (Fargate)</strong></td></tr><tr><td>Cluster EC2 thiếu capacity chạy Task mới</td><td><strong>ECS Capacity Provider</strong> (đi kèm ASG)</td></tr><tr><td>Cần image scan liên tục, tự động</td><td>ECR <strong>Enhanced Scanning</strong> (Amazon Inspector)</td></tr></tbody></table></div>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Docker <strong>share OS kernel</strong> với host, không phải VM đầy đủ; image lưu ở Docker Hub (public) hoặc ECR (private).</li>
+<li>ECS: phân biệt <strong>Task Definition</strong> (blueprint) – <strong>Task</strong> (instance đang chạy) – <strong>Service</strong> (giữ N task + gắn LB) – <strong>Cluster</strong> (nhóm logic).</li>
+<li>2 launch type: <strong>EC2</strong> (tự quản lý, trả tiền theo instance) vs <strong>Fargate</strong> (serverless, trả theo vCPU/RAM × thời gian).</li>
+<li><strong>3 loại IAM role dễ nhầm:</strong> EC2 Instance Profile (ECS Agent, chỉ EC2) / Task Execution Role (pull image, log, secret — cả 2 launch type) / Task Role (code trong container gọi AWS API).</li>
+<li>Load Balancer: ALB &amp; NLB hỗ trợ Fargate; <strong>Classic LB không hỗ trợ Fargate</strong>.</li>
+<li>EFS mount được vào ECS Task (multi-AZ share); <strong>S3 không mount được như file system</strong>.</li>
+<li>Fargate ephemeral storage: mặc định <strong>20 GiB</strong>, tăng được tới <strong>200 GiB</strong>.</li>
+<li>Auto Scaling ECS: scale theo CPU/RAM/ALB Request Count; Target Tracking / Step / Scheduled; <strong>task-level ≠ instance-level</strong> (ASG/Capacity Provider lo phần EC2).</li>
+<li>ECS có thể trigger bởi <strong>EventBridge</strong> (event hoặc schedule) và <strong>SQS</strong> — không cần chạy 24/7.</li>
+<li>ECR: private + public gallery, backed bởi S3, IAM kiểm soát access, có vulnerability scanning (Basic/Enhanced) + lifecycle policy.</li>
+<li>EKS = Kubernetes managed, cloud-agnostic, API khác ECS; node có thể EC2 (managed/self-managed) hoặc Fargate; multi-region = nhiều cluster; data volume qua CSI driver (EBS/EFS/FSx).</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Container ≠ VM: nhẹ hơn, nhanh hơn vì share kernel — nhưng cô lập kém hơn VM.</li>
+<li>ECS là lựa chọn “mặc định” khi làm việc thuần AWS; chỉ nhảy sang EKS khi có lý do rõ ràng (đã dùng K8s sẵn, cần portable đa cloud).</li>
+<li>Nhầm lẫn dễ gặp nhất trong domain này: <strong>Task Role vs Task Execution Role</strong> — luôn tự hỏi “đây là code trong container cần quyền, hay ECS cần quyền để chạy được Task?” trước khi chọn role.</li>
+<li>Fargate là câu trả lời an toàn cho câu hỏi “làm sao serverless hoá container” — nhớ luôn đi kèm networking mode <code>awsvpc</code>.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>ECS Task Definition vs Task vs Service vs Cluster</li>
+<li>ECS Task Role vs Task Execution Role vs EC2 Instance Profile</li>
+<li>ECS EC2 Launch Type vs Fargate Launch Type</li>
+<li>ECS Service Auto Scaling (Target Tracking/Step/Scheduled) vs EC2 Auto Scaling</li>
+<li>ECS Capacity Provider</li>
+<li>ECS + EventBridge / SQS event-driven pattern</li>
+<li>Amazon ECR (vulnerability scanning, lifecycle policy)</li>
+<li>Amazon EKS Node Types (Managed/Self-managed/Fargate)</li>
+<li>EKS Data Volumes qua CSI (EBS/EFS/FSx)</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-86" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#18--containers-on-aws-ecs-fargate-ecr--eks" data-for="18--containers-on-aws-ecs-fargate-ecr--eks">18 – Containers on AWS: ECS, Fargate, ECR &amp; EKS</a></li><li class="depth-1"><a href="#1-vì-sao-cần-container-docker-cơ-bản" data-for="1-vì-sao-cần-container-docker-cơ-bản">1. Vì sao cần container? (Docker cơ bản)</a></li><li class="depth-2"><a href="#11-docker-là-gì" data-for="11-docker-là-gì">1.1 Docker là gì?</a></li><li class="depth-2"><a href="#12-docker-vs-virtual-machine" data-for="12-docker-vs-virtual-machine">1.2 Docker vs Virtual Machine</a></li><li class="depth-2"><a href="#13-docker-image-lưu-ở-đâu" data-for="13-docker-image-lưu-ở-đâu">1.3 Docker image lưu ở đâu?</a></li><li class="depth-1"><a href="#2-chạy-container-trên-aws--bản-đồ-dịch-vụ" data-for="2-chạy-container-trên-aws--bản-đồ-dịch-vụ">2. Chạy container trên AWS — bản đồ dịch vụ</a></li><li class="depth-1"><a href="#3-khái-niệm-nền-tảng-ecs--4-thứ-dễ-nhầm" data-for="3-khái-niệm-nền-tảng-ecs--4-thứ-dễ-nhầm">3. Khái niệm nền tảng ECS — 4 thứ dễ nhầm</a></li><li class="depth-1"><a href="#4-amazon-ecs--2-launch-type" data-for="4-amazon-ecs--2-launch-type">4. Amazon ECS — 2 Launch Type</a></li><li class="depth-2"><a href="#41-ec2-launch-type--tự-quản-lý-hạ-tầng" data-for="41-ec2-launch-type--tự-quản-lý-hạ-tầng">4.1 EC2 Launch Type — tự quản lý hạ tầng</a></li><li class="depth-2"><a href="#42-fargate-launch-type--serverless" data-for="42-fargate-launch-type--serverless">4.2 Fargate Launch Type — serverless</a></li><li class="depth-2"><a href="#43-so-sánh-nhanh" data-for="43-so-sánh-nhanh">4.3 So sánh nhanh</a></li><li class="depth-1"><a href="#5-iam-roles-cho-ecs--điểm-hay-gây-nhầm-lẫn-nhất" data-for="5-iam-roles-cho-ecs--điểm-hay-gây-nhầm-lẫn-nhất">5. IAM Roles cho ECS — điểm hay gây nhầm lẫn nhất</a></li><li class="depth-1"><a href="#6-load-balancer-cho-ecs" data-for="6-load-balancer-cho-ecs">6. Load Balancer cho ECS</a></li><li class="depth-1"><a href="#7-data-volumes-cho-ecs" data-for="7-data-volumes-cho-ecs">7. Data Volumes cho ECS</a></li><li class="depth-1"><a href="#8-ecs-service-auto-scaling" data-for="8-ecs-service-auto-scaling">8. ECS Service Auto Scaling</a></li><li class="depth-2"><a href="#81-ec2-launch-type--auto-scaling-cả-ec2-instance" data-for="81-ec2-launch-type--auto-scaling-cả-ec2-instance">8.1 EC2 Launch Type — Auto Scaling cả EC2 instance</a></li><li class="depth-1"><a href="#9-ecs-event-driven--kết-hợp-eventbridge--sqs" data-for="9-ecs-event-driven--kết-hợp-eventbridge--sqs">9. ECS Event-driven — kết hợp EventBridge &amp; SQS</a></li><li class="depth-1"><a href="#10-amazon-ecr--registry-lưu-docker-image" data-for="10-amazon-ecr--registry-lưu-docker-image">10. Amazon ECR — registry lưu Docker image</a></li><li class="depth-1"><a href="#11-amazon-eks--managed-kubernetes" data-for="11-amazon-eks--managed-kubernetes">11. Amazon EKS — managed Kubernetes</a></li><li class="depth-2"><a href="#111-tổng-quan" data-for="111-tổng-quan">11.1 Tổng quan</a></li><li class="depth-2"><a href="#112-node-types" data-for="112-node-types">11.2 Node Types</a></li><li class="depth-2"><a href="#113-data-volumes-cho-eks" data-for="113-data-volumes-cho-eks">11.3 Data Volumes cho EKS</a></li><li class="depth-1"><a href="#12-so-sánh--chọn-đáp-án-thi" data-for="12-so-sánh--chọn-đáp-án-thi">12. So sánh &amp; chọn đáp án thi</a></li><li class="depth-2"><a href="#121-ecs-vs-eks" data-for="121-ecs-vs-eks">12.1 ECS vs EKS</a></li><li class="depth-2"><a href="#122-ec2-vs-fargate-áp-dụng-cho-cả-ecs-lẫn-eks" data-for="122-ec2-vs-fargate-áp-dụng-cho-cả-ecs-lẫn-eks">12.2 EC2 vs Fargate (áp dụng cho cả ECS lẫn EKS)</a></li><li class="depth-2"><a href="#123-tình-huống-thi" data-for="123-tình-huống-thi">12.3 Tình huống thi</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/22---data--and--analytics" class="internal">22 – Data &amp; Analytics: Athena, Redshift, OpenSearch, EMR, Glue, MSK</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

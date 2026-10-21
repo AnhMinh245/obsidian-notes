@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Storage Solutions - S3, EBS, EFS, FSx</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Storage Solutions - S3, EBS, EFS, FSx"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Storage Solutions - S3, EBS, EFS, FSx"/><meta name="twitter:description" content="Storage Solutions: S3, EBS, EFS, FSx &amp; Storage Gateway Để đạt được kiến trúc hiệu năng cao trong phần Storage, bạn phải lựa chọn chuẩn xác giữa Object Storage, Block Storage và File Storage dựa trên IOPS, Throughput, và đặc điểm truy cập của workload."/><meta property="og:description" content="Storage Solutions: S3, EBS, EFS, FSx &amp; Storage Gateway Để đạt được kiến trúc hiệu năng cao trong phần Storage, bạn phải lựa chọn chuẩn xác giữa Object Storage, Block Storage và File Storage dựa trên IOPS, Throughput, và đặc điểm truy cập của workload."/><meta property="og:image:alt" content="Storage Solutions: S3, EBS, EFS, FSx &amp; Storage Gateway Để đạt được kiến trúc hiệu năng cao trong phần Storage, bạn phải lựa chọn chuẩn xác giữa Object Storage, Block Storage và File Storage dựa trên IOPS, Throughput, và đặc điểm truy cập của workload."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.1---storage-solutions---s3,-ebs,-efs,-fsx"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.1---storage-solutions---s3,-ebs,-efs,-fsx"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Storage Solutions: S3, EBS, EFS, FSx &amp; Storage Gateway Để đạt được kiến trúc hiệu năng cao trong phần Storage, bạn phải lựa chọn chuẩn xác giữa Object Storage, Block Storage và File Storage dựa trên IOPS, Throughput, và đặc điểm truy cập của workload."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.1---storage-solutions---s3,-ebs,-efs,-fsx" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-36" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-36" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/aws-saa-c03/">AWS SAA-C03</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/">Domain 3 - High-Performing Architectures</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Storage Solutions - S3, EBS, EFS, FSx</a></div></nav><h1 class="article-title">Storage Solutions - S3, EBS, EFS, FSx</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/draft" class="internal internal-link tag-link">status/draft</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">AWS Storage Solutions</span><span class="note-properties-separator">, </span><span class="note-properties-text">Storage High Performance</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-12T17:00:00.000Z">13 thg 6, 2026</time><span>11 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="storage-solutions-s3-ebs-efs-fsx--storage-gateway">Storage Solutions: S3, EBS, EFS, FSx &amp; Storage Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#storage-solutions-s3-ebs-efs-fsx--storage-gateway" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>Để đạt được kiến trúc hiệu năng cao trong phần Storage, bạn phải lựa chọn chuẩn xác giữa Object Storage, Block Storage và File Storage dựa trên IOPS, Throughput, và đặc điểm truy cập của workload.</p>
+<hr/>
+<h2 id="1-cây-quyết-định-lưu-trữ-storage-decision-tree">1. Cây Quyết định Lưu trữ (Storage Decision Tree)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-cây-quyết-định-lưu-trữ-storage-decision-tree" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sử dụng sơ đồ dưới đây để đưa ra quyết định nhanh khi gặp câu hỏi về thiết kế lưu trữ:</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    Start[Bắt đầu: Cần lưu trữ loại dữ liệu gì?] --> Object[Object / Files không gắn với OS]\n    Start --> Block[Block Storage / Boot Volume OS]\n    Start --> File[File Storage / Shared Network Drive]\n    \n    %% Object Storage Path\n    Object --> S3[Amazon S3]\n    S3 --> AccessFreq{Tần suất truy cập?}\n    AccessFreq -->|Thường xuyên| S3Std[S3 Standard]\n    AccessFreq -->|Không đoán trước được| S3Int[S3 Intelligent-Tiering]\n    AccessFreq -->|Ít truy cập, cần ngay lập tức| S3IA[S3 Standard-IA]\n    AccessFreq -->|Archive, truy cập vài lần/năm| Glacier[S3 Glacier Flexible/Deep]\n    \n    %% Block Storage Path\n    Block --> EC2[Gắn vào EC2]\n    EC2 --> BlockReq{Yêu cầu IOPS?}\n    BlockReq -->|Hàng triệu IOPS, mất khi stop| InstStore[EC2 Instance Store]\n    BlockReq -->|Cần lưu bền bỉ, hiệu năng cao| IO[EBS io1 / io2]\n    BlockReq -->|Cân bằng giá và hiệu năng| GP[EBS gp2 / gp3]\n    BlockReq -->|Throughput cao cho Big Data| ST1[EBS st1]\n    \n    %% File Storage Path\n    File --> OS{Hệ điều hành?}\n    OS -->|Linux| EFS[Amazon EFS]\n    OS -->|Windows| FSxWin[FSx for Windows]\n    OS -->|HPC / S3 Integration| FSxL[FSx for Lustre]\n    OS -->|NetApp ONTAP features| FSxN[FSx for NetApp ONTAP]\n    \n    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:#fff,font-weight:bold;\n    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px;\n    class S3,S3Std,S3Int,S3IA,Glacier,InstStore,IO,GP,ST1,EFS,FSxWin,FSxL,FSxN aws;&quot;">flowchart TD
+    Start[Bắt đầu: Cần lưu trữ loại dữ liệu gì?] --> Object[Object / Files không gắn với OS]
+    Start --> Block[Block Storage / Boot Volume OS]
+    Start --> File[File Storage / Shared Network Drive]
+    
+    %% Object Storage Path
+    Object --> S3[Amazon S3]
+    S3 --> AccessFreq{Tần suất truy cập?}
+    AccessFreq -->|Thường xuyên| S3Std[S3 Standard]
+    AccessFreq -->|Không đoán trước được| S3Int[S3 Intelligent-Tiering]
+    AccessFreq -->|Ít truy cập, cần ngay lập tức| S3IA[S3 Standard-IA]
+    AccessFreq -->|Archive, truy cập vài lần/năm| Glacier[S3 Glacier Flexible/Deep]
+    
+    %% Block Storage Path
+    Block --> EC2[Gắn vào EC2]
+    EC2 --> BlockReq{Yêu cầu IOPS?}
+    BlockReq -->|Hàng triệu IOPS, mất khi stop| InstStore[EC2 Instance Store]
+    BlockReq -->|Cần lưu bền bỉ, hiệu năng cao| IO[EBS io1 / io2]
+    BlockReq -->|Cân bằng giá và hiệu năng| GP[EBS gp2 / gp3]
+    BlockReq -->|Throughput cao cho Big Data| ST1[EBS st1]
+    
+    %% File Storage Path
+    File --> OS{Hệ điều hành?}
+    OS -->|Linux| EFS[Amazon EFS]
+    OS -->|Windows| FSxWin[FSx for Windows]
+    OS -->|HPC / S3 Integration| FSxL[FSx for Lustre]
+    OS -->|NetApp ONTAP features| FSxN[FSx for NetApp ONTAP]
+    
+    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:#fff,font-weight:bold;
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px;
+    class S3,S3Std,S3Int,S3IA,Glacier,InstStore,IO,GP,ST1,EFS,FSxWin,FSxL,FSxN aws;
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="2-amazon-s3-simple-storage-service">2. Amazon S3 (Simple Storage Service)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-amazon-s3-simple-storage-service" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Amazon S3 là nền tảng Object Storage chủ lực. Để tối ưu hóa hiệu năng và chi phí, bạn cần nắm vững các khía cạnh sau:</p>
+<h3 id="21-các-storage-classes-và-bảng-so-sánh">2.1. Các Storage Classes và Bảng So Sánh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-các-storage-classes-và-bảng-so-sánh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Việc đặt sai Storage Class không làm sập hệ thống nhưng sẽ khiến chi phí đội lên gấp nhiều lần.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">S3 Storage Class</th><th style="text-align:left;">Tính sẵn sàng (Avail.)</th><th style="text-align:left;">Độ bền (Durability)</th><th style="text-align:left;">Thời gian lưu tối thiểu</th><th style="text-align:left;">Phí truy xuất</th><th style="text-align:left;">Thời gian lấy dữ liệu</th><th style="text-align:left;">Use Case</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>S3 Standard</strong></td><td style="text-align:left;">99.99%</td><td style="text-align:left;">11 số 9</td><td style="text-align:left;">None</td><td style="text-align:left;">Không</td><td style="text-align:left;">Milliseconds</td><td style="text-align:left;">Web hosting, dữ liệu truy cập nóng.</td></tr><tr><td style="text-align:left;"><strong>S3 Intelligent-Tiering</strong></td><td style="text-align:left;">99.9%</td><td style="text-align:left;">11 số 9</td><td style="text-align:left;">None</td><td style="text-align:left;">Không</td><td style="text-align:left;">Milliseconds</td><td style="text-align:left;">Dữ liệu không đoán trước được quy luật truy cập.</td></tr><tr><td style="text-align:left;"><strong>S3 Standard-IA</strong></td><td style="text-align:left;">99.9%</td><td style="text-align:left;">11 số 9</td><td style="text-align:left;">30 days</td><td style="text-align:left;">Có</td><td style="text-align:left;">Milliseconds</td><td style="text-align:left;">Backups, disaster recovery (cần truy xuất ngay).</td></tr><tr><td style="text-align:left;"><strong>S3 One Zone-IA</strong></td><td style="text-align:left;">99.5%</td><td style="text-align:left;">11 số 9</td><td style="text-align:left;">30 days</td><td style="text-align:left;">Có</td><td style="text-align:left;">Milliseconds</td><td style="text-align:left;">Bản sao chép thứ 2, dữ liệu có thể tái tạo.</td></tr><tr><td style="text-align:left;"><strong>Glacier Instant Retrieval</strong></td><td style="text-align:left;">99.9%</td><td style="text-align:left;">11 số 9</td><td style="text-align:left;">90 days</td><td style="text-align:left;">Có</td><td style="text-align:left;">Milliseconds</td><td style="text-align:left;">Archive nhưng thỉnh thoảng cần lấy ngay.</td></tr><tr><td style="text-align:left;"><strong>Glacier Flexible Retrieval</strong></td><td style="text-align:left;">99.99% (AZs)</td><td style="text-align:left;">11 số 9</td><td style="text-align:left;">90 days</td><td style="text-align:left;">Có</td><td style="text-align:left;">1 min - 12 hours</td><td style="text-align:left;">Archive chi phí thấp, không cần gấp.</td></tr><tr><td style="text-align:left;"><strong>Glacier Deep Archive</strong></td><td style="text-align:left;">99.99% (AZs)</td><td style="text-align:left;">11 số 9</td><td style="text-align:left;">180 days</td><td style="text-align:left;">Có</td><td style="text-align:left;">12 hours - 48 hours</td><td style="text-align:left;">Lưu trữ tuân thủ pháp lý lâu dài (7-10 năm).</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Important</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>S3 Intelligent-Tiering tự động di chuyển objects giữa các tầng lưu trữ (Frequent, Infrequent, Archive Instant) mà không có <strong>retrieval fee</strong>, thay vào đó AWS thu một khoản phí giám sát (monitoring fee) hàng tháng.</p>
+</div>
+</blockquote>
+<h3 id="22-tính-năng-bảo-mật--quản-trị-s3">2.2. Tính năng Bảo mật &amp; Quản trị S3<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-tính-năng-bảo-mật--quản-trị-s3" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Versioning</strong>: Lưu mọi phiên bản của object, bảo vệ khỏi việc vô tình xóa. Khi xóa, S3 tạo một “delete marker”. Cần kết hợp với <strong>MFA Delete</strong> để ngăn hacker xóa hoàn toàn.</li>
+<li><strong>S3 Object Lock</strong>:
+<ul>
+<li>Tính năng WORM (Write Once Read Many).</li>
+<li><strong>Governance mode</strong>: Có thể sửa/xoá nếu user có quyền IAM đặc biệt (<code>s3:BypassGovernanceRetention</code>).</li>
+<li><strong>Compliance mode</strong>: KHÔNG MỘT AI (kể cả root account) có thể sửa/xóa cho đến khi hết thời hạn retention. Cần cho chuẩn pháp lý (SEC, HIPAA).</li>
+<li><strong>Legal Hold</strong>: Khóa object vô thời hạn bất chấp retention period cho đến khi được gỡ bỏ bằng tay.</li>
+</ul>
+</li>
+<li><strong>Lifecycle Policies</strong>: Tự động chuyển data (Transition) từ Standard -> IA -> Glacier sau N ngày. Hoặc tự động xóa (Expiration) log files cũ.</li>
+</ul>
+<h3 id="23-under-the-hood-tối-ưu-hiệu-năng--limits-của-s3">2.3. Under the Hood: Tối ưu Hiệu Năng &amp; Limits của S3<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-under-the-hood-tối-ưu-hiệu-năng--limits-của-s3" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>S3 Limits &amp; Quotas</strong>:
+<ul>
+<li>Max kích thước của một Object: <strong>5 TB</strong>.</li>
+<li>Max kích thước cho 1 thao tác PUT đơn lẻ: <strong>5 GB</strong>. (Nên dùng Multipart Upload cho file > 100MB).</li>
+<li>Số lượng buckets mặc định: <strong>100/account</strong> (có thể xin tăng lên 1000).</li>
+</ul>
+</li>
+<li><strong>S3 Performance Guidelines</strong>:
+<ul>
+<li>Mỗi Prefix (tương đương với một “thư mục” ảo trong S3) hỗ trợ tối đa <strong>3,500 PUT/COPY/POST/DELETE</strong> requests/second và <strong>5,500 GET/HEAD</strong> requests/second.</li>
+<li>Nếu cần TPS (Transactions Per Second) cao hơn, hãy <strong>phân tán dữ liệu ra nhiều Prefixes</strong>. S3 sẽ tự động scale hạ tầng đằng sau để phục vụ.</li>
+</ul>
+</li>
+<li><strong>KMS Limits</strong>: Khi S3 kết hợp mã hoá bằng AWS KMS (SSE-KMS), hiệu năng có thể bị nghẽn do giới hạn API calls đến KMS thay vì S3. Bạn cần xin tăng quota của KMS nếu request rate quá cao.</li>
+<li><strong>S3 Byte-Range Fetches</strong>: Kéo từng phần (chunks) của file song song giúp tăng tốc độ download. Rất hữu ích khi chỉ cần đọc một phần header của file dữ liệu lớn.</li>
+<li><strong>S3 Select / Glacier Select</strong>: Cho phép chạy câu lệnh SQL trực tiếp trên S3 để trả về đúng kết quả cần thiết, thay vì download toàn bộ dữ liệu.</li>
+<li><strong>S3 Event Notifications</strong>: Tự động trigger Lambda function, SQS, SNS.</li>
+</ul>
+<h3 id="24-troubleshooting--common-errors-s3">2.4. Troubleshooting &amp; Common Errors (S3)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-troubleshooting--common-errors-s3" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>403 Access Denied</strong>: Xảy ra rất thường xuyên. Nguyên nhân có thể do:
+<ol>
+<li>IAM User/Role thiếu quyền truy cập (vd: <code>s3:GetObject</code>).</li>
+<li>Bucket Policy chặn request (vd: chặn truy cập từ ngoài VPC).</li>
+<li>Tính năng <strong>Block Public Access</strong> đang bật, trong khi bạn lại cố set object thành public (ACL hoặc Policy).</li>
+<li>Mã hoá KMS đang bật, nhưng IAM Role thiếu quyền decrypt (<code>kms:Decrypt</code>) với Customer Managed Key.</li>
+</ol>
+</li>
+<li><strong>S3 Replication Fails</strong>: Tính năng Cross-Region Replication (CRR) yêu cầu <strong>cả hai bucket (source &amp; destination) đều phải bật Versioning</strong>. Thêm nữa, IAM Role được S3 sử dụng phải có đủ quyền đọc source và ghi vào destination bucket.</li>
+</ul>
+<h3 id="25-cli--json-policy-snippets">2.5. CLI &amp; JSON Policy Snippets<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#25-cli--json-policy-snippets" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Snippet: Bucket Policy chặn truy cập nếu không dùng HTTPS</strong><br/>
+Rất phổ biến trong yêu cầu compliance/security:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;Version&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;2012-10-17&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;Statement&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;Sid&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;EnforceHTTPS&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;Effect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Deny&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;Principal&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;*&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;Action&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;s3:*&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;arn:aws:s3:::my-secure-bucket/*&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;Condition&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">        &quot;Bool&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">          &quot;aws:SecureTransport&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;false&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<hr/>
+<h2 id="3-amazon-ebs-elastic-block-store">3. Amazon EBS (Elastic Block Store)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-amazon-ebs-elastic-block-store" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>EBS là ổ cứng mạng (network drive) gắn vào EC2 instance. Đặc trưng là Block Storage.</p>
+<h3 id="31-các-loại-volume-và-giới-hạn-volume-types--limits">3.1. Các loại Volume và Giới hạn (Volume Types &amp; Limits)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-các-loại-volume-và-giới-hạn-volume-types--limits" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Volume Type</th><th style="text-align:left;">Max Size</th><th style="text-align:left;">Max IOPS</th><th style="text-align:left;">Max Throughput</th><th style="text-align:left;">Đặc tính nổi bật &amp; Use Case</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>gp3 (General Purpose SSD)</strong></td><td style="text-align:left;">16 TiB</td><td style="text-align:left;">16,000</td><td style="text-align:left;">1,000 MiB/s</td><td style="text-align:left;">Bất kể dung lượng, luôn có baseline 3,000 IOPS &amp; 125 MiB/s. Dễ dàng scale IOPS/throughput độc lập.</td></tr><tr><td style="text-align:left;"><strong>gp2 (General Purpose SSD)</strong></td><td style="text-align:left;">16 TiB</td><td style="text-align:left;">16,000</td><td style="text-align:left;">250 MiB/s</td><td style="text-align:left;">IOPS gắn liền với dung lượng (3 IOPS / GB). Dùng burst balance để tăng tạm thời lên 3000 IOPS cho volume &lt; 1TB.</td></tr><tr><td style="text-align:left;"><strong>io2 Block Express</strong></td><td style="text-align:left;">64 TiB</td><td style="text-align:left;">256,000</td><td style="text-align:left;">4,000 MiB/s</td><td style="text-align:left;">Độ trễ sub-millisecond, độ bền 99.999%. Dành cho database tải siêu cao (SAP HANA).</td></tr><tr><td style="text-align:left;"><strong>io1 (Provisioned IOPS)</strong></td><td style="text-align:left;">16 TiB</td><td style="text-align:left;">64,000</td><td style="text-align:left;">1,000 MiB/s</td><td style="text-align:left;">Provision IOPS cố định. Tỷ lệ IOPS:GB tối đa là 50:1.</td></tr><tr><td style="text-align:left;"><strong>st1 (Throughput Optimized HDD)</strong></td><td style="text-align:left;">16 TiB</td><td style="text-align:left;">500</td><td style="text-align:left;">500 MiB/s</td><td style="text-align:left;">Big Data, Data Warehouses, Log processing, Kafka. (Không dùng làm boot volume)</td></tr><tr><td style="text-align:left;"><strong>sc1 (Cold HDD)</strong></td><td style="text-align:left;">16 TiB</td><td style="text-align:left;">250</td><td style="text-align:left;">250 MiB/s</td><td style="text-align:left;">Rẻ nhất. File server hiếm truy cập. (Không dùng làm boot volume)</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Mẹo thi </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>Cost-effective</strong> cho database thông thường <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> Chọn <strong>gp3</strong>.</li>
+<li><strong>Mission-critical, latency-sensitive, >16000 IOPS</strong> <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> Chọn <strong>io1 / io2</strong>.</li>
+<li><strong>Big Data, MapReduce, Kafka, streaming workloads</strong> <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> Chọn <strong>st1</strong>.</li>
+</ul>
+</div>
+</blockquote>
+<h3 id="32-under-the-hood--advanced-configuration">3.2. Under the Hood &amp; Advanced Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-under-the-hood--advanced-configuration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>EBS Burst Balance (gp2)</strong>: Với gp2, nếu dung lượng volume nhỏ (dưới 1TB), bạn không có đủ IOPS cơ bản. Hệ thống cấp cho bạn I/O credits (Burst Balance). Khi dùng cạn credit này, hiệu năng volume sẽ tuột dốc không phanh. <strong>Giải pháp</strong>: Nâng cấp lên gp3 hoặc tăng dung lượng gp2 lên >1TB.</li>
+<li><strong>EBS Multi-Attach</strong>: Chỉ dành cho <strong>io1 / io2</strong>. Cho phép gắn cùng 1 volume vào <strong>nhiều EC2 instances</strong> (tối đa 16) trong CÙNG MỘT AZ. Bắt buộc OS phải dùng file system dạng cluster-aware (vd: GFS2). Không dùng cho ext4/xfs thông thường!</li>
+<li><strong>EC2 Instance Store</strong>: Ổ cứng cắm vật lý trực tiếp trên server chứa EC2. Đem lại hiệu năng khủng khiếp nhất (<strong>millions of IOPS</strong>). Nhưng là <strong>Ephemeral storage</strong> - Nếu instance Stop hoặc Terminate, dữ liệu sẽ bốc hơi hoàn toàn. Reboot thì giữ nguyên.</li>
+</ul>
+<h3 id="33-troubleshooting-common-errors-ebs">3.3. Troubleshooting Common Errors (EBS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-troubleshooting-common-errors-ebs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Volume Stuck in “attaching” hoặc “detaching”</strong>: Thường do OS bên trong không nhả lock ổ đĩa (vd: process nào đó đang đọc/ghi liên tục) hoặc lỗi hạ tầng AWS. Bạn có thể thử <code>Force Detach</code> volume, nhưng cảnh báo có thể gây corrupt data.</li>
+<li><strong>Cannot mount volume in another AZ</strong>: EBS volumes bị <strong>ràng buộc vào một AZ cụ thể</strong>. Nếu EC2 nằm ở <code>us-east-1a</code> thì không thể gắn EBS nằm ở <code>us-east-1b</code>. <strong>Cách giải quyết</strong>: Chụp EBS Snapshot <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> Tạo Volume mới từ Snapshot đó ở <code>us-east-1b</code> <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> Gắn vào EC2.</li>
+</ul>
+<hr/>
+<h2 id="4-amazon-efs-elastic-file-system">4. Amazon EFS (Elastic File System)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-amazon-efs-elastic-file-system" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Là NFS network file system, dùng được cho hàng ngàn EC2 instances mount vào cùng lúc. Tương thích chuẩn POSIX, Linux only. Phù hợp cho kiến trúc Serverless (EFS có thể mount thẳng vào Lambda hoặc ECS Fargate).</p>
+<h3 id="41-hiệu-năng-thông-lượng--quotas">4.1. Hiệu năng, Thông lượng &amp; Quotas<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-hiệu-năng-thông-lượng--quotas" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Limits</strong>:
+<ul>
+<li>Max concurrent EC2 connections: Lên tới <strong>vài chục ngàn</strong>. (Thực tế là không giới hạn, nhưng kết nối Native EFS driver tối ưu nhất cho hàng ngàn instance).</li>
+</ul>
+</li>
+<li><strong>Performance Modes</strong>:
+<ul>
+<li><strong>General Purpose</strong> (Mặc định): Độ trễ siêu thấp. Giới hạn 35,000 IOPS. Phù hợp cho 99% workloads.</li>
+<li><strong>Max I/O</strong>: Hỗ trợ 500,000+ IOPS nhưng đổi lại latency cao hơn một chút. Dùng cho Big Data, xử lý media. (Lưu ý: Bạn không thể đổi từ GP sang Max I/O sau khi đã tạo EFS).</li>
+</ul>
+</li>
+<li><strong>Throughput Modes</strong>:
+<ul>
+<li><strong>Elastic</strong>: Tự động scale lên xuống băng thông dựa vào tải thực tế, chỉ trả tiền cho phần đã dùng. Khuyên dùng hiện nay.</li>
+<li><strong>Provisioned</strong>: Cố định băng thông độc lập với dung lượng lưu trữ.</li>
+<li><strong>Bursting</strong>: Băng thông tăng giảm phụ thuộc vào dung lượng lưu trữ (rất dễ bị thắt cổ chai nếu lưu trữ ít nhưng truy cập nhiều).</li>
+</ul>
+</li>
+</ul>
+<h3 id="42-troubleshooting-common-errors-efs">4.2. Troubleshooting Common Errors (EFS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-troubleshooting-common-errors-efs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>EFS Mount Timeout</strong>: Thường gặp nhất khi chạy lệnh <code>mount</code>. <strong>Nguyên nhân 99% là do Security Group</strong>. Hãy đảm bảo SG của EFS cho phép Inbound traffic ở port <strong>2049 (NFS)</strong> từ Security Group của EC2.</li>
+<li><strong>Read-Only File System</strong>: Nếu EFS mount thành công nhưng báo Read-only, có thể cấu hình mount của Linux bị sai cờ <code>ro</code>, hoặc quyền POSIX UID/GID của thư mục không cấp quyền ghi cho user hiện tại.</li>
+</ul>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Cảnh báo </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>EFS chỉ hỗ trợ môi trường Linux. Nếu cần share file cho hệ thống Windows (SMB), PHẢI DÙNG <strong>Amazon FSx for Windows</strong>.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="5-amazon-fsx-family">5. Amazon FSx Family<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-amazon-fsx-family" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>FSx cung cấp các file systems đầy đủ tính năng được quản lý (managed) cho các workloads chuyên biệt:</p>
+<ol>
+<li><strong>FSx for Windows File Server</strong>:
+<ul>
+<li>Chạy trên nền Windows Server. Hỗ trợ giao thức SMB, NTFS.</li>
+<li>Tích hợp sâu với Active Directory (AD).</li>
+<li>Tùy chọn Single-AZ hoặc Multi-AZ.</li>
+</ul>
+</li>
+<li><strong>FSx for Lustre</strong>:
+<ul>
+<li>Dành riêng cho <strong>HPC (High-Performance Computing)</strong>, Machine Learning, Video Processing. Tốc độ đọc/ghi cực nhanh (sub-millisecond, hàng trăm GB/s).</li>
+<li>Tích hợp <strong>Directly</strong> với S3: FSxL có thể “lazy-load” file từ S3 xuống, xử lý nhanh như điện, rồi write lại kết quả lên S3.</li>
+</ul>
+</li>
+<li><strong>FSx for NetApp ONTAP</strong>: Đa giao thức (NFS, SMB, iSCSI), hỗ trợ deduplication, compression, SnapMirror.</li>
+<li><strong>FSx for OpenZFS</strong>: ZFS file system siêu tốc độ cao, snapshot tức thì.</li>
+</ol>
+<hr/>
+<h2 id="6-aws-storage-gateway--aws-backup">6. AWS Storage Gateway &amp; AWS Backup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-aws-storage-gateway--aws-backup" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-aws-storage-gateway">6.1. AWS Storage Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-aws-storage-gateway" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dùng để kết nối on-premises (hạ tầng tại chỗ) với AWS Cloud Storage.</p>
+<ul>
+<li><strong>S3 File Gateway</strong>: Trình bày như một thư mục chia sẻ NFS/SMB local. Nhưng phía sau đẩy object lên S3. Chứa local cache giúp truy cập file nóng tốc độ cao.</li>
+<li><strong>FSx File Gateway</strong>: Cho phép máy on-prem truy cập FSx for Windows qua SMB với local cache.</li>
+<li><strong>Volume Gateway (iSCSI)</strong>:
+<ul>
+<li><strong>Cached Volumes</strong>: Lưu toàn bộ data trên S3, chỉ giữ file nóng ở local.</li>
+<li><strong>Stored Volumes</strong>: Lưu FULL dữ liệu ở local (đảm bảo độ trễ = 0), âm thầm backup snapshot lên S3.</li>
+</ul>
+</li>
+<li><strong>Tape Gateway (VTL)</strong>: Cắm vào các phần mềm backup truyền thống (Veeam, Backup Exec) thay cho băng từ vật lý. Back data vào S3/Glacier.</li>
+</ul>
+<h3 id="62-aws-backup">6.2. AWS Backup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-aws-backup" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Dịch vụ tập trung (Centralized backup service). Quản lý chính sách backup (Backup Plans) cho EC2, EBS, EFS, RDS, DynamoDB.</li>
+<li>Hỗ trợ backup liên Region (Cross-region) và liên Account (Cross-account bằng AWS Organizations).</li>
+</ul>
+<hr/>
+<h2 id="7-case-study-thực-tế">7. Case Study Thực Tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-case-study-thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="case-study-kiến-trúc-xử-lý-video-hpc-với-s3-và-fsx-for-lustre">Case Study: Kiến trúc Xử lý Video (HPC) với S3 và FSx for Lustre<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#case-study-kiến-trúc-xử-lý-video-hpc-với-s3-và-fsx-for-lustre" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Bài toán</strong>: Một công ty media cần xử lý (render) hàng ngàn video gốc (lưu trên S3) mỗi ngày. Việc copy data từ S3 trực tiếp vào từng EC2 rất chậm và nghẽn cổ chai mạng.</p>
+<p><strong>Giải pháp</strong>: Sử dụng <strong>FSx for Lustre</strong> liên kết trực tiếp với bucket S3. Các EC2 instances chạy thuật toán render sẽ mount ổ Lustre này vào để lấy dữ liệu với tốc độ của siêu máy tính.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    subgraph sg_14 [\&quot;AWS Cloud\&quot;]\n        S3[Amazon S3\\nVideo Gốc]\n        FSx[Amazon FSx for Lustre\\nHigh-Speed File System]\n        S3 -- \&quot;Lazy Load &amp; Sync\&quot; &lt;--> FSx\n        \n    subgraph sg_15 [\&quot;Compute Cluster\&quot;]\n            EC2_1[EC2 Spot\\nRender Node 1]\n            EC2_2[EC2 Spot\\nRender Node 2]\n            EC2_3[EC2 Spot\\nRender Node N]\n        end\n        \n        FSx -. \&quot;Mount (100s GB/s)\&quot; .-> EC2_1\n        FSx -. \&quot;Mount\&quot; .-> EC2_2\n        FSx -. \&quot;Mount\&quot; .-> EC2_3\n    end\n\n    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:#fff,font-weight:bold;\n    class S3,FSx aws;&quot;">flowchart LR
+    subgraph sg_14 [&quot;AWS Cloud&quot;]
+        S3[Amazon S3\nVideo Gốc]
+        FSx[Amazon FSx for Lustre\nHigh-Speed File System]
+        S3 -- &quot;Lazy Load &amp; Sync&quot; &lt;--> FSx
+        
+    subgraph sg_15 [&quot;Compute Cluster&quot;]
+            EC2_1[EC2 Spot\nRender Node 1]
+            EC2_2[EC2 Spot\nRender Node 2]
+            EC2_3[EC2 Spot\nRender Node N]
+        end
+        
+        FSx -. &quot;Mount (100s GB/s)&quot; .-> EC2_1
+        FSx -. &quot;Mount&quot; .-> EC2_2
+        FSx -. &quot;Mount&quot; .-> EC2_3
+    end
+
+    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:#fff,font-weight:bold;
+    class S3,FSx aws;
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<p><strong>Mối liên kết:</strong></p>
+<ul>
+<li>Gắn storage vào EC2: <a href="../../../../02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.2---compute---ec2,-lambda,-fargate" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.2---compute---ec2,-lambda,-fargate">3.2 - Compute - EC2, Lambda, Fargate</a></li>
+<li>Bảo mật VPC cho Storage: <a href="../../../../02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.5---networking---vpc,-route-53,-direct-connect" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.5---networking---vpc,-route-53,-direct-connect">3.5 - Networking - VPC, Route 53, Direct Connect</a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-36" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#storage-solutions-s3-ebs-efs-fsx--storage-gateway" data-for="storage-solutions-s3-ebs-efs-fsx--storage-gateway">Storage Solutions: S3, EBS, EFS, FSx &amp; Storage Gateway</a></li><li class="depth-1"><a href="#1-cây-quyết-định-lưu-trữ-storage-decision-tree" data-for="1-cây-quyết-định-lưu-trữ-storage-decision-tree">1. Cây Quyết định Lưu trữ (Storage Decision Tree)</a></li><li class="depth-1"><a href="#2-amazon-s3-simple-storage-service" data-for="2-amazon-s3-simple-storage-service">2. Amazon S3 (Simple Storage Service)</a></li><li class="depth-2"><a href="#21-các-storage-classes-và-bảng-so-sánh" data-for="21-các-storage-classes-và-bảng-so-sánh">2.1. Các Storage Classes và Bảng So Sánh</a></li><li class="depth-2"><a href="#22-tính-năng-bảo-mật--quản-trị-s3" data-for="22-tính-năng-bảo-mật--quản-trị-s3">2.2. Tính năng Bảo mật &amp; Quản trị S3</a></li><li class="depth-2"><a href="#23-under-the-hood-tối-ưu-hiệu-năng--limits-của-s3" data-for="23-under-the-hood-tối-ưu-hiệu-năng--limits-của-s3">2.3. Under the Hood: Tối ưu Hiệu Năng &amp; Limits của S3</a></li><li class="depth-2"><a href="#24-troubleshooting--common-errors-s3" data-for="24-troubleshooting--common-errors-s3">2.4. Troubleshooting &amp; Common Errors (S3)</a></li><li class="depth-2"><a href="#25-cli--json-policy-snippets" data-for="25-cli--json-policy-snippets">2.5. CLI &amp; JSON Policy Snippets</a></li><li class="depth-1"><a href="#3-amazon-ebs-elastic-block-store" data-for="3-amazon-ebs-elastic-block-store">3. Amazon EBS (Elastic Block Store)</a></li><li class="depth-2"><a href="#31-các-loại-volume-và-giới-hạn-volume-types--limits" data-for="31-các-loại-volume-và-giới-hạn-volume-types--limits">3.1. Các loại Volume và Giới hạn (Volume Types &amp; Limits)</a></li><li class="depth-2"><a href="#32-under-the-hood--advanced-configuration" data-for="32-under-the-hood--advanced-configuration">3.2. Under the Hood &amp; Advanced Configuration</a></li><li class="depth-2"><a href="#33-troubleshooting-common-errors-ebs" data-for="33-troubleshooting-common-errors-ebs">3.3. Troubleshooting Common Errors (EBS)</a></li><li class="depth-1"><a href="#4-amazon-efs-elastic-file-system" data-for="4-amazon-efs-elastic-file-system">4. Amazon EFS (Elastic File System)</a></li><li class="depth-2"><a href="#41-hiệu-năng-thông-lượng--quotas" data-for="41-hiệu-năng-thông-lượng--quotas">4.1. Hiệu năng, Thông lượng &amp; Quotas</a></li><li class="depth-2"><a href="#42-troubleshooting-common-errors-efs" data-for="42-troubleshooting-common-errors-efs">4.2. Troubleshooting Common Errors (EFS)</a></li><li class="depth-1"><a href="#5-amazon-fsx-family" data-for="5-amazon-fsx-family">5. Amazon FSx Family</a></li><li class="depth-1"><a href="#6-aws-storage-gateway--aws-backup" data-for="6-aws-storage-gateway--aws-backup">6. AWS Storage Gateway &amp; AWS Backup</a></li><li class="depth-2"><a href="#61-aws-storage-gateway" data-for="61-aws-storage-gateway">6.1. AWS Storage Gateway</a></li><li class="depth-2"><a href="#62-aws-backup" data-for="62-aws-backup">6.2. AWS Backup</a></li><li class="depth-1"><a href="#7-case-study-thực-tế" data-for="7-case-study-thực-tế">7. Case Study Thực Tế</a></li><li class="depth-2"><a href="#case-study-kiến-trúc-xử-lý-video-hpc-với-s3-và-fsx-for-lustre" data-for="case-study-kiến-trúc-xử-lý-video-hpc-với-s3-và-fsx-for-lustre">Case Study: Kiến trúc Xử lý Video (HPC) với S3 và FSx for Lustre</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.0---d3-overview" class="internal">D3 - Overview</a></li><li><a href="../../../../02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.4---caching---elasticache,-cloudfront" class="internal">Caching - ElastiCache, CloudFront</a></li><li><a href="../../../../02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.6---data-ingestion---kinesis,-glue,-athena" class="internal">Data Ingestion - Kinesis, Glue, Athena</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/07---ec2-instance-storage" class="internal">7. EC2 Instance Storage</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.0---s3-introduction-index" class="internal">12. Amazon S3 Introduction – Index</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.1---s3-buckets--and--objects" class="internal">12.1 – S3 Buckets &amp; Objects</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.2---s3-versioning--and--static-website" class="internal">12.2 – S3 Versioning &amp; Static Website</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.3---s3-bucket-policy--and--access-control" class="internal">12.3 – S3 Bucket Policy &amp; Access Control</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Chương 03: Three Pillars Deep Dive — Metrics</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Chương 03: Three Pillars Deep Dive — Metrics"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Chương 03: Three Pillars Deep Dive — Metrics"/><meta name="twitter:description" content="Chương 03: Three Pillars Deep Dive — Metrics &quot;If you can't measure it, you can't manage it.&quot; — Peter Drucker Logs cho bạn chi tiết từng sự kiện."/><meta property="og:description" content="Chương 03: Three Pillars Deep Dive — Metrics &quot;If you can't measure it, you can't manage it.&quot; — Peter Drucker Logs cho bạn chi tiết từng sự kiện."/><meta property="og:image:alt" content="Chương 03: Three Pillars Deep Dive — Metrics &quot;If you can't measure it, you can't manage it.&quot; — Peter Drucker Logs cho bạn chi tiết từng sự kiện."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Chương 03: Three Pillars Deep Dive — Metrics &quot;If you can't measure it, you can't manage it.&quot; — Peter Drucker Logs cho bạn chi tiết từng sự kiện."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-438" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-438" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/fundamentals/">Fundamentals</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Chương 03: Three Pillars Deep Dive — Metrics</a></div></nav><h1 class="article-title">Chương 03: Three Pillars Deep Dive — Metrics</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-05T17:00:00.000Z">06 thg 4, 2026</time><span>11 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="chương-03-three-pillars-deep-dive--metrics">Chương 03: Three Pillars Deep Dive — Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chương-03-three-pillars-deep-dive--metrics" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote class="callout quote" data-callout="quote">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>&quot;If you can't measure it, you can't manage it.&quot; — Peter Drucker </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Logs cho bạn <strong>chi tiết từng sự kiện</strong>. Metrics cho bạn <strong>bức tranh tổng thể</strong> — xu hướng, so sánh, dự đoán.</p>
+</div>
+</blockquote>
+<p><strong>Mục tiêu chương này</strong>: Hiểu 4 loại metric, biết tại sao average nói dối, nắm vững 3 phương pháp đo lường (RED/USE/Golden Signals), và biết cách tránh “cardinality bomb”.</p>
+<p><strong>ShopVN evolution</strong>: Thêm <strong>metrics</strong> vào ShopVN Order Service (v3).</p>
+<hr/>
+<h2 id="1-bản-chất-của-metric--tại-sao-cần-số-liệu">1. Bản chất của Metric — Tại sao cần số liệu?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-bản-chất-của-metric--tại-sao-cần-số-liệu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Hãy tưởng tượng bạn quản lý một cửa hàng ShopVN offline:</p>
+<ul>
+<li><strong>Logs</strong> giống camera an ninh: replay lại xem khách nào đến, mua gì, có vấn đề gì. Rất chi tiết, nhưng bạn không thể ngồi xem 24/7.</li>
+<li><strong>Metrics</strong> giống bảng thống kê cuối ngày: “Hôm nay: 500 khách, doanh thu 100 triệu, 3 đơn bị trả hàng, thời gian phục vụ trung bình 5 phút”. Nhanh chóng, tổng quan.</li>
+</ul>
+<p><strong>Metric = một con số, đo theo thời gian.</strong></p>
+<pre><code>Thời điểm       Orders/sec    Error Rate    p99 Latency
+14:30:00         120           0.5%          200ms
+14:30:30         135           0.8%          250ms
+14:31:00         180           2.1%          800ms    ← Bắt đầu có vấn đề?
+14:31:30          50           15.3%         3200ms   ← ĐÃ CÓ VẤN ĐỀ!
+14:32:00          20           45.0%         timeout  ← OUTAGE!
+</code></pre>
+<p>Nhìn bảng trên, bạn thấy ngay <strong>xu hướng</strong>: error rate tăng dần rồi bùng phát, orders/sec giảm mạnh. Log không cho bạn bức tranh này — vì log là <strong>từng sự kiện riêng lẻ</strong>, không phải <strong>tổng hợp</strong>.</p>
+<hr/>
+<h2 id="2-metric-types--bốn-loại-metric-cơ-bản">2. Metric Types — Bốn loại metric cơ bản<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-metric-types--bốn-loại-metric-cơ-bản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Không phải mọi metrics đều giống nhau. Có 4 loại chính, mỗi loại phù hợp cho những use case khác nhau.</p>
+<h3 id="21-counter--đồng-hồ-công-tơ-mét">2.1 Counter — “Đồng hồ công tơ mét”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-counter--đồng-hồ-công-tơ-mét" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Counter <strong>chỉ tăng, không bao giờ giảm</strong> (trừ khi reset). Dùng để đếm số lần một sự kiện xảy ra.</p>
+<p><strong>Ẩn dụ</strong>: Số km trên xe máy — chỉ tăng, không bao giờ giảm. Bạn biết tổng đã đi bao xa, và so sánh giữa hai thời điểm để tính tốc độ.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> prometheus_client </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Counter</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ShopVN: Đếm tổng số orders đã tạo (tất cả mọi thời điểm)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">order_counter </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> Counter(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;shopvn_orders_total&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,           </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Tên metric (convention: _total ở cuối)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;Total number of orders created&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Mô tả cho người đọc</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;product_category&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]   </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Labels: cho phép filter theo chiều</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Khi order thành công:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">order_counter.labels(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;success&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">product_category</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;electronics&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">).inc()</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Counter: 0 → 1 → 2 → 3 → ... (chỉ tăng)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Khi order thất bại:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">order_counter.labels(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;failure&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">product_category</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;electronics&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">).inc()</span></span></code></pre></figure>
+<p><strong>Từ Counter, bạn tính được Rate</strong> (tốc độ thay đổi):</p>
+<pre><code>Counter lúc 14:30 = 10,000
+Counter lúc 14:31 = 10,150
+→ Rate = (10,150 - 10,000) / 60 giây = 2.5 orders/giây
+</code></pre>
+<h3 id="22-gauge--nhiệt-kế">2.2 Gauge — “Nhiệt kế”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-gauge--nhiệt-kế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Gauge <strong>tăng hoặc giảm</strong> — đo giá trị hiện tại tại một thời điểm.</p>
+<p><strong>Ẩn dụ</strong>: Nhiệt kế — lên 38°C, xuống 36°C. Hoặc mực nước hồ — lên sau mưa, xuống khi nắng.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> prometheus_client </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Gauge</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ShopVN: Số database connections đang active tại thời điểm hiện tại</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">db_connections </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> Gauge(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;shopvn_db_connections_active&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;Number of active database connections right now&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> create_order</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">():</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    conn </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> pool.getconn()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    db_connections.labels(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">service</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;order-service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">).inc()   </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># +1 (lấy connection)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    try</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # ... xử lý business logic ...</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        pass</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    finally</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        pool.putconn(conn)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        db_connections.labels(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">service</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;order-service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">).dec()  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># -1 (trả connection)</span></span></code></pre></figure>
+<p><strong>Ví dụ Gauge khác</strong>: CPU usage (%), memory usage (%), queue length, active users.</p>
+<h3 id="23-histogram--biểu-đồ-phân-bố">2.3 Histogram — “Biểu đồ phân bố”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-histogram--biểu-đồ-phân-bố" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Histogram đo <strong>phân bố</strong> của một giá trị — thường là thời gian (latency). Nó chia giá trị vào các “bucket” (thùng) để biết bao nhiêu requests rơi vào khoảng nào.</p>
+<p><strong>Ẩn dụ</strong>: Bảng thống kê chiều cao lớp học — không chỉ biết “chiều cao trung bình 165cm”, mà biết “10 người dưới 160cm, 15 người 160-170cm, 5 người trên 170cm”.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> prometheus_client </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Histogram</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ShopVN: Đo thời gian xử lý mỗi request</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">request_duration </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> Histogram(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;shopvn_request_duration_seconds&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;Time to process each request, in seconds&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;endpoint&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;method&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">],</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">    buckets</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0.01</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0.05</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0.1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0.25</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0.5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1.0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2.5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5.0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">10.0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Buckets: &lt;=10ms, &lt;=50ms, &lt;=100ms, &lt;=250ms, ...</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Cho phép tính percentile: bao nhiêu % requests dưới 100ms?</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="punctuation">@app.route</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;/api/v1/orders&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">methods</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;POST&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">])</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> create_order</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">():</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    with</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> request_duration.labels(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        endpoint</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;/api/v1/orders&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">method</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;POST&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    ).time():   </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Tự động đo thời gian start → end</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # ... business logic ...</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> jsonify({</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;order_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: order_id}), </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">201</span></span></code></pre></figure>
+<p><strong>Tại sao Histogram quan trọng?</strong> Vì nó cho bạn tính <strong>percentiles</strong> (p50, p90, p99) — sẽ giải thích ở phần 4.</p>
+<h3 id="24-summary--giống-histogram-khác-chỗ-tính-toán">2.4 Summary — Giống Histogram, khác chỗ tính toán<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-summary--giống-histogram-khác-chỗ-tính-toán" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Summary tính percentile <strong>ở client</strong> (trong app), Histogram tính <strong>ở server</strong> (khi query). Thực tế: <strong>Histogram phổ biến hơn</strong> vì linh hoạt hơn khi aggregation.</p>
+<h3 id="so-sánh-gọn">So sánh gọn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh-gọn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Hướng</th><th>Dùng khi nào</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>Counter</strong></td><td>Chỉ tăng</td><td>Đếm sự kiện tích lũy</td><td>Total requests, total errors, total bytes sent</td></tr><tr><td><strong>Gauge</strong></td><td>Tăng/Giảm</td><td>Giá trị hiện tại</td><td>CPU%, memory%, connections active, queue size</td></tr><tr><td><strong>Histogram</strong></td><td>Phân bố</td><td>Phân tích phân bố + percentile</td><td>Request latency, response size</td></tr><tr><td><strong>Summary</strong></td><td>Phân bố</td><td>Cần percentile chính xác phía client</td><td>Ít dùng, thường chọn histogram</td></tr></tbody></table></div>
+<hr/>
+<h2 id="3-labels--cardinality--sức-mạnh-và-cái-bẫy">3. Labels &amp; Cardinality — Sức mạnh và “cái bẫy”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-labels--cardinality--sức-mạnh-và-cái-bẫy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-labels-thêm-chiều-phân-tích">3.1 Labels: Thêm chiều phân tích<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-labels-thêm-chiều-phân-tích" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Labels (hay tags) cho phép bạn <strong>lọc và nhóm</strong> metrics theo nhiều chiều:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Cùng 1 counter, nhưng labels cho phép phân tích theo nhiều góc:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">order_counter.labels(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;success&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">category</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;electronics&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;hcm&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">).inc()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">order_counter.labels(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;failure&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">category</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;fashion&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;hanoi&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">).inc()</span></span></code></pre></figure>
+<p>Giờ bạn có thể hỏi:</p>
+<ul>
+<li>“Tổng orders?” → <code>sum(shopvn_orders_total)</code></li>
+<li>“Orders thành công ở HCM?” → <code>shopvn_orders_total{status=&quot;success&quot;, region=&quot;hcm&quot;}</code></li>
+<li>“Error rate theo category?” → <code>sum by (category)(shopvn_orders_total{status=&quot;failure&quot;}) / sum by (category)(shopvn_orders_total)</code></li>
+</ul>
+<h3 id="32-cardinality-problem--bom-nổ-chậm">3.2 Cardinality Problem — “Bom nổ chậm”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-cardinality-problem--bom-nổ-chậm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi <strong>tổ hợp labels duy nhất</strong> tạo ra một <strong>time series riêng biệt</strong> trong database. Ví dụ:</p>
+<pre><code>status (2 giá trị) × category (10) × region (5) = 100 time series ✅ OK
+
+Nhưng nếu thêm user_id (100,000 users):
+2 × 10 × 5 × 100,000 = 10,000,000 time series 💀 BOOM!
+</code></pre>
+<p>10 triệu time series = database metrics sẽ:</p>
+<ul>
+<li>Tốn RAM khổng lồ</li>
+<li>Query chậm</li>
+<li>Chi phí cloud tăng vọt</li>
+<li>Có thể crash metric storage</li>
+</ul>
+<blockquote class="callout danger" data-callout="danger">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Rule tuyệt đối </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>KHÔNG BAO GIỜ</strong> dùng high-cardinality values làm label:</p>
+<ul>
+<li>❌ <code>user_id</code> (hàng trăm nghìn giá trị)</li>
+<li>❌ <code>order_id</code> (vô hạn)</li>
+<li>❌ <code>ip_address</code> (hàng triệu)</li>
+<li>❌ <code>email</code> (hàng trăm nghìn)</li>
+</ul>
+<p>✅ Chỉ dùng labels có <strong>số giá trị nhỏ và cố định</strong>: status (2-5), region (5-20), http_method (5-7), service_name (10-50).</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="4-percentiles--tại-sao-average-nói-dối">4. Percentiles — Tại sao Average nói dối<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-percentiles--tại-sao-average-nói-dối" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Đây là một trong những bài học quan trọng nhất trong Observability:</p>
+<h3 id="41-ví-dụ-trực-quan">4.1 Ví dụ trực quan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-ví-dụ-trực-quan" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>10 requests vào ShopVN Order Service:</p>
+<pre><code>Request 1:  50ms ✅
+Request 2:  52ms ✅
+Request 3:  48ms ✅
+Request 4:  51ms ✅
+Request 5:  49ms ✅
+Request 6:  50ms ✅
+Request 7:  53ms ✅
+Request 8:  47ms ✅
+Request 9:  51ms ✅
+Request 10: 5000ms 💀 (Payment Service timeout)
+</code></pre>
+<p>Tính toán:</p>
+<ul>
+<li><strong>Average</strong> = (50+52+48+51+49+50+53+47+51+5000) / 10 = <strong>545ms</strong></li>
+<li><strong>Median (p50)</strong> = <strong>50ms</strong> — 50% users nhanh hơn 50ms</li>
+<li><strong>p90</strong> = <strong>53ms</strong> — 90% users nhanh hơn 53ms</li>
+<li><strong>p99</strong> = <strong>5000ms</strong> — 1% users phải chờ <strong>5 giây</strong></li>
+</ul>
+<p>Dashboard hiện Average = 545ms → CTO: “Hmm, hơi chậm nhưng chấp nhận được.”</p>
+<p>Thực tế: <strong>9 users trải nghiệm 50ms (tuyệt vời)</strong> nhưng <strong>1 user phải chờ 5 giây (khủng khiếp)</strong>. Average <strong>che giấu</strong> trải nghiệm tệ nhất.</p>
+<h3 id="42-dùng-percentile-nào">4.2 Dùng percentile nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-dùng-percentile-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Percentile</th><th>Ý nghĩa</th><th>Khi nào dùng</th></tr></thead><tbody><tr><td><strong>p50 (median)</strong></td><td>50% users nhanh hơn giá trị này</td><td>”Trải nghiệm điển hình”</td></tr><tr><td><strong>p90</strong></td><td>10% users chậm hơn</td><td>”Trải nghiệm phần lớn users”</td></tr><tr><td><strong>p95</strong></td><td>5% users chậm hơn</td><td>Balance giữa typical và worst</td></tr><tr><td><strong>p99</strong></td><td>1% users chậm hơn</td><td>”Trải nghiệm tệ nhất (ngoại trừ extreme)“</td></tr><tr><td><strong>p99.9</strong></td><td>0.1% users chậm hơn</td><td>Extreme cases</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Rule: Dùng Percentiles cho Latency, KHÔNG dùng Average </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>SLO thường đặt dựa trên <strong>p99</strong>: “99% requests phải hoàn thành dưới 500ms”</li>
+<li>Dynatrace và Datadog mặc định hiển thị <strong>p50, p90, p95, p99</strong> — không hiển thị average</li>
+<li>Nếu ai đó nói “latency trung bình 200ms” → hãy hỏi: “p99 là bao nhiêu?“</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="5-ba-phương-pháp-đo-lường--red-use-golden-signals">5. Ba Phương Pháp Đo Lường — RED, USE, Golden Signals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-ba-phương-pháp-đo-lường--red-use-golden-signals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Ba frameworks giúp bạn <strong>biết cần đo gì</strong> — không phải bịa metrics ngẫu nhiên.</p>
+<h3 id="51-red-method--cho-services">5.1 RED Method — Cho Services<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-red-method--cho-services" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote>
+<p>“Service của tôi có khỏe không?”</p>
+</blockquote>
+<p>Dùng khi bạn đang nhìn vào <strong>API/service</strong> (Order Service, Product Service):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Signal</th><th>Câu hỏi</th><th>Metric cho ShopVN Order Service</th></tr></thead><tbody><tr><td><strong>R</strong>ate</td><td>Bao nhiêu requests/giây?</td><td><code>shopvn_http_requests_total</code> (tính rate)</td></tr><tr><td><strong>E</strong>rrors</td><td>Bao nhiêu % bị lỗi?</td><td><code>shopvn_http_requests_total{status=5xx} / total</code></td></tr><tr><td><strong>D</strong>uration</td><td>Mỗi request mất bao lâu?</td><td><code>shopvn_request_duration_seconds</code> (p50, p99)</td></tr></tbody></table></div>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ShopVN v3: Thêm RED metrics</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> prometheus_client </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Counter, Histogram</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">http_requests </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> Counter(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;shopvn_http_requests_total&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;Total HTTP requests to this service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;method&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;endpoint&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;status_code&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">http_duration </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> Histogram(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;shopvn_http_request_duration_seconds&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;Time to process each HTTP request&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;method&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;endpoint&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">],</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">    buckets</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0.01</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0.05</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0.1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0.25</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0.5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1.0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2.5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5.0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="punctuation">@app.before_request</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> start_timer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">():</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    request._start_time </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> time.time()</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="punctuation">@app.after_request</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> track_red_metrics</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(response):</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Rate + Errors: increment counter cho MỌI request</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    http_requests.labels(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        method</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">request.method,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        endpoint</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">request.path,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        status_code</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">response.status_code</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    ).inc()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Duration: observe latency</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    duration </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> time.time() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> request._start_time</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    http_duration.labels(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        method</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">request.method,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        endpoint</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">request.path</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    ).observe(duration)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> response</span></span></code></pre></figure>
+<h3 id="52-use-method--cho-infrastructure-resources">5.2 USE Method — Cho Infrastructure Resources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-use-method--cho-infrastructure-resources" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote>
+<p>“Server/resource của tôi có quá tải không?”</p>
+</blockquote>
+<p>Dùng khi bạn đang nhìn vào <strong>infrastructure</strong> (CPU, Memory, Disk, Network):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Signal</th><th>Câu hỏi</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>U</strong>tilization</td><td>Bao nhiêu % đang được dùng?</td><td>CPU 75%, Memory 60%, Disk 85%</td></tr><tr><td><strong>S</strong>aturation</td><td>Công việc có phải xếp hàng chờ?</td><td>Request queue length = 50, thread pool full</td></tr><tr><td><strong>E</strong>rrors</td><td>Có lỗi resource không?</td><td>Disk I/O errors, network packet drops</td></tr></tbody></table></div>
+<p><strong>Khi nào Saturation cao nhưng Utilization thấp?</strong> Paradox này xảy ra khi resource bị lock contention — CPU rảnh nhưng threads đợi nhau (database locked rows). Đây là signal quan trọng mà chỉ có USE method bắt được.</p>
+<h3 id="53-golden-signals-google-sre--framework-tổng-hợp">5.3 Golden Signals (Google SRE) — Framework tổng hợp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-golden-signals-google-sre--framework-tổng-hợp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Google SRE đề xuất 4 signals cốt lõi, kết hợp cả RED và USE:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Golden Signal</th><th>Mô tả</th><th>Map với RED/USE</th></tr></thead><tbody><tr><td><strong>Latency</strong></td><td>Thời gian xử lý request</td><td>RED: Duration</td></tr><tr><td><strong>Traffic</strong></td><td>Lượng request</td><td>RED: Rate</td></tr><tr><td><strong>Errors</strong></td><td>Tỷ lệ lỗi</td><td>RED: Errors</td></tr><tr><td><strong>Saturation</strong></td><td>Resource có “đầy” không</td><td>USE: Saturation</td></tr></tbody></table></div>
+<h3 id="54-chọn-method-nào">5.4 Chọn method nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#54-chọn-method-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Bạn đang nhìn vào...
+├── API endpoint / microservice? ──→ RED Method
+├── Server / VM / Container / Database? ──→ USE Method
+└── Tổng quan cả hệ thống? ──→ Golden Signals (kết hợp cả hai)
+</code></pre>
+<hr/>
+<h2 id="6-metric-naming-conventions">6. Metric Naming Conventions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-metric-naming-conventions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Đặt tên metric <strong>nhất quán</strong> giúp team nào nhìn vào cũng hiểu, tool nào cũng parse được:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Format: &lt;namespace>_&lt;subsystem>_&lt;name>_&lt;unit></span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ✅ Tốt — rõ ràng, có namespace, có unit</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;shopvn_order_service_request_duration_seconds&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;shopvn_db_connections_active_total&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;shopvn_payment_errors_total&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ❌ Tệ — không biết service nào, đơn vị gì</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;request_time&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">         # Service nào? Đơn vị gì (ms? s?)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;orderErrors&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">          # CamelCase, không namespace</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;cpu&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                  # CPU gì? Utilization? Time?</span></span></code></pre></figure>
+<p><strong>Rules:</strong></p>
+<ul>
+<li>snake_case, lowercase luôn</li>
+<li>Counter kết thúc bằng <code>_total</code></li>
+<li>Luôn ghi unit: <code>_seconds</code>, <code>_bytes</code>, <code>_ratio</code></li>
+<li>Dùng base units: seconds (không milliseconds), bytes (không kilobytes)</li>
+</ul>
+<hr/>
+<h2 id="7-tổng-kết">7. Tổng Kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-tổng-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khái niệm</th><th>Key Takeaway</th></tr></thead><tbody><tr><td>Metric vs Log</td><td>Log = chi tiết sự kiện. Metric = xu hướng, tổng hợp</td></tr><tr><td>4 Metric Types</td><td>Counter (đếm), Gauge (đo hiện tại), Histogram (phân bố), Summary</td></tr><tr><td>Labels</td><td>Thêm chiều phân tích nhưng tránh high-cardinality</td></tr><tr><td>Percentiles</td><td><strong>Dùng p50/p90/p99</strong>, KHÔNG dùng average cho latency</td></tr><tr><td>RED</td><td>Rate + Errors + Duration → cho services</td></tr><tr><td>USE</td><td>Utilization + Saturation + Errors → cho infrastructure</td></tr><tr><td>Golden Signals</td><td>Latency + Traffic + Errors + Saturation → tổng hợp</td></tr></tbody></table></div>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>ShopVN sau Chương 03 </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>ShopVN có <strong>Logs</strong> (biết chi tiết sự kiện) và <strong>Metrics</strong> (biết xu hướng tổng thể). Dashboard hiển thị rate, error rate, p99 latency.</p>
+<p>Nhưng khi p99 latency tăng lên 3 giây, bạn biết <strong>hệ thống chậm</strong> nhưng không biết <strong>chậm ở ĐÂU</strong> — là Product Service? Payment Service? Database? Mỗi request đi qua 5 services, latency có thể bắt nguồn từ bất kỳ chỗ nào.</p>
+<p>👉 Chương tiếp theo <a href="../../../02---areas/observability/fundamentals/04---three-pillars-deep-dive---traces" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/04---three-pillars-deep-dive---traces">04 - Three Pillars Deep Dive - Traces</a>: Thêm <strong>Distributed Tracing</strong> — “GPS tracking” cho mỗi request.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mapping-sang-dynatrace--datadog" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept trong chương</th><th>Dynatrace</th><th>Datadog</th></tr></thead><tbody><tr><td>Counter / Gauge / Histogram</td><td><strong>Custom metrics</strong> via Metric Ingest API hoặc OneAgent</td><td><strong>Custom metrics</strong> via DogStatsD hoặc API</td></tr><tr><td>RED Method (Rate, Errors, Duration)</td><td><strong>Service analysis</strong> — tự tính Request rate, Error rate, Response time</td><td><strong>APM Service page</strong> — Requests/s, Error rate, Latency built-in</td></tr><tr><td>USE Method (Utilization, Saturation, Errors)</td><td><strong>Host monitoring</strong> — CPU, Memory, Disk, Network per host</td><td><strong>Infrastructure</strong> — System metrics per host/container</td></tr><tr><td>Percentiles (p50, p90, p99)</td><td><strong>Service analysis</strong> → Response time → p50/p90/p95 built-in</td><td><strong>APM</strong> → Latency Distribution → p50/p75/p90/p95/p99</td></tr><tr><td>Cardinality (labels)</td><td><strong>Metric metadata</strong> — DT tự quản, cảnh báo high cardinality</td><td><strong>Metrics Summary</strong> — track cardinality, chặn custom metrics quá cao</td></tr><tr><td>Dashboards</td><td><strong>Dashboards</strong> — drag-drop tiles, DQL queries</td><td><strong>Dashboards</strong> — drag-drop widgets, query-based</td></tr><tr><td>Alerting on metrics</td><td><strong>Custom alerts</strong> → Metric events</td><td><strong>Monitors</strong> → Metric Monitor</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-demo--chạy-thử-shopvn-v3-metrics">🧪 Demo — Chạy thử ShopVN v3 (Metrics)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-demo--chạy-thử-shopvn-v3-metrics" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Thấy metrics RED thực tế — error rate, throughput, latency — trên dashboard live:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>File</th><th>Mô tả</th></tr></thead><tbody><tr><td><code>demo/v3_with_metrics.py</code></td><td>ShopVN v3: thêm Prometheus metrics + live dashboard</td></tr></tbody></table></div>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Terminal 1</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">source</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> .env/bin/activate</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">python3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> v3_with_metrics.py</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Terminal 2: Gửi nhiều requests</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">source</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> .env/bin/activate</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">python3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> simulate_traffic.py</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 50</span></span></code></pre></figure>
+<p><strong>Quan sát:</strong></p>
+<ol>
+<li>Mở browser → <strong><a href="http://localhost:5000/dashboard" class="external external-link">http://localhost:5000/dashboard<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></strong> — thấy RED metrics cập nhật realtime</li>
+<li>Mở → <strong><a href="http://localhost:5000/metrics" class="external external-link">http://localhost:5000/metrics<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></strong> — thấy Prometheus raw format (Counter, Histogram)</li>
+</ol>
+<p><strong>Mapping lý thuyết → code:</strong></p>
+<ul>
+<li><strong>Counter</strong> (phần 2.1) → <code>http_requests_total</code> và <code>orders_created</code> trong code: đếm tổng requests, chỉ tăng</li>
+<li><strong>Gauge</strong> (phần 2.2) → <code>active_requests</code> trong code: lên khi request vào, xuống khi response trả</li>
+<li><strong>Histogram</strong> (phần 2.3) → <code>http_request_duration</code> với buckets <code>[0.01, 0.025, ..., 10.0]</code></li>
+<li><strong>Labels</strong> (phần 3) → <code>labels(method=..., endpoint=..., status_code=...)</code>: filter theo nhiều chiều</li>
+<li><strong>RED Method</strong> (phần 5.1) → <code>http_requests_total</code> (Rate), status_code 5xx (Errors), <code>http_request_duration</code> (Duration)</li>
+<li><strong>Cardinality</strong> (phần 3.2) → Labels chỉ dùng giá trị cố định (method, status_code), KHÔNG dùng user_id</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Thử nghiệm </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Gửi 50 requests, mở <code>/dashboard</code>. Gửi thêm 50 → xem metrics thay đổi. Thấy error rate, throughput trực tiếp — đây là bức tranh tổng thể mà logs không thể cho.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-tham-khảo">📚 Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://prometheus.io/docs/concepts/metric_types/" class="external external-link">Prometheus Metric Types<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services/" class="external external-link">RED Method — Tom Wilkie (Grafana)<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.brendangregg.com/usemethod.html" class="external external-link">USE Method — Brendan Gregg<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://sre.google/sre-book/monitoring-distributed-systems/" class="external external-link">Monitoring Distributed Systems — Google SRE Book<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://prometheus.io/docs/practices/histograms/" class="external external-link">Histogram vs Summary — Prometheus<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-388" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#chương-03-three-pillars-deep-dive--metrics" data-for="chương-03-three-pillars-deep-dive--metrics">Chương 03: Three Pillars Deep Dive — Metrics</a></li><li class="depth-1"><a href="#1-bản-chất-của-metric--tại-sao-cần-số-liệu" data-for="1-bản-chất-của-metric--tại-sao-cần-số-liệu">1. Bản chất của Metric — Tại sao cần số liệu?</a></li><li class="depth-1"><a href="#2-metric-types--bốn-loại-metric-cơ-bản" data-for="2-metric-types--bốn-loại-metric-cơ-bản">2. Metric Types — Bốn loại metric cơ bản</a></li><li class="depth-2"><a href="#21-counter--đồng-hồ-công-tơ-mét" data-for="21-counter--đồng-hồ-công-tơ-mét">2.1 Counter — “Đồng hồ công tơ mét”</a></li><li class="depth-2"><a href="#22-gauge--nhiệt-kế" data-for="22-gauge--nhiệt-kế">2.2 Gauge — “Nhiệt kế”</a></li><li class="depth-2"><a href="#23-histogram--biểu-đồ-phân-bố" data-for="23-histogram--biểu-đồ-phân-bố">2.3 Histogram — “Biểu đồ phân bố”</a></li><li class="depth-2"><a href="#24-summary--giống-histogram-khác-chỗ-tính-toán" data-for="24-summary--giống-histogram-khác-chỗ-tính-toán">2.4 Summary — Giống Histogram, khác chỗ tính toán</a></li><li class="depth-2"><a href="#so-sánh-gọn" data-for="so-sánh-gọn">So sánh gọn</a></li><li class="depth-1"><a href="#3-labels--cardinality--sức-mạnh-và-cái-bẫy" data-for="3-labels--cardinality--sức-mạnh-và-cái-bẫy">3. Labels &amp; Cardinality — Sức mạnh và “cái bẫy”</a></li><li class="depth-2"><a href="#31-labels-thêm-chiều-phân-tích" data-for="31-labels-thêm-chiều-phân-tích">3.1 Labels: Thêm chiều phân tích</a></li><li class="depth-2"><a href="#32-cardinality-problem--bom-nổ-chậm" data-for="32-cardinality-problem--bom-nổ-chậm">3.2 Cardinality Problem — “Bom nổ chậm”</a></li><li class="depth-1"><a href="#4-percentiles--tại-sao-average-nói-dối" data-for="4-percentiles--tại-sao-average-nói-dối">4. Percentiles — Tại sao Average nói dối</a></li><li class="depth-2"><a href="#41-ví-dụ-trực-quan" data-for="41-ví-dụ-trực-quan">4.1 Ví dụ trực quan</a></li><li class="depth-2"><a href="#42-dùng-percentile-nào" data-for="42-dùng-percentile-nào">4.2 Dùng percentile nào?</a></li><li class="depth-1"><a href="#5-ba-phương-pháp-đo-lường--red-use-golden-signals" data-for="5-ba-phương-pháp-đo-lường--red-use-golden-signals">5. Ba Phương Pháp Đo Lường — RED, USE, Golden Signals</a></li><li class="depth-2"><a href="#51-red-method--cho-services" data-for="51-red-method--cho-services">5.1 RED Method — Cho Services</a></li><li class="depth-2"><a href="#52-use-method--cho-infrastructure-resources" data-for="52-use-method--cho-infrastructure-resources">5.2 USE Method — Cho Infrastructure Resources</a></li><li class="depth-2"><a href="#53-golden-signals-google-sre--framework-tổng-hợp" data-for="53-golden-signals-google-sre--framework-tổng-hợp">5.3 Golden Signals (Google SRE) — Framework tổng hợp</a></li><li class="depth-2"><a href="#54-chọn-method-nào" data-for="54-chọn-method-nào">5.4 Chọn method nào?</a></li><li class="depth-1"><a href="#6-metric-naming-conventions" data-for="6-metric-naming-conventions">6. Metric Naming Conventions</a></li><li class="depth-1"><a href="#7-tổng-kết" data-for="7-tổng-kết">7. Tổng Kết</a></li><li class="depth-1"><a href="#-mapping-sang-dynatrace--datadog" data-for="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog</a></li><li class="depth-1"><a href="#-demo--chạy-thử-shopvn-v3-metrics" data-for="-demo--chạy-thử-shopvn-v3-metrics">🧪 Demo — Chạy thử ShopVN v3 (Metrics)</a></li><li class="depth-1"><a href="#-tham-khảo" data-for="-tham-khảo">📚 Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/observability/datadog/labs/01---infrastructure-monitoring--and--host-map" class="internal">Lab 01 — Infrastructure Monitoring &amp; Host Map</a></li><li><a href="../../../02---areas/observability/datadog/labs/04---apm--and--distributed-tracing" class="internal">Lab 04 — APM &amp; Distributed Tracing</a></li><li><a href="../../../02---areas/observability/datadog/labs/05---custom-metrics--and--dogstatsd" class="internal">Lab 05 — Custom Metrics &amp; DogStatsD</a></li><li><a href="../../../02---areas/observability/datadog/labs/06---dashboards--and--visualization" class="internal">Lab 06 — Dashboards &amp; Visualization</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/01---host-monitoring--and--smartscape-topology" class="internal">Lab 01 — Host Monitoring &amp; Smartscape Topology</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/02---services,-purepath--and--database" class="internal">Lab 02 — Services, PurePath &amp; Database</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/03---log-monitoring--and--log-viewer" class="internal">Lab 03 — Log Monitoring &amp; Log Viewer</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/06---dashboards--and--dql-queries" class="internal">Lab 06 — Dashboards &amp; DQL Queries</a></li><li><a href="../../../02---areas/observability/fundamentals/00---mục-lục--and--lộ-trình-học" class="internal">Observability Fundamentals — Mục Lục &amp; Lộ Trình Học</a></li><li><a href="../../../02---areas/observability/fundamentals/01---application-logic-fundamentals" class="internal">Chương 01: Application Logic Fundamentals</a></li><li><a href="../../../02---areas/observability/fundamentals/02---three-pillars-deep-dive---logs" class="internal">Chương 02: Three Pillars Deep Dive — Logs</a></li><li><a href="../../../02---areas/observability/fundamentals/06---sli,-slo--and--error-budgets" class="internal">Chương 06: SLI, SLO &amp; Error Budgets</a></li><li><a href="../../../02---areas/observability/fundamentals/08---infrastructure-context" class="internal">Chương 08: Infrastructure Context</a></li><li><a href="../../../02---areas/observability/fundamentals/demo/readme" class="internal">ShopVN Demo — Hands-on Lab Guide</a></li><li><a href="../../../02---areas/observability/labs/00---lab-overview--and--roadmap" class="internal">Observability Platform Labs — Tổng Quan &amp; Lộ Trình</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

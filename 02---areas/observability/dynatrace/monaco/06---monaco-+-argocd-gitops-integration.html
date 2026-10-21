@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Monaco + ArgoCD GitOps Integration</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Monaco + ArgoCD GitOps Integration"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Monaco + ArgoCD GitOps Integration"/><meta name="twitter:description" content="Monaco + ArgoCD GitOps Integration Thuộc MOC - Dynatrace · Prev ← 05 - Delete, Download &amp; Drift Management · Next → 07 - CI-CD Pipeline &amp; Secret Management ⏱️ Thời gian đọc: ~90 phút 📋 Prerequisites: Hiểu ArgoCD basics, hoàn thành Labs 00-05, biết K8s Jobs/CronJobs 🔗 Source: ArgoCD Docs, M..."/><meta property="og:description" content="Monaco + ArgoCD GitOps Integration Thuộc MOC - Dynatrace · Prev ← 05 - Delete, Download &amp; Drift Management · Next → 07 - CI-CD Pipeline &amp; Secret Management ⏱️ Thời gian đọc: ~90 phút 📋 Prerequisites: Hiểu ArgoCD basics, hoàn thành Labs 00-05, biết K8s Jobs/CronJobs 🔗 Source: ArgoCD Docs, M..."/><meta property="og:image:alt" content="Monaco + ArgoCD GitOps Integration Thuộc MOC - Dynatrace · Prev ← 05 - Delete, Download &amp; Drift Management · Next → 07 - CI-CD Pipeline &amp; Secret Management ⏱️ Thời gian đọc: ~90 phút 📋 Prerequisites: Hiểu ArgoCD basics, hoàn thành Labs 00-05, biết K8s Jobs/CronJobs 🔗 Source: ArgoCD Docs, M..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/monaco/06---monaco-+-argocd-gitops-integration"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/monaco/06---monaco-+-argocd-gitops-integration"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Monaco + ArgoCD GitOps Integration Thuộc MOC - Dynatrace · Prev ← 05 - Delete, Download &amp; Drift Management · Next → 07 - CI-CD Pipeline &amp; Secret Management ⏱️ Thời gian đọc: ~90 phút 📋 Prerequisites: Hiểu ArgoCD basics, hoàn thành Labs 00-05, biết K8s Jobs/CronJobs 🔗 Source: ArgoCD Docs, M..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/dynatrace/monaco/06---monaco-+-argocd-gitops-integration" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-432" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-432" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/">Dynatrace</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/monaco/">Monaco</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Monaco + ArgoCD GitOps Integration</a></div></nav><h1 class="article-title">Monaco + ArgoCD GitOps Integration</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/draft" class="internal internal-link tag-link">status/draft</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/dynatrace" class="internal internal-link tag-link">domain/dynatrace</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/devops" class="internal internal-link tag-link">domain/devops</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Monaco ArgoCD</span><span class="note-properties-separator">, </span><span class="note-properties-text">GitOps Dynatrace</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>31 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="monaco--argocd-gitops-integration">Monaco + ArgoCD GitOps Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#monaco--argocd-gitops-integration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>Thuộc <a href="../../../../moc---dynatrace" class="internal internal-link alias" data-slug="moc---dynatrace">MOC - Dynatrace</a> · Prev ← <a href="../../../../02---areas/observability/dynatrace/monaco/05---delete,-download--and--drift-management" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/05---delete,-download--and--drift-management">05 - Delete, Download &amp; Drift Management</a> · Next → <a href="../../../../02---areas/observability/dynatrace/monaco/07---ci-cd-pipeline--and--secret-management" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/07---ci-cd-pipeline--and--secret-management">07 - CI-CD Pipeline &amp; Secret Management</a></p>
+</blockquote>
+<blockquote>
+<p>⏱️ <strong>Thời gian đọc</strong>: ~90 phút<br/>
+📋 <strong>Prerequisites</strong>: Hiểu ArgoCD basics, hoàn thành Labs 00-05, biết K8s Jobs/CronJobs<br/>
+🔗 <strong>Source</strong>: <a href="https://argo-cd.readthedocs.io" class="external external-link">ArgoCD Docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>, <a href="https://docs.dynatrace.com/docs/manage/configuration-as-code" class="external external-link">Monaco Docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</blockquote>
+<hr/>
+<h2 id="1-tại-sao-cần-gitops-cho-dynatrace-configuration">1. Tại sao cần GitOps cho Dynatrace Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-tại-sao-cần-gitops-cho-dynatrace-configuration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="scenario--câu-chuyện-bạn-sẽ-gặp-hoặc-đã-gặp">Scenario — Câu chuyện bạn sẽ gặp (hoặc đã gặp)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scenario--câu-chuyện-bạn-sẽ-gặp-hoặc-đã-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hãy tưởng tượng team bạn quản lý <strong>3 Dynatrace environments</strong>: dev, staging, prod. Mọi thứ đang chạy ổn — alerting profiles chuẩn, dashboards đồng bộ, SLOs consistent giữa các env.</p>
+<p>Rồi <strong>tuần trước</strong>, một engineer nhận incident ticket lúc 2h sáng. Response time của <code>payment-service</code> tăng đột biến, Dynatrace báo problem. Trong quá trình debug, engineer <strong>mở Dynatrace UI trên production</strong> và sửa alerting threshold từ <code>2000ms</code> lên <code>5000ms</code> để tạm tắt alert gây noise trong lúc fix. Incident resolved lúc 4h sáng. Engineer đi ngủ. <strong>Quên revert threshold.</strong></p>
+<p>2 tuần sau, staging environment có bug tương tự — <code>payment-service</code> response time tăng lên <code>3500ms</code>. Nhưng lần này <strong>không ai nhận alert</strong>. Tại sao? Vì alerting profile trên prod đã bị sửa lên <code>5000ms</code>, và ai đó (hoặc script) đã copy config từ prod sang staging tuần trước để “đồng bộ”. Kết quả: staging alert threshold cũng là <code>5000ms</code> → <code>3500ms</code> không trigger → bug âm thầm ảnh hưởng testing 3 ngày trước khi QA phát hiện bằng mắt thường.</p>
+<p><strong>Đây là configuration drift</strong> — và nó xảy ra ở mọi team không dùng Configuration as Code.</p>
+<h3 id="pain-points-chi-tiết--tại-sao-ui-based-config-là-bom-nổ-chậm">Pain points chi tiết — Tại sao UI-based config là bom nổ chậm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pain-points-chi-tiết--tại-sao-ui-based-config-là-bom-nổ-chậm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>1. Không có audit trail đáng tin cậy</strong></p>
+<p>Dynatrace UI có Settings changelog, nhưng nó chỉ ghi “who changed what” — không ghi “<strong>tại sao</strong> thay đổi”. Không có PR description, không có reviewer approval, không có rollback button. Khi incident xảy ra vì config sai, bạn biết ai sửa nhưng không biết context. So sánh với Git history: mỗi commit có message, có diff, có linked Jira ticket, có reviewer comments.</p>
+<p><strong>2. Không reproducible across environments</strong></p>
+<p>Setup 1 Dynatrace environment từ zero qua UI mất <strong>hàng giờ</strong>: tạo management zones, alerting profiles, notification channels, dashboards, SLOs, auto-tagging rules… Giờ setup env thứ 2? Làm lại từ đầu. Env thứ 3? Lại từ đầu. Mỗi lần setup là cơ hội tạo ra sai lệch. Monaco + Git giải quyết: <code>monaco deploy manifest.yaml --environment staging</code> — xong trong 30 giây, consistent 100%.</p>
+<p><strong>3. Configuration drift giữa environments</strong></p>
+<p>Dev có 15 alerting profiles, staging có 14 (ai đó quên tạo 1 cái), prod có 16 (ai đó tạo thêm 2 cái adhoc). Không tool nào phát hiện sự khác biệt này cho đến khi incident xảy ra. Với GitOps: Git repo là single source of truth — mọi env PHẢI match với repo, nếu drift → ArgoCD tự heal.</p>
+<p><strong>4. Không thể code review monitoring changes</strong></p>
+<p>Một junior engineer sửa SLO target từ <code>99.9%</code> xuống <code>99%</code> trên prod. Không ai review. Không ai biết. Với GitOps: thay đổi này phải qua PR → reviewer thấy diff <code>99.9 → 99.0</code> → hỏi “tại sao hạ target?” → ngăn chặn trước khi deploy.</p>
+<p><strong>5. Rollback gần như không thể</strong></p>
+<p>Nếu config mới gây vấn đề, bạn phải <strong>nhớ</strong> config cũ là gì rồi sửa lại bằng tay. Với Git: <code>git revert &lt;commit></code> + ArgoCD auto-sync → rollback trong 60 giây.</p>
+<h3 id="gitops-principles-áp-dụng-cho-monitoring-configuration">GitOps principles áp dụng cho monitoring configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gitops-principles-áp-dụng-cho-monitoring-configuration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>GitOps không chỉ dành cho application deployment. 4 principles của GitOps áp dụng hoàn hảo cho monitoring config:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Principle</th><th>Application Deployment</th><th>Monitoring Config (Monaco)</th></tr></thead><tbody><tr><td><strong>Declarative</strong></td><td>K8s manifests mô tả desired state</td><td>Monaco YAML mô tả desired Dynatrace config</td></tr><tr><td><strong>Versioned</strong></td><td>Git history cho app code</td><td>Git history cho alerting/dashboard/SLO configs</td></tr><tr><td><strong>Automated</strong></td><td>ArgoCD auto-sync khi Git thay đổi</td><td>ArgoCD trigger Monaco Job khi config thay đổi</td></tr><tr><td><strong>Continuously Reconciled</strong></td><td>ArgoCD detect drift, self-heal</td><td>ArgoCD + Monaco detect config drift, re-apply</td></tr></tbody></table></div>
+<h3 id="-tại-sao-không-chỉ-dùng-monaco-cli-trong-cicd-pipeline">💡 “Tại sao không chỉ dùng Monaco CLI trong CI/CD pipeline?”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tại-sao-không-chỉ-dùng-monaco-cli-trong-cicd-pipeline" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Câu hỏi rất hay, và đây là phân biệt quan trọng:</p>
+<p><strong>Monaco CLI trong CI/CD</strong> (vd: GitLab CI chạy <code>monaco deploy</code> khi merge MR):</p>
+<ul>
+<li>✅ Automated deployment</li>
+<li>✅ Version-controlled</li>
+<li>❌ <strong>Push-based</strong> — chỉ deploy khi có commit mới, không biết config bị sửa tay trên UI</li>
+<li>❌ Không có <strong>continuous reconciliation</strong> — nếu ai đó sửa config trên Dynatrace UI sau khi deploy, CI/CD không biết</li>
+<li>❌ Không có <strong>dashboard</strong> hiển thị sync status</li>
+<li>❌ Không có <strong>RBAC</strong> granular (ai được deploy env nào)</li>
+</ul>
+<p><strong>ArgoCD + Monaco</strong>:</p>
+<ul>
+<li>✅ Tất cả ưu điểm trên</li>
+<li>✅ <strong>Pull-based</strong> — ArgoCD liên tục poll Git repo, phát hiện thay đổi</li>
+<li>✅ <strong>Continuous reconciliation</strong> — ArgoCD so sánh desired state (Git) vs actual state (cluster) mỗi 3 phút (configurable)</li>
+<li>✅ <strong>Self-heal</strong> — nếu ai xoá Monaco Job, ArgoCD tạo lại</li>
+<li>✅ <strong>Visibility</strong> — ArgoCD UI hiển thị sync status, health, history cho mọi Application</li>
+<li>✅ <strong>Multi-cluster</strong> — 1 ArgoCD quản lý nhiều clusters/environments</li>
+<li>✅ <strong>RBAC</strong> — project-based permissions</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>Analogie</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Dùng Monaco CLI trong CI/CD = <strong>push-based GitOps</strong> — giống <code>kubectl apply</code> chạy trong pipeline, chỉ apply khi có commit mới.<br/>
+Thêm ArgoCD = <strong>pull-based GitOps</strong> — giống có người canh gác 24/7, liên tục so sánh “Git nói gì” vs “cluster đang có gì” và tự sửa khi lệch.<br/>
+Tương tự sự khác biệt giữa chạy <code>terraform apply</code> thủ công vs dùng Terraform Cloud/Atlantis tự detect drift.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="2-kiến-trúc-tổng-quan--2-layers-bổ-sung-nhau">2. Kiến trúc tổng quan — 2 layers bổ sung nhau<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-kiến-trúc-tổng-quan--2-layers-bổ-sung-nhau" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="hiểu-đúng-argocd-và-monaco-không-overlap">Hiểu đúng: ArgoCD và Monaco KHÔNG overlap<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hiểu-đúng-argocd-và-monaco-không-overlap" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Điều quan trọng nhất cần hiểu trước khi đi sâu: ArgoCD và Monaco hoạt động ở <strong>2 LAYERS HOÀN TOÀN KHÁC NHAU</strong>. Chúng không cạnh tranh — chúng bổ sung cho nhau.</p>
+<ul>
+<li><strong>ArgoCD</strong> quản lý <strong>Kubernetes resources</strong>: Deployments, Services, ConfigMaps, Jobs, CronJobs. ArgoCD nói chuyện với <strong>Kubernetes API</strong>.</li>
+<li><strong>Monaco</strong> quản lý <strong>Dynatrace resources</strong>: Dashboards, SLOs, Alerting Profiles, Auto-tagging rules, Notification channels. Monaco nói chuyện với <strong>Dynatrace API</strong>.</li>
+</ul>
+<p>ArgoCD <strong>không biết gì</strong> về Dynatrace API. Monaco <strong>không biết gì</strong> về Kubernetes. Cầu nối giữa chúng là <strong>K8s Job</strong> — ArgoCD trigger Job, Job chạy container có Monaco CLI, Monaco gọi Dynatrace API. Đơn giản nhưng cực kỳ powerful.</p>
+<h3 id="mermaid-architecture-diagram">Mermaid Architecture Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mermaid-architecture-diagram" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TB\n    subgraph Dev[\&quot;👨‍💻 Developer\&quot;]\n        PR[\&quot;Merge PR\\n(Monaco YAML + K8s manifests)\&quot;]\n    end\n\n    subgraph Git[\&quot;📦 Git Repository\&quot;]\n        MC[\&quot;Monaco Configs\\n(manifest.yaml, projects/*)\&quot;]\n        K8S[\&quot;K8s Manifests\\n(deployments, services, jobs)\&quot;]\n        MC -.->|\&quot;same repo or\\ndifferent repo\&quot;| K8S\n    end\n\n    subgraph CICD[\&quot;🔄 CI/CD Pipeline (optional)\&quot;]\n        VAL[\&quot;Validate\\nmonaco deploy --dry-run\&quot;]\n        LINT[\&quot;Lint\\nyamlint + schema check\&quot;]\n    end\n\n    subgraph Argo[\&quot;🎯 ArgoCD Controller\&quot;]\n        SYNC[\&quot;Sync Engine\\ndesired state ↔ actual state\&quot;]\n        HOOK[\&quot;Resource Hooks\\nPreSync / Sync / PostSync\&quot;]\n        HEALTH[\&quot;Health Assessment\\nwait until all resources healthy\&quot;]\n    end\n\n    subgraph K8sCluster[\&quot;☸️ Kubernetes Cluster\&quot;]\n        APP[\&quot;Application Pods\\n(frontend, backend, APIs)\&quot;]\n        JOB[\&quot;Monaco K8s Job\\n(runs monaco deploy)\&quot;]\n        SEC[\&quot;Secrets\\n(DT API token, Git creds)\&quot;]\n    end\n\n    subgraph DT[\&quot;🔴 Dynatrace Environment\&quot;]\n        API[\&quot;Config API\\nSettings 2.0 + Classic\&quot;]\n        DASH[\&quot;Dashboards, SLOs\\nAlerting, Auto-tags...\&quot;]\n    end\n\n    PR --> Git\n    MC --> VAL\n    VAL -->|\&quot;MR approved\&quot;| Git\n    K8S --> SYNC\n    SYNC --> HEALTH\n    HEALTH -->|\&quot;all healthy\&quot;| HOOK\n    HOOK -->|\&quot;PostSync\&quot;| JOB\n    SEC -->|\&quot;mount\&quot;| JOB\n    JOB -->|\&quot;monaco deploy\&quot;| API\n    API --> DASH&quot;">flowchart TB
+    subgraph Dev[&quot;👨‍💻 Developer&quot;]
+        PR[&quot;Merge PR\n(Monaco YAML + K8s manifests)&quot;]
+    end
+
+    subgraph Git[&quot;📦 Git Repository&quot;]
+        MC[&quot;Monaco Configs\n(manifest.yaml, projects/*)&quot;]
+        K8S[&quot;K8s Manifests\n(deployments, services, jobs)&quot;]
+        MC -.->|&quot;same repo or\ndifferent repo&quot;| K8S
+    end
+
+    subgraph CICD[&quot;🔄 CI/CD Pipeline (optional)&quot;]
+        VAL[&quot;Validate\nmonaco deploy --dry-run&quot;]
+        LINT[&quot;Lint\nyamlint + schema check&quot;]
+    end
+
+    subgraph Argo[&quot;🎯 ArgoCD Controller&quot;]
+        SYNC[&quot;Sync Engine\ndesired state ↔ actual state&quot;]
+        HOOK[&quot;Resource Hooks\nPreSync / Sync / PostSync&quot;]
+        HEALTH[&quot;Health Assessment\nwait until all resources healthy&quot;]
+    end
+
+    subgraph K8sCluster[&quot;☸️ Kubernetes Cluster&quot;]
+        APP[&quot;Application Pods\n(frontend, backend, APIs)&quot;]
+        JOB[&quot;Monaco K8s Job\n(runs monaco deploy)&quot;]
+        SEC[&quot;Secrets\n(DT API token, Git creds)&quot;]
+    end
+
+    subgraph DT[&quot;🔴 Dynatrace Environment&quot;]
+        API[&quot;Config API\nSettings 2.0 + Classic&quot;]
+        DASH[&quot;Dashboards, SLOs\nAlerting, Auto-tags...&quot;]
+    end
+
+    PR --> Git
+    MC --> VAL
+    VAL -->|&quot;MR approved&quot;| Git
+    K8S --> SYNC
+    SYNC --> HEALTH
+    HEALTH -->|&quot;all healthy&quot;| HOOK
+    HOOK -->|&quot;PostSync&quot;| JOB
+    SEC -->|&quot;mount&quot;| JOB
+    JOB -->|&quot;monaco deploy&quot;| API
+    API --> DASH
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="ascii-flow--step-by-step-cho-người-thích-đọc-tuần-tự">ASCII flow — Step by step cho người thích đọc tuần tự<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ascii-flow--step-by-step-cho-người-thích-đọc-tuần-tự" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>STEP 1: Developer merge PR
+         ↓
+         Git repo updated (Monaco YAML + K8s manifests)
+
+STEP 2: ArgoCD detects change (poll mỗi 3 phút hoặc webhook)
+         ↓
+         ArgoCD compares desired state (Git) vs actual state (cluster)
+         → Status: OutOfSync
+
+STEP 3: ArgoCD Sync bắt đầu
+         ↓
+         Deploy K8s resources theo sync wave order:
+           Wave -2: Namespaces, CRDs
+           Wave -1: Dynatrace Operator
+           Wave  0: Application Deployments, Services
+           Wave  1: Ingress, NetworkPolicies
+
+STEP 4: ArgoCD Health Check
+         ↓
+         Wait until ALL resources ở wave hiện tại = Healthy
+         (Pod Running, Service có endpoints, Deployment rollout complete)
+
+STEP 5: PostSync Hook triggered
+         ↓
+         ArgoCD tạo K8s Job chứa Monaco container
+         Job chạy: monaco deploy manifest.yaml --environment prod
+
+STEP 6: Monaco gọi Dynatrace API
+         ↓
+         Create/Update dashboards, SLOs, alerting profiles...
+         Job complete → ArgoCD cleanup → Sync = Healthy ✅
+</code></pre>
+<h3 id="bảng-2-layers-chi-tiết">Bảng 2 layers chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-2-layers-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Layer 1: ArgoCD (K8s)</th><th>Layer 2: Monaco (Dynatrace)</th></tr></thead><tbody><tr><td><strong>Tool</strong></td><td>ArgoCD Sync Engine</td><td>Monaco CLI v2</td></tr><tr><td><strong>API target</strong></td><td>Kubernetes API Server</td><td>Dynatrace REST API</td></tr><tr><td><strong>Quản lý</strong></td><td>Pods, Services, ConfigMaps, Jobs…</td><td>Dashboards, SLOs, Alerting, Tags…</td></tr><tr><td><strong>Ví dụ cụ thể</strong></td><td>Deploy <code>payment-service</code> v2.1.0</td><td>Update dashboard title thành “v2.1.0”</td></tr><tr><td><strong>State storage</strong></td><td>etcd (K8s cluster)</td><td>Dynatrace environment</td></tr><tr><td><strong>Drift detection</strong></td><td>ArgoCD diff Git vs cluster</td><td>Monaco dry-run / <code>monaco download</code> diff</td></tr><tr><td><strong>Self-heal</strong></td><td>ArgoCD tự re-apply nếu resource bị sửa</td><td>Cần re-run Monaco Job (qua ArgoCD sync)</td></tr><tr><td><strong>Auth</strong></td><td>kubeconfig / ServiceAccount</td><td>OAuth Client / API Token</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Community Pattern — Không phải Official Integration </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Đây là <strong>community best practice</strong>, KHÔNG phải official integration. Dynatrace không ship ArgoCD plugin, và ArgoCD không có native Dynatrace resource kind. Pattern này dùng <strong>K8s Job như cầu nối</strong> — ArgoCD trigger Job, Job chạy Monaco. Nhưng pattern này được dùng rộng rãi trong enterprise Dynatrace deployments, được đề cập trong Dynatrace community forums, và hoạt động production-ready. Tương tự cách Terraform không có native ArgoCD provider nhưng mọi người vẫn dùng <code>kubernetes_manifest</code> resource để quản lý ArgoCD Applications.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="3-pattern-a-argocd-postsync-hook--deploy-xong-app-cập-nhật-monitoring">3. Pattern A: ArgoCD PostSync Hook — “Deploy xong app, cập nhật monitoring”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-pattern-a-argocd-postsync-hook--deploy-xong-app-cập-nhật-monitoring" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="scenario--khi-nào-bạn-cần-pattern-này">Scenario — Khi nào bạn cần Pattern này<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scenario--khi-nào-bạn-cần-pattern-này" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bạn merge PR cho app <code>payment-service</code> v2.1.0. ArgoCD sync → deploy new pods → health check pass → app healthy. Giờ bạn muốn <strong>TỰ ĐỘNG</strong>:</p>
+<ul>
+<li>Update dashboard title thành “Payment Service v2.1.0”</li>
+<li>Thêm SLO mới cho endpoint <code>/api/v2/refunds</code> (feature mới trong v2.1.0)</li>
+<li>Adjust alerting threshold cho feature flag <code>express-checkout</code> (cần latency cao hơn vì gọi 3rd party)</li>
+<li>Update management zone để include new service tags</li>
+</ul>
+<p>PostSync Hook làm chính xác điều này: <strong>chạy Monaco SAU KHI app đã deploy thành công</strong>.</p>
+<h3 id="flow-chi-tiết--6-bước-postsync">Flow chi tiết — 6 bước PostSync<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#flow-chi-tiết--6-bước-postsync" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│ STEP 1: ArgoCD Sync Start                               │
+│   ArgoCD detect Git change → begin sync                 │
+├─────────────────────────────────────────────────────────┤
+│ STEP 2: Deploy K8s Resources (Wave 0)                   │
+│   → Create/Update Deployments, Services, ConfigMaps     │
+│   → payment-service pods rolling update to v2.1.0       │
+├─────────────────────────────────────────────────────────┤
+│ STEP 3: Health Assessment                               │
+│   → ArgoCD waits: &quot;Are all new pods Running?&quot;           │
+│   → &quot;Do services have healthy endpoints?&quot;               │
+│   → &quot;Is rollout complete (no old ReplicaSets)?&quot;         │
+│   → ✅ All healthy → proceed to hooks                  │
+├─────────────────────────────────────────────────────────┤
+│ STEP 4: PostSync Hook Triggered (Wave 5)                │
+│   → ArgoCD creates K8s Job: monaco-postsync-&lt;hash>      │
+│   → Job starts init container: git clone configs repo   │
+├─────────────────────────────────────────────────────────┤
+│ STEP 5: Monaco Container Runs                           │
+│   → monaco deploy manifest.yaml --environment prod      │
+│   → REST API calls to Dynatrace:                        │
+│     PUT /api/v2/settings/objects (SLOs, alerting)        │
+│     PUT /api/config/v1/dashboards/&lt;id> (dashboard)       │
+│   → Exit code 0 = success                               │
+├─────────────────────────────────────────────────────────┤
+│ STEP 6: Cleanup                                         │
+│   → HookSucceeded policy → ArgoCD deletes Job           │
+│   → ArgoCD sync status = Healthy ✅                     │
+│   → If Job failed → sync status = Degraded ⚠️           │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="k8s-job-manifest--giải-thích-từng-field-quan-trọng">K8s Job Manifest — Giải thích từng field quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#k8s-job-manifest--giải-thích-từng-field-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">batch/v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">Job</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # generateName thay vì name — xem [!tip] bên dưới</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  generateName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monaco-postsync-</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monitoring</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  annotations</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # ──── ArgoCD Hook Annotations ────</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    argocd.argoproj.io/hook</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">PostSync</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    argocd.argoproj.io/hook-delete-policy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HookSucceeded</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    argocd.argoproj.io/sync-wave</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;5&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  backoffLimit</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">3</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">              # retry tối đa 3 lần nếu container fail</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  ttlSecondsAfterFinished</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">300</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> # auto-cleanup sau 5 phút (fallback nếu ArgoCD không cleanup)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  template</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      labels</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        app</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monaco-postsync</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        component</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monitoring-config</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      restartPolicy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">Never</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">     # BẮT BUỘC — xem [!warning] bên dưới</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      serviceAccountName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monaco-sa</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # SA có quyền đọc Secrets</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # ──── Init Container: Clone config repo ────</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      initContainers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">git-clone</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          image</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">alpine/git:2.43</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          command</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">git</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">clone</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">--depth=1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">--branch=main</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">$(GIT_REPO_URL)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/monaco</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">GIT_REPO_URL</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              valueFrom</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">                secretKeyRef</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">                  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">git-credentials</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">                  key</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">repo-url</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          volumeMounts</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monaco-configs</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              mountPath</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/monaco</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # ──── Main Container: Run Monaco ────</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      containers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monaco</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          image</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dynatrace/dynatrace-configuration-as-code:v2.27.0</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          command</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monaco</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">deploy</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">manifest.yaml</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">--environment</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">$(TARGET_ENV)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">--verbose</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # logs chi tiết cho debugging</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">TARGET_ENV</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;prod&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DT_API_TOKEN</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              valueFrom</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">                secretKeyRef</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">                  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dynatrace-monaco-token</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">                  key</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">api-token</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DT_ENV_URL</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              valueFrom</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">                secretKeyRef</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">                  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dynatrace-monaco-token</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">                  key</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">env-url</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          volumeMounts</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monaco-configs</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              mountPath</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/monaco</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          workingDir</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/monaco</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          resources</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            requests</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              memory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;128Mi&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              cpu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;100m&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            limits</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              memory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;256Mi&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              cpu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;500m&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      volumes</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monaco-configs</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          emptyDir</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {}</span></span></code></pre></figure>
+<h3 id="giải-thích-từng-annotation-quan-trọng">Giải thích từng annotation quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#giải-thích-từng-annotation-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong><code>argocd.argoproj.io/hook: PostSync</code></strong></p>
+<p>Chạy <strong>SAU KHI</strong> tất cả resources ở sync wave hiện tại đã healthy. Đây là điểm mấu chốt: nếu app deploy <strong>fail</strong> (pod crash, image pull error) → PostSync hook <strong>KHÔNG chạy</strong> → Monaco không deploy config cho app không tồn tại → đúng behavior mong muốn. ArgoCD hỗ trợ các hook types khác:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Hook Type</th><th>Khi nào chạy</th><th>Use case</th></tr></thead><tbody><tr><td><code>PreSync</code></td><td>Trước khi sync bắt đầu</td><td>DB migration, schema validation</td></tr><tr><td><code>Sync</code></td><td>Cùng lúc với sync</td><td>Sidecar config, supplementary resources</td></tr><tr><td><code>PostSync</code></td><td>Sau khi sync thành công</td><td><strong>Monaco deploy</strong>, smoke tests, notifications</td></tr><tr><td><code>SyncFail</code></td><td>Khi sync thất bại</td><td>Alert, cleanup, rollback trigger</td></tr><tr><td><code>PostDelete</code></td><td>Sau khi resource bị xoá</td><td>Cleanup external resources</td></tr></tbody></table></div>
+<p><strong><code>argocd.argoproj.io/hook-delete-policy: HookSucceeded</code></strong></p>
+<p>Cleanup Job sau khi succeed. Không để completed Jobs chất đống trong cluster (mỗi sync tạo 1 Job → 100 syncs = 100 completed Jobs nếu không cleanup). Có 3 policy options:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Policy</th><th>Behavior</th><th>Khi nào dùng</th></tr></thead><tbody><tr><td><code>HookSucceeded</code></td><td>Xoá Job khi exit code 0</td><td>Default choice — giữ cluster sạch</td></tr><tr><td><code>HookFailed</code></td><td>Xoá Job khi exit code != 0</td><td>Khi muốn giữ failed Jobs để <code>kubectl logs</code> debug</td></tr><tr><td><code>BeforeHookCreation</code></td><td>Xoá Job cũ trước khi tạo mới</td><td>Tránh “Job already exists” khi re-sync</td></tr></tbody></table></div>
+<p><strong><code>argocd.argoproj.io/sync-wave: &quot;5&quot;</code></strong></p>
+<p>Wave number quyết định <strong>thứ tự deploy</strong>. ArgoCD deploy resources theo wave tăng dần: wave -2 trước, rồi -1, rồi 0… Tại sao Monaco ở wave 5?</p>
+<ul>
+<li>Wave 0 = app chính (Deployments, Services) — đây là default wave</li>
+<li>Wave 5 = chạy <strong>SAU</strong> app đã deploy xong ở wave 0</li>
+<li>Nếu đặt Monaco ở wave 0 → Monaco chạy <strong>SONG SONG</strong> với app → có thể fail vì Dynatrace entity cho service chưa tồn tại (OneAgent chưa kịp discover)</li>
+<li>Giống Helm <code>hook-weight</code>: số nhỏ chạy trước, số lớn chạy sau</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Dùng <code>generateName</code> thay <code>name</code> khi re-sync nhiều lần</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nếu dùng <code>name: monaco-postsync</code> và ArgoCD re-sync (manual hoặc auto), K8s sẽ báo <strong>“Job already exists”</strong> vì Job cũ có thể chưa được cleanup. Dùng <code>generateName: monaco-postsync-</code> → K8s tự append random suffix mỗi lần (<code>monaco-postsync-x7k2q</code>) → không bao giờ conflict. Kết hợp với <code>hook-delete-policy: BeforeHookCreation</code> để chắc chắn.</p>
+</div>
+</blockquote>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Job PHẢI có <code>restartPolicy: Never</code></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nếu dùng <code>restartPolicy: Always</code> hoặc <code>OnFailure</code>, K8s sẽ restart container vô hạn khi Monaco exit (kể cả exit code 0, vì container “exited” = cần restart theo policy). Kết quả: Job <strong>không bao giờ complete</strong> → ArgoCD sync <strong>đứng vĩnh viễn</strong> ở PostSync phase → cần manual intervention. <code>Never</code> = container exit → Job complete (success hoặc fail) → ArgoCD tiếp tục lifecycle.</p>
+</div>
+</blockquote>
+<h3 id="tại-sao-dùng-init-container-pattern-cho-git-clone">Tại sao dùng init container pattern cho git-clone?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-dùng-init-container-pattern-cho-git-clone" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bạn có thể hỏi: “Tại sao không bake Monaco configs vào Docker image luôn?” — Init container pattern có 3 lợi ích:</p>
+<ol>
+<li><strong>Luôn lấy config mới nhất</strong> — <code>git clone --depth=1 --branch=main</code> đảm bảo lấy HEAD mới nhất, không phụ thuộc vào thời điểm build image</li>
+<li><strong>Tách biệt concerns</strong> — Monaco image chỉ chứa binary, không chứa config. Config thay đổi thường xuyên hơn Monaco version → tách ra = build ít image hơn</li>
+<li><strong>Reusable</strong> — cùng 1 Job template dùng cho mọi environment, chỉ đổi biến <code>TARGET_ENV</code> và <code>GIT_REPO_URL</code></li>
+</ol>
+<p>So sánh: init container pattern giống <code>initContainers</code> trong Istio sidecar injection — setup environment trước khi main container chạy. Hoặc giống <code>terraform init</code> trước <code>terraform apply</code>.</p>
+<h3 id="khi-nào-dùng-pattern-a--và-khi-nào-không-dùng">Khi nào dùng Pattern A — và khi nào KHÔNG dùng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-nào-dùng-pattern-a--và-khi-nào-không-dùng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Dùng khi:</strong></p>
+<ul>
+<li>App code và Monaco configs <strong>cùng repo</strong> (hoặc cùng sync cycle)</li>
+<li>Team nhỏ-trung (1-3 teams), không cần RBAC phức tạp</li>
+<li>Muốn <strong>atomic deployment</strong>: app + monitoring config deploy cùng lúc</li>
+<li>Prototype/PoC nhanh — setup đơn giản nhất</li>
+</ul>
+<p><strong>KHÔNG dùng khi:</strong></p>
+<ul>
+<li>Monaco configs thay đổi <strong>độc lập</strong> với app deployment (vd: SRE team update SLO mỗi sprint nhưng app không deploy)</li>
+<li>Cần <strong>multi-environment</strong> deploy từ 1 template (→ dùng Pattern B)</li>
+<li>Hệ thống phức tạp với >5 components cần lifecycle riêng (→ dùng Pattern C)</li>
+</ul>
+<hr/>
+<h2 id="4-pattern-b-applicationset-multi-environment">4. Pattern B: ApplicationSet Multi-Environment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-pattern-b-applicationset-multi-environment" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="scenario--dry-principle-cho-multi-env">Scenario — DRY principle cho multi-env<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scenario--dry-principle-cho-multi-env" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bạn có 3 environments: dev, staging, prod. Mỗi env cần 1 ArgoCD Application riêng cho Monaco configs. Nếu viết 3 Application YAML riêng biệt:</p>
+<pre><code># Bạn sẽ phải maintain 3 files gần giống nhau:
+monaco-dev.yaml      → path: overlays/dev, cluster: dev-cluster
+monaco-staging.yaml  → path: overlays/staging, cluster: staging-cluster
+monaco-prod.yaml     → path: overlays/prod, cluster: prod-cluster
+</code></pre>
+<p>3 files thì OK. Nhưng khi có 10 environments? 20 tenants? Copy-paste 20 files → sửa 1 field → phải sửa 20 files → chắc chắn quên 1-2 files → drift.</p>
+<p><strong>ApplicationSet</strong> giải quyết: 1 template + 1 generator = N Applications tự động. Giống Terraform <code>for_each</code> — 1 resource definition, N instances. Hoặc giống Helm <code>range</code> loop.</p>
+<h3 id="applicationset-manifest--giải-thích-chi-tiết">ApplicationSet Manifest — giải thích chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#applicationset-manifest--giải-thích-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">argoproj.io/v1alpha1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ApplicationSet</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monaco-configs</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">argocd</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">          # ApplicationSet PHẢI ở namespace argocd</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  goTemplate</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">           # Dùng Go template syntax (mạnh hơn Jinja)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  goTemplateOptions</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">missingkey=error</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # Fail nếu template variable không tồn tại → catch typos sớm</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # ──── Generator: định nghĩa danh sách environments ────</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  generators</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">list</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        elements</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">          - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dev</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            cluster</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://dev-cluster.internal:6443</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monitoring-dev</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            dtUrl</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://abc12345.live.dynatrace.com</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            syncPolicy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">automated</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">     # dev auto-sync</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">          - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">staging</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            cluster</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://staging-cluster.internal:6443</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monitoring-staging</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            dtUrl</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://def67890.live.dynatrace.com</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            syncPolicy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">automated</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">     # staging auto-sync</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">          - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">prod</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            cluster</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://prod-cluster.internal:6443</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monitoring-prod</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            dtUrl</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://ghi11111.live.dynatrace.com</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            syncPolicy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">manual</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # prod cần manual approve</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # ──── Template: ArgoCD Application được generate cho MỖI element ────</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  template</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;monaco-{{ .env }}&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # → monaco-dev, monaco-staging, monaco-prod</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">argocd</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      labels</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        app.kubernetes.io/part-of</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dynatrace-monitoring</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;{{ .env }}&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">             # label cho filtering trong ArgoCD UI</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      project</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monitoring</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">             # ArgoCD Project = RBAC boundary</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      source</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        repoURL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://gitlab.com/org/dynatrace-configs.git</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        targetRevision</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">main</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;overlays/{{ .env }}&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">   # Kustomize overlay per-env</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      destination</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        server</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;{{ .cluster }}&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # target K8s cluster</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;{{ .namespace }}&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> # target namespace</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      syncPolicy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        automated</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          prune</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                 # xoá resources không còn trong Git</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          selfHeal</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">              # tự repair nếu resource bị sửa tay</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        syncOptions</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">          - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">CreateNamespace=true</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # tạo namespace nếu chưa tồn tại</span></span></code></pre></figure>
+<p>Khi apply ApplicationSet này, ArgoCD sẽ <strong>tự động tạo 3 Applications</strong>: <code>monaco-dev</code>, <code>monaco-staging</code>, <code>monaco-prod</code>. Thêm 1 element vào generator → tự có Application thứ 4. Xoá element → Application bị xoá (nếu <code>prune: true</code> trong ApplicationSet policy).</p>
+<h3 id="generator-types--chọn-đúng-generator-cho-đúng-use-case">Generator Types — Chọn đúng generator cho đúng use case<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#generator-types--chọn-đúng-generator-cho-đúng-use-case" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Generator</th><th>Mô tả</th><th>Use case</th><th>Ví dụ cụ thể</th></tr></thead><tbody><tr><td><strong>List</strong></td><td>Danh sách cố định các elements</td><td>Số env ít, cố định, biết trước</td><td>dev/staging/prod — 3 env cố định</td></tr><tr><td><strong>Git Directory</strong></td><td>Scan directories trong Git repo</td><td>Mỗi team/tenant có folder riêng, tự phát hiện team mới</td><td><code>teams/team-a/</code>, <code>teams/team-b/</code> → auto-create Applications</td></tr><tr><td><strong>Git File</strong></td><td>Đọc config files (JSON/YAML) trong repo</td><td>Config per-tenant phức tạp hơn directory name</td><td><code>tenants/acme.json</code> chứa cluster URL, env vars…</td></tr><tr><td><strong>Cluster</strong></td><td>Dựa trên ArgoCD registered clusters</td><td>Multi-cluster, auto-discover clusters mới</td><td>Cluster mới join → tự có Application</td></tr><tr><td><strong>Matrix</strong></td><td>Combine 2+ generators (cross-product)</td><td>Mọi kết hợp env × team</td><td>3 envs × 4 teams = 12 Applications tự động</td></tr><tr><td><strong>Merge</strong></td><td>Merge results, override defaults per-element</td><td>Base config + per-env overrides</td><td>Default <code>syncPolicy: auto</code> nhưng prod override thành <code>manual</code></td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Git Directory generator — Self-service cho teams </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Đây là generator mạnh nhất cho enterprise. Khi dùng Git Directory generator, <strong>team mới chỉ cần tạo folder</strong> <code>teams/team-xyz/</code> với Kustomize overlay → ApplicationSet <strong>TỰ ĐỘNG</strong> tạo Application cho team đó → không cần platform team intervention. Đây là true self-service GitOps — platform team cung cấp infrastructure (ApplicationSet template), product teams tự quản config (folder trong repo).</p>
+</div>
+</blockquote>
+<h3 id="kustomize-overlay-pattern--mỗi-env-customize-riêng">Kustomize overlay pattern — Mỗi env customize riêng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kustomize-overlay-pattern--mỗi-env-customize-riêng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>dynatrace-configs/
+├── base/                          # Shared config — giống nhau mọi env
+│   ├── kustomization.yaml
+│   └── monaco-job.yaml            # Job template chung
+├── overlays/
+│   ├── dev/
+│   │   ├── kustomization.yaml     # patches cho dev
+│   │   └── env-config.yaml        # DT_ENV_URL, TARGET_ENV = dev
+│   ├── staging/
+│   │   ├── kustomization.yaml
+│   │   └── env-config.yaml
+│   └── prod/
+│       ├── kustomization.yaml
+│       ├── env-config.yaml
+│       └── resource-limits.yaml   # prod cần resource limits cao hơn
+</code></pre>
+<p>Pattern này <strong>tách biệt “gì giống nhau” vs “gì khác nhau”</strong> — <code>base/</code> chứa template Job, <code>overlays/</code> chứa patches per-env. Giống Helm values files nhưng dùng Kustomize (native K8s, không cần Helm chart).</p>
+<hr/>
+<h2 id="5-pattern-c-app-of-apps--enterprise-architecture">5. Pattern C: App of Apps — Enterprise architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-pattern-c-app-of-apps--enterprise-architecture" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="concept--microservices-cho-gitops">Concept — Microservices cho GitOps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#concept--microservices-cho-gitops" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi hệ thống phức tạp (>5 services, >3 teams, cần RBAC per-component), Pattern A và B bắt đầu chạm giới hạn. App of Apps giải quyết bằng cách tạo <strong>hierarchy</strong>:</p>
+<ul>
+<li>1 <strong>Root Application</strong> = “parent” — quản lý lifecycle của tất cả child Applications</li>
+<li>N <strong>Child Applications</strong> = “children” — mỗi child quản lý 1 component (frontend, backend, operator, monaco)</li>
+<li>ArgoCD sync Root → tạo/update tất cả Children → Children sync resources riêng</li>
+</ul>
+<p>So sánh: App of Apps giống <strong>microservices architecture cho GitOps</strong> — mỗi component có lifecycle riêng, team riêng, RBAC riêng, sync policy riêng. Root Application giống API Gateway — entry point duy nhất, route đến đúng service.</p>
+<h3 id="directory-structure">Directory structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#directory-structure" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>gitops-root/
+├── apps/                              # Root Application trỏ tới folder này
+│   ├── frontend-app.yaml             # Child: ArgoCD App cho Frontend
+│   ├── backend-app.yaml              # Child: ArgoCD App cho Backend API
+│   ├── payment-service-app.yaml      # Child: ArgoCD App cho Payment
+│   ├── dynatrace-operator-app.yaml   # Child: ArgoCD App cho DT Operator
+│   └── monaco-configs-app.yaml       # Child: ArgoCD App cho Monaco ← focus
+│
+├── components/                        # Actual K8s manifests
+│   ├── frontend/
+│   │   ├── deployment.yaml
+│   │   ├── service.yaml
+│   │   └── ingress.yaml
+│   ├── backend/
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── payment-service/
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── dynatrace/
+│   │   ├── namespace.yaml
+│   │   ├── dynakube.yaml              # DynaKube CR cho Operator
+│   │   └── csi-driver-config.yaml
+│   └── monaco/
+│       ├── kustomization.yaml
+│       ├── base/
+│       │   └── monaco-job.yaml
+│       └── overlays/
+│           ├── dev/
+│           ├── staging/
+│           └── prod/
+│
+└── README.md
+</code></pre>
+<h3 id="root-application-yaml">Root Application YAML<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#root-application-yaml" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">argoproj.io/v1alpha1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">Application</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">root-app</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">argocd</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Root Application thường do platform/SRE team quản lý</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Không cần sync-wave — đây là top-level entry point</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  project</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">default</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  source</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    repoURL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://gitlab.com/org/gitops-root.git</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    targetRevision</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">main</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">apps</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                 # Trỏ tới folder chứa child Application YAMLs</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  destination</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    server</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://kubernetes.default.svc</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">argocd</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">          # Children được tạo trong argocd namespace</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  syncPolicy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    automated</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      prune</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">              # Xoá child Application nếu YAML bị remove khỏi Git</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      selfHeal</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">           # Re-create child nếu bị xoá manually</span></span></code></pre></figure>
+<h3 id="child-application--monaco-configs">Child Application — Monaco Configs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#child-application--monaco-configs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">argoproj.io/v1alpha1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">Application</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monaco-configs</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">argocd</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  annotations</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    argocd.argoproj.io/sync-wave</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;5&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Deploy SAU app components</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  labels</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    app.kubernetes.io/part-of</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">platform</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">   # Grouping trong ArgoCD UI</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    team</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">sre</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                             # Team ownership</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  project</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monitoring</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                     # ArgoCD Project = RBAC scope</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  source</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    repoURL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://gitlab.com/org/gitops-root.git</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    targetRevision</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">main</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">components/monaco/overlays/prod</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  destination</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    server</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://kubernetes.default.svc</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monitoring</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  syncPolicy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    automated</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      prune</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      selfHeal</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    retry</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      limit</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                           # Retry sync 5 lần</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      backoff</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        duration</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">30s</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                     # Wait 30s trước retry đầu tiên</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        factor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                         # Exponential backoff: 30s, 60s, 120s...</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        maxDuration</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">5m</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                   # Không wait quá 5 phút</span></span></code></pre></figure>
+<h3 id="mermaid--app-of-apps-hierarchy">Mermaid — App of Apps hierarchy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mermaid--app-of-apps-hierarchy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TB\n    ROOT[\&quot;🌳 Root Application\\n(root-app)\&quot;]\n\n    ROOT --> FE[\&quot;📱 Frontend App\\nWave 0\&quot;]\n    ROOT --> BE[\&quot;⚙️ Backend App\\nWave 0\&quot;]\n    ROOT --> PAY[\&quot;💳 Payment Service\\nWave 0\&quot;]\n    ROOT --> DT[\&quot;🔴 DT Operator\\nWave -1\&quot;]\n    ROOT --> MON[\&quot;📊 Monaco Configs\\nWave 5\&quot;]\n\n    FE --> FE_R[\&quot;Deployment\\nService\\nIngress\&quot;]\n    BE --> BE_R[\&quot;Deployment\\nService\&quot;]\n    PAY --> PAY_R[\&quot;Deployment\\nService\\nHPA\&quot;]\n    DT --> DT_R[\&quot;DynaKube CR\\nNamespace\\nCSI Config\&quot;]\n    MON --> MON_R[\&quot;Monaco Job\\nSecrets\\nConfigMaps\&quot;]\n\n    MON_R -->|\&quot;monaco deploy\&quot;| DTAPI[\&quot;🔴 Dynatrace API\\nDashboards, SLOs\\nAlerting Profiles\&quot;]&quot;">flowchart TB
+    ROOT[&quot;🌳 Root Application\n(root-app)&quot;]
+
+    ROOT --> FE[&quot;📱 Frontend App\nWave 0&quot;]
+    ROOT --> BE[&quot;⚙️ Backend App\nWave 0&quot;]
+    ROOT --> PAY[&quot;💳 Payment Service\nWave 0&quot;]
+    ROOT --> DT[&quot;🔴 DT Operator\nWave -1&quot;]
+    ROOT --> MON[&quot;📊 Monaco Configs\nWave 5&quot;]
+
+    FE --> FE_R[&quot;Deployment\nService\nIngress&quot;]
+    BE --> BE_R[&quot;Deployment\nService&quot;]
+    PAY --> PAY_R[&quot;Deployment\nService\nHPA&quot;]
+    DT --> DT_R[&quot;DynaKube CR\nNamespace\nCSI Config&quot;]
+    MON --> MON_R[&quot;Monaco Job\nSecrets\nConfigMaps&quot;]
+
+    MON_R -->|&quot;monaco deploy&quot;| DTAPI[&quot;🔴 Dynatrace API\nDashboards, SLOs\nAlerting Profiles&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="khi-nào-cần-pattern-c">Khi nào cần Pattern C<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-nào-cần-pattern-c" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Yếu tố</th><th>Cần Pattern C</th><th>Không cần</th></tr></thead><tbody><tr><td>Số components</td><td>>5 services</td><td>1-3 services</td></tr><tr><td>Số teams</td><td>>2 teams cần RBAC riêng</td><td>1 team owns everything</td></tr><tr><td>Lifecycle</td><td>Components release độc lập</td><td>Everything releases together</td></tr><tr><td>Scale</td><td>Enterprise, nhiều clusters</td><td>Single cluster</td></tr><tr><td>Governance</td><td>Compliance, audit per-component</td><td>Startup, move fast</td></tr></tbody></table></div>
+<hr/>
+<h2 id="6-sync-wave-ordering--thứ-tự-quan-trọng-hơn-bạn-nghĩ">6. Sync Wave Ordering — Thứ tự quan trọng hơn bạn nghĩ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-sync-wave-ordering--thứ-tự-quan-trọng-hơn-bạn-nghĩ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tại-sao-sai-thứ-tự--cascading-failures">Tại sao sai thứ tự = cascading failures<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-sai-thứ-tự--cascading-failures" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hãy xem scenario thực tế: team deploy full stack mới, tất cả resources cùng sync wave 0 (default). Chuyện gì xảy ra?</p>
+<ol>
+<li>ArgoCD sync → deploy <strong>tất cả cùng lúc</strong>: Namespace, DT Operator, App Deployments, Ingress, Monaco Job</li>
+<li>Monaco Job bắt đầu chạy → gọi <code>monaco deploy</code> → cố tạo SLO cho <code>payment-service</code></li>
+<li>Nhưng <code>payment-service</code> Deployment chưa Ready (đang pull image) → OneAgent chưa discover service → Dynatrace entity chưa tồn tại</li>
+<li>Monaco SLO config reference <code>type(SERVICE),entityName(&quot;payment-service&quot;)</code> → <strong>entity not found</strong> → deploy fail</li>
+<li>ArgoCD báo sync failed → team panic → debug 30 phút → phát hiện chỉ vì <strong>thứ tự sai</strong></li>
+</ol>
+<p>Sync waves ngăn chặn scenario này bằng cách <strong>đảm bảo thứ tự</strong>: resources ở wave thấp deploy trước, wave cao deploy sau. ArgoCD <strong>wait</strong> cho mọi resource ở wave N healthy trước khi bắt đầu wave N+1.</p>
+<h3 id="recommended-sync-waves--giải-thích-từng-wave">Recommended Sync Waves — Giải thích từng wave<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#recommended-sync-waves--giải-thích-từng-wave" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Wave</th><th>Component</th><th>Tại sao ở wave này</th></tr></thead><tbody><tr><td><strong>-2</strong></td><td>Namespaces, CRDs</td><td><strong>Phải tồn tại trước MỌI THỨ</strong>. CRDs định nghĩa custom resource types — nếu chưa có CRD, K8s không hiểu DynaKube CR. Namespace phải có trước khi tạo resource trong đó. Tương tự <code>terraform</code> phải tạo VPC trước khi tạo subnets.</td></tr><tr><td><strong>-1</strong></td><td>Dynatrace Operator + DynaKube CR</td><td>Operator cần <strong>thời gian init</strong>: download OneAgent, inject vào node, start CSI driver. Nếu ở wave 0 cùng app → app pods có thể start trước OneAgent inject → miss initial transactions. Wave -1 cho Operator thời gian setup.</td></tr><tr><td><strong>0</strong></td><td>Application Deployments, Services</td><td><strong>Workload chính</strong>. Đây là default wave — resources không có annotation <code>sync-wave</code> tự động ở wave 0. App cần chạy trước Monaco vì Monaco config reference app entities.</td></tr><tr><td><strong>1</strong></td><td>Ingress, NetworkPolicies</td><td>Routing cần app healthy trước. Ingress controller check backend health → nếu app chưa ready → Ingress báo 503. NetworkPolicies cần namespaces và pods tồn tại.</td></tr><tr><td><strong>5</strong></td><td>Monaco PostSync Job</td><td><strong>Chạy CUỐI CÙNG</strong> sau khi mọi thứ healthy. Gap lớn (0→5 thay vì 0→2) là intentional — để room cho future resources ở wave 2, 3, 4 mà không cần re-number. Tương tự Helm hook weight convention: dùng 5, 10, 20 thay vì 1, 2, 3.</td></tr></tbody></table></div>
+<h3 id="code-examples--annotations-trên-resources">Code examples — Annotations trên resources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#code-examples--annotations-trên-resources" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Wave -2: Namespace (phải tồn tại trước mọi thứ)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">Namespace</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dynatrace</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  annotations</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    argocd.argoproj.io/sync-wave</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;-2&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">---</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Wave -1: DynaKube CR (Operator cần thời gian init)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dynatrace.com/v1beta2</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DynaKube</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dynakube</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dynatrace</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  annotations</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    argocd.argoproj.io/sync-wave</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;-1&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  apiUrl</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">https://abc12345.live.dynatrace.com/api</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">---</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Wave 0: App Deployment (default, không cần annotation)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">apps/v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">Deployment</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">payment-service</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">default</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Không có sync-wave annotation → default wave 0</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">---</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Wave 1: Ingress (cần app healthy trước)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">networking.k8s.io/v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">Ingress</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">payment-ingress</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  annotations</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    argocd.argoproj.io/sync-wave</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;1&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">---</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Wave 5: Monaco Job (chạy cuối cùng)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">batch/v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">Job</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  generateName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">monaco-postsync-</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  annotations</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    argocd.argoproj.io/hook</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">PostSync</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    argocd.argoproj.io/sync-wave</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;5&quot;</span></span></code></pre></figure>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Sync wave vs Hook — Hai concept khác nhau nhưng bổ sung </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Sync wave</strong> quyết định thứ tự deploy TRONG cùng 1 sync phase. <strong>Hook</strong> quyết định resource chạy ở PHASE nào (PreSync, Sync, PostSync). Monaco Job thường dùng CẢ HAI: <code>hook: PostSync</code> (chạy ở phase PostSync) + <code>sync-wave: &quot;5&quot;</code> (nếu có nhiều PostSync hooks, chạy theo thứ tự wave). Giống ArgoCD Sync Phase giống Terraform lifecycle (<code>create_before_destroy</code>), Sync Wave giống Terraform <code>depends_on</code> — nhưng dùng số thay vì explicit reference.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="7-git-repository-structure--mono-repo-vs-multi-repo">7. Git Repository Structure — Mono-repo vs Multi-repo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-git-repository-structure--mono-repo-vs-multi-repo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="option-a-mono-repo--recommended-cho-team-nhỏ-trung">Option A: Mono-repo — Recommended cho team nhỏ-trung<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-a-mono-repo--recommended-cho-team-nhỏ-trung" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mọi Monaco configs + K8s manifests nằm trong <strong>1 repository</strong>. Đây là lựa chọn phổ biến nhất và nên bắt đầu với pattern này.</p>
+<pre><code>dynatrace-gitops/                      # Single repo
+├── manifest.yaml                      # Monaco manifest — entry point
+├── environments/                      # Environment definitions
+│   ├── dev.yaml                       # DT_ENV_URL, tokens cho dev
+│   ├── staging.yaml                   # DT_ENV_URL, tokens cho staging
+│   └── prod.yaml                      # DT_ENV_URL, tokens cho prod
+│
+├── projects/                          # Monaco projects (Dynatrace configs)
+│   ├── alerting/                      # Alerting profiles + notifications
+│   │   ├── alerting-profile-critical.yaml
+│   │   ├── alerting-profile-warning.yaml
+│   │   └── notification-slack.yaml
+│   ├── dashboards/                    # Dashboard JSON/YAML
+│   │   ├── k8s-overview.json
+│   │   ├── app-performance.json
+│   │   └── sre-golden-signals.json
+│   ├── slos/                          # Service Level Objectives
+│   │   ├── availability-slo.yaml
+│   │   └── latency-slo.yaml
+│   ├── synthetic/                     # Synthetic monitors
+│   │   ├── homepage-http.yaml
+│   │   └── checkout-browser.yaml
+│   ├── management-zones/              # Management zones
+│   │   ├── mz-frontend.yaml
+│   │   └── mz-backend.yaml
+│   └── auto-tags/                     # Auto-tagging rules
+│       ├── tag-environment.yaml
+│       └── tag-team-ownership.yaml
+│
+├── k8s/                               # Kubernetes manifests cho Monaco Job
+│   ├── base/
+│   │   ├── kustomization.yaml
+│   │   ├── monaco-job.yaml            # Job template
+│   │   ├── monaco-sa.yaml             # ServiceAccount
+│   │   └── monaco-rbac.yaml           # Role + RoleBinding
+│   └── overlays/
+│       ├── dev/
+│       │   ├── kustomization.yaml
+│       │   └── patches/
+│       │       └── env-config.yaml    # TARGET_ENV=dev, DT_ENV_URL=...
+│       ├── staging/
+│       │   ├── kustomization.yaml
+│       │   └── patches/
+│       │       └── env-config.yaml
+│       └── prod/
+│           ├── kustomization.yaml
+│           └── patches/
+│               ├── env-config.yaml
+│               └── resource-limits.yaml  # prod cần resources cao hơn
+│
+├── delete/                            # Monaco delete definitions
+│   └── delete.yaml                    # Explicit list configs cần xoá
+│
+├── .gitlab-ci.yml                     # CI: validate + dry-run
+├── .github/CODEOWNERS                 # Code review assignments
+└── README.md                          # Setup guide, contributing guide
+</code></pre>
+<p><strong>Khi nào dùng mono-repo:</strong></p>
+<ul>
+<li>Team size &lt; 20 người</li>
+<li>1 team (hoặc vài team làm việc chung) own tất cả configs</li>
+<li>Release cycle đồng nhất (mọi thứ deploy cùng lúc)</li>
+<li>Đơn giản hoá CI/CD — 1 pipeline cho tất cả</li>
+</ul>
+<h3 id="option-b-multi-repo--cho-enterprise-với-team-ownership-rõ-ràng">Option B: Multi-repo — Cho enterprise với team ownership rõ ràng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-b-multi-repo--cho-enterprise-với-team-ownership-rõ-ràng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Repo 1: dynatrace-configs-platform     # Platform/SRE team owns
+  └── management-zones, auto-tags, base alerting profiles
+
+Repo 2: dynatrace-configs-frontend     # Frontend team owns
+  └── dashboards, SLOs, synthetic monitors cho frontend
+
+Repo 3: dynatrace-configs-backend      # Backend team owns
+  └── dashboards, SLOs cho backend APIs
+
+Repo 4: dynatrace-configs-sre          # SRE team owns
+  └── alerting profiles, notification channels, global SLOs
+
+Repo 5: gitops-root                    # Platform team owns
+  └── Root Application + Child Application definitions
+</code></pre>
+<p><strong>Khi nào dùng multi-repo:</strong></p>
+<ul>
+<li>Team ownership rõ ràng — CODEOWNERS per repo, không ai sửa nhầm config team khác</li>
+<li>Các team có <strong>release cycle khác nhau</strong> — frontend deploy hàng ngày, platform deploy hàng tháng</li>
+<li>Cần <strong>RBAC granular</strong> — backend devs không có access vào SRE alerting repo</li>
+<li>Compliance yêu cầu <strong>audit trail per-team</strong></li>
+</ul>
+<h3 id="bảng-so-sánh">Bảng so sánh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-so-sánh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Mono-repo</th><th>Multi-repo</th></tr></thead><tbody><tr><td><strong>Team size</strong></td><td>1-20</td><td>20+</td></tr><tr><td><strong>Complexity</strong></td><td>Thấp</td><td>Cao</td></tr><tr><td><strong>RBAC</strong></td><td>Branch protection rules</td><td>Repo-level permissions</td></tr><tr><td><strong>CI/CD</strong></td><td>1 pipeline</td><td>N pipelines</td></tr><tr><td><strong>Cross-reference</strong></td><td>Dễ (cùng repo)</td><td>Khó (phải clone nhiều repos)</td></tr><tr><td><strong>Discoverability</strong></td><td>Cao (tất cả ở 1 chỗ)</td><td>Thấp (phải biết repo nào chứa gì)</td></tr><tr><td><strong>Blast radius</strong></td><td>Cao (1 bad merge ảnh hưởng all)</td><td>Thấp (1 bad merge chỉ ảnh hưởng 1 team)</td></tr><tr><td><strong>Onboarding</strong></td><td>Nhanh (clone 1 repo)</td><td>Chậm (clone N repos, hiểu structure)</td></tr></tbody></table></div>
+<h3 id="best-practices--bất-kể-mono-hay-multi-repo">Best Practices — Bất kể mono hay multi-repo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#best-practices--bất-kể-mono-hay-multi-repo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>1. Tách Monaco configs khỏi application code</strong></p>
+<p>Đừng đặt Monaco YAML trong cùng repo với source code (<code>src/</code>, <code>go.mod</code>, <code>package.json</code>). Monaco configs thay đổi theo <strong>monitoring needs</strong>, app code thay đổi theo <strong>feature needs</strong> — lifecycle khác nhau. Nếu cùng repo: mỗi lần update dashboard title = 1 commit trong app repo = trigger CI build cho app → waste resources.</p>
+<p><strong>2. Version-control <code>delete.yaml</code> — biết chính xác cái gì bị xoá</strong></p>
+<p>Khi xoá Dynatrace config, Monaco cần <code>delete.yaml</code> explicit. File này <strong>PHẢI</strong> ở trong Git — không ai được xoá config bằng cách chạy Monaco local với adhoc delete file. Git history cho delete file = audit trail: ai quyết định xoá SLO cũ, khi nào, tại sao.</p>
+<p><strong>3. Environment-specific values qua Monaco environment YAML, KHÔNG hardcode</strong></p>
+<p>Sai: <code>url: https://abc12345.live.dynatrace.com</code> trong config template<br/>
+Đúng: <code>url: {{ .Env.DT_ENV_URL }}</code> hoặc dùng Monaco environment file với token references</p>
+<p><strong>4. README.md với setup guide đầy đủ</strong></p>
+<p>Phải trả lời: (a) Cách setup local development (clone, install Monaco, cần tokens gì), (b) Cách contribute (branch strategy, PR template), (c) Cách rollback, (d) Cách thêm environment mới.</p>
+<p><strong>5. Branch protection + required reviewers</strong></p>
+<p><code>main</code> branch phải có: required PR review (ít nhất 1 reviewer), CI checks pass (dry-run), no force push. Production-impacting changes (alerting, SLOs) nên require 2 reviewers.</p>
+<p><strong>6. Semantic commit messages</strong></p>
+<pre><code>chore(alerting): update critical threshold for payment-service
+feat(dashboard): add SRE golden signals dashboard
+fix(slo): correct latency SLO target from 99 to 99.9
+</code></pre>
+<p>Giúp Git history readable, auto-generate changelog, dễ debug “change nào gây issue”.</p>
+<hr/>
+<h2 id="8-argocd-notifications--dynatrace-events-api">8. ArgoCD Notifications → Dynatrace Events API<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-argocd-notifications--dynatrace-events-api" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tại-sao-dynatrace-cần-biết-khi-nào-deployment-xảy-ra">Tại sao Dynatrace cần biết khi nào deployment xảy ra<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-dynatrace-cần-biết-khi-nào-deployment-xảy-ra" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Đây là phần thường bị bỏ qua nhưng <strong>cực kỳ có giá trị</strong>. Davis AI — engine phát hiện và phân tích problems của Dynatrace — sử dụng <strong>deployment events</strong> để correlate problems với changes.</p>
+<p>Hãy xem 2 scenarios:</p>
+<p><strong>Scenario A — KHÔNG có deployment event:</strong></p>
+<ol>
+<li>Team deploy <code>payment-service</code> v2.1.0 lúc 14:00</li>
+<li>Response time tăng 200% lúc 14:05</li>
+<li>Davis phát hiện problem: “Response time degradation on payment-service”</li>
+<li>Root cause analysis: “Increased traffic?” “Database slow?” “Network issue?” — Davis <strong>đoán</strong> nhưng không chắc</li>
+<li>Team mất 30 phút debug → phát hiện v2.1.0 có N+1 query bug</li>
+</ol>
+<p><strong>Scenario B — CÓ deployment event:</strong></p>
+<ol>
+<li>ArgoCD deploy <code>payment-service</code> v2.1.0 lúc 14:00 → gửi deployment event đến Dynatrace</li>
+<li>Response time tăng 200% lúc 14:05</li>
+<li>Davis phát hiện problem: “Response time degradation on payment-service — <strong>likely caused by deployment: payment-service v2.1.0 (deployed 5 minutes ago)</strong>”</li>
+<li>Team <strong>ngay lập tức biết</strong> nguyên nhân → rollback v2.1.0 → response time bình thường</li>
+<li>Debug time: <strong>5 phút</strong> thay vì 30 phút</li>
+</ol>
+<p><strong>Deployment marker = correlation gold.</strong> Mỗi deployment event là data point giúp Davis AI <strong>loại trừ nguyên nhân</strong> và <strong>tập trung vào root cause thật</strong>.</p>
+<h3 id="argocd-notifications-webhook-configuration">ArgoCD Notifications Webhook Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#argocd-notifications-webhook-configuration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>ArgoCD có built-in Notifications controller — gửi webhook khi sync events xảy ra. Cấu hình qua ConfigMap:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ConfigMap</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">argocd-notifications-cm</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">argocd</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">data</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # ──── Service definition: Dynatrace webhook endpoint ────</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  service.webhook.dynatrace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    url: https://abc12345.live.dynatrace.com/api/v2/events/ingest</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    headers:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">      - name: Authorization</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        value: Api-Token $dynatrace-api-token    # Reference Secret</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">      - name: Content-Type</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        value: application/json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # ──── Template: Event payload gửi đến Dynatrace ────</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  template.dynatrace-deployment</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    webhook:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">      dynatrace:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        method: POST</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        body: |</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">          {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;eventType&quot;: &quot;CUSTOM_DEPLOYMENT&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;title&quot;: &quot;ArgoCD Deployment: {{.app.metadata.name}}&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;properties&quot;: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">              &quot;dt.event.deployment.name&quot;: &quot;{{.app.metadata.name}}&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">              &quot;dt.event.deployment.version&quot;: &quot;{{.app.status.sync.revision}}&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">              &quot;dt.event.deployment.project&quot;: &quot;{{.app.spec.project}}&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">              &quot;dt.event.deployment.remediation_action_type&quot;: &quot;rollback&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">              &quot;source&quot;: &quot;ArgoCD&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">              &quot;environment&quot;: &quot;{{.app.metadata.labels.env}}&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">              &quot;repository&quot;: &quot;{{.app.spec.source.repoURL}}&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">              &quot;commit_sha&quot;: &quot;{{.app.status.sync.revision}}&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;entitySelector&quot;: &quot;type(KUBERNETES_CLUSTER),kubernetesClusterId(\&quot;CLUSTER_ID\&quot;)&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">          }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # ──── Template: Sync failed notification ────</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  template.dynatrace-sync-failed</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    webhook:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">      dynatrace:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        method: POST</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        body: |</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">          {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;eventType&quot;: &quot;CUSTOM_INFO&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;title&quot;: &quot;ArgoCD Sync FAILED: {{.app.metadata.name}}&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;properties&quot;: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">              &quot;dt.event.description&quot;: &quot;Sync failed for {{.app.metadata.name}}. Phase: {{.app.status.operationState.phase}}. Message: {{.app.status.operationState.message}}&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">              &quot;source&quot;: &quot;ArgoCD&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">              &quot;severity&quot;: &quot;ERROR&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;entitySelector&quot;: &quot;type(KUBERNETES_CLUSTER),kubernetesClusterId(\&quot;CLUSTER_ID\&quot;)&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">          }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # ──── Triggers: Khi nào gửi notification ────</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  trigger.on-sync-succeeded</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    - when: app.status.operationState.phase in ['Succeeded']</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">      send: [dynatrace-deployment]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  trigger.on-sync-failed</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    - when: app.status.operationState.phase in ['Error', 'Failed']</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">      send: [dynatrace-sync-failed]</span></span></code></pre></figure>
+<h3 id="sdlc-event-types--dynatrace-hiểu-event-nào">SDLC Event Types — Dynatrace hiểu event nào<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sdlc-event-types--dynatrace-hiểu-event-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dynatrace hỗ trợ <strong>Software Development Lifecycle (SDLC) events</strong> — đây là schema chuẩn cho deployment tracking:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Event Type</th><th>Mục đích</th><th>Davis AI sử dụng</th></tr></thead><tbody><tr><td><code>CUSTOM_DEPLOYMENT</code></td><td>Đánh dấu deployment xảy ra</td><td><strong>Correlation</strong>: link problem → deployment gần nhất</td></tr><tr><td><code>CUSTOM_INFO</code></td><td>Thông tin bổ sung (sync failed, config changed)</td><td>Context cho investigation</td></tr><tr><td><code>CUSTOM_ANNOTATION</code></td><td>Annotation trên timeline</td><td>Visual marker trên dashboard charts</td></tr></tbody></table></div>
+<p><strong>Properties quan trọng</strong> mà Davis AI sử dụng:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Property</th><th>Mục đích</th></tr></thead><tbody><tr><td><code>dt.event.deployment.name</code></td><td>Tên deployment — hiển thị trong problem card</td></tr><tr><td><code>dt.event.deployment.version</code></td><td>Version — Git commit SHA hoặc app version tag</td></tr><tr><td><code>dt.event.deployment.project</code></td><td>Grouping — nhóm deployments theo project</td></tr><tr><td><code>dt.event.deployment.remediation_action_type</code></td><td>Gợi ý action khi problem detected (vd: <code>rollback</code>)</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Deployment marker = tự động Root Cause Analysis </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Khi Davis phát hiện anomaly SAU deployment event (trong window 30 phút mặc định), nó tự động tag problem là <strong>“likely caused by deployment”</strong> và hiển thị deployment info trong problem card. Điều này giúp team <strong>skip</strong> bước “gì vừa thay đổi?” — Davis đã trả lời sẵn. Trong production với hàng chục deployments/ngày, đây là <strong>tiết kiệm hàng giờ debug mỗi tuần</strong>.</p>
+</div>
+</blockquote>
+<h3 id="annotation-trên-argocd-application-để-subscribe-notifications">Annotation trên ArgoCD Application để subscribe notifications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#annotation-trên-argocd-application-để-subscribe-notifications" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">argoproj.io/v1alpha1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">Application</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">payment-service</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  annotations</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Subscribe Application này vào notification triggers</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    notifications.argoproj.io/subscribe.on-sync-succeeded.dynatrace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    notifications.argoproj.io/subscribe.on-sync-failed.dynatrace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;&quot;</span></span></code></pre></figure>
+<p>Mỗi Application cần annotation này để “opt-in” vào notification. Không có annotation = không gửi event. Thiết kế này cho phép <strong>selective notification</strong> — không phải mọi Application đều cần gửi event đến Dynatrace (vd: ArgoCD system apps không cần).</p>
+<hr/>
+<h2 id="9-tổng-kết--chọn-pattern-nào">9. Tổng kết — Chọn Pattern nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-tổng-kết--chọn-pattern-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="bảng-so-sánh-3-patterns">Bảng so sánh 3 patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-so-sánh-3-patterns" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Pattern A: PostSync Hook</th><th>Pattern B: ApplicationSet</th><th>Pattern C: App of Apps</th></tr></thead><tbody><tr><td><strong>Complexity</strong></td><td>🟢 Thấp</td><td>🟡 Trung bình</td><td>🔴 Cao</td></tr><tr><td><strong>Team size</strong></td><td>1-5 devs</td><td>5-20 devs</td><td>20+ devs</td></tr><tr><td><strong>Environments</strong></td><td>1-2</td><td>2+ (built for multi-env)</td><td>N (enterprise scale)</td></tr><tr><td><strong>RBAC</strong></td><td>Basic</td><td>Project-based</td><td>Per-component RBAC</td></tr><tr><td><strong>Setup time</strong></td><td>30 phút</td><td>2-4 giờ</td><td>1-2 ngày</td></tr><tr><td><strong>Maintenance</strong></td><td>Thấp</td><td>Trung bình</td><td>Cao (nhưng scalable)</td></tr><tr><td><strong>Use case</strong></td><td>App + monitoring cùng deploy</td><td>Multi-env DRY template</td><td>Enterprise, nhiều teams</td></tr><tr><td><strong>Config ownership</strong></td><td>1 team</td><td>1-2 teams</td><td>Nhiều teams, ownership rõ</td></tr><tr><td><strong>Flexibility</strong></td><td>Hạn chế</td><td>Tốt</td><td>Tuyệt vời</td></tr></tbody></table></div>
+<h3 id="decision-flowchart">Decision Flowchart<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#decision-flowchart" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    START[\&quot;Bạn cần GitOps cho\\nDynatrace Config?\&quot;]\n    Q1{\&quot;Bao nhiêu\\nenvironments?\&quot;}\n    Q2{\&quot;Bao nhiêu teams\\ncần RBAC riêng?\&quot;}\n    Q3{\&quot;Components có\\nlifecycle riêng?\&quot;}\n\n    A[\&quot;✅ Pattern A\\nPostSync Hook\&quot;]\n    B[\&quot;✅ Pattern B\\nApplicationSet\&quot;]\n    C[\&quot;✅ Pattern C\\nApp of Apps\&quot;]\n\n    START --> Q1\n    Q1 -->|\&quot;1-2 envs\&quot;| Q2\n    Q1 -->|\&quot;3+ envs\&quot;| Q3\n    Q2 -->|\&quot;1 team\&quot;| A\n    Q2 -->|\&quot;2+ teams\&quot;| Q3\n    Q3 -->|\&quot;Không — deploy cùng lúc\&quot;| B\n    Q3 -->|\&quot;Có — lifecycle riêng\&quot;| C&quot;">flowchart TD
+    START[&quot;Bạn cần GitOps cho\nDynatrace Config?&quot;]
+    Q1{&quot;Bao nhiêu\nenvironments?&quot;}
+    Q2{&quot;Bao nhiêu teams\ncần RBAC riêng?&quot;}
+    Q3{&quot;Components có\nlifecycle riêng?&quot;}
+
+    A[&quot;✅ Pattern A\nPostSync Hook&quot;]
+    B[&quot;✅ Pattern B\nApplicationSet&quot;]
+    C[&quot;✅ Pattern C\nApp of Apps&quot;]
+
+    START --> Q1
+    Q1 -->|&quot;1-2 envs&quot;| Q2
+    Q1 -->|&quot;3+ envs&quot;| Q3
+    Q2 -->|&quot;1 team&quot;| A
+    Q2 -->|&quot;2+ teams&quot;| Q3
+    Q3 -->|&quot;Không — deploy cùng lúc&quot;| B
+    Q3 -->|&quot;Có — lifecycle riêng&quot;| C
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="starting-recommendation">Starting Recommendation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#starting-recommendation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Nếu bạn mới bắt đầu</strong>: dùng <strong>Pattern A</strong> cho PoC. Setup 30 phút, prove value nhanh. Deploy 1 alerting profile + 1 dashboard qua PostSync Hook → thấy nó hoạt động → team buy-in.</p>
+<p><strong>Khi scale lên production</strong>: chuyển sang <strong>Pattern B</strong> khi có >2 environments. ApplicationSet giúp DRY — 1 template, N envs. Đây là sweet spot cho đa số teams.</p>
+<p><strong>Khi enterprise cần</strong>: dùng <strong>Pattern C</strong> khi có nhiều teams, nhiều components, cần RBAC per-component. Setup phức tạp hơn nhưng scale tốt nhất.</p>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Các pattern KHÔNG exclusive — có thể kết hợp </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Trong thực tế, enterprise thường dùng <strong>Pattern C (App of Apps) + Pattern B (ApplicationSet cho Monaco child)</strong> — Root Application chứa child Application cho Monaco, child Application đó dùng ApplicationSet để generate per-environment configs. Đây là combination phổ biến nhất trong production.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="links-và-references">Links và References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#links-và-references" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Next</strong>: <a href="../../../../02---areas/observability/dynatrace/monaco/07---ci-cd-pipeline--and--secret-management" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/07---ci-cd-pipeline--and--secret-management">07 - CI-CD Pipeline &amp; Secret Management</a> — CI/CD pipeline validate Monaco configs trước khi ArgoCD sync</li>
+<li><strong>Next</strong>: <a href="../../../../02---areas/observability/dynatrace/monaco/08---production-patterns--and--best-practices" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/08---production-patterns--and--best-practices">08 - Production Patterns &amp; Best Practices</a> — Patterns nâng cao: drift detection CronJob, canary config deploy, blue-green monitoring</li>
+<li><strong>MOC</strong>: <a href="../../../../moc---dynatrace" class="internal internal-link alias" data-slug="moc---dynatrace">MOC - Dynatrace</a></li>
+<li><strong>ArgoCD Docs</strong>: <a href="https://argo-cd.readthedocs.io/en/stable/user-guide/resource_hooks/" class="external external-link">Resource Hooks<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>, <a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/" class="external external-link">ApplicationSet<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>, <a href="https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/" class="external external-link">Sync Waves<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><strong>Monaco Docs</strong>: <a href="https://docs.dynatrace.com/docs/manage/configuration-as-code" class="external external-link">Configuration as Code<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><strong>Dynatrace Events API</strong>: <a href="https://docs.dynatrace.com/docs/dynatrace-api/environment-api/events-v2" class="external external-link">Events API v2<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-382" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#monaco--argocd-gitops-integration" data-for="monaco--argocd-gitops-integration">Monaco + ArgoCD GitOps Integration</a></li><li class="depth-1"><a href="#1-tại-sao-cần-gitops-cho-dynatrace-configuration" data-for="1-tại-sao-cần-gitops-cho-dynatrace-configuration">1. Tại sao cần GitOps cho Dynatrace Configuration</a></li><li class="depth-2"><a href="#scenario--câu-chuyện-bạn-sẽ-gặp-hoặc-đã-gặp" data-for="scenario--câu-chuyện-bạn-sẽ-gặp-hoặc-đã-gặp">Scenario — Câu chuyện bạn sẽ gặp (hoặc đã gặp)</a></li><li class="depth-2"><a href="#pain-points-chi-tiết--tại-sao-ui-based-config-là-bom-nổ-chậm" data-for="pain-points-chi-tiết--tại-sao-ui-based-config-là-bom-nổ-chậm">Pain points chi tiết — Tại sao UI-based config là bom nổ chậm</a></li><li class="depth-2"><a href="#gitops-principles-áp-dụng-cho-monitoring-configuration" data-for="gitops-principles-áp-dụng-cho-monitoring-configuration">GitOps principles áp dụng cho monitoring configuration</a></li><li class="depth-2"><a href="#-tại-sao-không-chỉ-dùng-monaco-cli-trong-cicd-pipeline" data-for="-tại-sao-không-chỉ-dùng-monaco-cli-trong-cicd-pipeline">💡 “Tại sao không chỉ dùng Monaco CLI trong CI/CD pipeline?”</a></li><li class="depth-1"><a href="#2-kiến-trúc-tổng-quan--2-layers-bổ-sung-nhau" data-for="2-kiến-trúc-tổng-quan--2-layers-bổ-sung-nhau">2. Kiến trúc tổng quan — 2 layers bổ sung nhau</a></li><li class="depth-2"><a href="#hiểu-đúng-argocd-và-monaco-không-overlap" data-for="hiểu-đúng-argocd-và-monaco-không-overlap">Hiểu đúng: ArgoCD và Monaco KHÔNG overlap</a></li><li class="depth-2"><a href="#mermaid-architecture-diagram" data-for="mermaid-architecture-diagram">Mermaid Architecture Diagram</a></li><li class="depth-2"><a href="#ascii-flow--step-by-step-cho-người-thích-đọc-tuần-tự" data-for="ascii-flow--step-by-step-cho-người-thích-đọc-tuần-tự">ASCII flow — Step by step cho người thích đọc tuần tự</a></li><li class="depth-2"><a href="#bảng-2-layers-chi-tiết" data-for="bảng-2-layers-chi-tiết">Bảng 2 layers chi tiết</a></li><li class="depth-1"><a href="#3-pattern-a-argocd-postsync-hook--deploy-xong-app-cập-nhật-monitoring" data-for="3-pattern-a-argocd-postsync-hook--deploy-xong-app-cập-nhật-monitoring">3. Pattern A: ArgoCD PostSync Hook — “Deploy xong app, cập nhật monitoring”</a></li><li class="depth-2"><a href="#scenario--khi-nào-bạn-cần-pattern-này" data-for="scenario--khi-nào-bạn-cần-pattern-này">Scenario — Khi nào bạn cần Pattern này</a></li><li class="depth-2"><a href="#flow-chi-tiết--6-bước-postsync" data-for="flow-chi-tiết--6-bước-postsync">Flow chi tiết — 6 bước PostSync</a></li><li class="depth-2"><a href="#k8s-job-manifest--giải-thích-từng-field-quan-trọng" data-for="k8s-job-manifest--giải-thích-từng-field-quan-trọng">K8s Job Manifest — Giải thích từng field quan trọng</a></li><li class="depth-2"><a href="#giải-thích-từng-annotation-quan-trọng" data-for="giải-thích-từng-annotation-quan-trọng">Giải thích từng annotation quan trọng</a></li><li class="depth-2"><a href="#tại-sao-dùng-init-container-pattern-cho-git-clone" data-for="tại-sao-dùng-init-container-pattern-cho-git-clone">Tại sao dùng init container pattern cho git-clone?</a></li><li class="depth-2"><a href="#khi-nào-dùng-pattern-a--và-khi-nào-không-dùng" data-for="khi-nào-dùng-pattern-a--và-khi-nào-không-dùng">Khi nào dùng Pattern A — và khi nào KHÔNG dùng</a></li><li class="depth-1"><a href="#4-pattern-b-applicationset-multi-environment" data-for="4-pattern-b-applicationset-multi-environment">4. Pattern B: ApplicationSet Multi-Environment</a></li><li class="depth-2"><a href="#scenario--dry-principle-cho-multi-env" data-for="scenario--dry-principle-cho-multi-env">Scenario — DRY principle cho multi-env</a></li><li class="depth-2"><a href="#applicationset-manifest--giải-thích-chi-tiết" data-for="applicationset-manifest--giải-thích-chi-tiết">ApplicationSet Manifest — giải thích chi tiết</a></li><li class="depth-2"><a href="#generator-types--chọn-đúng-generator-cho-đúng-use-case" data-for="generator-types--chọn-đúng-generator-cho-đúng-use-case">Generator Types — Chọn đúng generator cho đúng use case</a></li><li class="depth-2"><a href="#kustomize-overlay-pattern--mỗi-env-customize-riêng" data-for="kustomize-overlay-pattern--mỗi-env-customize-riêng">Kustomize overlay pattern — Mỗi env customize riêng</a></li><li class="depth-1"><a href="#5-pattern-c-app-of-apps--enterprise-architecture" data-for="5-pattern-c-app-of-apps--enterprise-architecture">5. Pattern C: App of Apps — Enterprise architecture</a></li><li class="depth-2"><a href="#concept--microservices-cho-gitops" data-for="concept--microservices-cho-gitops">Concept — Microservices cho GitOps</a></li><li class="depth-2"><a href="#directory-structure" data-for="directory-structure">Directory structure</a></li><li class="depth-2"><a href="#root-application-yaml" data-for="root-application-yaml">Root Application YAML</a></li><li class="depth-2"><a href="#child-application--monaco-configs" data-for="child-application--monaco-configs">Child Application — Monaco Configs</a></li><li class="depth-2"><a href="#mermaid--app-of-apps-hierarchy" data-for="mermaid--app-of-apps-hierarchy">Mermaid — App of Apps hierarchy</a></li><li class="depth-2"><a href="#khi-nào-cần-pattern-c" data-for="khi-nào-cần-pattern-c">Khi nào cần Pattern C</a></li><li class="depth-1"><a href="#6-sync-wave-ordering--thứ-tự-quan-trọng-hơn-bạn-nghĩ" data-for="6-sync-wave-ordering--thứ-tự-quan-trọng-hơn-bạn-nghĩ">6. Sync Wave Ordering — Thứ tự quan trọng hơn bạn nghĩ</a></li><li class="depth-2"><a href="#tại-sao-sai-thứ-tự--cascading-failures" data-for="tại-sao-sai-thứ-tự--cascading-failures">Tại sao sai thứ tự = cascading failures</a></li><li class="depth-2"><a href="#recommended-sync-waves--giải-thích-từng-wave" data-for="recommended-sync-waves--giải-thích-từng-wave">Recommended Sync Waves — Giải thích từng wave</a></li><li class="depth-2"><a href="#code-examples--annotations-trên-resources" data-for="code-examples--annotations-trên-resources">Code examples — Annotations trên resources</a></li><li class="depth-1"><a href="#7-git-repository-structure--mono-repo-vs-multi-repo" data-for="7-git-repository-structure--mono-repo-vs-multi-repo">7. Git Repository Structure — Mono-repo vs Multi-repo</a></li><li class="depth-2"><a href="#option-a-mono-repo--recommended-cho-team-nhỏ-trung" data-for="option-a-mono-repo--recommended-cho-team-nhỏ-trung">Option A: Mono-repo — Recommended cho team nhỏ-trung</a></li><li class="depth-2"><a href="#option-b-multi-repo--cho-enterprise-với-team-ownership-rõ-ràng" data-for="option-b-multi-repo--cho-enterprise-với-team-ownership-rõ-ràng">Option B: Multi-repo — Cho enterprise với team ownership rõ ràng</a></li><li class="depth-2"><a href="#bảng-so-sánh" data-for="bảng-so-sánh">Bảng so sánh</a></li><li class="depth-2"><a href="#best-practices--bất-kể-mono-hay-multi-repo" data-for="best-practices--bất-kể-mono-hay-multi-repo">Best Practices — Bất kể mono hay multi-repo</a></li><li class="depth-1"><a href="#8-argocd-notifications--dynatrace-events-api" data-for="8-argocd-notifications--dynatrace-events-api">8. ArgoCD Notifications → Dynatrace Events API</a></li><li class="depth-2"><a href="#tại-sao-dynatrace-cần-biết-khi-nào-deployment-xảy-ra" data-for="tại-sao-dynatrace-cần-biết-khi-nào-deployment-xảy-ra">Tại sao Dynatrace cần biết khi nào deployment xảy ra</a></li><li class="depth-2"><a href="#argocd-notifications-webhook-configuration" data-for="argocd-notifications-webhook-configuration">ArgoCD Notifications Webhook Configuration</a></li><li class="depth-2"><a href="#sdlc-event-types--dynatrace-hiểu-event-nào" data-for="sdlc-event-types--dynatrace-hiểu-event-nào">SDLC Event Types — Dynatrace hiểu event nào</a></li><li class="depth-2"><a href="#annotation-trên-argocd-application-để-subscribe-notifications" data-for="annotation-trên-argocd-application-để-subscribe-notifications">Annotation trên ArgoCD Application để subscribe notifications</a></li><li class="depth-1"><a href="#9-tổng-kết--chọn-pattern-nào" data-for="9-tổng-kết--chọn-pattern-nào">9. Tổng kết — Chọn Pattern nào?</a></li><li class="depth-2"><a href="#bảng-so-sánh-3-patterns" data-for="bảng-so-sánh-3-patterns">Bảng so sánh 3 patterns</a></li><li class="depth-2"><a href="#decision-flowchart" data-for="decision-flowchart">Decision Flowchart</a></li><li class="depth-2"><a href="#starting-recommendation" data-for="starting-recommendation">Starting Recommendation</a></li><li class="depth-1"><a href="#links-và-references" data-for="links-và-references">Links và References</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/dynatrace/monaco/00---monaco-v2-overview--and--architecture" class="internal">Monaco v2 Overview &amp; Architecture</a></li><li><a href="../../../../02---areas/observability/dynatrace/monaco/05---delete,-download--and--drift-management" class="internal">Delete Download &amp; Drift Management</a></li><li><a href="../../../../02---areas/observability/dynatrace/monaco/07---ci-cd-pipeline--and--secret-management" class="internal">CI/CD Pipeline &amp; Secret Management</a></li><li><a href="../../../../02---areas/observability/dynatrace/monaco/08---production-patterns--and--best-practices" class="internal">Production Patterns &amp; Best Practices</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

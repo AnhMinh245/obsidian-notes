@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>01.4 - Tree và Forest - Cấu trúc phân cấp AD</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="01.4 - Tree và Forest - Cấu trúc phân cấp AD"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="01.4 - Tree và Forest - Cấu trúc phân cấp AD"/><meta name="twitter:description" content="Tree và Forest - Cấu trúc phân cấp AD Tóm tắt nhanh Tree là tập hợp domains có chung DNS namespace liên tục, tự động có parent-child trust Forest là ranh giới cao nhất trong AD — chia sẻ chung 1 Schema và 1 Configuration partition Forest Root Domain là domain đầu tiên được tạo, giữ vai trò đặc biệt ..."/><meta property="og:description" content="Tree và Forest - Cấu trúc phân cấp AD Tóm tắt nhanh Tree là tập hợp domains có chung DNS namespace liên tục, tự động có parent-child trust Forest là ranh giới cao nhất trong AD — chia sẻ chung 1 Schema và 1 Configuration partition Forest Root Domain là domain đầu tiên được tạo, giữ vai trò đặc biệt ..."/><meta property="og:image:alt" content="Tree và Forest - Cấu trúc phân cấp AD Tóm tắt nhanh Tree là tập hợp domains có chung DNS namespace liên tục, tự động có parent-child trust Forest là ranh giới cao nhất trong AD — chia sẻ chung 1 Schema và 1 Configuration partition Forest Root Domain là domain đầu tiên được tạo, giữ vai trò đặc biệt ..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/01---nền-tảng/01.4---tree-và-forest---cấu-trúc-phân-cấp-ad"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/01---nền-tảng/01.4---tree-và-forest---cấu-trúc-phân-cấp-ad"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Tree và Forest - Cấu trúc phân cấp AD Tóm tắt nhanh Tree là tập hợp domains có chung DNS namespace liên tục, tự động có parent-child trust Forest là ranh giới cao nhất trong AD — chia sẻ chung 1 Schema và 1 Configuration partition Forest Root Domain là domain đầu tiên được tạo, giữ vai trò đặc biệt ..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.4---tree-và-forest---cấu-trúc-phân-cấp-ad" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-470" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-470" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/">Windows Servers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/">AD Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/">01 - Nền tảng</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>01.4 - Tree và Forest - Cấu trúc phân cấp AD</a></div></nav><h1 class="article-title">01.4 - Tree và Forest - Cấu trúc phân cấp AD</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/windows-server" class="internal internal-link tag-link">domain/windows-server</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">AD Tree</span><span class="note-properties-separator">, </span><span class="note-properties-text">AD Forest</span><span class="note-properties-separator">, </span><span class="note-properties-text">Forest and Tree</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>11 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="tree-và-forest---cấu-trúc-phân-cấp-ad">Tree và Forest - Cấu trúc phân cấp AD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tree-và-forest---cấu-trúc-phân-cấp-ad" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tóm-tắt-nhanh">Tóm tắt nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Tree</strong> là tập hợp domains có chung DNS namespace liên tục, tự động có parent-child trust</li>
+<li><strong>Forest</strong> là ranh giới cao nhất trong AD — chia sẻ chung 1 Schema và 1 Configuration partition</li>
+<li><strong>Forest Root Domain</strong> là domain đầu tiên được tạo, giữ vai trò đặc biệt không thể thay thế</li>
+<li>Một forest có thể chứa nhiều trees với <strong>disjoint namespace</strong> (namespace khác nhau)</li>
+<li>Schema là <strong>read-only trên mọi DC trừ Schema Master</strong> — thay đổi Schema ảnh hưởng toàn forest và <strong>không thể undo</strong></li>
+<li><strong>Quyết định forest design là quan trọng nhất</strong> — thay đổi sau này cực kỳ khó khăn</li>
+</ul>
+<h2 id="tree--cây-domain">Tree — Cây domain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tree--cây-domain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="định-nghĩa">Định nghĩa<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#định-nghĩa" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Tree là <strong>tập hợp 1 hoặc nhiều domains</strong> chia sẻ <strong>contiguous DNS namespace</strong> (namespace liên tục)</li>
+<li>Domain con kế thừa namespace của domain cha:</li>
+</ul>
+<pre><code>corp.example.com          ← Tree root
+├── hr.corp.example.com   ← Child domain
+├── it.corp.example.com   ← Child domain
+└── sales.corp.example.com
+    └── asia.sales.corp.example.com   ← Grandchild domain
+</code></pre>
+<blockquote>
+<p><strong>Tương tự thực tế</strong>: Tree giống như <strong>tập đoàn kinh doanh</strong> với tên thương hiệu chung. Công ty mẹ <code>corp.example.com</code> có công ty con <code>hr.corp.example.com</code>, <code>sales.corp.example.com</code> — tất cả mang họ “example.com”.</p>
+</blockquote>
+<h3 id="đặc-điểm-của-tree">Đặc điểm của Tree<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#đặc-điểm-của-tree" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>Mô tả</th><th>Ý nghĩa thực tế</th></tr></thead><tbody><tr><td>Namespace</td><td>Contiguous — domain con kế thừa DNS suffix của cha</td><td>User UPN: <code>user@hr.corp.example.com</code></td></tr><tr><td>Trust</td><td>Automatic <strong>parent-child trust</strong> (two-way, transitive)</td><td>User ở child domain tự động có thể xác thực ở parent domain</td></tr><tr><td>Quản trị</td><td>Mỗi domain có Domain Admins riêng</td><td>IT team ở <code>hr.corp.example.com</code> tự quản lý domain của mình</td></tr><tr><td>Replication</td><td>Domain partition riêng biệt cho từng domain</td><td>Dữ liệu HR không replicate sang IT domain → giảm WAN traffic</td></tr></tbody></table></div>
+<h3 id="tại-sao-tạo-child-domain">Tại sao tạo child domain?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-tạo-child-domain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Replication boundary</strong>: giảm replication traffic giữa các vùng địa lý có WAN chậm</li>
+<li><strong>Policy boundary</strong>: cần password policy hoặc security settings khác biệt hoàn toàn</li>
+<li><strong>Administrative autonomy</strong>: delegation ở level domain, không chỉ OU — IT team địa phương có toàn quyền</li>
+<li><strong>Regulatory requirement</strong>: data phải lưu tại quốc gia cụ thể, cần domain partition riêng</li>
+</ul>
+<blockquote>
+<p><strong>Lưu ý</strong>: Trend hiện đại là <strong>single domain, multiple OU</strong> — child domain chỉ tạo khi thật sự cần, vì tăng complexity đáng kể (thêm DC, DNS zone, trust management, admin overhead).</p>
+</blockquote>
+<h2 id="forest--rừng-domain">Forest — Rừng domain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#forest--rừng-domain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="định-nghĩa-1">Định nghĩa<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#định-nghĩa-1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Forest là <strong>container logic cao nhất</strong> trong Active Directory</li>
+<li>Bao gồm 1 hoặc nhiều trees</li>
+<li><strong>True security boundary</strong> — cách ly hoàn toàn giữa 2 forests (trừ khi tạo Forest Trust)</li>
+</ul>
+<blockquote>
+<p><strong>Tương tự thực tế</strong>: Forest giống như <strong>quốc gia</strong> — có hiến pháp riêng (Schema), lãnh thổ riêng (Configuration), và chỉ hợp tác với quốc gia khác qua hiệp ước ngoại giao (Forest Trust). Mọi bang/tỉnh (domains) trong quốc gia đều phải tuân theo hiến pháp.</p>
+</blockquote>
+<h3 id="các-thành-phần-được-chia-sẻ-trong-forest">Các thành phần được chia sẻ trong Forest<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-thành-phần-được-chia-sẻ-trong-forest" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thành phần</th><th>Phạm vi</th><th>Mô tả</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>Schema</strong></td><td>Toàn forest</td><td>Định nghĩa mọi object class và attribute</td><td>Thay đổi Schema = ảnh hưởng mọi DC</td></tr><tr><td><strong>Configuration</strong></td><td>Toàn forest</td><td>Sites, subnets, replication topology, services</td><td>Topology mạng chung cho toàn forest</td></tr><tr><td><strong>Global Catalog</strong></td><td>Toàn forest</td><td>Partial Attribute Set của mọi domain</td><td>Cross-domain search, UPN logon</td></tr><tr><td><strong>Enterprise Admins</strong></td><td>Toàn forest</td><td>Group có quyền cao nhất trong forest</td><td>Chỉ tồn tại ở Forest Root Domain</td></tr><tr><td><strong>Schema Admins</strong></td><td>Toàn forest</td><td>Group duy nhất có quyền sửa Schema</td><td>Chỉ tồn tại ở Forest Root Domain</td></tr><tr><td><strong>Trust</strong></td><td>Tự động giữa trees</td><td>Tree-root trust (two-way, transitive)</td><td>Mọi domain trong forest trust nhau</td></tr></tbody></table></div>
+<h3 id="forest-với-nhiều-trees">Forest với nhiều Trees<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#forest-với-nhiều-trees" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph forest[\&quot;Forest: example.com\&quot;]\n        direction TB\n        \n        subgraph tree1[\&quot;Tree 1: corp.example.com\&quot;]\n            frd[\&quot;corp.example.com&lt;br/>(Forest Root Domain)\&quot;]\n            child1[\&quot;hr.corp.example.com\&quot;]\n            child2[\&quot;it.corp.example.com\&quot;]\n            frd -->|\&quot;Parent-Child Trust\&quot;| child1\n            frd -->|\&quot;Parent-Child Trust\&quot;| child2\n        end\n\n        subgraph tree2[\&quot;Tree 2: fabrikam.com\&quot;]\n            tree2root[\&quot;fabrikam.com&lt;br/>(Tree Root)\&quot;]\n            child3[\&quot;dev.fabrikam.com\&quot;]\n            tree2root -->|\&quot;Parent-Child Trust\&quot;| child3\n        end\n\n        frd &lt;-->|\&quot;Tree-Root Trust&lt;br/>(two-way, transitive)\&quot;| tree2root\n    end\n\n    ea[\&quot;Enterprise Admins&lt;br/>(in Forest Root Domain)\&quot;]\n    sa[\&quot;Schema Admins&lt;br/>(in Forest Root Domain)\&quot;]\n    \n    ea -. \&quot;authority over entire forest\&quot; .-> forest\n    sa -. \&quot;authority to modify Schema\&quot; .-> forest&quot;">graph TD
+    subgraph forest[&quot;Forest: example.com&quot;]
+        direction TB
+        
+        subgraph tree1[&quot;Tree 1: corp.example.com&quot;]
+            frd[&quot;corp.example.com&lt;br/>(Forest Root Domain)&quot;]
+            child1[&quot;hr.corp.example.com&quot;]
+            child2[&quot;it.corp.example.com&quot;]
+            frd -->|&quot;Parent-Child Trust&quot;| child1
+            frd -->|&quot;Parent-Child Trust&quot;| child2
+        end
+
+        subgraph tree2[&quot;Tree 2: fabrikam.com&quot;]
+            tree2root[&quot;fabrikam.com&lt;br/>(Tree Root)&quot;]
+            child3[&quot;dev.fabrikam.com&quot;]
+            tree2root -->|&quot;Parent-Child Trust&quot;| child3
+        end
+
+        frd &lt;-->|&quot;Tree-Root Trust&lt;br/>(two-way, transitive)&quot;| tree2root
+    end
+
+    ea[&quot;Enterprise Admins&lt;br/>(in Forest Root Domain)&quot;]
+    sa[&quot;Schema Admins&lt;br/>(in Forest Root Domain)&quot;]
+    
+    ea -. &quot;authority over entire forest&quot; .-> forest
+    sa -. &quot;authority to modify Schema&quot; .-> forest
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>Tree 1 (<code>corp.example.com</code>) và Tree 2 (<code>fabrikam.com</code>) có <strong>disjoint namespace</strong> (namespace không liên quan)</li>
+<li>Hai trees tự động có <strong>Tree-Root Trust</strong> (two-way, transitive) khi cùng nằm trong 1 forest</li>
+<li>User ở <code>fabrikam.com</code> có thể truy cập resources ở <code>corp.example.com</code> nhờ transitive trust</li>
+<li><strong>Lý do thêm tree mới</strong>: công ty mua lại công ty khác (M&amp;A), muốn giữ DNS namespace riêng nhưng chia sẻ Schema/GC</li>
+</ul>
+<h2 id="forest-root-domain">Forest Root Domain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#forest-root-domain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="vai-trò-đặc-biệt">Vai trò đặc biệt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vai-trò-đặc-biệt" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Domain đầu tiên</strong> được tạo khi thiết lập forest mới</li>
+<li>Chứa 2 groups quan trọng nhất:
+<ul>
+<li><strong>Enterprise Admins</strong>: quyền admin trên mọi domain trong forest — auto-added vào local Administrators group trên mọi DC</li>
+<li><strong>Schema Admins</strong>: quyền duy nhất để sửa Schema — nên để <strong>trống</strong> khi không cần</li>
+</ul>
+</li>
+<li>Giữ <strong>Forest-wide FSMO roles</strong>:
+<ul>
+<li>Schema Master (1 per forest)</li>
+<li>Domain Naming Master (1 per forest)</li>
+</ul>
+</li>
+<li><strong>Không thể xoá</strong> — xoá Forest Root Domain = xoá toàn bộ forest</li>
+<li><strong>Không thể demote</strong> DC cuối cùng của Forest Root Domain</li>
+</ul>
+<h3 id="best-practice-cho-forest-root-domain">Best practice cho Forest Root Domain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#best-practice-cho-forest-root-domain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nhiều tổ chức lớn dùng <strong>dedicated (empty) root domain</strong>: <code>example.com</code> chỉ chứa Enterprise Admins/Schema Admins, không chứa user/computer thường
+<ul>
+<li><strong>Ưu điểm</strong>: isolate forest-level admin accounts, giảm attack surface, Enterprise Admins không bị ảnh hưởng nếu child domain bị compromise</li>
+<li><strong>Nhược điểm</strong>: thêm complexity, cần ít nhất 2 DC riêng cho root domain (tốn license)</li>
+</ul>
+</li>
+<li>Tổ chức nhỏ/vừa thường dùng <strong>single domain</strong> làm cả root domain và chứa users — hoàn toàn hợp lệ</li>
+<li><strong>Không bao giờ rename Forest Root Domain</strong> — ảnh hưởng toàn bộ forest trust path</li>
+</ul>
+<h2 id="quyết-định-thiết-kế-single-domain-vs-multi-domain-vs-multi-forest">Quyết định thiết kế: Single-Domain vs Multi-Domain vs Multi-Forest<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quyết-định-thiết-kế-single-domain-vs-multi-domain-vs-multi-forest" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="decision-matrix">Decision Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#decision-matrix" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    start[\&quot;Start AD Design\&quot;]\n    q1{\&quot;Need absolute&lt;br/>security isolation&lt;br/>between units?\&quot;}\n    q2{\&quot;Need replication boundary&lt;br/>or completely different&lt;br/>password policy?\&quot;}\n    q3{\&quot;Multiple different&lt;br/>DNS namespaces?\&quot;}\n    \n    single[\&quot;SINGLE DOMAIN&lt;br/>+ Multiple OUs&lt;br/>+ Sites\&quot;]\n    multi[\&quot;MULTI-DOMAIN&lt;br/>(Tree with child domains)\&quot;]\n    multiTree[\&quot;MULTI-TREE&lt;br/>(1 forest, multiple trees)\&quot;]\n    multiForest[\&quot;MULTI-FOREST&lt;br/>(separate forests)\&quot;]\n    \n    start --> q1\n    q1 -->|\&quot;Yes\&quot;| multiForest\n    q1 -->|\&quot;No\&quot;| q2\n    q2 -->|\&quot;Yes\&quot;| q3\n    q2 -->|\&quot;No\&quot;| single\n    q3 -->|\&quot;Yes\&quot;| multiTree\n    q3 -->|\&quot;No\&quot;| multi&quot;">graph TD
+    start[&quot;Start AD Design&quot;]
+    q1{&quot;Need absolute&lt;br/>security isolation&lt;br/>between units?&quot;}
+    q2{&quot;Need replication boundary&lt;br/>or completely different&lt;br/>password policy?&quot;}
+    q3{&quot;Multiple different&lt;br/>DNS namespaces?&quot;}
+    
+    single[&quot;SINGLE DOMAIN&lt;br/>+ Multiple OUs&lt;br/>+ Sites&quot;]
+    multi[&quot;MULTI-DOMAIN&lt;br/>(Tree with child domains)&quot;]
+    multiTree[&quot;MULTI-TREE&lt;br/>(1 forest, multiple trees)&quot;]
+    multiForest[&quot;MULTI-FOREST&lt;br/>(separate forests)&quot;]
+    
+    start --> q1
+    q1 -->|&quot;Yes&quot;| multiForest
+    q1 -->|&quot;No&quot;| q2
+    q2 -->|&quot;Yes&quot;| q3
+    q2 -->|&quot;No&quot;| single
+    q3 -->|&quot;Yes&quot;| multiTree
+    q3 -->|&quot;No&quot;| multi
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="so-sánh-chi-tiết">So sánh chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>Single Domain</th><th>Multi-Domain (1 Tree)</th><th>Multi-Tree (1 Forest)</th><th>Multi-Forest</th></tr></thead><tbody><tr><td><strong>Complexity</strong></td><td>Thấp nhất</td><td>Trung bình</td><td>Cao</td><td>Cao nhất</td></tr><tr><td><strong>Cost</strong></td><td>2 DC</td><td>2 DC per domain</td><td>2 DC per domain</td><td>2 DC per domain per forest</td></tr><tr><td><strong>Security isolation</strong></td><td>Không</td><td>Partial</td><td>Partial</td><td><strong>Complete</strong></td></tr><tr><td><strong>Schema</strong></td><td>1</td><td>1 (shared)</td><td>1 (shared)</td><td><strong>Separate</strong></td></tr><tr><td><strong>Replication</strong></td><td>Domain-wide</td><td>Per domain</td><td>Per domain</td><td>Per forest</td></tr><tr><td><strong>Administration</strong></td><td>Centralized</td><td>Delegated per domain</td><td>Delegated per domain</td><td><strong>Independent</strong></td></tr><tr><td><strong>Password policy</strong></td><td>1 + PSO</td><td>Per domain + PSO</td><td>Per domain + PSO</td><td>Per domain + PSO</td></tr><tr><td><strong>DNS namespace</strong></td><td>1</td><td>Contiguous</td><td><strong>Disjoint</strong></td><td>Independent</td></tr><tr><td><strong>User experience</strong></td><td>SSO toàn domain</td><td>SSO toàn forest</td><td>SSO toàn forest</td><td>SSO cần Forest Trust</td></tr><tr><td><strong>Phù hợp</strong></td><td>SMB, doanh nghiệp vừa</td><td>Enterprise, quy mô lớn</td><td>M&amp;A, đa thương hiệu</td><td>Regulated industries, M&amp;A chưa merge</td></tr></tbody></table></div>
+<h3 id="ví-dụ-thực-tế-cho-từng-mô-hình">Ví dụ thực tế cho từng mô hình<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ví-dụ-thực-tế-cho-từng-mô-hình" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Single Domain</strong>: Công ty phần mềm 500 người, 3 văn phòng (HCM, HN, DN)</p>
+<ul>
+<li><code>viettech.local</code> — 1 domain, 3 sites, OUs theo phòng ban</li>
+</ul>
+<p><strong>Multi-Domain</strong>: Tập đoàn bán lẻ 5000 người, cần tách quản lý cho mỗi khu vực</p>
+<ul>
+<li><code>retail.vn</code> (Forest Root) → <code>north.retail.vn</code> → <code>south.retail.vn</code></li>
+</ul>
+<p><strong>Multi-Tree</strong>: Tập đoàn mua lại công ty khác, giữ brand riêng</p>
+<ul>
+<li>Tree 1: <code>viettech.com</code> (Forest Root), Tree 2: <code>acquired-company.com</code></li>
+</ul>
+<p><strong>Multi-Forest</strong>: Ngân hàng + công ty chứng khoán cùng tập đoàn, quy định pháp lý yêu cầu tách biệt</p>
+<ul>
+<li>Forest 1: <code>bank.example.com</code>, Forest 2: <code>securities.example.com</code> + Forest Trust</li>
+</ul>
+<h2 id="schema">Schema<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#schema" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="schema-là-gì">Schema là gì<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#schema-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Schema <strong>định nghĩa cấu trúc</strong> của mọi object có thể tồn tại trong AD:
+<ul>
+<li><strong>Class</strong>: loại object (User, Computer, Group, OU, Contact…)</li>
+<li><strong>Attribute</strong>: thuộc tính của class (<code>displayName</code>, <code>mail</code>, <code>memberOf</code>, <code>userAccountControl</code>…)</li>
+</ul>
+</li>
+<li><strong>1 forest = 1 Schema duy nhất</strong> — replicate đến mọi DC trong forest</li>
+</ul>
+<blockquote>
+<p><strong>Tương tự thực tế</strong>: Schema giống như <strong>khuôn đúc</strong> trong nhà máy. Khuôn User quy định user object phải có: tên, email, password, department… Muốn thêm trường mới (ví dụ: mã nhân viên) → phải sửa khuôn. Nhưng khuôn đã sửa <strong>không thể undo</strong> — chỉ có thể ngừng dùng (deactivate).</p>
+</blockquote>
+<h3 id="đặc-điểm-schema">Đặc điểm Schema<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#đặc-điểm-schema" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>Mô tả</th><th>Hệ quả</th></tr></thead><tbody><tr><td><strong>Extensible</strong></td><td>Có thể thêm class/attribute mới</td><td>Exchange, Lync, SCCM đều extend Schema khi cài</td></tr><tr><td><strong>Không thể xoá</strong></td><td>Attribute/class đã thêm chỉ có thể <strong>deactivate</strong></td><td>Cần test kỹ trong lab trước khi extend production</td></tr><tr><td><strong>Versioned</strong></td><td>Mỗi lần extend → Schema version tăng</td><td>Kiểm tra version: <code>objectVersion</code> attribute trên Schema container</td></tr><tr><td><strong>Single Master</strong></td><td>Chỉ Schema Master FSMO role mới ghi được</td><td>Protect Schema Master DC, giữ offline khi không cần</td></tr><tr><td><strong>Forest-wide</strong></td><td>1 Schema cho toàn forest</td><td>Schema conflict giữa ứng dụng → cần planning kỹ</td></tr></tbody></table></div>
+<h3 id="ví-dụ-thực-tế-schema-extension">Ví dụ thực tế: Schema Extension<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ví-dụ-thực-tế-schema-extension" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống</strong>: Cài Exchange Server 2019 vào forest có sẵn AD</p>
+<ol>
+<li>Exchange setup chạy <code>setup.exe /PrepareSchema</code> — cần quyền Schema Admins</li>
+<li>Thêm ~1000+ attributes mới vào Schema (ví dụ: <code>msExchMailboxGuid</code>, <code>msExchRecipientDisplayType</code>)</li>
+<li>Extend class <code>User</code> — thêm attributes mới liên quan đến mailbox</li>
+<li>Schema replicate đến <strong>mọi DC trong forest</strong> — kể cả DC ở domain không dùng Exchange</li>
+<li><strong>Không thể undo</strong> — nếu gỡ Exchange, các attributes vẫn nằm trong Schema mãi</li>
+</ol>
+<p><strong>Quy trình an toàn</strong>:</p>
+<ul>
+<li>Test trong <strong>lab forest</strong> trước</li>
+<li>Backup System State trên Schema Master</li>
+<li>Thêm account vào Schema Admins → extend → remove khỏi Schema Admins</li>
+<li>Monitor replication: <code>repadmin /showrepl</code> trên mọi DC</li>
+</ul>
+<h3 id="schema-object-id-oid">Schema Object ID (OID)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#schema-object-id-oid" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Mỗi class/attribute có OID (Object Identifier) duy nhất toàn cầu</li>
+<li>Microsoft có dải OID: <code>1.2.840.113556.1.x.x</code></li>
+<li>Custom attributes cần OID riêng — không dùng OID của vendor khác</li>
+<li>Đăng ký OID doanh nghiệp tại IANA (hoặc generate từ Microsoft script <code>oidgen.vbs</code>)</li>
+</ul>
+<h2 id="configuration-partition">Configuration Partition<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#configuration-partition" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="nội-dung">Nội dung<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nội-dung" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Sites và Subnets</strong>: topology mạng vật lý</li>
+<li><strong>Site Links</strong>: kết nối giữa sites, schedule replication</li>
+<li><strong>Services</strong>: Exchange, DFSR, và các service đăng ký vào AD</li>
+<li><strong>Replication topology</strong>: được KCC tự động tạo</li>
+<li><strong>Partitions container</strong>: danh sách Application partitions</li>
+</ul>
+<h3 id="partition-sharing-model">Partition Sharing Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#partition-sharing-model" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph forest[\&quot;Forest\&quot;]\n        schema[\&quot;Schema Partition&lt;br/>Replicate: ALL DCs in forest\&quot;]\n        config[\&quot;Configuration Partition&lt;br/>Replicate: ALL DCs in forest\&quot;]\n        \n        subgraph domainA[\&quot;Domain: corp.example.com\&quot;]\n            dpA[\&quot;Domain Partition A&lt;br/>Replicate: only DCs in domain A\&quot;]\n            dc1[\&quot;DC-01\&quot;]\n            dc2[\&quot;DC-02\&quot;]\n        end\n        \n        subgraph domainB[\&quot;Domain: sales.example.com\&quot;]\n            dpB[\&quot;Domain Partition B&lt;br/>Replicate: only DCs in domain B\&quot;]\n            dc3[\&quot;DC-03\&quot;]\n            dc4[\&quot;DC-04\&quot;]\n        end\n\n        subgraph appPart[\&quot;Application Partitions\&quot;]\n            dnsD[\&quot;DomainDnsZones&lt;br/>Replicate: all DCs in domain\&quot;]\n            dnsF[\&quot;ForestDnsZones&lt;br/>Replicate: all DCs in forest\&quot;]\n        end\n    end\n\n    schema --> dc1\n    schema --> dc2\n    schema --> dc3\n    schema --> dc4\n    \n    config --> dc1\n    config --> dc2\n    config --> dc3\n    config --> dc4\n    \n    dpA --> dc1\n    dpA --> dc2\n    \n    dpB --> dc3\n    dpB --> dc4&quot;">graph TD
+    subgraph forest[&quot;Forest&quot;]
+        schema[&quot;Schema Partition&lt;br/>Replicate: ALL DCs in forest&quot;]
+        config[&quot;Configuration Partition&lt;br/>Replicate: ALL DCs in forest&quot;]
+        
+        subgraph domainA[&quot;Domain: corp.example.com&quot;]
+            dpA[&quot;Domain Partition A&lt;br/>Replicate: only DCs in domain A&quot;]
+            dc1[&quot;DC-01&quot;]
+            dc2[&quot;DC-02&quot;]
+        end
+        
+        subgraph domainB[&quot;Domain: sales.example.com&quot;]
+            dpB[&quot;Domain Partition B&lt;br/>Replicate: only DCs in domain B&quot;]
+            dc3[&quot;DC-03&quot;]
+            dc4[&quot;DC-04&quot;]
+        end
+
+        subgraph appPart[&quot;Application Partitions&quot;]
+            dnsD[&quot;DomainDnsZones&lt;br/>Replicate: all DCs in domain&quot;]
+            dnsF[&quot;ForestDnsZones&lt;br/>Replicate: all DCs in forest&quot;]
+        end
+    end
+
+    schema --> dc1
+    schema --> dc2
+    schema --> dc3
+    schema --> dc4
+    
+    config --> dc1
+    config --> dc2
+    config --> dc3
+    config --> dc4
+    
+    dpA --> dc1
+    dpA --> dc2
+    
+    dpB --> dc3
+    dpB --> dc4
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Tóm tắt replication scope</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Partition</th><th>Replicate đến</th><th>Ghi được từ</th></tr></thead><tbody><tr><td>Schema</td><td>Mọi DC trong forest</td><td>Chỉ Schema Master</td></tr><tr><td>Configuration</td><td>Mọi DC trong forest</td><td>Mọi DC</td></tr><tr><td>Domain</td><td>DC trong cùng domain</td><td>DC trong cùng domain (trừ RODC)</td></tr><tr><td>DomainDnsZones</td><td>DC trong cùng domain (có DNS role)</td><td>DC trong cùng domain</td></tr><tr><td>ForestDnsZones</td><td>DC trong cả forest (có DNS role)</td><td>Mọi DC có DNS role</td></tr></tbody></table></div>
+<h2 id="forest-trust-scenarios">Forest Trust Scenarios<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#forest-trust-scenarios" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="khi-nào-cần-forest-trust">Khi nào cần Forest Trust?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-nào-cần-forest-trust" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tình huống</th><th>Giải pháp</th></tr></thead><tbody><tr><td>Sáp nhập 2 công ty, mỗi bên có forest riêng</td><td><strong>Two-way Forest Trust</strong> — users cả 2 bên truy cập resources lẫn nhau</td></tr><tr><td>Đối tác kinh doanh cần truy cập 1 vài ứng dụng</td><td><strong>One-way Forest Trust + Selective Authentication</strong> — giới hạn quyền</td></tr><tr><td>Environment tách biệt (dev/staging vs production)</td><td><strong>Forest Trust</strong> hoặc <strong>không trust</strong> tuỳ nhu cầu access</td></tr><tr><td>Sau M&amp;A, muốn merge 2 forests thành 1</td><td><strong>Không có merge tool</strong> — phải migrate users/data bằng ADMT</td></tr></tbody></table></div>
+<h3 id="forest-trust-vs-external-trust">Forest Trust vs External Trust<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#forest-trust-vs-external-trust" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>Forest Trust</th><th>External Trust</th></tr></thead><tbody><tr><td>Scope</td><td>Toàn forest (mọi domain)</td><td>1 domain cụ thể</td></tr><tr><td>Transitivity</td><td>Transitive</td><td>Non-transitive</td></tr><tr><td>Yêu cầu</td><td>Forest Functional Level 2003+</td><td>Bất kỳ level</td></tr><tr><td>SID Filtering</td><td>Mặc định bật</td><td>Mặc định bật</td></tr><tr><td>Selective Auth</td><td>Hỗ trợ</td><td>Hỗ trợ</td></tr><tr><td><strong>Khuyến nghị</strong></td><td><strong>Ưu tiên</strong></td><td>Chỉ khi cần giới hạn scope</td></tr></tbody></table></div>
+<p>Chi tiết xem <a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.5---trust-relationships---quan-hệ-tin-tưởng" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.5---trust-relationships---quan-hệ-tin-tưởng">01.5 - Trust Relationships - Quan hệ tin tưởng</a></p>
+<h2 id="câu-hỏi-thường-gặp">Câu hỏi thường gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-thường-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tôi-có-thể-merge-2-forests-thành-1-không">Tôi có thể merge 2 forests thành 1 không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tôi-có-thể-merge-2-forests-thành-1-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Không có công cụ merge trực tiếp</strong> — đây là limitation lớn nhất của AD</li>
+<li>Phải dùng <strong>Active Directory Migration Tool (ADMT)</strong> để migrate users, computers, groups từng bước</li>
+<li>Quá trình phức tạp, tốn thời gian, ảnh hưởng users</li>
+<li><strong>Khuyến nghị</strong>: plan forest design kỹ từ đầu</li>
+</ul>
+<h3 id="tại-sao-forest-là-true-security-boundary-mà-domain-thì-không">Tại sao forest là true security boundary mà domain thì không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-forest-là-true-security-boundary-mà-domain-thì-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Trong cùng forest, Enterprise Admins có quyền trên mọi domain</li>
+<li>Domain Admins có thể khai thác SID History để leo thang quyền</li>
+<li>Kerberos trust path trong forest là transitive — compromise 1 domain có thể ảnh hưởng forest</li>
+<li><strong>Chỉ forest boundary</strong> mới ngăn chặn hoàn toàn các attack path này</li>
+</ul>
+<h3 id="số-lượng-domain-tối-đa-trong-1-forest">Số lượng domain tối đa trong 1 forest?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#số-lượng-domain-tối-đa-trong-1-forest" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Không có giới hạn cứng</strong> — nhưng Microsoft khuyến nghị &lt; 40 domains</li>
+<li>Mỗi domain tăng thêm: replication traffic, DNS complexity, admin overhead</li>
+<li><strong>Best practice</strong>: ít domains nhất có thể</li>
+</ul>
+<h2 id="lưu-ý-quan-trọng">Lưu ý quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Forest design là quyết định quan trọng nhất</strong> — merge/split forest sau này cực kỳ khó khăn</li>
+<li><strong>Đừng tạo child domain</strong> chỉ vì có văn phòng ở thành phố khác — dùng Sites và OU. Child domain chỉ cần khi có yêu cầu isolation thật sự</li>
+<li><strong>Schema extension không thể undo</strong> — luôn test trong lab forest trước khi apply vào production</li>
+<li><strong>Enterprise Admins và Schema Admins</strong> nên để trống hoặc chỉ có members khi cần thực hiện forest-level operations, sau đó remove</li>
+<li>Khi tạo Forest Trust giữa 2 forests, chúng vẫn giữ <strong>Schema riêng, Configuration riêng</strong> — chỉ chia sẻ authentication path</li>
+<li><strong>Functional Level</strong> của forest quyết định features có sẵn — chi tiết xem <a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level">03.2 - Schema và Functional Level</a></li>
+</ul>
+<h2 id="liên-kết">Liên kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#liên-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.2---domain---đơn-vị-quản-lý-cốt-lõi" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.2---domain---đơn-vị-quản-lý-cốt-lõi">01.2 - Domain - Đơn vị quản lý cốt lõi</a> — domain nằm trong tree/forest</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.5---trust-relationships---quan-hệ-tin-tưởng" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.5---trust-relationships---quan-hệ-tin-tưởng">01.5 - Trust Relationships - Quan hệ tin tưởng</a> — trust tự động và trust thủ công</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level">03.2 - Schema và Functional Level</a> — chi tiết Schema versioning</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication">01.6 - Global Catalog và Sites - Tìm kiếm và Replication</a> — GC chứa partial data từ mọi domain</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.1---active-directory---tổng-quan-và-kiến-trúc" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.1---active-directory---tổng-quan-và-kiến-trúc">01.1 - Active Directory - Tổng quan và kiến trúc</a> — tổng quan kiến trúc AD</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt">03.1 - FSMO Roles - 5 vai trò chủ chốt</a> — Schema Master và Domain Naming Master ở forest level</li>
+<li><a href="../../../../moc---windows-server-ad-2025" class="internal internal-link alias" data-slug="moc---windows-server-ad-2025">MOC - Windows Server AD 2025</a></li>
+</ul>
+<h2 id="tham-khảo">Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/understanding-forest-design" class="external external-link">Understanding Forest Design — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/understanding-domain-tree-design" class="external external-link">Understanding Domain Tree Design — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/ad/active-directory-schema" class="external external-link">Active Directory Schema — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/ad/how-the-schema-is-extended" class="external external-link">Schema Extensions — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-420" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#tree-và-forest---cấu-trúc-phân-cấp-ad" data-for="tree-và-forest---cấu-trúc-phân-cấp-ad">Tree và Forest - Cấu trúc phân cấp AD</a></li><li class="depth-1"><a href="#tóm-tắt-nhanh" data-for="tóm-tắt-nhanh">Tóm tắt nhanh</a></li><li class="depth-1"><a href="#tree--cây-domain" data-for="tree--cây-domain">Tree — Cây domain</a></li><li class="depth-2"><a href="#định-nghĩa" data-for="định-nghĩa">Định nghĩa</a></li><li class="depth-2"><a href="#đặc-điểm-của-tree" data-for="đặc-điểm-của-tree">Đặc điểm của Tree</a></li><li class="depth-2"><a href="#tại-sao-tạo-child-domain" data-for="tại-sao-tạo-child-domain">Tại sao tạo child domain?</a></li><li class="depth-1"><a href="#forest--rừng-domain" data-for="forest--rừng-domain">Forest — Rừng domain</a></li><li class="depth-2"><a href="#định-nghĩa-1" data-for="định-nghĩa-1">Định nghĩa</a></li><li class="depth-2"><a href="#các-thành-phần-được-chia-sẻ-trong-forest" data-for="các-thành-phần-được-chia-sẻ-trong-forest">Các thành phần được chia sẻ trong Forest</a></li><li class="depth-2"><a href="#forest-với-nhiều-trees" data-for="forest-với-nhiều-trees">Forest với nhiều Trees</a></li><li class="depth-1"><a href="#forest-root-domain" data-for="forest-root-domain">Forest Root Domain</a></li><li class="depth-2"><a href="#vai-trò-đặc-biệt" data-for="vai-trò-đặc-biệt">Vai trò đặc biệt</a></li><li class="depth-2"><a href="#best-practice-cho-forest-root-domain" data-for="best-practice-cho-forest-root-domain">Best practice cho Forest Root Domain</a></li><li class="depth-1"><a href="#quyết-định-thiết-kế-single-domain-vs-multi-domain-vs-multi-forest" data-for="quyết-định-thiết-kế-single-domain-vs-multi-domain-vs-multi-forest">Quyết định thiết kế: Single-Domain vs Multi-Domain vs Multi-Forest</a></li><li class="depth-2"><a href="#decision-matrix" data-for="decision-matrix">Decision Matrix</a></li><li class="depth-2"><a href="#so-sánh-chi-tiết" data-for="so-sánh-chi-tiết">So sánh chi tiết</a></li><li class="depth-2"><a href="#ví-dụ-thực-tế-cho-từng-mô-hình" data-for="ví-dụ-thực-tế-cho-từng-mô-hình">Ví dụ thực tế cho từng mô hình</a></li><li class="depth-1"><a href="#schema" data-for="schema">Schema</a></li><li class="depth-2"><a href="#schema-là-gì" data-for="schema-là-gì">Schema là gì</a></li><li class="depth-2"><a href="#đặc-điểm-schema" data-for="đặc-điểm-schema">Đặc điểm Schema</a></li><li class="depth-2"><a href="#ví-dụ-thực-tế-schema-extension" data-for="ví-dụ-thực-tế-schema-extension">Ví dụ thực tế: Schema Extension</a></li><li class="depth-2"><a href="#schema-object-id-oid" data-for="schema-object-id-oid">Schema Object ID (OID)</a></li><li class="depth-1"><a href="#configuration-partition" data-for="configuration-partition">Configuration Partition</a></li><li class="depth-2"><a href="#nội-dung" data-for="nội-dung">Nội dung</a></li><li class="depth-2"><a href="#partition-sharing-model" data-for="partition-sharing-model">Partition Sharing Model</a></li><li class="depth-1"><a href="#forest-trust-scenarios" data-for="forest-trust-scenarios">Forest Trust Scenarios</a></li><li class="depth-2"><a href="#khi-nào-cần-forest-trust" data-for="khi-nào-cần-forest-trust">Khi nào cần Forest Trust?</a></li><li class="depth-2"><a href="#forest-trust-vs-external-trust" data-for="forest-trust-vs-external-trust">Forest Trust vs External Trust</a></li><li class="depth-1"><a href="#câu-hỏi-thường-gặp" data-for="câu-hỏi-thường-gặp">Câu hỏi thường gặp</a></li><li class="depth-2"><a href="#tôi-có-thể-merge-2-forests-thành-1-không" data-for="tôi-có-thể-merge-2-forests-thành-1-không">Tôi có thể merge 2 forests thành 1 không?</a></li><li class="depth-2"><a href="#tại-sao-forest-là-true-security-boundary-mà-domain-thì-không" data-for="tại-sao-forest-là-true-security-boundary-mà-domain-thì-không">Tại sao forest là true security boundary mà domain thì không?</a></li><li class="depth-2"><a href="#số-lượng-domain-tối-đa-trong-1-forest" data-for="số-lượng-domain-tối-đa-trong-1-forest">Số lượng domain tối đa trong 1 forest?</a></li><li class="depth-1"><a href="#lưu-ý-quan-trọng" data-for="lưu-ý-quan-trọng">Lưu ý quan trọng</a></li><li class="depth-1"><a href="#liên-kết" data-for="liên-kết">Liên kết</a></li><li class="depth-1"><a href="#tham-khảo" data-for="tham-khảo">Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.1---active-directory---tổng-quan-và-kiến-trúc" class="internal">01.1 - Active Directory - Tổng quan và kiến trúc</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.2---domain---đơn-vị-quản-lý-cốt-lõi" class="internal">01.2 - Domain - Đơn vị quản lý cốt lõi</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal">01.3 - Domain Controller - Trái tim của AD</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.5---trust-relationships---quan-hệ-tin-tưởng" class="internal">01.5 - Trust Relationships - Quan hệ tin tưởng</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication" class="internal">01.6 - Global Catalog và Sites - Tìm kiếm và Replication</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level" class="internal">03.2 - Schema và Functional Level</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

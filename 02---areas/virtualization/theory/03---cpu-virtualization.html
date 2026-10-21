@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>CPU Virtualization</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="CPU Virtualization"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="CPU Virtualization"/><meta name="twitter:description" content="03 · CPU Virtualization ← 🖥️ Virtualization MOC 1."/><meta property="og:description" content="03 · CPU Virtualization ← 🖥️ Virtualization MOC 1."/><meta property="og:image:alt" content="03 · CPU Virtualization ← 🖥️ Virtualization MOC 1."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/virtualization/theory/03---cpu-virtualization"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/virtualization/theory/03---cpu-virtualization"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="03 · CPU Virtualization ← 🖥️ Virtualization MOC 1."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/virtualization/theory/03---cpu-virtualization" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-462" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-462" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/virtualization/">Virtualization</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/virtualization/theory/">theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>CPU Virtualization</a></div></nav><h1 class="article-title">CPU Virtualization</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/devops" class="internal internal-link tag-link">domain/devops</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Ảo hoá CPU</span><span class="note-properties-separator">, </span><span class="note-properties-text">VT-x</span><span class="note-properties-separator">, </span><span class="note-properties-text">AMD-V</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-23T17:00:00.000Z">24 thg 4, 2026</time><span>9 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="03--cpu-virtualization">03 · CPU Virtualization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#03--cpu-virtualization" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>← <a href="../../.././virtualization-moc" class="internal internal-link alias" data-slug="virtualization-moc">🖥️ Virtualization MOC</a></p>
+<hr/>
+<h2 id="1-bài-toán-cốt-lõi">1. Bài toán cốt lõi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-bài-toán-cốt-lõi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>CPU chỉ có <strong>một bộ register</strong>, <strong>một bộ đếm program counter</strong>, và <strong>một bộ interrupt controller</strong> tại mỗi thời điểm. Nhưng nhiều VM cần “sở hữu” CPU đồng thời.</p>
+<p><strong>Câu hỏi cần trả lời:</strong></p>
+<ul>
+<li>Làm sao để guest OS chạy kernel instructions (Ring 0) mà không chiếm quyền hypervisor?</li>
+<li>Làm sao để chuyển đổi giữa các VM nhanh và an toàn?</li>
+<li>Làm sao để guest OS không biết nó đang bị ảo hoá (binary compatibility)?</li>
+</ul>
+<hr/>
+<h2 id="2-lý-thuyết-popek-goldberg-về-sensitive-instructions">2. Lý thuyết Popek-Goldberg về Sensitive Instructions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-lý-thuyết-popek-goldberg-về-sensitive-instructions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-phân-loại-instruction">2.1. Phân loại instruction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-phân-loại-instruction" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>CPU instruction set chia thành 3 nhóm quan trọng cho ảo hoá:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Định nghĩa</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>Privileged</strong></td><td>Chỉ chạy ở Ring 0, Ring 3 sẽ trap</td><td><code>HLT</code>, <code>LIDT</code>, <code>MOV CR3</code></td></tr><tr><td><strong>Sensitive</strong></td><td>Thay đổi trạng thái tài nguyên hệ thống hoặc phụ thuộc vào vị trí trong memory</td><td><code>POPF</code>, <code>SGDT</code>, <code>SIDT</code></td></tr><tr><td><strong>Innocuous</strong></td><td>Không ảnh hưởng tài nguyên, chạy ở mọi ring</td><td><code>ADD</code>, <code>MOV</code>, <code>CMP</code></td></tr></tbody></table></div>
+<h3 id="22-định-lý-popek-goldberg-1974">2.2. Định lý Popek-Goldberg (1974)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-định-lý-popek-goldberg-1974" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote>
+<p><strong>“Một kiến trúc CPU có thể ảo hoá hiệu quả khi và chỉ khi tập sensitive instructions là tập con của privileged instructions.”</strong></p>
+</blockquote>
+<p>Nếu mọi sensitive instruction đều <strong>trap</strong> khi chạy ở Ring 3 → hypervisor có thể <strong>bắt và xử lý</strong> (trap-and-emulate).</p>
+<h3 id="23-vấn-đề-của-x86">2.3. Vấn đề của x86<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-vấn-đề-của-x86" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>x86 <strong>vi phạm</strong> định lý này — có 17 instruction là sensitive nhưng <strong>KHÔNG</strong> privileged:</p>
+<pre><code>SGDT, SIDT, SLDT    — Store GDT/IDT/LDT register (đọc vị trí bảng descriptor)
+SMSW                 — Store Machine Status Word
+PUSHF, POPF          — Push/Pop FLAGS register
+LAR, LSL, VERR, VERW — Segment descriptor operations
+...
+</code></pre>
+<p><strong>Tại sao nguy hiểm:</strong></p>
+<ul>
+<li><code>SGDT</code> ở Ring 3: <strong>không trap</strong>, trả về giá trị thật của GDT register</li>
+<li>Guest OS gọi <code>SGDT</code> → nhận GDT address của <strong>host</strong> thay vì guest → phát hiện đang bị ảo hoá hoặc crash</li>
+</ul>
+<p>→ x86 thuần tuý <strong>không thể</strong> dùng trap-and-emulate đơn giản. Cần giải pháp bổ sung.</p>
+<hr/>
+<h2 id="3-các-kỹ-thuật-cpu-virtualization">3. Các kỹ thuật CPU Virtualization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-các-kỹ-thuật-cpu-virtualization" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-binary-translation-bt">3.1. Binary Translation (BT)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-binary-translation-bt" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tiên phong bởi VMware</strong> (1999) — giải pháp phần mềm thuần tuý cho vấn đề x86.</p>
+<pre><code>Guest Code (Ring 0 instructions)
+         │
+         ↓
+┌───────────────────────────────────────┐
+│         Binary Translator             │
+│                                       │
+│  Quét code trước khi chạy:            │
+│  ┌───────────────────────────────┐    │
+│  │ Instruction an toàn → giữ    │    │
+│  │ Instruction sensitive → thay  │    │
+│  │   bằng equivalent an toàn     │    │
+│  │   hoặc call vào hypervisor    │    │
+│  └───────────────────────────────┘    │
+│                                       │
+│  Cache translated blocks (TCG)        │
+└──────────────────┬────────────────────┘
+                   ↓
+          Chạy translated code
+          trên CPU thật
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Ưu điểm</th><th>Nhược điểm</th></tr></thead><tbody><tr><td>Không cần sửa guest OS</td><td>Overhead 15-30% cho kernel code</td></tr><tr><td>Không cần CPU extensions</td><td>Phức tạp implement</td></tr><tr><td>Binary compatibility hoàn toàn</td><td>Translation cache chiếm RAM</td></tr></tbody></table></div>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>VMware đã patent BT</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Binary Translation là “bí quyết” giúp VMware ảo hoá x86 trước khi Intel/AMD tạo VT-x. Đây là lý do VMware có lợi thế cạnh tranh lớn giai đoạn 1999-2006.</p>
+</div>
+</blockquote>
+<h3 id="32-paravirtualization-pv">3.2. Paravirtualization (PV)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-paravirtualization-pv" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tiên phong bởi Xen</strong> (2003) — thay vì giấu guest, <strong>nói thẳng</strong> guest đang bị ảo hoá.</p>
+<pre><code>Guest OS (đã sửa đổi kernel)
+         │
+         │  Thay vì instruction đặc quyền,
+         │  gọi hypercall trực tiếp
+         │
+         ↓
+┌────────────────────┐
+│    Hypervisor       │
+│  Xử lý hypercall   │
+│  trả kết quả       │
+└────────────────────┘
+</code></pre>
+<p><strong>Hypercall</strong> tương tự <strong>syscall</strong>, nhưng thay vì app → OS, thì guest OS → hypervisor:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Syscall: app gọi kernel</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">write</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(fd, buf, len);</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       // INT 0x80 / SYSCALL instruction</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Hypercall: guest kernel gọi hypervisor</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">HYPERVISOR_mmu_update</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">   // VMCALL / VMMCALL instruction</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">HYPERVISOR_grant_table</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span></code></pre></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Ưu điểm</th><th>Nhược điểm</th></tr></thead><tbody><tr><td>Hiệu năng rất cao (gần native)</td><td>Phải sửa source code guest OS</td></tr><tr><td>Ít overhead hơn BT</td><td>Không chạy Windows (closed source)</td></tr><tr><td>Giảm trap frequency</td><td>Cần maintain kernel patch</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>Paravirt vẫn sống trong I/O</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Dù hardware-assisted đã giải quyết CPU, <strong>paravirt drivers</strong> (virtio) vẫn là chuẩn vàng cho I/O:</p>
+<ul>
+<li><code>virtio-blk</code> / <code>virtio-scsi</code> — disk</li>
+<li><code>virtio-net</code> — network</li>
+<li><code>virtio-balloon</code> — memory management</li>
+</ul>
+<p>VMware cũng dùng paravirt drivers: <strong>VMware Tools</strong> / <strong>PVSCSI</strong> / <strong>VMXNET3</strong>.</p>
+</div>
+</blockquote>
+<h3 id="33-hardware-assisted-virtualization-hw-v">3.3. Hardware-Assisted Virtualization (HW-V)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-hardware-assisted-virtualization-hw-v" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Intel VT-x</strong> (2005) / <strong>AMD-V</strong> (2006) — CPU hỗ trợ native, giải quyết triệt để vấn đề x86.</p>
+<pre><code>┌─────────────────────────────────────────────┐
+│              CPU with VT-x/AMD-V            │
+│                                             │
+│  ┌───────────────────────────────────────┐  │
+│  │  VMX Root Mode (Ring -1)              │  │
+│  │  ► Hypervisor chạy ở đây             │  │
+│  │  ► Toàn quyền kiểm soát CPU          │  │
+│  └──────────────┬────────────────────────┘  │
+│                 │                            │
+│      VM Entry (VMLAUNCH/VMRESUME)            │
+│                 │                            │
+│                 ↓                            │
+│  ┌───────────────────────────────────────┐  │
+│  │  VMX Non-root Mode                   │  │
+│  │  ► Guest OS chạy ở đây              │  │
+│  │  ► Ring 0-3 bình thường              │  │
+│  │  ► Sensitive instructions → VM Exit  │  │
+│  └──────────────┬────────────────────────┘  │
+│                 │                            │
+│      VM Exit (trap về hypervisor)            │
+│                 │                            │
+│                 ↓                            │
+│  ┌───────────────────────────────────────┐  │
+│  │  Hypervisor xử lý VM Exit            │  │
+│  │  ► Emulate instruction               │  │
+│  │  ► Update VMCS                       │  │
+│  │  ► VMRESUME → trả lại guest          │  │
+│  └───────────────────────────────────────┘  │
+└─────────────────────────────────────────────┘
+</code></pre>
+<h4 id="vmcs--virtual-machine-control-structure">VMCS — Virtual Machine Control Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vmcs--virtual-machine-control-structure" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>VMCS</strong> là cấu trúc dữ liệu trong memory mà CPU dùng để quản lý trạng thái VM:</p>
+<pre><code>VMCS (mỗi vCPU có 1 VMCS)
+├── Guest-state area
+│   ├── CR0, CR3, CR4 (control registers)
+│   ├── CS, SS, DS, ES, FS, GS (segment registers)
+│   ├── GDTR, IDTR, LDTR, TR
+│   ├── RSP, RIP, RFLAGS
+│   └── MSRs (Model Specific Registers)
+├── Host-state area
+│   ├── CR0, CR3, CR4
+│   ├── RSP, RIP
+│   └── Segment selectors
+├── VM-execution control fields
+│   ├── Pin-based controls (external interrupts, NMI)
+│   ├── Processor-based controls (HLT, I/O, MSR access)
+│   └── Exception bitmap (which exceptions cause VM Exit)
+├── VM-exit control fields
+│   └── Điều khiển hành vi khi VM Exit
+└── VM-entry control fields
+    └── Điều khiển hành vi khi VM Entry
+</code></pre>
+<p><strong>VM Entry/Exit flow:</strong></p>
+<pre><code>VM Entry (VMLAUNCH/VMRESUME):
+  1. CPU lưu host state vào VMCS host-state area
+  2. Load guest state từ VMCS guest-state area
+  3. Chuyển sang VMX non-root mode
+  4. Guest chạy native trên CPU
+
+VM Exit (tự động khi sensitive instruction):
+  1. CPU lưu guest state vào VMCS guest-state area
+  2. Load host state từ VMCS host-state area
+  3. Chuyển sang VMX root mode
+  4. Hypervisor xử lý reason code
+  5. VMRESUME → quay lại guest
+</code></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>VM Exit là &quot;chi phí&quot; lớn nhất</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Mỗi VM Exit tốn ~1000-3000 CPU cycles (context save/restore). Mục tiêu tối ưu hypervisor = <strong>giảm số lần VM Exit</strong> tối đa.</p>
+<p>Ví dụ tối ưu:</p>
+<ul>
+<li><strong>EPT</strong> loại bỏ VM Exit cho page table walks</li>
+<li><strong>APIC virtualization</strong> giảm VM Exit cho interrupt handling</li>
+<li><strong>VPID</strong> tránh flush TLB khi VM switch</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="4-so-sánh-3-kỹ-thuật">4. So sánh 3 kỹ thuật<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-so-sánh-3-kỹ-thuật" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>Binary Translation</th><th>Paravirtualization</th><th>Hardware-Assisted</th></tr></thead><tbody><tr><td><strong>Sửa guest OS?</strong></td><td>❌ Không</td><td>✅ Phải sửa kernel</td><td>❌ Không</td></tr><tr><td><strong>Cần CPU extensions?</strong></td><td>❌ Không</td><td>❌ Không</td><td>✅ VT-x / AMD-V</td></tr><tr><td><strong>Hiệu năng CPU</strong></td><td>~85% native</td><td>~95% native</td><td>~97% native</td></tr><tr><td><strong>Complexity</strong></td><td>Rất cao (VMware patent)</td><td>Trung bình</td><td>Thấp (CPU lo)</td></tr><tr><td><strong>Windows guest?</strong></td><td>✅</td><td>❌ (closed source)</td><td>✅</td></tr><tr><td><strong>Hiện tại</strong></td><td>Legacy, VMware không dùng nữa</td><td>Chỉ còn I/O (virtio)</td><td><strong>Chuẩn mặc định</strong></td></tr></tbody></table></div>
+<hr/>
+<h2 id="5-vcpu-scheduling">5. vCPU Scheduling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-vcpu-scheduling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-vcpu-là-gì">5.1. vCPU là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-vcpu-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>vCPU (virtual CPU)</strong> = một execution context mà hypervisor gán cho VM. <strong>Không phải</strong> physical core.</p>
+<pre><code>Physical Server: 2 sockets × 8 cores × 2 threads = 32 pCPUs (logical)
+
+VM allocations:
+  VM1: 4 vCPU  ─┐
+  VM2: 8 vCPU   │
+  VM3: 2 vCPU   ├── Tổng 22 vCPU ← overcommit nếu > 32
+  VM4: 4 vCPU   │
+  VM5: 4 vCPU  ─┘
+</code></pre>
+<h3 id="52-vcpu-scheduling-algorithms">5.2. vCPU Scheduling Algorithms<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-vcpu-scheduling-algorithms" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hypervisor schedule vCPU lên pCPU tương tự OS schedule process lên CPU:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Algorithm</th><th>Mô tả</th><th>Dùng bởi</th></tr></thead><tbody><tr><td><strong>BFS / CFS</strong></td><td>Linux CFS scheduler — fair share</td><td>KVM (dùng CFS của Linux kernel)</td></tr><tr><td><strong>Credit Scheduler</strong></td><td>Mỗi vCPU nhận “credits” theo weight, hết credit → preempt</td><td>Xen</td></tr><tr><td><strong>NUMA-aware</strong></td><td>Ưu tiên schedule vCPU lên pCPU cùng NUMA node với RAM</td><td>ESXi, KVM</td></tr><tr><td><strong>Co-scheduling</strong></td><td>Tất cả vCPU của 1 VM chạy đồng thời (tránh lock holder preemption)</td><td>ESXi (relaxed)</td></tr></tbody></table></div>
+<h3 id="53-cpu-overcommit-và-ảnh-hưởng">5.3. CPU Overcommit và ảnh hưởng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-cpu-overcommit-và-ảnh-hưởng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Overcommit ratio = Tổng vCPU / Tổng pCPU
+
+Ví dụ: 64 vCPU trên 32 pCPU = 2:1 ratio
+
+CPU Ready Time = thời gian vCPU MUỐN chạy nhưng phải ĐỢI pCPU
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Ratio</th><th>Tình trạng</th><th>CPU Ready</th></tr></thead><tbody><tr><td>≤ 1:1</td><td>Không overcommit, lý tưởng</td><td>&lt; 2%</td></tr><tr><td>2:1</td><td>Nhẹ, chấp nhận được cho non-critical</td><td>2-5%</td></tr><tr><td>3:1</td><td>Trung bình, cần monitor</td><td>5-10%</td></tr><tr><td>> 4:1</td><td>Cao, có thể ảnh hưởng hiệu năng</td><td>> 10% ⚠️</td></tr></tbody></table></div>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>CPU Ready > 5% là dấu hiệu cần điều tra</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>VMware: xem qua vCenter Performance tab<br/>
+KVM: <code>virsh cpu-stats &lt;vm></code><br/>
+Proxmox: web UI → VM → Summary → CPU wait</p>
+</div>
+</blockquote>
+<h3 id="54-numa-awareness">5.4. NUMA Awareness<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#54-numa-awareness" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>NUMA (Non-Uniform Memory Access)</strong> — trong server multi-socket, mỗi CPU socket có RAM “gần” (local) và RAM “xa” (remote):</p>
+<pre><code>┌─────────────────────┐     ┌─────────────────────┐
+│     NUMA Node 0     │     │     NUMA Node 1     │
+│  ┌───────┐  ┌─────┐ │     │ ┌─────┐  ┌───────┐ │
+│  │ CPU 0 │  │ RAM │ │◄───►│ │ RAM │  │ CPU 1 │ │
+│  │ cores │  │ 64G │ │ QPI │ │ 64G │  │ cores │ │
+│  └───────┘  └─────┘ │ UPI │ └─────┘  └───────┘ │
+└─────────────────────┘     └─────────────────────┘
+     Local access              Local access
+      ~80ns                      ~80ns
+           Remote access ~150ns
+</code></pre>
+<p><strong>Tại sao quan trọng cho VM:</strong></p>
+<ul>
+<li>VM 8 vCPU + 32GB RAM → nên nằm trọn trong 1 NUMA node</li>
+<li>Nếu vCPU schedule trên Node 0 nhưng RAM ở Node 1 → <strong>latency x2</strong></li>
+<li>Hypervisor tốt sẽ tự NUMA-pin VM, nhưng cần verify</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># KVM — kiểm tra NUMA topology</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">numactl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --hardware</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">virsh</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numatune</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> myvm</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ESXi — vNUMA tự động khi VM > 8 vCPU</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">esxcli</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> hardware</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> memory</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> vmnuma</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> list</span></span></code></pre></figure>
+<hr/>
+<h2 id="6-kiểm-tra-cpu-virtualization-support">6. Kiểm tra CPU Virtualization Support<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-kiểm-tra-cpu-virtualization-support" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Linux — kiểm tra VT-x / AMD-V</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -E</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> 'vmx|svm'</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> /proc/cpuinfo</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> head</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -1</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># vmx = Intel VT-x</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># svm = AMD-V (Secure Virtual Machine)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Kiểm tra KVM module</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lsmod</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> kvm</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Chi tiết hơn</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">cat</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> /sys/module/kvm_intel/parameters/nested</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # nested virt enabled?</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">cat</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> /sys/module/kvm_intel/parameters/ept</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # EPT enabled?</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Kiểm tra nested virtualization</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Intel</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">cat</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> /sys/module/kvm_intel/parameters/nested</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># AMD</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">cat</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> /sys/module/kvm_amd/parameters/nested</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Enable nested (Intel)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;options kvm_intel nested=1&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> tee</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> /etc/modprobe.d/kvm-nested.conf</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> modprobe</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> kvm_intel</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> &amp;&amp; </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> modprobe</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> kvm_intel</span></span></code></pre></figure>
+<hr/>
+<h2 id="tóm-tắt">Tóm tắt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>  1960s-1990s: Mainframe VM (IBM) — trap-and-emulate hoàn hảo
+        │
+        ↓
+  1999: VMware x86 — Binary Translation (vì x86 có sensitive ≠ privileged)
+        │
+        ↓
+  2003: Xen — Paravirtualization (sửa guest OS, dùng hypercalls)
+        │
+        ↓
+  2005-06: Intel VT-x / AMD-V — Hardware-Assisted (tạo VMX root/non-root)
+        │
+        ↓
+  Hiện tại: Hardware-Assisted + Paravirt I/O (virtio/PVSCSI/VMXNET3)
+            = Chuẩn vàng cho mọi hypervisor
+</code></pre>
+<hr/>
+<h2 id="xem-thêm">Xem thêm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#xem-thêm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../01---fundamentals" class="internal internal-link alias" data-slug="01---fundamentals">01 - Fundamentals</a> — Ring model và trap-and-emulate cơ bản</li>
+<li><a href="../../../02---areas/virtualization/theory/04---memory-virtualization" class="internal internal-link alias" data-slug="02---areas/virtualization/theory/04---memory-virtualization">04 - Memory Virtualization</a> — EPT/NPT — hardware-assisted cho memory</li>
+<li><a href="../../../02---areas/virtualization/theory/07---io-and-device-virtualization" class="internal internal-link alias" data-slug="02---areas/virtualization/theory/07---io-and-device-virtualization">07 - IO and Device Virtualization</a> — virtio, paravirt drivers</li>
+<li><a href="../../../02---areas/virtualization/theory/02---hypervisor-architecture" class="internal internal-link alias" data-slug="02---areas/virtualization/theory/02---hypervisor-architecture">02 - Hypervisor Architecture</a> — KVM/QEMU, ESXi internals</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-412" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#03--cpu-virtualization" data-for="03--cpu-virtualization">03 · CPU Virtualization</a></li><li class="depth-1"><a href="#1-bài-toán-cốt-lõi" data-for="1-bài-toán-cốt-lõi">1. Bài toán cốt lõi</a></li><li class="depth-1"><a href="#2-lý-thuyết-popek-goldberg-về-sensitive-instructions" data-for="2-lý-thuyết-popek-goldberg-về-sensitive-instructions">2. Lý thuyết Popek-Goldberg về Sensitive Instructions</a></li><li class="depth-2"><a href="#21-phân-loại-instruction" data-for="21-phân-loại-instruction">2.1. Phân loại instruction</a></li><li class="depth-2"><a href="#22-định-lý-popek-goldberg-1974" data-for="22-định-lý-popek-goldberg-1974">2.2. Định lý Popek-Goldberg (1974)</a></li><li class="depth-2"><a href="#23-vấn-đề-của-x86" data-for="23-vấn-đề-của-x86">2.3. Vấn đề của x86</a></li><li class="depth-1"><a href="#3-các-kỹ-thuật-cpu-virtualization" data-for="3-các-kỹ-thuật-cpu-virtualization">3. Các kỹ thuật CPU Virtualization</a></li><li class="depth-2"><a href="#31-binary-translation-bt" data-for="31-binary-translation-bt">3.1. Binary Translation (BT)</a></li><li class="depth-2"><a href="#32-paravirtualization-pv" data-for="32-paravirtualization-pv">3.2. Paravirtualization (PV)</a></li><li class="depth-2"><a href="#33-hardware-assisted-virtualization-hw-v" data-for="33-hardware-assisted-virtualization-hw-v">3.3. Hardware-Assisted Virtualization (HW-V)</a></li><li class="depth-1"><a href="#4-so-sánh-3-kỹ-thuật" data-for="4-so-sánh-3-kỹ-thuật">4. So sánh 3 kỹ thuật</a></li><li class="depth-1"><a href="#5-vcpu-scheduling" data-for="5-vcpu-scheduling">5. vCPU Scheduling</a></li><li class="depth-2"><a href="#51-vcpu-là-gì" data-for="51-vcpu-là-gì">5.1. vCPU là gì?</a></li><li class="depth-2"><a href="#52-vcpu-scheduling-algorithms" data-for="52-vcpu-scheduling-algorithms">5.2. vCPU Scheduling Algorithms</a></li><li class="depth-2"><a href="#53-cpu-overcommit-và-ảnh-hưởng" data-for="53-cpu-overcommit-và-ảnh-hưởng">5.3. CPU Overcommit và ảnh hưởng</a></li><li class="depth-2"><a href="#54-numa-awareness" data-for="54-numa-awareness">5.4. NUMA Awareness</a></li><li class="depth-1"><a href="#6-kiểm-tra-cpu-virtualization-support" data-for="6-kiểm-tra-cpu-virtualization-support">6. Kiểm tra CPU Virtualization Support</a></li><li class="depth-1"><a href="#tóm-tắt" data-for="tóm-tắt">Tóm tắt</a></li><li class="depth-1"><a href="#xem-thêm" data-for="xem-thêm">Xem thêm</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/virtualization/theory/01---fundamentals" class="internal">Virtualization Fundamentals</a></li><li><a href="../../../02---areas/virtualization/theory/02---hypervisor-architecture" class="internal">Hypervisor Architecture</a></li><li><a href="../../../02---areas/virtualization/theory/04---memory-virtualization" class="internal">Memory Virtualization</a></li><li><a href="../../../02---areas/virtualization/theory/07---io-and-device-virtualization" class="internal">I/O and Device Virtualization</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

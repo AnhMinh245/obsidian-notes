@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Lab 05 — Custom Metrics &amp; DogStatsD</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Lab 05 — Custom Metrics &amp; DogStatsD"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Lab 05 — Custom Metrics &amp; DogStatsD"/><meta name="twitter:description" content="Lab 05 — Custom Metrics &amp; DogStatsD ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 04 hoàn thành, Datadog Agent chạy trên Minikube 🔗 Source: Datadog DogStatsD Docs 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu DogStatsD — protocol gửi custom metrics đến Agent trong Kubernetes Phân biệt 2 transport: hostP..."/><meta property="og:description" content="Lab 05 — Custom Metrics &amp; DogStatsD ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 04 hoàn thành, Datadog Agent chạy trên Minikube 🔗 Source: Datadog DogStatsD Docs 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu DogStatsD — protocol gửi custom metrics đến Agent trong Kubernetes Phân biệt 2 transport: hostP..."/><meta property="og:image:alt" content="Lab 05 — Custom Metrics &amp; DogStatsD ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 04 hoàn thành, Datadog Agent chạy trên Minikube 🔗 Source: Datadog DogStatsD Docs 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu DogStatsD — protocol gửi custom metrics đến Agent trong Kubernetes Phân biệt 2 transport: hostP..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/labs/05---custom-metrics--and--dogstatsd"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/labs/05---custom-metrics--and--dogstatsd"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Lab 05 — Custom Metrics &amp; DogStatsD ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 04 hoàn thành, Datadog Agent chạy trên Minikube 🔗 Source: Datadog DogStatsD Docs 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu DogStatsD — protocol gửi custom metrics đến Agent trong Kubernetes Phân biệt 2 transport: hostP..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/datadog/labs/05---custom-metrics--and--dogstatsd" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-296" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-296" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/">Datadog</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/labs/">Labs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Lab 05 — Custom Metrics &amp; DogStatsD</a></div></nav><h1 class="article-title">Lab 05 — Custom Metrics &amp; DogStatsD</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/datadog" class="internal internal-link tag-link">domain/datadog</a><span class="note-properties-separator">, </span><a href="../../../../tags/labs" class="internal internal-link tag-link">labs</a><span class="note-properties-separator">, </span><a href="../../../../tags/metrics" class="internal internal-link tag-link">metrics</a><span class="note-properties-separator">, </span><a href="../../../../tags/dogstatsd" class="internal internal-link tag-link">dogstatsd</a><span class="note-properties-separator">, </span><a href="../../../../tags/custom-metrics" class="internal internal-link tag-link">custom-metrics</a><span class="note-properties-separator">, </span><a href="../../../../tags/kubernetes" class="internal internal-link tag-link">kubernetes</a><span class="note-properties-separator">, </span><a href="../../../../tags/hands-on" class="internal internal-link tag-link">hands-on</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-11T17:00:00.000Z">12 thg 6, 2026</time><span>11 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="lab-05--custom-metrics--dogstatsd">Lab 05 — Custom Metrics &amp; DogStatsD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lab-05--custom-metrics--dogstatsd" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>⏱️ <strong>Thời gian</strong>: ~45 phút<br/>
+📋 <strong>Prerequisites</strong>: <a href="../../../../02---areas/observability/datadog/labs/04---apm--and--distributed-tracing" class="internal internal-link alias" data-slug="02---areas/observability/datadog/labs/04---apm--and--distributed-tracing">Lab 04</a> hoàn thành, Datadog Agent chạy trên Minikube<br/>
+🔗 <strong>Source</strong>: <a href="https://docs.datadoghq.com/developers/dogstatsd/" class="external external-link">Datadog DogStatsD Docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</blockquote>
+<hr/>
+<h2 id="-mục-tiêu">🎯 Mục Tiêu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mục-tiêu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau lab này, bạn sẽ:</p>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Hiểu DogStatsD — protocol gửi custom metrics đến Agent trong Kubernetes</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Phân biệt 2 transport: <strong>hostPort UDP</strong> vs <strong>UDS (Unix Domain Socket)</strong></li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Khám phá existing metrics từ Storedog (trace.<em>, kubernetes.</em>)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Gửi custom metric bằng CLI từ debug Pod (netcat)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Hiểu Datadog metric types: COUNT, GAUGE, RATE, HISTOGRAM, DISTRIBUTION</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Nắm rõ HISTOGRAM sinh 5 metrics mặc định, cấu hình qua <code>histogram_aggregates</code></li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> So sánh: Datadog metric types vs Prometheus equivalents</li>
+</ul>
+<hr/>
+<h2 id="-kiến-thức-nền">📚 Kiến Thức Nền<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kiến-thức-nền" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="fundamentals">Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="../../../../02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics">Ch.03 — Metrics</a><br/>
+→ Metric types (Counter, Gauge, Histogram), metric naming, push vs pull</li>
+<li><a href="../../../../02---areas/observability/fundamentals/05---instrumentation--and--opentelemetry" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/05---instrumentation--and--opentelemetry">Ch.05 — Instrumentation</a><br/>
+→ Client libraries, StatsD protocol</li>
+</ul>
+<h3 id="cách-học-lab-này">Cách học lab này<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-học-lab-này" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Lab này dạy bạn cách thiết kế metric, không chỉ cách gửi metric </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>Trước khi gửi metric đầu tiên, hãy tự hỏi dữ liệu đó là trạng thái hiện thời, số lần xảy ra, hay phân bố latency. Chọn sai metric type sẽ làm dashboard và alert phía sau trở nên khó hiểu hoặc sai nghĩa.</li>
+<li>Trong Kubernetes, DogStatsD có 2 transport: <strong>hostPort</strong> (đơn giản, dùng trong lab) và <strong>UDS</strong> (recommended cho production vì origin detection tự động tag container metadata). Hiểu cả hai, nhưng lab dùng hostPort cho nhanh.</li>
+<li>DogStatsD rất dễ dùng nên cũng rất dễ bị lạm dụng. Giá trị của lab này nằm ở chỗ hiểu khi nào một tag là hữu ích, và khi nào bạn đang đẩy cardinality lên chỉ để đổi lấy quá ít insight.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="1-dogstatsd-trong-kubernetes">1. DogStatsD trong Kubernetes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-dogstatsd-trong-kubernetes" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-concept">1.1. Concept<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-concept" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>DogStatsD = <strong>StatsD protocol + Datadog extensions</strong>, chạy bên trong Agent DaemonSet.</p>
+<pre><code>                    Minikube Node
+┌─────────────────────────────────────────────────────┐
+│                                                     │
+│  ┌──────────────┐       ┌─────────────────────────┐ │
+│  │  App Pod      │       │  Agent Pod (DaemonSet)  │ │
+│  │  (storedog)   │       │                         │ │
+│  │               │  UDP  │  DogStatsD              │ │
+│  │  DD_AGENT_HOST├──────→│  hostPort: 8125         │ │
+│  │  = status.    │       │                         │ │
+│  │    hostIP     │       │  ┌─────────────────┐    │ │
+│  │               │       │  │ Aggregate (10s) │    │ │
+│  └──────────────┘       │  └────────┬────────┘    │ │
+│                          │           │ HTTPS       │ │
+│  ┌──────────────┐       │           ▼             │ │
+│  │  App Pod 2    │  UDS  │  Datadog Cloud          │ │
+│  │               ├──────→│  (via Forwarder)        │ │
+│  │  /var/run/    │       │                         │ │
+│  │  datadog/     │       └─────────────────────────┘ │
+│  │  dsd.socket   │                                   │
+│  └──────────────┘                                   │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="12-hai-transport-trong-k8s">1.2. Hai transport trong K8s<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-hai-transport-trong-k8s" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th><strong>hostPort UDP</strong></th><th><strong>UDS (Unix Domain Socket)</strong></th></tr></thead><tbody><tr><td><strong>Setup</strong></td><td><code>hostPort: 8125</code> trên Agent</td><td>Volume mount <code>/var/run/datadog/dsd.socket</code></td></tr><tr><td><strong>App config</strong></td><td><code>DD_AGENT_HOST=status.hostIP</code> + port 8125</td><td><code>DD_DOGSTATSD_URL=unix:///var/run/datadog/dsd.socket</code></td></tr><tr><td><strong>Origin detection</strong></td><td>Không (phải tag thủ công)</td><td>Có — tự gắn <code>pod_name</code>, <code>kube_namespace</code>, <code>container_name</code></td></tr><tr><td><strong>Performance</strong></td><td>Tốt</td><td>Tốt hơn (no network stack)</td></tr><tr><td><strong>Recommended</strong></td><td>Dev / lab</td><td><strong>Production</strong></td></tr><tr><td><strong>Lab này</strong></td><td>✅ Dùng</td><td>Đề cập cấu hình</td></tr></tbody></table></div>
+<blockquote>
+<p>🔗 <strong>Fundamentals</strong>: <a href="../../../../02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics#1-bản-chất-của-metric--tại-sao-cần-số-liệu" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics">Ch.03 — Push vs Pull</a>. DogStatsD = <strong>push model</strong> (app gửi metric đến agent). Ngược lại với <strong>Prometheus pull model</strong> (Prometheus scrape endpoint <code>/metrics</code>).</p>
+</blockquote>
+<h3 id="13-helm-values-cho-dogstatsd">1.3. Helm values cho DogStatsD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-helm-values-cho-dogstatsd" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Kiểm tra values hiện tại (đã cài từ Lab 00):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Verify DogStatsD đã enabled trong Helm release</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">helm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> values</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> yaml</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A5</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> dogstatsd</span></span></code></pre></figure>
+<p>DogStatsD hostPort mặc định đã bật trong chart <code>datadog/datadog</code>. Nếu cần enable rõ ràng:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># values-dogstatsd.yaml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">datadog</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  dogstatsd</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    port</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">8125</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    useHostPort</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # mở hostPort 8125 trên mỗi Node</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    nonLocalTraffic</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # cho phép nhận metric từ Pod khác</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # --- UDS (production recommended) ---</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # useSocketVolume: true</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # socketPath: /var/run/datadog/dsd.socket</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # hostSocketPath: /var/run/datadog/</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # --- Origin Detection (chỉ với UDS) ---</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # originDetection: true  # tự tag pod_name, namespace, container</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Apply nếu cần update</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">helm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> upgrade</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog/datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> values-dogstatsd.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --reuse-values</span></span></code></pre></figure>
+<h3 id="14-app-pod-cần-gì-để-gửi-metric">1.4. App Pod cần gì để gửi metric?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-app-pod-cần-gì-để-gửi-metric" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi app Pod cần biết Agent ở đâu — dùng <strong>Downward API</strong> lấy <code>status.hostIP</code>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Trong Deployment spec của app</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DD_AGENT_HOST</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    valueFrom</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      fieldRef</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        fieldPath</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">status.hostIP</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DD_DOGSTATSD_PORT</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;8125&quot;</span></span></code></pre></figure>
+<h3 id="15-so-sánh-dogstatsd-vs-prometheus">1.5. So sánh: DogStatsD vs Prometheus<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#15-so-sánh-dogstatsd-vs-prometheus" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>DogStatsD (Datadog)</th><th>Prometheus client</th></tr></thead><tbody><tr><td><strong>Model</strong></td><td>Push (app → agent)</td><td>Pull (prom scrapes app)</td></tr><tr><td><strong>Protocol</strong></td><td>UDP port 8125 / UDS</td><td>HTTP GET /metrics</td></tr><tr><td><strong>Aggregation</strong></td><td>Agent aggregates</td><td>Prometheus aggregates</td></tr><tr><td><strong>Container tags</strong></td><td>UDS origin detection</td><td>Service discovery labels</td></tr><tr><td><strong>Code</strong></td><td><code>statsd.increment(&quot;shop.views&quot;)</code></td><td><code>counter.inc()</code> + expose endpoint</td></tr><tr><td><strong>Flush</strong></td><td>10 giây (hardcoded)</td><td>Scrape interval (configurable)</td></tr></tbody></table></div>
+<hr/>
+<h2 id="2-khám-phá-existing-metrics">2. Khám Phá Existing Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-khám-phá-existing-metrics" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-metrics-summary">2.1. Metrics Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-metrics-summary" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Vào <strong>Metrics</strong> → <strong>Summary</strong></li>
+<li>Gõ filter: <code>trace.</code> → thấy APM-generated metrics</li>
+<li>Gõ filter: <code>kubernetes.</code> → thấy K8s metrics (thay vì <code>docker.*</code>)</li>
+<li>Gõ filter: <code>system.</code> → thấy host/node metrics</li>
+</ol>
+<h3 id="22-metric-namespaces-trong-k8s">2.2. Metric namespaces trong K8s<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-metric-namespaces-trong-k8s" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Namespace</th><th>Source</th><th>Ví dụ</th></tr></thead><tbody><tr><td><code>system.*</code></td><td>Agent (node metrics)</td><td><code>system.cpu.user</code>, <code>system.mem.used</code></td></tr><tr><td><code>kubernetes.*</code></td><td>Kubernetes integration</td><td><code>kubernetes.cpu.usage.total</code>, <code>kubernetes.memory.rss</code></td></tr><tr><td><code>kubernetes_state.*</code></td><td>KSM (Kube State Metrics)</td><td><code>kubernetes_state.deployment.replicas</code>, <code>kubernetes_state.pod.status_phase</code></td></tr><tr><td><code>trace.*</code></td><td>APM trace metrics</td><td><code>trace.flask.request.hits</code>, <code>trace.rack.request.duration</code></td></tr><tr><td><code>postgres.*</code></td><td>PostgreSQL integration</td><td><code>postgres.connections</code>, <code>postgres.rows_fetched</code></td></tr><tr><td><code>custom.*</code></td><td>DogStatsD (user-defined)</td><td>Bạn sẽ tạo ở bước tiếp</td></tr></tbody></table></div>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>K8s metrics thay thế Docker metrics </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Trong Docker labs bạn thấy <code>docker.cpu.usage</code>, <code>docker.mem.rss</code>. Trong K8s, tương đương là <code>kubernetes.cpu.usage.total</code>, <code>kubernetes.memory.rss</code>. Agent lấy metrics từ Kubelet API (port 10250 HTTPS) thay vì Docker socket.</p>
+</div>
+</blockquote>
+<h3 id="23-xem-metric-details">2.3. Xem metric details<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-xem-metric-details" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Click vào 1 metric (ví dụ: <code>kubernetes.cpu.usage.total</code>)</li>
+<li>Xem:
+<ul>
+<li><strong>Type</strong>: COUNT, GAUGE, etc.</li>
+<li><strong>Tags</strong>: <code>kube_namespace</code>, <code>kube_deployment</code>, <code>pod_name</code></li>
+<li><strong>Unit</strong>: nanocores, bytes, milliseconds</li>
+<li><strong>Hosts/Tags</strong>: Bao nhiêu tag combinations đang gửi metric này</li>
+</ul>
+</li>
+</ol>
+<hr/>
+<h2 id="3-gửi-custom-metric--cli-test-từ-pod">3. Gửi Custom Metric — CLI Test từ Pod<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-gửi-custom-metric--cli-test-từ-pod" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-tìm-agent-host-ip">3.1. Tìm Agent host IP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-tìm-agent-host-ip" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Trong K8s, bạn không thể gửi UDP trực tiếp từ host. Cần gửi <strong>từ bên trong Pod</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Cách 1: Debug Pod nhanh — gửi 1 COUNT metric</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> debug-dogstatsd</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --image=busybox</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --rm</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --restart=Never</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -c</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> 'echo &quot;custom.k8s.test:1|c|#env:lab,source:debug-pod&quot; | nc -u -w1 $(hostname -i | cut -d. -f1-3).1 8125'</span></span></code></pre></figure>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>hostname IP trick </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Lệnh trên giả định Agent DaemonSet lắng nghe trên Node IP. Cách chính xác hơn là truyền <code>DD_AGENT_HOST</code> qua env:</p>
+</div>
+</blockquote>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Cách 2: Exec vào app Pod đã có DD_AGENT_HOST</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> deploy/discounts</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> storedog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -c</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> 'echo &quot;custom.k8s.test:1|c|#env:lab&quot; | nc -u -w1 $DD_AGENT_HOST 8125'</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Cách 3: Debug Pod với DD_AGENT_HOST rõ ràng</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">NODE_IP</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pod</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -l</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> app=datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> jsonpath='{.items[0].status.hostIP}'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> debug-statsd</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --image=busybox</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --rm</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --restart=Never</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -c</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;echo 'custom.k8s.hello:42|g|#env:lab,team:sre' | nc -u -w1 </span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">$NODE_IP</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> 8125&quot;</span></span></code></pre></figure>
+<h3 id="32-dogstatsd-packet-format">3.2. DogStatsD packet format<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-dogstatsd-packet-format" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>&lt;metric_name>:&lt;value>|&lt;type>|@&lt;sample_rate>|#&lt;tag1>,&lt;tag2>
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Element</th><th>Options</th><th>Ví dụ</th></tr></thead><tbody><tr><td><code>metric_name</code></td><td>Tên metric (dots ok)</td><td><code>shop.products.viewed</code></td></tr><tr><td><code>value</code></td><td>Number</td><td><code>1</code>, <code>42</code>, <code>3.14</code></td></tr><tr><td><code>type</code></td><td><code>c</code> (count), <code>g</code> (gauge), <code>h</code> (histogram), <code>d</code> (distribution), <code>ms</code> (timer)</td><td><code>c</code></td></tr><tr><td><code>sample_rate</code></td><td>Optional, <code>@0.5</code> = 50% sampling</td><td><code>@0.1</code></td></tr><tr><td><code>tags</code></td><td>Optional, prefix <code>#</code></td><td><code>#env:dev,service:shop</code></td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Sample rate hỗ trợ những type nào? </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Sample rate (<code>@&lt;rate></code>) hỗ trợ: <strong>COUNT, HISTOGRAM, DISTRIBUTION, TIMER</strong>. Không hỗ trợ GAUGE (vì gauge là giá trị tức thời, sampling sẽ làm mất ý nghĩa).</p>
+</div>
+</blockquote>
+<h3 id="33-gửi-nhiều-metrics-từ-debug-pod">3.3. Gửi nhiều metrics từ debug Pod<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-gửi-nhiều-metrics-từ-debug-pod" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Tạo Pod chạy loop gửi business metrics</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> metric-sender</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --image=busybox</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --rm</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --restart=Never</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  --env=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;DD_AGENT_HOST=$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get pod </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">-n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">-l</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> app=datadog </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string">\</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">    -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> jsonpath='{.items[0].status.hostIP}')&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -c</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> '</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">for i in $(seq 1 20); do</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  echo &quot;shop.products.viewed:1|c|#env:lab,page:catalog&quot; | nc -u -w1 $DD_AGENT_HOST 8125</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  echo &quot;shop.cart.items:$(( RANDOM % 5 + 1 ))|g|#env:lab&quot; | nc -u -w1 $DD_AGENT_HOST 8125</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  echo &quot;shop.checkout.latency:$(( RANDOM % 300 + 50 ))|h|#env:lab,region:us&quot; | nc -u -w1 $DD_AGENT_HOST 8125</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  sleep 1</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">done</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">echo &quot;Done sending 20 rounds of metrics&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">'</span></span></code></pre></figure>
+<h3 id="34-verify-trên-datadog-ui">3.4. Verify trên Datadog UI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#34-verify-trên-datadog-ui" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Vào <strong>Metrics</strong> → <strong>Explorer</strong></li>
+<li>Tìm <code>custom.k8s.test</code> hoặc <code>shop.products.viewed</code></li>
+<li>Chờ 1-2 phút (Agent flush interval = <strong>10 giây</strong> hardcoded, nhưng propagation đến cloud mất thêm thời gian)</li>
+</ol>
+<h3 id="35-verify-từ-agent-pod">3.5. Verify từ Agent Pod<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#35-verify-từ-agent-pod" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Kiểm tra DogStatsD stats trên Agent</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ds/datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> dogstatsd-stats</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Kiểm tra DogStatsD đang listen</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ds/datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A10</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;DogStatsD&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="4-metric-types--deep-dive">4. Metric Types — Deep Dive<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-metric-types--deep-dive" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-datadog-metric-types">4.1. Datadog metric types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-datadog-metric-types" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Type</th><th>Wire Code</th><th>Use case</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>COUNT</strong></td><td><code>|c</code></td><td>Đếm events</td><td>requests, errors, purchases</td></tr><tr><td><strong>GAUGE</strong></td><td><code>|g</code></td><td>Giá trị hiện tại</td><td>queue size, temperature, active users</td></tr><tr><td><strong>RATE</strong></td><td>—</td><td>Events/second</td><td>Datadog tự tính từ COUNT</td></tr><tr><td><strong>HISTOGRAM</strong></td><td><code>|h</code></td><td>Distribution (client-side)</td><td>response time, payload size</td></tr><tr><td><strong>DISTRIBUTION</strong></td><td><code>|d</code></td><td>Global percentiles (server-side)</td><td>cross-region latency</td></tr><tr><td><strong>TIMER</strong></td><td><code>|ms</code></td><td>Duration (alias cho histogram)</td><td>function execution time</td></tr></tbody></table></div>
+<h3 id="42-histogram-sinh-5-metrics-mặc-định">4.2. HISTOGRAM sinh 5 metrics mặc định<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-histogram-sinh-5-metrics-mặc-định" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Đây là kiến thức thi quan trọng </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Khi gửi <strong>1 histogram metric</strong>, Agent tự sinh <strong>5 metrics</strong> mặc định:</p>
+</div>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Generated Metric</th><th>Suffix</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><code>&lt;name>.avg</code></td><td>Average</td><td>Giá trị trung bình trong flush interval</td></tr><tr><td><code>&lt;name>.count</code></td><td>Count</td><td>Số data points nhận được</td></tr><tr><td><code>&lt;name>.median</code></td><td>Median</td><td>Percentile 50</td></tr><tr><td><code>&lt;name>.95percentile</code></td><td>P95</td><td>Percentile 95</td></tr><tr><td><code>&lt;name>.max</code></td><td>Max</td><td>Giá trị lớn nhất</td></tr></tbody></table></div>
+<p>Cấu hình trong <code>datadog.yaml</code> (hoặc Helm values):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Thay đổi aggregations (mặc định: max, median, avg, count)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">datadog</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  histogram_aggregates</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">max</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">median</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">avg</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">count</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">min</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">              # thêm min</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Thay đổi percentiles (mặc định: 0.95)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  histogram_percentiles</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;0.50&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;0.75&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;0.95&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;0.99&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">           # thêm P99 → sinh thêm metric &lt;name>.99percentile</span></span></code></pre></figure>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Mỗi percentile/aggregate thêm = thêm custom metric </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>1 histogram metric name + 2 tag values + 7 aggregates = 14 custom metrics. Cardinality tăng rất nhanh!</p>
+</div>
+</blockquote>
+<h3 id="43-so-sánh-datadog-vs-prometheus-types">4.3. So sánh: Datadog vs Prometheus types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-so-sánh-datadog-vs-prometheus-types" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Datadog</th><th>Prometheus</th><th>Giống/Khác</th></tr></thead><tbody><tr><td>COUNT</td><td>Counter</td><td>Tương tự — monotonically increasing</td></tr><tr><td>GAUGE</td><td>Gauge</td><td>Giống — current value</td></tr><tr><td>HISTOGRAM</td><td>Histogram</td><td>Khác — DD <strong>client-side</strong> aggregate, Prom <strong>server-side</strong> buckets</td></tr><tr><td>DISTRIBUTION</td><td>Summary</td><td>Tương tự — percentiles, nhưng DD server-side aggregation</td></tr><tr><td>RATE</td><td>—</td><td>DD Agent tự tính rate từ count</td></tr><tr><td>TIMER</td><td>—</td><td>Alias cho histogram, đo duration</td></tr></tbody></table></div>
+<h3 id="44-chọn-type-nào">4.4. Chọn type nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#44-chọn-type-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Q: &quot;Đếm events?&quot;           → COUNT (|c)
+   Ví dụ: requests, errors, purchases
+
+Q: &quot;Giá trị hiện tại?&quot;     → GAUGE (|g)
+   Ví dụ: queue size, temperature, active users
+
+Q: &quot;Distribution/latency?&quot; → HISTOGRAM (|h) hoặc DISTRIBUTION (|d)
+   Ví dụ: response time, payload size
+   HISTOGRAM = client-side (5 metrics mặc định)
+   DISTRIBUTION = server-side (global percentiles, accurate cross-host)
+
+Q: &quot;Rate (events/second)?&quot; → COUNT + Datadog &quot;as_rate()&quot; function
+   Ví dụ: requests/second
+</code></pre>
+<blockquote>
+<p>🔗 <strong>Fundamentals</strong>: <a href="../../../../02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics#2-metric-types--bốn-loại-metric-cơ-bản" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics">Ch.03 — Counter, Gauge, Histogram</a>. Cùng concepts, khác naming. Prometheus Counter ≈ Datadog COUNT. Prometheus Histogram ≈ Datadog HISTOGRAM (nhưng aggregation location khác).</p>
+</blockquote>
+<hr/>
+<h2 id="5-dogstatsd--advanced-flush--uds">5. DogStatsD — Advanced: Flush &amp; UDS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-dogstatsd--advanced-flush--uds" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-flush-interval--10-giây-hardcoded">5.1. Flush interval = 10 giây (hardcoded)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-flush-interval--10-giây-hardcoded" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>App gửi metric          Agent buffer          Datadog Cloud
+  t=0  &quot;shop:1|c&quot;  ──→  ┌──────────┐
+  t=3  &quot;shop:1|c&quot;  ──→  │ count=3  │
+  t=7  &quot;shop:1|c&quot;  ──→  │          │
+                         └────┬─────┘
+  t=10 (flush)                │  HTTPS POST
+                              └──────────→   count=3 (10s bucket)
+</code></pre>
+<ul>
+<li>Flush interval là <strong>10 giây</strong>, <strong>không thể thay đổi</strong></li>
+<li>Agent tổng hợp tất cả data points trong 10s rồi gửi 1 lần</li>
+<li>Nếu app gửi <code>shop:1|c</code> 3 lần trong 10s → Agent gửi count=3</li>
+</ul>
+<h3 id="52-uds-setup-cho-production">5.2. UDS setup cho production<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-uds-setup-cho-production" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi cần <strong>origin detection</strong> (tự động tag <code>pod_name</code>, <code>kube_namespace</code>, <code>container_name</code>):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># values-uds.yaml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">datadog</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  dogstatsd</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    useSocketVolume</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    socketPath</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/var/run/datadog/dsd.socket</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    hostSocketPath</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/var/run/datadog/</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    originDetection</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">     # tự gắn container tags</span></span></code></pre></figure>
+<p>App Pod cần mount cùng volume:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># App Deployment</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  containers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">app</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DD_DOGSTATSD_URL</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;unix:///var/run/datadog/dsd.socket&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      volumeMounts</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dsdsocket</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          mountPath</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/var/run/datadog</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          readOnly</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  volumes</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dsdsocket</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      hostPath</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/var/run/datadog/</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DirectoryOrCreate</span></span></code></pre></figure>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Origin Detection = tự động UST cho DogStatsD </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Với UDS + origin detection, mọi custom metric gửi từ Pod sẽ tự được gắn <code>pod_name</code>, <code>kube_namespace</code>, <code>kube_deployment</code> — không cần app tự thêm tags thủ công. Rất mạnh cho multi-tenant clusters.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="6-metrics-explorer--advanced-queries">6. Metrics Explorer — Advanced Queries<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-metrics-explorer--advanced-queries" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-query-functions">6.1. Query functions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-query-functions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Trong Metrics Explorer, thử các functions:</p>
+<pre><code># Average CPU by Pod
+avg:kubernetes.cpu.usage.total{kube_namespace:storedog} by {pod_name}
+
+# Sum memory by Deployment
+sum:kubernetes.memory.rss{kube_namespace:storedog} by {kube_deployment}
+
+# Rate of discount requests
+avg:trace.flask.request.hits{service:store-discounts}.as_rate()
+
+# Top 5 Pods by memory
+top(avg:kubernetes.memory.rss{*} by {pod_name}, 5)
+
+# Custom metric vừa gửi
+avg:shop.products.viewed{env:lab}.as_count()
+</code></pre>
+<h3 id="62-aggregation--rollup">6.2. Aggregation &amp; Rollup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-aggregation--rollup" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Function</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><code>avg</code></td><td>Average across tags</td></tr><tr><td><code>sum</code></td><td>Sum across tags</td></tr><tr><td><code>max</code> / <code>min</code></td><td>Extremes</td></tr><tr><td><code>count</code></td><td>Number of unique tag combinations</td></tr><tr><td><code>.rollup(avg, 60)</code></td><td>Average over 60s buckets</td></tr><tr><td><code>.as_rate()</code></td><td>Convert count to rate (per second)</td></tr><tr><td><code>.as_count()</code></td><td>Raw count</td></tr></tbody></table></div>
+<hr/>
+<h2 id="️-troubleshooting">⚠️ Troubleshooting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#️-troubleshooting" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="custom-metric-không-hiện-trên-ui">Custom metric không hiện trên UI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#custom-metric-không-hiện-trên-ui" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 1. Verify DogStatsD listening trên Agent</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ds/datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A10</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;DogStatsD&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Phải thấy: &quot;DogStatsD&quot; section với &quot;Packets received: N&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 2. Kiểm tra Agent nhận được stats</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ds/datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> dogstatsd-stats</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Phải thấy metric names bạn vừa gửi</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 3. Kiểm tra hostPort đang mở</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> yaml</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;hostPort&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Phải thấy hostPort: 8125</span></span></code></pre></figure>
+<h3 id="netcat-không-gửi-được-từ-debug-pod">netcat không gửi được từ debug Pod<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#netcat-không-gửi-được-từ-debug-pod" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Kiểm tra Node IP mà Pod chạy trên</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> wide</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Cột NODE cho biết Agent chạy trên node nào</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Verify connectivity</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> debug-net</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --image=busybox</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --rm</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --restart=Never</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -c</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> 'nc -zvu &lt;NODE_IP> 8125'</span></span></code></pre></figure>
+<h3 id="metric-hiện-nhưng-value-sai">Metric hiện nhưng value sai<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#metric-hiện-nhưng-value-sai" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>COUNT metrics: Datadog normalize thành <strong>rate per second</strong> by default</li>
+<li>Dùng <code>.as_count()</code> để xem raw count</li>
+<li>Flush interval = <strong>10 giây (hardcoded)</strong> — không thể thay đổi</li>
+<li>HISTOGRAM tạo 5 metrics mặc định — check suffix <code>.avg</code>, <code>.count</code>, <code>.median</code>, <code>.95percentile</code>, <code>.max</code></li>
+</ul>
+<h3 id="dogstatsd-nonlocaltraffic">DogStatsD nonLocalTraffic<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dogstatsd-nonlocaltraffic" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Nếu Agent chỉ nhận từ localhost, Pods khác không gửi được</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Kiểm tra env var</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ds/datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> env</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> NON_LOCAL</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Phải thấy DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true</span></span></code></pre></figure>
+<hr/>
+<h2 id="-kết-nối-fundamentals">🔗 Kết Nối Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kết-nối-fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept (Fundamentals)</th><th>Datadog K8s Implementation</th></tr></thead><tbody><tr><td><strong>Push vs Pull</strong> (Ch.03)</td><td>DogStatsD = push model (hostPort 8125 / UDS)</td></tr><tr><td><strong>Counter</strong> (Ch.03)</td><td>Datadog COUNT (<code>|c</code>)</td></tr><tr><td><strong>Gauge</strong> (Ch.03)</td><td>Datadog GAUGE (<code>|g</code>)</td></tr><tr><td><strong>Histogram</strong> (Ch.03)</td><td>Datadog HISTOGRAM (<code>|h</code>) → sinh 5 metrics mặc định</td></tr><tr><td><strong>Metric Naming</strong> (Ch.03)</td><td><code>namespace.metric_name</code> + tags</td></tr><tr><td><strong>Custom Metrics</strong> (Ch.03)</td><td>Business-specific: shop.revenue, user.signups</td></tr><tr><td><strong>Container Context</strong> (Ch.08)</td><td>UDS origin detection → tự tag pod_name, namespace</td></tr><tr><td><strong>Downward API</strong> (K8s)</td><td><code>status.hostIP</code> → DD_AGENT_HOST cho mỗi Pod</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-verify-checklist">✅ Verify Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-verify-checklist" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> <code>agent status</code> hiện DogStatsD section với packets received > 0</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Metrics Summary: tìm được <code>trace.*</code>, <code>kubernetes.*</code>, <code>system.*</code> metrics</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Gửi custom metric từ debug Pod bằng netcat thành công</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Custom metric hiện trên Metrics Explorer (chờ ~2 phút)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Hiểu sự khác biệt COUNT vs GAUGE vs HISTOGRAM vs DISTRIBUTION</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Biết HISTOGRAM sinh 5 metrics mặc định, cấu hình bằng <code>histogram_aggregates</code></li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Metrics Explorer: query với functions (avg, sum, as_rate, as_count)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Hiểu flush interval = 10s hardcoded</li>
+</ul>
+<hr/>
+<p><strong>Bước tiếp theo:</strong> <a href="../../../../02---areas/observability/datadog/labs/06---dashboards--and--visualization" class="internal internal-link alias" data-slug="02---areas/observability/datadog/labs/06---dashboards--and--visualization">06 - Dashboards &amp; Visualization</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-246" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#lab-05--custom-metrics--dogstatsd" data-for="lab-05--custom-metrics--dogstatsd">Lab 05 — Custom Metrics &amp; DogStatsD</a></li><li class="depth-1"><a href="#-mục-tiêu" data-for="-mục-tiêu">🎯 Mục Tiêu</a></li><li class="depth-1"><a href="#-kiến-thức-nền" data-for="-kiến-thức-nền">📚 Kiến Thức Nền</a></li><li class="depth-2"><a href="#fundamentals" data-for="fundamentals">Fundamentals</a></li><li class="depth-2"><a href="#cách-học-lab-này" data-for="cách-học-lab-này">Cách học lab này</a></li><li class="depth-1"><a href="#1-dogstatsd-trong-kubernetes" data-for="1-dogstatsd-trong-kubernetes">1. DogStatsD trong Kubernetes</a></li><li class="depth-2"><a href="#11-concept" data-for="11-concept">1.1. Concept</a></li><li class="depth-2"><a href="#12-hai-transport-trong-k8s" data-for="12-hai-transport-trong-k8s">1.2. Hai transport trong K8s</a></li><li class="depth-2"><a href="#13-helm-values-cho-dogstatsd" data-for="13-helm-values-cho-dogstatsd">1.3. Helm values cho DogStatsD</a></li><li class="depth-2"><a href="#14-app-pod-cần-gì-để-gửi-metric" data-for="14-app-pod-cần-gì-để-gửi-metric">1.4. App Pod cần gì để gửi metric?</a></li><li class="depth-2"><a href="#15-so-sánh-dogstatsd-vs-prometheus" data-for="15-so-sánh-dogstatsd-vs-prometheus">1.5. So sánh: DogStatsD vs Prometheus</a></li><li class="depth-1"><a href="#2-khám-phá-existing-metrics" data-for="2-khám-phá-existing-metrics">2. Khám Phá Existing Metrics</a></li><li class="depth-2"><a href="#21-metrics-summary" data-for="21-metrics-summary">2.1. Metrics Summary</a></li><li class="depth-2"><a href="#22-metric-namespaces-trong-k8s" data-for="22-metric-namespaces-trong-k8s">2.2. Metric namespaces trong K8s</a></li><li class="depth-2"><a href="#23-xem-metric-details" data-for="23-xem-metric-details">2.3. Xem metric details</a></li><li class="depth-1"><a href="#3-gửi-custom-metric--cli-test-từ-pod" data-for="3-gửi-custom-metric--cli-test-từ-pod">3. Gửi Custom Metric — CLI Test từ Pod</a></li><li class="depth-2"><a href="#31-tìm-agent-host-ip" data-for="31-tìm-agent-host-ip">3.1. Tìm Agent host IP</a></li><li class="depth-2"><a href="#32-dogstatsd-packet-format" data-for="32-dogstatsd-packet-format">3.2. DogStatsD packet format</a></li><li class="depth-2"><a href="#33-gửi-nhiều-metrics-từ-debug-pod" data-for="33-gửi-nhiều-metrics-từ-debug-pod">3.3. Gửi nhiều metrics từ debug Pod</a></li><li class="depth-2"><a href="#34-verify-trên-datadog-ui" data-for="34-verify-trên-datadog-ui">3.4. Verify trên Datadog UI</a></li><li class="depth-2"><a href="#35-verify-từ-agent-pod" data-for="35-verify-từ-agent-pod">3.5. Verify từ Agent Pod</a></li><li class="depth-1"><a href="#4-metric-types--deep-dive" data-for="4-metric-types--deep-dive">4. Metric Types — Deep Dive</a></li><li class="depth-2"><a href="#41-datadog-metric-types" data-for="41-datadog-metric-types">4.1. Datadog metric types</a></li><li class="depth-2"><a href="#42-histogram-sinh-5-metrics-mặc-định" data-for="42-histogram-sinh-5-metrics-mặc-định">4.2. HISTOGRAM sinh 5 metrics mặc định</a></li><li class="depth-2"><a href="#43-so-sánh-datadog-vs-prometheus-types" data-for="43-so-sánh-datadog-vs-prometheus-types">4.3. So sánh: Datadog vs Prometheus types</a></li><li class="depth-2"><a href="#44-chọn-type-nào" data-for="44-chọn-type-nào">4.4. Chọn type nào?</a></li><li class="depth-1"><a href="#5-dogstatsd--advanced-flush--uds" data-for="5-dogstatsd--advanced-flush--uds">5. DogStatsD — Advanced: Flush &amp; UDS</a></li><li class="depth-2"><a href="#51-flush-interval--10-giây-hardcoded" data-for="51-flush-interval--10-giây-hardcoded">5.1. Flush interval = 10 giây (hardcoded)</a></li><li class="depth-2"><a href="#52-uds-setup-cho-production" data-for="52-uds-setup-cho-production">5.2. UDS setup cho production</a></li><li class="depth-1"><a href="#6-metrics-explorer--advanced-queries" data-for="6-metrics-explorer--advanced-queries">6. Metrics Explorer — Advanced Queries</a></li><li class="depth-2"><a href="#61-query-functions" data-for="61-query-functions">6.1. Query functions</a></li><li class="depth-2"><a href="#62-aggregation--rollup" data-for="62-aggregation--rollup">6.2. Aggregation &amp; Rollup</a></li><li class="depth-1"><a href="#️-troubleshooting" data-for="️-troubleshooting">⚠️ Troubleshooting</a></li><li class="depth-2"><a href="#custom-metric-không-hiện-trên-ui" data-for="custom-metric-không-hiện-trên-ui">Custom metric không hiện trên UI</a></li><li class="depth-2"><a href="#netcat-không-gửi-được-từ-debug-pod" data-for="netcat-không-gửi-được-từ-debug-pod">netcat không gửi được từ debug Pod</a></li><li class="depth-2"><a href="#metric-hiện-nhưng-value-sai" data-for="metric-hiện-nhưng-value-sai">Metric hiện nhưng value sai</a></li><li class="depth-2"><a href="#dogstatsd-nonlocaltraffic" data-for="dogstatsd-nonlocaltraffic">DogStatsD nonLocalTraffic</a></li><li class="depth-1"><a href="#-kết-nối-fundamentals" data-for="-kết-nối-fundamentals">🔗 Kết Nối Fundamentals</a></li><li class="depth-1"><a href="#-verify-checklist" data-for="-verify-checklist">✅ Verify Checklist</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/datadog/labs/04---apm--and--distributed-tracing" class="internal">Lab 04 — APM &amp; Distributed Tracing</a></li><li><a href="../../../../02---areas/observability/datadog/labs/06---dashboards--and--visualization" class="internal">Lab 06 — Dashboards &amp; Visualization</a></li><li><a href="../../../../02---areas/observability/labs/00---lab-overview--and--roadmap" class="internal">Observability Platform Labs — Tổng Quan &amp; Lộ Trình</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

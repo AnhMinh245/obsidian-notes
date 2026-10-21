@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>16 – Storage Extras</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="16 – Storage Extras"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="16 – Storage Extras"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 16 – Storage Extras Snow Family, FSx, Storage Gateway, Transfer Family, DataSync — các dịch vụ storage “ngoài” EBS/EFS/S3 core nhưng rất hay ra thi vì dễ nhầm use case."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 16 – Storage Extras Snow Family, FSx, Storage Gateway, Transfer Family, DataSync — các dịch vụ storage “ngoài” EBS/EFS/S3 core nhưng rất hay ra thi vì dễ nhầm use case."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 16 – Storage Extras Snow Family, FSx, Storage Gateway, Transfer Family, DataSync — các dịch vụ storage “ngoài” EBS/EFS/S3 core nhưng rất hay ra thi vì dễ nhầm use case."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/16---storage-extras"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/16---storage-extras"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 16 – Storage Extras Snow Family, FSx, Storage Gateway, Transfer Family, DataSync — các dịch vụ storage “ngoài” EBS/EFS/S3 core nhưng rất hay ra thi vì dễ nhầm use case."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/16---storage-extras" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-84" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-84" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>16 – Storage Extras</a></div></nav><h1 class="article-title">16 – Storage Extras</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Storage Extras</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Snowball</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Snow Family</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon FSx</span><span class="note-properties-separator">, </span><span class="note-properties-text">Storage Gateway</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS DataSync</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Transfer Family</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-07-28T17:00:00.000Z">29 thg 7, 2026</time><span>12 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="16--storage-extras">16 – Storage Extras<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#16--storage-extras" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>Snow Family, FSx, Storage Gateway, Transfer Family, DataSync — các dịch vụ storage “ngoài” EBS/EFS/S3 core nhưng <strong>rất hay ra thi</strong> vì dễ nhầm use case.</p>
+<hr/>
+<h2 id="aws-snow-family">AWS Snow Family<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-snow-family" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Snow Family</strong> = thiết bị vật lý <strong>bảo mật cao, di động</strong> để:</p>
+<ul>
+<li>Thu thập / xử lý data tại <strong>edge</strong></li>
+<li>Migrate data <strong>vào hoặc ra</strong> AWS (offline)</li>
+<li>Phù hợp khi mạng quá chậm / đắt / không ổn định</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260729121154.png" alt width="auto" height="auto"/></p>
+<h3 id="quy-mô-thiết-bị-hay-hỏi-trong-thi">Quy mô thiết bị (hay hỏi trong thi)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quy-mô-thiết-bị-hay-hỏi-trong-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thiết bị</th><th>Quy mô data (order of magnitude)</th><th>Ghi chú</th></tr></thead><tbody><tr><td><strong>Snowcone</strong></td><td>Vài <strong>TB</strong></td><td>Nhỏ, nhẹ, có thể chạy compute nhẹ</td></tr><tr><td><strong>Snowball Edge</strong></td><td>Tới mức <strong>PB</strong> (nhiều device)</td><td>Storage Optimized / Compute Optimized</td></tr><tr><td><strong>Snowmobile</strong></td><td>Tới mức <strong>EB</strong> (exabyte)</td><td>“Container truck” — migrate data center lớn</td></tr></tbody></table></div>
+<blockquote>
+<p>Nhớ theo bậc: <strong>Snowcone (TB) → Snowball (PB) → Snowmobile (EB)</strong>.</p>
+</blockquote>
+<h3 id="khi-nào-dùng-snow-thay-vì-transfer-qua-mạng">Khi nào dùng Snow thay vì transfer qua mạng?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-nào-dùng-snow-thay-vì-transfer-qua-mạng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="../../.././../../attachments/pasted-image-20260729121206.png" alt width="auto" height="auto"/></p>
+<p><strong>Thách thức của transfer online:</strong></p>
+<ul>
+<li>Connectivity hạn chế / không ổn định</li>
+<li>Bandwidth hẹp hoặc <strong>shared</strong> (không maximize được đường truyền)</li>
+<li>Chi phí mạng cao (egress / dedicated line đắt)</li>
+</ul>
+<blockquote>
+<p><strong>Rule of thumb (Stephane):</strong> Nếu transfer qua mạng <strong>> 1 tuần</strong> → dùng thiết bị Snow (offline).</p>
+</blockquote>
+<p><img src="../../.././../../attachments/pasted-image-20260729121235.png" alt width="auto" height="auto"/></p>
+<h3 id="flow-migrate-điển-hình-import-vào-aws">Flow migrate điển hình (import vào AWS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#flow-migrate-điển-hình-import-vào-aws" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant You as Bạn / Data center\n    participant AWS as AWS\n    participant Device as Snowball\n    participant S3 as Amazon S3\n\n    You->>AWS: Order Snowball\n    AWS->>You: Ship thiết bị\n    You->>Device: Copy data vào device (encrypted)\n    You->>AWS: Ship trả lại\n    AWS->>S3: Import data vào bucket\n    AWS->>You: Job hoàn tất&quot;">sequenceDiagram
+    participant You as Bạn / Data center
+    participant AWS as AWS
+    participant Device as Snowball
+    participant S3 as Amazon S3
+
+    You->>AWS: Order Snowball
+    AWS->>You: Ship thiết bị
+    You->>Device: Copy data vào device (encrypted)
+    You->>AWS: Ship trả lại
+    AWS->>S3: Import data vào bucket
+    AWS->>You: Job hoàn tất
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>Data trên device được <strong>encrypt</strong> (keys quản lý qua KMS trong quy trình AWS).</li>
+<li>Có thể <strong>export</strong> ngược: lấy data từ S3 ra device rồi ship về on-premises.</li>
+</ul>
+<h3 id="edge-computing-với-snowball-edge">Edge Computing với Snowball Edge<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#edge-computing-với-snowball-edge" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Edge Computing</strong> = xử lý data <strong>ngay nơi data được tạo</strong>, trước khi (hoặc thay vì) gửi về cloud.</p>
+<p>Ví dụ vị trí: xe tải, tàu biển, trạm khai thác dưới lòng đất — Internet kém / không có compute tại chỗ.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thiết bị</th><th>Mục đích</th></tr></thead><tbody><tr><td><strong>Snowball Edge Compute Optimized</strong></td><td>Edge compute (ưu tiên CPU/GPU)</td></tr><tr><td><strong>Snowball Edge Storage Optimized</strong></td><td>Edge storage dung lượng lớn</td></tr></tbody></table></div>
+<p>Trên Snowball Edge có thể chạy:</p>
+<ul>
+<li><strong>EC2 instances</strong></li>
+<li><strong>Lambda functions</strong> (compute tại device)</li>
+</ul>
+<p><strong>Use cases:</strong> preprocess data (lọc/nén trước khi gửi cloud), machine learning tại chỗ, transcoding media.</p>
+<h3 id="snowball--glacier-không-import-trực-tiếp">Snowball → Glacier: không import trực tiếp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#snowball--glacier-không-import-trực-tiếp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Snow[\&quot;Snowball\&quot;] -->|\&quot;import\&quot;| S3[\&quot;Amazon S3\&quot;]\n    S3 -->|\&quot;Lifecycle Policy\&quot;| Glacier[\&quot;S3 Glacier / Deep Archive\&quot;]&quot;">graph LR
+    Snow[&quot;Snowball&quot;] -->|&quot;import&quot;| S3[&quot;Amazon S3&quot;]
+    S3 -->|&quot;Lifecycle Policy&quot;| Glacier[&quot;S3 Glacier / Deep Archive&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>Snowball <strong>không</strong> import thẳng vào Glacier.</li>
+<li>Phải vào <strong>S3 trước</strong>, rồi dùng <strong>S3 Lifecycle Policy</strong> transition sang Glacier.</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260729121308.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Điểm thi:</strong> “Migrate petabyte rồi archive Glacier” → Snowball → S3 → Lifecycle → Glacier. <strong>Không</strong> chọn “Snowball trực tiếp Glacier”.</p>
+</blockquote>
+<hr/>
+<h2 id="amazon-fsx--overview">Amazon FSx – Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-fsx--overview" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Amazon FSx</strong> = launch <strong>file system third-party hiệu năng cao</strong> trên AWS — <strong>fully managed</strong> (patch, backup, HA tùy loại).</p>
+<p><img src="../../.././../../attachments/pasted-image-20260729121328.png" alt width="auto" height="auto"/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>FSx</th><th>Protocol / hệ</th><th>Use case nổi bật</th></tr></thead><tbody><tr><td><strong>Windows File Server</strong></td><td>SMB, NTFS</td><td>Share Windows, AD, DFS</td></tr><tr><td><strong>Lustre</strong></td><td>Parallel FS (Linux/cluster)</td><td>HPC, ML, video, finance</td></tr><tr><td><strong>NetApp ONTAP</strong></td><td>NFS, SMB, iSCSI</td><td>Migrate ONTAP/NAS, multi-OS</td></tr><tr><td><strong>OpenZFS</strong></td><td>NFS v3/v4.x</td><td>Migrate ZFS, clone nhanh</td></tr></tbody></table></div>
+<p><strong>Khác EFS thế nào?</strong></p>
+<ul>
+<li><strong>EFS</strong> = NFS managed “thuần AWS”, đơn giản, multi-AZ, cho Linux POSIX share thông thường.</li>
+<li><strong>FSx</strong> = khi cần semantics của Windows / Lustre / NetApp / ZFS (AD, DFS, parallel HPC, dedup, clone…).</li>
+</ul>
+<hr/>
+<h2 id="amazon-fsx-for-windows-file-server">Amazon FSx for Windows File Server<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-fsx-for-windows-file-server" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Fully managed <strong>Windows file share</strong> — thay thế Windows File Server tự quản.</p>
+<p><strong>Đặc điểm:</strong></p>
+<ul>
+<li>Protocol: <strong>SMB</strong> + Windows <strong>NTFS</strong></li>
+<li>Tích hợp <strong>Microsoft Active Directory</strong>, ACLs, user quotas</li>
+<li>Mount được từ <strong>Linux EC2</strong> (không chỉ Windows)</li>
+<li>Hỗ trợ <strong>DFS Namespaces</strong> (gộp nhiều FS thành 1 namespace logic)</li>
+<li>Scale: hàng chục GB/s, hàng triệu IOPS, hàng trăm PB</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Storage</th><th>Khi nào</th></tr></thead><tbody><tr><td><strong>SSD</strong></td><td>Latency-sensitive: DB, media processing, analytics</td></tr><tr><td><strong>HDD</strong></td><td>Workload phổ thông: home directory, CMS</td></tr></tbody></table></div>
+<p><strong>Kiến trúc / hybrid:</strong></p>
+<ul>
+<li>Truy cập từ on-premises qua <strong>VPN</strong> hoặc <strong>Direct Connect</strong></li>
+<li>Có thể cấu hình <strong>Multi-AZ</strong> (HA)</li>
+<li>Backup hàng ngày sang <strong>S3</strong></li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    WinEC2[\&quot;Windows / Linux EC2\&quot;] -->|\&quot;SMB\&quot;| FSxW[\&quot;FSx for Windows\&quot;]\n    OnPrem[\&quot;On-premises\&quot;] -->|\&quot;VPN / DX\&quot;| FSxW\n    FSxW -->|\&quot;Daily backup\&quot;| S3[\&quot;S3\&quot;]\n    AD[\&quot;Active Directory\&quot;] -.->|\&quot;auth / ACL\&quot;| FSxW&quot;">graph LR
+    WinEC2[&quot;Windows / Linux EC2&quot;] -->|&quot;SMB&quot;| FSxW[&quot;FSx for Windows&quot;]
+    OnPrem[&quot;On-premises&quot;] -->|&quot;VPN / DX&quot;| FSxW
+    FSxW -->|&quot;Daily backup&quot;| S3[&quot;S3&quot;]
+    AD[&quot;Active Directory&quot;] -.->|&quot;auth / ACL&quot;| FSxW
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Điểm thi:</strong> Cần shared storage <strong>Windows + AD + ACL/NTFS</strong> → <strong>FSx for Windows</strong>, <strong>không</strong> chọn EFS (EFS là NFS/Linux-centric).</p>
+</blockquote>
+<hr/>
+<h2 id="amazon-fsx-for-lustre">Amazon FSx for Lustre<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-fsx-for-lustre" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Lustre</strong> = parallel distributed file system cho large-scale computing<br/>
+(tên từ “<strong>Linux</strong>” + “c<strong>luster</strong>”).</p>
+<p><strong>Use cases:</strong> Machine Learning, HPC, video processing, financial modeling, EDA.</p>
+<ul>
+<li>Scale: hàng trăm GB/s, hàng triệu IOPS, latency <strong>sub-ms</strong></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Storage</th><th>Khi nào</th></tr></thead><tbody><tr><td><strong>SSD</strong></td><td>Low-latency, IOPS-intensive, file nhỏ / random</td></tr><tr><td><strong>HDD</strong></td><td>Throughput-intensive, file lớn / sequential</td></tr></tbody></table></div>
+<h3 id="tích-hợp-s3-điểm-hay-hỏi">Tích hợp S3 (điểm hay hỏi)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tích-hợp-s3-điểm-hay-hỏi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    S3in[\&quot;S3 input dataset\&quot;] -->|\&quot;lazy load / import\&quot;| Lustre[\&quot;FSx for Lustre\&quot;]\n    Cluster[\&quot;HPC / ML cluster\&quot;] -->|\&quot;đọc-ghi POSIX\&quot;| Lustre\n    Lustre -->|\&quot;export kết quả\&quot;| S3out[\&quot;S3 output\&quot;]&quot;">graph LR
+    S3in[&quot;S3 input dataset&quot;] -->|&quot;lazy load / import&quot;| Lustre[&quot;FSx for Lustre&quot;]
+    Cluster[&quot;HPC / ML cluster&quot;] -->|&quot;đọc-ghi POSIX&quot;| Lustre
+    Lustre -->|&quot;export kết quả&quot;| S3out[&quot;S3 output&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>“Đọc S3 như file system” qua FSx (object S3 hiện ra dạng file/folder).</li>
+<li>Ghi kết quả compute ngược lại S3.</li>
+<li>Truy cập từ on-premises qua VPN / Direct Connect.</li>
+</ul>
+<h3 id="deployment-options-scratch-vs-persistent">Deployment options: Scratch vs Persistent<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deployment-options-scratch-vs-persistent" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Scratch</strong></th><th><strong>Persistent</strong></th></tr></thead><tbody><tr><td>Mục đích</td><td>Temporary storage</td><td>Long-term storage</td></tr><tr><td>Replication</td><td>❌ Không replicate (mất nếu file server fail)</td><td>✔ Replicate trong <strong>cùng AZ</strong></td></tr><tr><td>Hiệu năng</td><td>Burst cao (<strong>6x</strong>, ~200 MB/s per TiB)</td><td>Ổn định hơn; thay server hỏng trong vài phút</td></tr><tr><td>Chi phí</td><td>Thường rẻ hơn cho job ngắn</td><td>Cao hơn (có durability trong AZ)</td></tr><tr><td>Dùng khi</td><td>Short-term processing, tối ưu chi phí</td><td>Long-term, data nhạy cảm</td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260729121448.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Điểm thi:</strong> Job HPC ngắn, dataset có thể lấy lại từ S3 → <strong>Scratch</strong>. Data phải sống lâu trên FS → <strong>Persistent</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="amazon-fsx-for-netapp-ontap">Amazon FSx for NetApp ONTAP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-fsx-for-netapp-ontap" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Managed <strong>NetApp ONTAP</strong> trên AWS — giữ feature set quen thuộc của NetApp.</p>
+<ul>
+<li>Protocol: <strong>NFS, SMB, iSCSI</strong> (linh hoạt nhất trong nhóm FSx về protocol)</li>
+<li>Migrate workload đang chạy ONTAP / NAS lên AWS với ít đổi app</li>
+<li>Tương thích: Linux, Windows, macOS, VMware Cloud on AWS, WorkSpaces, AppStream 2.0, EC2, ECS, EKS</li>
+<li>Storage <strong>tự co giãn</strong> (shrink/grow)</li>
+<li>Snapshots, replication, compression, <strong>deduplication</strong>, chi phí thấp</li>
+<li><strong>Point-in-time instantaneous cloning</strong> — clone FS gần như tức thì để test workload mới (không copy full data)</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260729121523.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Khi nào chọn ONTAP:</strong> Đề bài nhấn <strong>NetApp</strong>, <strong>deduplication</strong>, <strong>iSCSI + NFS + SMB cùng lúc</strong>, hoặc <strong>instant clone</strong> cho môi trường test.</p>
+</blockquote>
+<hr/>
+<h2 id="amazon-fsx-for-openzfs">Amazon FSx for OpenZFS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-fsx-for-openzfs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Managed <strong>OpenZFS</strong> trên AWS.</p>
+<ul>
+<li>Protocol: <strong>NFS</strong> (v3, v4, v4.1, v4.2)</li>
+<li>Migrate workload ZFS lên AWS</li>
+<li>Tương thích: Linux, Windows, macOS, VMware Cloud on AWS, WorkSpaces, AppStream 2.0, EC2, ECS, EKS</li>
+<li>Tới <strong>1,000,000 IOPS</strong>, latency <strong>&lt; 0.5 ms</strong></li>
+<li>Snapshots, compression, chi phí thấp</li>
+<li><strong>Point-in-time instantaneous cloning</strong> (giống ONTAP — dùng cho test)</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260729121603.png" alt width="auto" height="auto"/></p>
+<h3 id="fsx--chọn-nhanh">FSx — chọn nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fsx--chọn-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nhu cầu</th><th>Chọn</th></tr></thead><tbody><tr><td>Windows share + AD + SMB / NTFS / DFS</td><td><strong>FSx for Windows</strong></td></tr><tr><td>HPC / ML / parallel FS + gắn S3</td><td><strong>FSx for Lustre</strong></td></tr><tr><td>NFS + SMB + iSCSI, dedup, ONTAP feature</td><td><strong>FSx for NetApp ONTAP</strong></td></tr><tr><td>NFS + ZFS semantics, clone nhanh, IOPS cực cao</td><td><strong>FSx for OpenZFS</strong></td></tr><tr><td>Linux POSIX shared FS đơn giản, multi-AZ</td><td><strong>EFS</strong></td></tr></tbody></table></div>
+<hr/>
+<h2 id="hybrid-cloud-for-storage">Hybrid Cloud for Storage<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hybrid-cloud-for-storage" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>AWS đẩy mô hình <strong>hybrid cloud</strong>: một phần infra trên cloud, một phần on-premises.</p>
+<p><strong>Lý do thường gặp:</strong> migration dài dở, security, compliance, IT strategy (“cloud dần”).</p>
+<p>Vấn đề cốt lõi: <strong>S3 là object storage proprietary</strong> (không mount NFS thuần như EFS). Làm sao app on-premises “thấy” S3 như file share quen thuộc?</p>
+<p>→ <strong>AWS Storage Gateway</strong></p>
+<h3 id="aws-storage--cloud-native-options-nhắc-lại">AWS Storage — cloud-native options (nhắc lại)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-storage--cloud-native-options-nhắc-lại" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="../../.././../../attachments/pasted-image-20260729121630.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="aws-storage-gateway">AWS Storage Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-storage-gateway" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Cầu nối</strong> giữa data on-premises và data trên cloud — user/app on-prem dùng protocol quen (NFS/SMB/iSCSI/VTL), phía sau là AWS.</p>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>Disaster recovery</li>
+<li>Backup &amp; restore</li>
+<li>Tiered storage (nóng on-prem cache, lạnh trên S3)</li>
+<li>On-premises cache + low-latency file access</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Protocol phía on-prem</th><th>Backend AWS</th><th>“Nhìn” như</th></tr></thead><tbody><tr><td><strong>S3 File Gateway</strong></td><td>NFS / SMB</td><td>S3 objects</td><td>File share</td></tr><tr><td><strong>Volume Gateway</strong></td><td>iSCSI</td><td>Volumes → EBS snapshots trên S3</td><td>Đĩa block</td></tr><tr><td><strong>Tape Gateway</strong></td><td>iSCSI VTL</td><td>Virtual tapes → S3 / Glacier</td><td>Tape library</td></tr></tbody></table></div>
+<p>Gateway thường chạy dạng <strong>VM</strong> (VMware / Hyper-V / KVM) hoặc hardware appliance, có <strong>local cache</strong>; kết nối Internet hoặc <strong>Direct Connect</strong>, encrypt in-transit.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260729121804.png" alt width="auto" height="auto"/></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TB\n    subgraph onprem [\&quot;On-premises\&quot;]\n        Users[\&quot;Users / Apps\&quot;]\n        FG[\&quot;File Gateway&lt;br/>NFS/SMB\&quot;]\n        VG[\&quot;Volume Gateway&lt;br/>iSCSI\&quot;]\n        TG[\&quot;Tape Gateway&lt;br/>iSCSI VTL\&quot;]\n        Cache[\&quot;Local cache\&quot;]\n    end\n    subgraph aws [\&quot;AWS\&quot;]\n        S3[\&quot;S3\&quot;]\n        Snap[\&quot;EBS Snapshots\&quot;]\n        VTL[\&quot;Virtual tapes&lt;br/>S3 + Glacier\&quot;]\n    end\n    Users --> FG\n    Users --> VG\n    BackupApp[\&quot;Backup software\&quot;] --> TG\n    FG --> Cache\n    VG --> Cache\n    TG --> Cache\n    FG -->|\&quot;objects\&quot;| S3\n    VG -->|\&quot;snapshots\&quot;| Snap\n    TG --> VTL&quot;">graph TB
+    subgraph onprem [&quot;On-premises&quot;]
+        Users[&quot;Users / Apps&quot;]
+        FG[&quot;File Gateway&lt;br/>NFS/SMB&quot;]
+        VG[&quot;Volume Gateway&lt;br/>iSCSI&quot;]
+        TG[&quot;Tape Gateway&lt;br/>iSCSI VTL&quot;]
+        Cache[&quot;Local cache&quot;]
+    end
+    subgraph aws [&quot;AWS&quot;]
+        S3[&quot;S3&quot;]
+        Snap[&quot;EBS Snapshots&quot;]
+        VTL[&quot;Virtual tapes&lt;br/>S3 + Glacier&quot;]
+    end
+    Users --> FG
+    Users --> VG
+    BackupApp[&quot;Backup software&quot;] --> TG
+    FG --> Cache
+    VG --> Cache
+    TG --> Cache
+    FG -->|&quot;objects&quot;| S3
+    VG -->|&quot;snapshots&quot;| Snap
+    TG --> VTL
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="amazon-s3-file-gateway">Amazon S3 File Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-s3-file-gateway" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Bucket S3 truy cập qua <strong>NFS</strong> hoặc <strong>SMB</strong> như file share thường</li>
+<li>Data dùng gần đây <strong>cache</strong> tại gateway → đọc nóng nhanh</li>
+<li>Storage class hỗ trợ “ghi trực tiếp”: Standard, Standard-IA, One Zone-IA, Intelligent-Tiering</li>
+<li>Sang <strong>Glacier / Deep Archive</strong> bằng <strong>Lifecycle Policy</strong> (không mount Glacier như folder hot)</li>
+<li>Mỗi File Gateway dùng <strong>IAM Role</strong> để access bucket</li>
+<li>SMB tích hợp <strong>Active Directory</strong> cho user authentication</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260729121700.png" alt width="auto" height="auto"/></p>
+<p><strong>Ví dụ đề bài:</strong> “On-premises cần NFS/SMB vào object trên S3, giữ cache local” → <strong>S3 File Gateway</strong>.</p>
+<h3 id="volume-gateway">Volume Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#volume-gateway" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Block storage qua <strong>iSCSI</strong>, backed bởi S3 (qua EBS snapshots).</p>
+<ul>
+<li>Backup thành <strong>EBS snapshots</strong> → restore volume on-premises <strong>hoặc</strong> tạo EBS volume trên AWS (DR rất tiện)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Mode</th><th>Dataset chính nằm đâu?</th><th>Hành vi</th><th>Khi nào</th></tr></thead><tbody><tr><td><strong>Cached volumes</strong></td><td><strong>AWS (S3)</strong></td><td>On-prem chỉ cache data nóng</td><td>On-prem disk ít, muốn mở rộng gần như unlimited trên cloud</td></tr><tr><td><strong>Stored volumes</strong></td><td><strong>On-premises (full)</strong></td><td>Toàn bộ data local; backup định kỳ lên S3</td><td>Cần latency local tuyệt đối + vẫn muốn backup cloud</td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260729121725.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Mẹo nhớ:</strong> Cached = “não ở cloud, cache ở nhà”. Stored = “não ở nhà, backup lên cloud”.</p>
+</blockquote>
+<h3 id="tape-gateway">Tape Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tape-gateway" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Cho công ty vẫn backup bằng quy trình <strong>physical tape</strong> (và không muốn đổi backup software ngay).</p>
+<ul>
+<li>Giữ cùng quy trình backup, tape trở thành <strong>ảo trên cloud</strong></li>
+<li><strong>Virtual Tape Library (VTL)</strong> backed bởi S3 và Glacier</li>
+<li>Interface <strong>iSCSI</strong>; tương thích nhiều backup software phổ biến</li>
+<li>Workflow: backup → virtual tape trên S3 → “eject” → archive <strong>Glacier / Deep Archive</strong></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260729121743.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Điểm thi nhanh:</strong></p>
+<ul>
+<li>File share NFS/SMB ↔ S3 → <strong>File Gateway</strong></li>
+<li>iSCSI disk + Cached/Stored / EBS snapshot DR → <strong>Volume Gateway</strong></li>
+<li>Thay thế tape library → <strong>Tape Gateway</strong></li>
+</ul>
+</blockquote>
+<hr/>
+<h2 id="aws-transfer-family">AWS Transfer Family<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-transfer-family" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Fully managed <strong>file transfer</strong> vào/ra <strong>Amazon S3</strong> hoặc <strong>Amazon EFS</strong> qua giao thức FTP-family — khi đối tác/hệ thống cũ <strong>chỉ nói SFTP/FTP/FTPS</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Protocol</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>FTP</strong></td><td>File Transfer Protocol (không mã hóa — hạn chế dùng)</td></tr><tr><td><strong>FTPS</strong></td><td>FTP over SSL</td></tr><tr><td><strong>SFTP</strong></td><td>Secure File Transfer Protocol (chạy trên SSH)</td></tr></tbody></table></div>
+<p><strong>Đặc điểm:</strong></p>
+<ul>
+<li>Managed infrastructure, scalable, reliable, <strong>HA multi-AZ</strong></li>
+<li>Pricing: <strong>endpoint provisioned / giờ</strong> + data transfer (GB)</li>
+<li>Quản lý user credential <strong>trong service</strong>, hoặc integrate IdP có sẵn:
+<ul>
+<li>Microsoft Active Directory, LDAP, Okta, Amazon Cognito, custom identity provider</li>
+</ul>
+</li>
+<li>Use cases: chia sẻ file với partner, public datasets, tích hợp CRM / ERP vẫn dùng SFTP</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260729121846.png" alt width="auto" height="auto"/></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Partner[\&quot;Partner / ERP&lt;br/>SFTP client\&quot;] -->|\&quot;SFTP/FTPS/FTP\&quot;| TF[\&quot;Transfer Family\&quot;]\n    TF --> S3[\&quot;Amazon S3\&quot;]\n    TF --> EFS[\&quot;Amazon EFS\&quot;]\n    IdP[\&quot;AD / Cognito / Okta\&quot;] -.->|\&quot;auth\&quot;| TF&quot;">graph LR
+    Partner[&quot;Partner / ERP&lt;br/>SFTP client&quot;] -->|&quot;SFTP/FTPS/FTP&quot;| TF[&quot;Transfer Family&quot;]
+    TF --> S3[&quot;Amazon S3&quot;]
+    TF --> EFS[&quot;Amazon EFS&quot;]
+    IdP[&quot;AD / Cognito / Okta&quot;] -.->|&quot;auth&quot;| TF
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Điểm thi:</strong> “Partner upload bằng SFTP vào S3, không muốn quản lý FTP server” → <strong>Transfer Family</strong>.<br/>
+Không chọn Storage Gateway (không phải SFTP endpoint) và không chọn DataSync (không phải giao thức FTP-family cho partner).</p>
+</blockquote>
+<hr/>
+<h2 id="aws-datasync">AWS DataSync<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-datasync" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Di chuyển / đồng bộ <strong>lượng data lớn</strong>, có thể <strong>lên lịch</strong>, giữ metadata &amp; permissions — tối ưu hơn tự viết <code>rsync</code>/script.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Chiều transfer</th><th>Cần agent?</th></tr></thead><tbody><tr><td>On-premises / cloud khác → AWS (NFS, SMB, HDFS, S3 API…)</td><td>✔ <strong>Cần agent</strong> (deploy gần nguồn)</td></tr><tr><td>AWS → AWS (giữa các storage services)</td><td>❌ <strong>Không cần agent</strong></td></tr></tbody></table></div>
+<p><strong>Có thể sync tới:</strong></p>
+<ul>
+<li>Amazon S3 (mọi storage class, kể cả Glacier)</li>
+<li>Amazon EFS</li>
+<li>Amazon FSx (Windows, Lustre, NetApp, OpenZFS…)</li>
+</ul>
+<p><strong>Đặc điểm vận hành:</strong></p>
+<ul>
+<li>Schedule: hourly / daily / weekly (hoặc one-time)</li>
+<li>Giữ <strong>file permissions &amp; metadata</strong> (NFS POSIX, SMB…)</li>
+<li>Transfer <strong>incremental</strong> sau lần đầu (chỉ file đổi)</li>
+<li>1 agent task tới ~<strong>10 Gbps</strong>; có thể set <strong>bandwidth limit</strong> để không “bóp” mạng production</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260729121922.png" alt width="auto" height="auto"/></p>
+<p><img src="../../.././../../attachments/pasted-image-20260729121939.png" alt width="auto" height="auto"/></p>
+<h3 id="datasync-vs-các-dịch-vụ-chuyển-data-khác">DataSync vs các dịch vụ “chuyển data” khác<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#datasync-vs-các-dịch-vụ-chuyển-data-khác" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nhu cầu</th><th>Chọn</th><th>Vì sao</th></tr></thead><tbody><tr><td>Online sync lớn, schedule, giữ metadata</td><td><strong>DataSync</strong></td><td>Tối ưu throughput + incremental</td></tr><tr><td>On-prem cần <strong>mount liên tục</strong> (NFS/SMB/iSCSI/tape)</td><td><strong>Storage Gateway</strong></td><td>Access ongoing, có cache local</td></tr><tr><td>Client/partner dùng <strong>SFTP/FTP/FTPS</strong></td><td><strong>Transfer Family</strong></td><td>Protocol FTP-family managed</td></tr><tr><td>Offline, petabyte, mạng > 1 tuần</td><td><strong>Snow Family</strong></td><td>Ship thiết bị vật lý</td></tr><tr><td>Continuous file share Windows trên AWS</td><td><strong>FSx for Windows</strong></td><td>Không phải công cụ migrate</td></tr></tbody></table></div>
+<p><strong>Kết hợp thực tế:</strong> DataSync (online, phần còn lại / delta hàng ngày) + Snowball (bulk ban đầu quá lớn) — đề thi đôi khi mô tả đúng pattern này.</p>
+<hr/>
+<h2 id="storage-comparison-tóm-tắt-toàn-cảnh">Storage Comparison (tóm tắt toàn cảnh)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#storage-comparison-tóm-tắt-toàn-cảnh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dịch vụ</th><th>Bản chất</th><th>“Một câu” nhớ</th></tr></thead><tbody><tr><td><strong>S3</strong></td><td>Object storage</td><td>API object, không mount POSIX thuần</td></tr><tr><td><strong>S3 Glacier</strong></td><td>Object archival</td><td>Rẻ, retrieve chậm hơn</td></tr><tr><td><strong>EBS</strong></td><td>Block network — gắn EC2</td><td>Thường 1 instance / volume</td></tr><tr><td><strong>Instance Store</strong></td><td>Disk vật lý ephemeral</td><td>IOPS cực cao, mất khi stop/terminate</td></tr><tr><td><strong>EFS</strong></td><td>NFS Linux managed</td><td>Multi-AZ share POSIX đơn giản</td></tr><tr><td><strong>FSx for Windows</strong></td><td>Windows file server managed</td><td>SMB + AD</td></tr><tr><td><strong>FSx for Lustre</strong></td><td>HPC parallel FS</td><td>Gắn S3, Scratch/Persistent</td></tr><tr><td><strong>FSx for NetApp ONTAP</strong></td><td>NetApp managed</td><td>NFS/SMB/iSCSI + dedup/clone</td></tr><tr><td><strong>FSx for OpenZFS</strong></td><td>ZFS managed</td><td>NFS + clone + IOPS cao</td></tr><tr><td><strong>Storage Gateway</strong></td><td>Hybrid bridge</td><td>File / Volume / Tape</td></tr><tr><td><strong>Transfer Family</strong></td><td>FTP-family managed</td><td>SFTP vào S3/EFS</td></tr><tr><td><strong>DataSync</strong></td><td>Bulk / scheduled sync</td><td>Agent on-prem; AWS↔AWS không agent</td></tr><tr><td><strong>Snowcone / Snowball / Snowmobile</strong></td><td>Physical migration</td><td>TB → PB → EB</td></tr><tr><td><strong>Database</strong></td><td>Structured + query</td><td>Không thay storage file/object</td></tr></tbody></table></div>
+<hr/>
+<h2 id="tình-huống-thi--chọn-dịch-vụ-nào">Tình huống thi — chọn dịch vụ nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tình-huống-thi--chọn-dịch-vụ-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đề bài (rút gọn)</th><th>Đáp án</th></tr></thead><tbody><tr><td>80 TB, mạng chỉ xong sau 3 tuần</td><td><strong>Snowball</strong></td></tr><tr><td>5 EB data center lift-and-shift</td><td><strong>Snowmobile</strong></td></tr><tr><td>Import Snowball rồi lưu Glacier lâu dài</td><td>Snowball → <strong>S3</strong> → <strong>Lifecycle</strong></td></tr><tr><td>Windows home directories + AD ACL</td><td><strong>FSx for Windows</strong></td></tr><tr><td>1000 node ML đọc dataset từ S3</td><td><strong>FSx for Lustre</strong> (+ S3)</td></tr><tr><td>Job HPC 2 ngày, tối ưu tiền, data tái tạo được</td><td>Lustre <strong>Scratch</strong></td></tr><tr><td>On-prem NFS trỏ vào objects S3, có cache</td><td><strong>S3 File Gateway</strong></td></tr><tr><td>iSCSI volume, data full ở on-prem, backup cloud</td><td>Volume Gateway <strong>Stored</strong></td></tr><tr><td>iSCSI, on-prem disk nhỏ, primary data trên AWS</td><td>Volume Gateway <strong>Cached</strong></td></tr><tr><td>Backup software tape → cloud</td><td><strong>Tape Gateway</strong></td></tr><tr><td>Đối tác bắt buộc SFTP upload vào S3</td><td><strong>Transfer Family</strong></td></tr><tr><td>Sync NFS on-prem → EFS mỗi đêm</td><td><strong>DataSync</strong> (+ agent)</td></tr><tr><td>Copy EFS region A → FSx/EFS region B</td><td><strong>DataSync</strong> (không agent)</td></tr></tbody></table></div>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Snow scale: <strong>Snowcone (TB) / Snowball (PB) / Snowmobile (EB)</strong>; > 1 tuần qua mạng → Snow.</li>
+<li>Snowball <strong>không</strong> vào Glacier trực tiếp — luôn <strong>S3 + Lifecycle</strong>.</li>
+<li>Windows + AD + SMB → <strong>FSx for Windows</strong> (không EFS).</li>
+<li>HPC/ML + S3-as-filesystem → <strong>FSx for Lustre</strong>; Scratch vs Persistent.</li>
+<li>NFS/SMB hybrid liên tục → <strong>File Gateway</strong>; iSCSI → <strong>Volume Gateway</strong> (Cached vs Stored); tape → <strong>Tape Gateway</strong>.</li>
+<li>SFTP/FTPS/FTP → <strong>Transfer Family</strong>.</li>
+<li>Sync lớn có schedule / AWS↔AWS → <strong>DataSync</strong>; đừng nhầm với Storage Gateway (mount ongoing).</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Bốn “cổng chuyển data”: <strong>Gateway</strong> = sống hybrid; <strong>DataSync</strong> = copy/sync; <strong>Transfer Family</strong> = FTP-family; <strong>Snow</strong> = xe tải offline.</li>
+<li>FSx = khi EFS/EBS thiếu semantics (Windows AD, Lustre HPC, ONTAP/ZFS).</li>
+<li>Cached vs Stored của Volume Gateway dễ mất điểm — đọc kỹ đề xem data “não” nằm đâu.</li>
+<li>Snowball → Glacier = nhớ thêm bước Lifecycle.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Snowcone vs Snowball vs Snowmobile</li>
+<li>Snowball → S3 → Glacier Lifecycle</li>
+<li>FSx Lustre Scratch vs Persistent + S3 integration</li>
+<li>Storage Gateway: File vs Volume (Cached/Stored) vs Tape</li>
+<li>DataSync vs Storage Gateway vs Transfer Family vs Snow</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-84" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#16--storage-extras" data-for="16--storage-extras">16 – Storage Extras</a></li><li class="depth-1"><a href="#aws-snow-family" data-for="aws-snow-family">AWS Snow Family</a></li><li class="depth-2"><a href="#quy-mô-thiết-bị-hay-hỏi-trong-thi" data-for="quy-mô-thiết-bị-hay-hỏi-trong-thi">Quy mô thiết bị (hay hỏi trong thi)</a></li><li class="depth-2"><a href="#khi-nào-dùng-snow-thay-vì-transfer-qua-mạng" data-for="khi-nào-dùng-snow-thay-vì-transfer-qua-mạng">Khi nào dùng Snow thay vì transfer qua mạng?</a></li><li class="depth-2"><a href="#flow-migrate-điển-hình-import-vào-aws" data-for="flow-migrate-điển-hình-import-vào-aws">Flow migrate điển hình (import vào AWS)</a></li><li class="depth-2"><a href="#edge-computing-với-snowball-edge" data-for="edge-computing-với-snowball-edge">Edge Computing với Snowball Edge</a></li><li class="depth-2"><a href="#snowball--glacier-không-import-trực-tiếp" data-for="snowball--glacier-không-import-trực-tiếp">Snowball → Glacier: không import trực tiếp</a></li><li class="depth-1"><a href="#amazon-fsx--overview" data-for="amazon-fsx--overview">Amazon FSx – Overview</a></li><li class="depth-1"><a href="#amazon-fsx-for-windows-file-server" data-for="amazon-fsx-for-windows-file-server">Amazon FSx for Windows File Server</a></li><li class="depth-1"><a href="#amazon-fsx-for-lustre" data-for="amazon-fsx-for-lustre">Amazon FSx for Lustre</a></li><li class="depth-2"><a href="#tích-hợp-s3-điểm-hay-hỏi" data-for="tích-hợp-s3-điểm-hay-hỏi">Tích hợp S3 (điểm hay hỏi)</a></li><li class="depth-2"><a href="#deployment-options-scratch-vs-persistent" data-for="deployment-options-scratch-vs-persistent">Deployment options: Scratch vs Persistent</a></li><li class="depth-1"><a href="#amazon-fsx-for-netapp-ontap" data-for="amazon-fsx-for-netapp-ontap">Amazon FSx for NetApp ONTAP</a></li><li class="depth-1"><a href="#amazon-fsx-for-openzfs" data-for="amazon-fsx-for-openzfs">Amazon FSx for OpenZFS</a></li><li class="depth-2"><a href="#fsx--chọn-nhanh" data-for="fsx--chọn-nhanh">FSx — chọn nhanh</a></li><li class="depth-1"><a href="#hybrid-cloud-for-storage" data-for="hybrid-cloud-for-storage">Hybrid Cloud for Storage</a></li><li class="depth-2"><a href="#aws-storage--cloud-native-options-nhắc-lại" data-for="aws-storage--cloud-native-options-nhắc-lại">AWS Storage — cloud-native options (nhắc lại)</a></li><li class="depth-1"><a href="#aws-storage-gateway" data-for="aws-storage-gateway">AWS Storage Gateway</a></li><li class="depth-2"><a href="#amazon-s3-file-gateway" data-for="amazon-s3-file-gateway">Amazon S3 File Gateway</a></li><li class="depth-2"><a href="#volume-gateway" data-for="volume-gateway">Volume Gateway</a></li><li class="depth-2"><a href="#tape-gateway" data-for="tape-gateway">Tape Gateway</a></li><li class="depth-1"><a href="#aws-transfer-family" data-for="aws-transfer-family">AWS Transfer Family</a></li><li class="depth-1"><a href="#aws-datasync" data-for="aws-datasync">AWS DataSync</a></li><li class="depth-2"><a href="#datasync-vs-các-dịch-vụ-chuyển-data-khác" data-for="datasync-vs-các-dịch-vụ-chuyển-data-khác">DataSync vs các dịch vụ “chuyển data” khác</a></li><li class="depth-1"><a href="#storage-comparison-tóm-tắt-toàn-cảnh" data-for="storage-comparison-tóm-tắt-toàn-cảnh">Storage Comparison (tóm tắt toàn cảnh)</a></li><li class="depth-1"><a href="#tình-huống-thi--chọn-dịch-vụ-nào" data-for="tình-huống-thi--chọn-dịch-vụ-nào">Tình huống thi — chọn dịch vụ nào?</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/30---other-services" class="internal">30 – Other Services: CloudFormation, SES, Systems Manager, Cost Explorer, AWS Batch, Amplify...</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>8.4. HA &amp; Scaling Workflows - Luồng Self-Healing &amp; Auto-Scaling</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="8.4. HA &amp; Scaling Workflows - Luồng Self-Healing &amp; Auto-Scaling"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="8.4. HA &amp; Scaling Workflows - Luồng Self-Healing &amp; Auto-Scaling"/><meta name="twitter:description" content="8.4."/><meta property="og:description" content="8.4."/><meta property="og:image:alt" content="8.4."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/08-high-availability/04-ha-workflows"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/08-high-availability/04-ha-workflows"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="8.4."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/k8s/08-high-availability/04-ha-workflows" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-158" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-158" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/">K8S</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/08-high-availability/">08-high-availability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>8.4. HA &amp; Scaling Workflows - Luồng Self-Healing &amp; Auto-Scaling</a></div></nav><h1 class="article-title">8.4. HA &amp; Scaling Workflows - Luồng Self-Healing &amp; Auto-Scaling</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/k8s" class="internal internal-link tag-link">domain/k8s</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-09T17:00:00.000Z">10 thg 4, 2026</time><span>13 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="84-ha--scaling-workflows---luồng-self-healing--auto-scaling">8.4. HA &amp; Scaling Workflows - Luồng Self-Healing &amp; Auto-Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#84-ha--scaling-workflows---luồng-self-healing--auto-scaling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>Chi tiết cách Kubernetes phát hiện lỗi, tự khôi phục, và tự động scale ứng dụng</p>
+</blockquote>
+<hr/>
+<h2 id="-mục-tiêu-học">🎯 Mục Tiêu Học<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mục-tiêu-học" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau khi học xong phần này, bạn sẽ:</p>
+<ul>
+<li>✅ Trace được toàn bộ <strong>self-healing pipeline</strong> từ crash → recovery</li>
+<li>✅ Hiểu <strong>Probe decision logic</strong> (Liveness vs Readiness vs Startup)</li>
+<li>✅ Nắm rõ <strong>HPA control loop</strong> và công thức tính replicas</li>
+<li>✅ Hiểu <strong>Cluster Autoscaler</strong> workflow khi Pods unschedulable</li>
+<li>✅ Biết cách <strong>PodDisruptionBudget</strong> bảo vệ availability khi drain</li>
+</ul>
+<hr/>
+<h2 id="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-quy-tắc-màu-sắc-diagram" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Quy tắc màu nhất quán </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>💙 <strong>Xanh dương</strong> <code>#3498db</code> — Controllers, orchestration</li>
+<li>💚 <strong>Xanh lá</strong> <code>#27ae60</code> — Healthy, Running, Success</li>
+<li>🧡 <strong>Cam</strong> <code>#f39c12</code> — Warning, degraded, scaling action</li>
+<li>❤️ <strong>Đỏ</strong> <code>#e74c3c</code> — Failed, crash, kill</li>
+<li>💜 <strong>Tím</strong> <code>#9b59b6</code> — HPA, VPA, autoscaling</li>
+<li>⬜ <strong>Xám</strong> <code>#95a5a6</code> — Infrastructure, unchanged</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-1-complete-self-healing-pipeline">🔄 Workflow 1: Complete Self-Healing Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-1-complete-self-healing-pipeline" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Pod crash → Detection → Recovery → Traffic restored</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant C as 📦 Container\n    participant KL as 🔧 kubelet\n    participant API as 🔀 API Server\n    participant EP as Endpoints&lt;br/>Controller\n    participant KP as ⚙️ kube-proxy\n    participant RSC as ⚙️ ReplicaSet&lt;br/>Controller\n\n    Note over C: 💥 Container crashes!&lt;br/>(OOMKill / App Error / Segfault)\n\n    KL->>KL: Detect container exit&lt;br/>exitCode: 137 (OOMKill)&lt;br/>or exitCode: 1 (App Error)\n\n    KL->>API: Update Pod status&lt;br/>containerStatus: Terminated&lt;br/>Ready: false\n\n    par Remove from traffic\n        EP->>EP: 👁️ Watch: Pod not Ready!\n        EP->>API: Remove Pod IP from Endpoints\n        KP->>KP: Update iptables&lt;br/>❌ No traffic to this Pod\n    and Restart container\n        KL->>KL: Check restartPolicy\n        Note over KL: restartPolicy: Always&lt;br/>→ Restart with backoff\n        KL->>KL: ⏱️ Backoff delay&lt;br/>0s → 10s → 20s → 40s&lt;br/>→ 80s → 160s → 300s (max)\n        KL->>C: Pull image (if needed)&lt;br/>Create + Start container\n    end\n\n    alt Container starts OK\n        C-->>KL: Process running\n        KL->>KL: readinessProbe passes\n        KL->>API: Update: Ready=true\n        EP->>API: Add Pod IP back to Endpoints\n        KP->>KP: Update iptables&lt;br/>✅ Traffic restored!\n    else Container crashes again (CrashLoopBackOff)\n        C-->>KL: Exit code non-zero\n        KL->>KL: Increase backoff&lt;br/>Status: CrashLoopBackOff\n        Note over KL: Keep retrying with&lt;br/>exponential backoff (max 5min)\n    end&quot;">sequenceDiagram
+    autonumber
+    participant C as 📦 Container
+    participant KL as 🔧 kubelet
+    participant API as 🔀 API Server
+    participant EP as Endpoints&lt;br/>Controller
+    participant KP as ⚙️ kube-proxy
+    participant RSC as ⚙️ ReplicaSet&lt;br/>Controller
+
+    Note over C: 💥 Container crashes!&lt;br/>(OOMKill / App Error / Segfault)
+
+    KL->>KL: Detect container exit&lt;br/>exitCode: 137 (OOMKill)&lt;br/>or exitCode: 1 (App Error)
+
+    KL->>API: Update Pod status&lt;br/>containerStatus: Terminated&lt;br/>Ready: false
+
+    par Remove from traffic
+        EP->>EP: 👁️ Watch: Pod not Ready!
+        EP->>API: Remove Pod IP from Endpoints
+        KP->>KP: Update iptables&lt;br/>❌ No traffic to this Pod
+    and Restart container
+        KL->>KL: Check restartPolicy
+        Note over KL: restartPolicy: Always&lt;br/>→ Restart with backoff
+        KL->>KL: ⏱️ Backoff delay&lt;br/>0s → 10s → 20s → 40s&lt;br/>→ 80s → 160s → 300s (max)
+        KL->>C: Pull image (if needed)&lt;br/>Create + Start container
+    end
+
+    alt Container starts OK
+        C-->>KL: Process running
+        KL->>KL: readinessProbe passes
+        KL->>API: Update: Ready=true
+        EP->>API: Add Pod IP back to Endpoints
+        KP->>KP: Update iptables&lt;br/>✅ Traffic restored!
+    else Container crashes again (CrashLoopBackOff)
+        C-->>KL: Exit code non-zero
+        KL->>KL: Increase backoff&lt;br/>Status: CrashLoopBackOff
+        Note over KL: Keep retrying with&lt;br/>exponential backoff (max 5min)
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="node-failure-timeline">Node Failure Timeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#node-failure-timeline" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;timeline\n    title Node Failure → Pod Recovery Timeline\n\n    T+0s : 💀 Worker Node dies\n         : kubelet stops sending heartbeats\n         : Pods still \&quot;Running\&quot; in API\n\n    T+10-40s : Node Controller misses heartbeats\n             : nodeStatusUpdateFrequency = 10s\n             : 4 consecutive misses\n\n    T+40s : Node marked NotReady\n          : kubectl get nodes → STATUS: NotReady\n          : Endpoints Controller removes Pods\n          : kube-proxy removes iptables rules\n          : 🚫 Traffic stops going to dead Node\n\n    T+40s-5min : Grace Period (pod-eviction-timeout)\n               : Pods still \&quot;Running\&quot; status on dead Node\n               : But NO traffic reaching them\n               : Other healthy Pods handle traffic\n\n    T+5min : Pod Eviction begins\n           : Taint added → node.kubernetes.io/unreachable:NoExecute\n           : All Pods evicted from dead Node\n           : ReplicaSet Controller detects actual &lt; desired\n\n    T+5min+ : Recovery Complete ✅\n            : New Pods created by RS Controller\n            : Scheduler assigns to healthy Nodes\n            : kubelet starts containers\n            : Endpoints + kube-proxy updated\n            : Full service restored!&quot;">timeline
+    title Node Failure → Pod Recovery Timeline
+
+    T+0s : 💀 Worker Node dies
+         : kubelet stops sending heartbeats
+         : Pods still &quot;Running&quot; in API
+
+    T+10-40s : Node Controller misses heartbeats
+             : nodeStatusUpdateFrequency = 10s
+             : 4 consecutive misses
+
+    T+40s : Node marked NotReady
+          : kubectl get nodes → STATUS: NotReady
+          : Endpoints Controller removes Pods
+          : kube-proxy removes iptables rules
+          : 🚫 Traffic stops going to dead Node
+
+    T+40s-5min : Grace Period (pod-eviction-timeout)
+               : Pods still &quot;Running&quot; status on dead Node
+               : But NO traffic reaching them
+               : Other healthy Pods handle traffic
+
+    T+5min : Pod Eviction begins
+           : Taint added → node.kubernetes.io/unreachable:NoExecute
+           : All Pods evicted from dead Node
+           : ReplicaSet Controller detects actual &lt; desired
+
+    T+5min+ : Recovery Complete ✅
+            : New Pods created by RS Controller
+            : Scheduler assigns to healthy Nodes
+            : kubelet starts containers
+            : Endpoints + kube-proxy updated
+            : Full service restored!
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>5 phút downtime cho affected Pods! </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>Pods trên dead Node → <strong>5 phút</strong> trước khi bị evict và reschedule</li>
+<li>Traffic bị cut sau <strong>40s</strong> (Node NotReady)</li>
+<li>Pods trên <strong>healthy Nodes</strong> vẫn serve traffic bình thường</li>
+<li>→ Reason to always run <strong>≥2 replicas</strong> trên <strong>≥2 Nodes</strong>!</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-2-probe-decision-logic">🔄 Workflow 2: Probe Decision Logic<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-2-probe-decision-logic" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: kubelet evaluate 3 loại Probes</p>
+</blockquote>
+<h3 id="probe-execution-flow">Probe Execution Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#probe-execution-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    START[\&quot;📦 Container Started\&quot;] --> STARTUP_EXISTS{\&quot;startupProbe&lt;br/>configured?\&quot;}\n\n    STARTUP_EXISTS -->|\&quot;Yes\&quot;| STARTUP_LOOP[\&quot;startupProbe checking...&lt;br/>(periodSeconds × failureThreshold)\&quot;]\n    STARTUP_EXISTS -->|\&quot;No\&quot;| HEALTH_LOOP\n\n    STARTUP_LOOP --> STARTUP_RESULT{\&quot;Probe&lt;br/>result?\&quot;}\n    STARTUP_RESULT -->|\&quot;✅ Success\&quot;| HEALTH_LOOP[\&quot;Start Liveness &amp; Readiness&lt;br/>Probe loops\&quot;]\n    STARTUP_RESULT -->|\&quot;❌ Fail (all retries)\&quot;| STARTUP_KILL[\&quot;💀 Kill container&lt;br/>Restart with backoff\&quot;]\n\n    subgraph \&quot;Ongoing Health Checks\&quot;\n        HEALTH_LOOP --> LIVENESS &amp; READINESS\n\n        LIVENESS[\&quot;🫀 livenessProbe&lt;br/>every periodSeconds\&quot;] --> LIVE_R{\&quot;Result?\&quot;}\n        LIVE_R -->|\&quot;✅ Success\&quot;| LIVE_OK[\&quot;Container alive&lt;br/>Continue checking\&quot;]\n        LIVE_R -->|\&quot;❌ Fail × failureThreshold\&quot;| LIVE_KILL[\&quot;💀 Kill container&lt;br/>kubelet restarts it\&quot;]\n\n        READINESS[\&quot;📡 readinessProbe&lt;br/>every periodSeconds\&quot;] --> READY_R{\&quot;Result?\&quot;}\n        READY_R -->|\&quot;✅ Success\&quot;| READY_OK[\&quot;Ready=true&lt;br/>✅ IN Endpoints&lt;br/>→ Receives traffic\&quot;]\n        READY_R -->|\&quot;❌ Fail × failureThreshold\&quot;| READY_REMOVE[\&quot;Ready=false&lt;br/>❌ OUT of Endpoints&lt;br/>→ No traffic\&quot;]\n    end\n\n    LIVE_OK --> LIVENESS\n    READY_OK --> READINESS\n    READY_REMOVE --> READINESS\n    LIVE_KILL --> START\n\n    style STARTUP_KILL fill:#e74c3c,stroke:#c0392b,color:#fff\n    style LIVE_KILL fill:#e74c3c,stroke:#c0392b,color:#fff\n    style LIVE_OK fill:#27ae60,stroke:#1e8449,color:#fff\n    style READY_OK fill:#27ae60,stroke:#1e8449,color:#fff\n    style READY_REMOVE fill:#f39c12,stroke:#d68910,color:#fff&quot;">flowchart TD
+    START[&quot;📦 Container Started&quot;] --> STARTUP_EXISTS{&quot;startupProbe&lt;br/>configured?&quot;}
+
+    STARTUP_EXISTS -->|&quot;Yes&quot;| STARTUP_LOOP[&quot;startupProbe checking...&lt;br/>(periodSeconds × failureThreshold)&quot;]
+    STARTUP_EXISTS -->|&quot;No&quot;| HEALTH_LOOP
+
+    STARTUP_LOOP --> STARTUP_RESULT{&quot;Probe&lt;br/>result?&quot;}
+    STARTUP_RESULT -->|&quot;✅ Success&quot;| HEALTH_LOOP[&quot;Start Liveness &amp; Readiness&lt;br/>Probe loops&quot;]
+    STARTUP_RESULT -->|&quot;❌ Fail (all retries)&quot;| STARTUP_KILL[&quot;💀 Kill container&lt;br/>Restart with backoff&quot;]
+
+    subgraph &quot;Ongoing Health Checks&quot;
+        HEALTH_LOOP --> LIVENESS &amp; READINESS
+
+        LIVENESS[&quot;🫀 livenessProbe&lt;br/>every periodSeconds&quot;] --> LIVE_R{&quot;Result?&quot;}
+        LIVE_R -->|&quot;✅ Success&quot;| LIVE_OK[&quot;Container alive&lt;br/>Continue checking&quot;]
+        LIVE_R -->|&quot;❌ Fail × failureThreshold&quot;| LIVE_KILL[&quot;💀 Kill container&lt;br/>kubelet restarts it&quot;]
+
+        READINESS[&quot;📡 readinessProbe&lt;br/>every periodSeconds&quot;] --> READY_R{&quot;Result?&quot;}
+        READY_R -->|&quot;✅ Success&quot;| READY_OK[&quot;Ready=true&lt;br/>✅ IN Endpoints&lt;br/>→ Receives traffic&quot;]
+        READY_R -->|&quot;❌ Fail × failureThreshold&quot;| READY_REMOVE[&quot;Ready=false&lt;br/>❌ OUT of Endpoints&lt;br/>→ No traffic&quot;]
+    end
+
+    LIVE_OK --> LIVENESS
+    READY_OK --> READINESS
+    READY_REMOVE --> READINESS
+    LIVE_KILL --> START
+
+    style STARTUP_KILL fill:#e74c3c,stroke:#c0392b,color:#fff
+    style LIVE_KILL fill:#e74c3c,stroke:#c0392b,color:#fff
+    style LIVE_OK fill:#27ae60,stroke:#1e8449,color:#fff
+    style READY_OK fill:#27ae60,stroke:#1e8449,color:#fff
+    style READY_REMOVE fill:#f39c12,stroke:#d68910,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="probe-comparison">Probe Comparison<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#probe-comparison" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph \&quot;startupProbe\&quot;\n        S_Q[\&quot;Is container&lt;br/>STARTED yet?\&quot;]\n        S_FAIL[\&quot;❌ Fail → Kill + Restart\&quot;]\n        S_PASS[\&quot;✅ Pass → Enable other probes\&quot;]\n    end\n\n    subgraph \&quot;livenessProbe\&quot;\n        L_Q[\&quot;Is container&lt;br/>ALIVE?\&quot;]\n        L_FAIL[\&quot;❌ Fail → Kill + Restart\&quot;]\n        L_PASS[\&quot;✅ Pass → Continue\&quot;]\n    end\n\n    subgraph \&quot;readinessProbe\&quot;\n        R_Q[\&quot;Is container&lt;br/>READY for traffic?\&quot;]\n        R_FAIL[\&quot;❌ Fail → Remove from Endpoints&lt;br/>(Container stays alive!)\&quot;]\n        R_PASS[\&quot;✅ Pass → Add to Endpoints\&quot;]\n    end\n\n    style S_FAIL fill:#e74c3c,stroke:#c0392b,color:#fff\n    style L_FAIL fill:#e74c3c,stroke:#c0392b,color:#fff\n    style R_FAIL fill:#f39c12,stroke:#d68910,color:#fff\n    style S_PASS fill:#27ae60,stroke:#1e8449,color:#fff\n    style L_PASS fill:#27ae60,stroke:#1e8449,color:#fff\n    style R_PASS fill:#27ae60,stroke:#1e8449,color:#fff&quot;">graph LR
+    subgraph &quot;startupProbe&quot;
+        S_Q[&quot;Is container&lt;br/>STARTED yet?&quot;]
+        S_FAIL[&quot;❌ Fail → Kill + Restart&quot;]
+        S_PASS[&quot;✅ Pass → Enable other probes&quot;]
+    end
+
+    subgraph &quot;livenessProbe&quot;
+        L_Q[&quot;Is container&lt;br/>ALIVE?&quot;]
+        L_FAIL[&quot;❌ Fail → Kill + Restart&quot;]
+        L_PASS[&quot;✅ Pass → Continue&quot;]
+    end
+
+    subgraph &quot;readinessProbe&quot;
+        R_Q[&quot;Is container&lt;br/>READY for traffic?&quot;]
+        R_FAIL[&quot;❌ Fail → Remove from Endpoints&lt;br/>(Container stays alive!)&quot;]
+        R_PASS[&quot;✅ Pass → Add to Endpoints&quot;]
+    end
+
+    style S_FAIL fill:#e74c3c,stroke:#c0392b,color:#fff
+    style L_FAIL fill:#e74c3c,stroke:#c0392b,color:#fff
+    style R_FAIL fill:#f39c12,stroke:#d68910,color:#fff
+    style S_PASS fill:#27ae60,stroke:#1e8449,color:#fff
+    style L_PASS fill:#27ae60,stroke:#1e8449,color:#fff
+    style R_PASS fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Khi nào dùng Probe nào? </p></div>
+                  
+                </div>
+<div class="callout-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Probe</th><th>Cần khi…</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>Startup</strong></td><td>App khởi động chậm (load data, warm cache)</td><td>Java app takes 60s to start</td></tr><tr><td><strong>Liveness</strong></td><td>App có thể bị stuck/deadlock</td><td>Web server hung, DB connection pool exhausted</td></tr><tr><td><strong>Readiness</strong></td><td>App cần warmup trước khi nhận traffic</td><td>Cache loading, DB migration running</td></tr></tbody></table></div>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-3-hpa-control-loop">🔄 Workflow 3: HPA Control Loop<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-3-hpa-control-loop" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Auto-scale dựa trên CPU utilization</p>
+</blockquote>
+<h3 id="complete-hpa-decision-flow">Complete HPA Decision Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#complete-hpa-decision-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    subgraph \&quot;Metrics Pipeline\&quot;\n        CADVISOR[\&quot;cAdvisor&lt;br/>(per Node)\&quot;] -->|\&quot;container metrics\&quot;| KUBELET[\&quot;kubelet&lt;br/>/metrics/resource\&quot;]\n        KUBELET --> MS[\&quot;📊 Metrics Server&lt;br/>kube-system\&quot;]\n    end\n\n    subgraph \&quot;HPA Controller Loop (mỗi 15s)\&quot;\n        MS -->|\&quot;metrics.k8s.io API\&quot;| HPA[\&quot;📈 HPA Controller\&quot;]\n\n        HPA --> FETCH[\&quot;Fetch current metrics&lt;br/>for all Pods in target\&quot;]\n\n        FETCH --> CALC[\&quot;🧮 Calculate desired replicas:&lt;br/>desired = ⌈current × (actual/target)⌉\&quot;]\n\n        CALC --> EXAMPLE[\&quot;Example:&lt;br/>Current: 3 Pods&lt;br/>Target CPU: 50%&lt;br/>Actual CPU: avg 75%&lt;br/>&lt;br/>desired = ⌈3 × (75/50)⌉ = ⌈4.5⌉ = 5\&quot;]\n\n        EXAMPLE --> BOUNDS{\&quot;Within&lt;br/>min/max?\&quot;}\n        BOUNDS -->|\&quot;desired &lt; min\&quot;| USE_MIN[\&quot;Use minReplicas\&quot;]\n        BOUNDS -->|\&quot;desired > max\&quot;| USE_MAX[\&quot;Use maxReplicas\&quot;]\n        BOUNDS -->|\&quot;min ≤ desired ≤ max\&quot;| USE_CALC[\&quot;Use calculated value\&quot;]\n    end\n\n    subgraph \&quot;Scale Action\&quot;\n        USE_MIN &amp; USE_MAX &amp; USE_CALC --> DIRECTION{\&quot;Scale&lt;br/>direction?\&quot;}\n\n        DIRECTION -->|\&quot;Scale UP\&quot;| SCALE_UP[\&quot;▲ Immediate scale up&lt;br/>Update Deployment replicas&lt;br/>→ RS Controller → new Pods&lt;br/>→ Scheduler → kubelet\&quot;]\n\n        DIRECTION -->|\&quot;Scale DOWN\&quot;| STABILIZE[\&quot;⏳ Stabilization window&lt;br/>(default: 5 min)&lt;br/>Pick HIGHEST recommendation&lt;br/>in last 5 min\&quot;]\n        STABILIZE --> SCALE_DOWN[\&quot;▼ Gradual scale down\&quot;]\n\n        DIRECTION -->|\&quot;No change\&quot;| WAIT[\&quot;⏳ Wait 15s&lt;br/>Check again\&quot;]\n    end\n\n    style HPA fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style SCALE_UP fill:#27ae60,stroke:#1e8449,color:#fff\n    style SCALE_DOWN fill:#f39c12,stroke:#d68910,color:#fff\n    style MS fill:#3498db,stroke:#2980b9,color:#fff&quot;">flowchart TD
+    subgraph &quot;Metrics Pipeline&quot;
+        CADVISOR[&quot;cAdvisor&lt;br/>(per Node)&quot;] -->|&quot;container metrics&quot;| KUBELET[&quot;kubelet&lt;br/>/metrics/resource&quot;]
+        KUBELET --> MS[&quot;📊 Metrics Server&lt;br/>kube-system&quot;]
+    end
+
+    subgraph &quot;HPA Controller Loop (mỗi 15s)&quot;
+        MS -->|&quot;metrics.k8s.io API&quot;| HPA[&quot;📈 HPA Controller&quot;]
+
+        HPA --> FETCH[&quot;Fetch current metrics&lt;br/>for all Pods in target&quot;]
+
+        FETCH --> CALC[&quot;🧮 Calculate desired replicas:&lt;br/>desired = ⌈current × (actual/target)⌉&quot;]
+
+        CALC --> EXAMPLE[&quot;Example:&lt;br/>Current: 3 Pods&lt;br/>Target CPU: 50%&lt;br/>Actual CPU: avg 75%&lt;br/>&lt;br/>desired = ⌈3 × (75/50)⌉ = ⌈4.5⌉ = 5&quot;]
+
+        EXAMPLE --> BOUNDS{&quot;Within&lt;br/>min/max?&quot;}
+        BOUNDS -->|&quot;desired &lt; min&quot;| USE_MIN[&quot;Use minReplicas&quot;]
+        BOUNDS -->|&quot;desired > max&quot;| USE_MAX[&quot;Use maxReplicas&quot;]
+        BOUNDS -->|&quot;min ≤ desired ≤ max&quot;| USE_CALC[&quot;Use calculated value&quot;]
+    end
+
+    subgraph &quot;Scale Action&quot;
+        USE_MIN &amp; USE_MAX &amp; USE_CALC --> DIRECTION{&quot;Scale&lt;br/>direction?&quot;}
+
+        DIRECTION -->|&quot;Scale UP&quot;| SCALE_UP[&quot;▲ Immediate scale up&lt;br/>Update Deployment replicas&lt;br/>→ RS Controller → new Pods&lt;br/>→ Scheduler → kubelet&quot;]
+
+        DIRECTION -->|&quot;Scale DOWN&quot;| STABILIZE[&quot;⏳ Stabilization window&lt;br/>(default: 5 min)&lt;br/>Pick HIGHEST recommendation&lt;br/>in last 5 min&quot;]
+        STABILIZE --> SCALE_DOWN[&quot;▼ Gradual scale down&quot;]
+
+        DIRECTION -->|&quot;No change&quot;| WAIT[&quot;⏳ Wait 15s&lt;br/>Check again&quot;]
+    end
+
+    style HPA fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style SCALE_UP fill:#27ae60,stroke:#1e8449,color:#fff
+    style SCALE_DOWN fill:#f39c12,stroke:#d68910,color:#fff
+    style MS fill:#3498db,stroke:#2980b9,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="hpa-scaling-visualization">HPA Scaling Visualization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hpa-scaling-visualization" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph \&quot;Before Scale (3 Pods, CPU avg 75%)\&quot;\n        B1[\&quot;Pod 1&lt;br/>CPU: 80%&lt;br/>🔴\&quot;]\n        B2[\&quot;Pod 2&lt;br/>CPU: 70%&lt;br/>🟡\&quot;]\n        B3[\&quot;Pod 3&lt;br/>CPU: 75%&lt;br/>🟡\&quot;]\n    end\n\n    subgraph \&quot;After Scale UP (5 Pods, CPU avg 45%)\&quot;\n        A1[\&quot;Pod 1&lt;br/>CPU: 48%&lt;br/>🟢\&quot;]\n        A2[\&quot;Pod 2&lt;br/>CPU: 42%&lt;br/>🟢\&quot;]\n        A3[\&quot;Pod 3&lt;br/>CPU: 45%&lt;br/>🟢\&quot;]\n        A4[\&quot;Pod 4&lt;br/>CPU: 44%&lt;br/>🟢\&quot;]\n        A5[\&quot;Pod 5&lt;br/>CPU: 46%&lt;br/>🟢\&quot;]\n    end\n\n    style B1 fill:#e74c3c,stroke:#c0392b,color:#fff\n    style B2 fill:#f39c12,stroke:#d68910,color:#fff\n    style B3 fill:#f39c12,stroke:#d68910,color:#fff\n    style A1 fill:#27ae60,stroke:#1e8449,color:#fff\n    style A2 fill:#27ae60,stroke:#1e8449,color:#fff\n    style A3 fill:#27ae60,stroke:#1e8449,color:#fff\n    style A4 fill:#27ae60,stroke:#1e8449,color:#fff\n    style A5 fill:#27ae60,stroke:#1e8449,color:#fff&quot;">graph LR
+    subgraph &quot;Before Scale (3 Pods, CPU avg 75%)&quot;
+        B1[&quot;Pod 1&lt;br/>CPU: 80%&lt;br/>🔴&quot;]
+        B2[&quot;Pod 2&lt;br/>CPU: 70%&lt;br/>🟡&quot;]
+        B3[&quot;Pod 3&lt;br/>CPU: 75%&lt;br/>🟡&quot;]
+    end
+
+    subgraph &quot;After Scale UP (5 Pods, CPU avg 45%)&quot;
+        A1[&quot;Pod 1&lt;br/>CPU: 48%&lt;br/>🟢&quot;]
+        A2[&quot;Pod 2&lt;br/>CPU: 42%&lt;br/>🟢&quot;]
+        A3[&quot;Pod 3&lt;br/>CPU: 45%&lt;br/>🟢&quot;]
+        A4[&quot;Pod 4&lt;br/>CPU: 44%&lt;br/>🟢&quot;]
+        A5[&quot;Pod 5&lt;br/>CPU: 46%&lt;br/>🟢&quot;]
+    end
+
+    style B1 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style B2 fill:#f39c12,stroke:#d68910,color:#fff
+    style B3 fill:#f39c12,stroke:#d68910,color:#fff
+    style A1 fill:#27ae60,stroke:#1e8449,color:#fff
+    style A2 fill:#27ae60,stroke:#1e8449,color:#fff
+    style A3 fill:#27ae60,stroke:#1e8449,color:#fff
+    style A4 fill:#27ae60,stroke:#1e8449,color:#fff
+    style A5 fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>HPA Formula </p></div>
+                  
+                </div>
+<div class="callout-content">
+<pre><code>desiredReplicas = ⌈ currentReplicas × (currentMetric / targetMetric) ⌉
+</code></pre>
+<ul>
+<li><strong>Scale UP</strong>: Ngay lập tức (fast reaction)</li>
+<li><strong>Scale DOWN</strong>: Chờ stabilization window 5 phút (tránh flapping)</li>
+<li><strong>Tolerance</strong>: ±10% (default) — không scale nếu trong khoảng này</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-4-vpa-recommendation-flow">🔄 Workflow 4: VPA Recommendation Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-4-vpa-recommendation-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: VPA phân tích resource usage và đề xuất requests/limits</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    subgraph \&quot;Data Collection (continuous)\&quot;\n        METRICS[\&quot;📊 Metrics: CPU/Memory&lt;br/>history over 8 days\&quot;] --> VPA_REC[\&quot;VPA Recommender&lt;br/>&lt;i>Analyze usage patterns&lt;/i>\&quot;]\n    end\n\n    subgraph \&quot;Recommendation\&quot;\n        VPA_REC --> CALC_REC[\&quot;📋 Recommendations:&lt;br/>&lt;br/>Lower bound: P10 = 100m CPU, 128Mi&lt;br/>Target: P50 = 250m CPU, 512Mi&lt;br/>Upper bound: P95 = 500m CPU, 1Gi&lt;br/>Uncapped: 800m CPU, 2Gi\&quot;]\n    end\n\n    subgraph \&quot;Update Modes\&quot;\n        CALC_REC --> MODE{\&quot;updateMode?\&quot;}\n        MODE -->|\&quot;Off\&quot;| OFF[\&quot;📊 Only show recommendations&lt;br/>kubectl describe vpa\&quot;]\n        MODE -->|\&quot;Initial\&quot;| INITIAL[\&quot;Set resources on&lt;br/>Pod creation only&lt;br/>(no live updates)\&quot;]\n        MODE -->|\&quot;Auto\&quot;| AUTO[\&quot;Evict Pod if far&lt;br/>from target, recreate&lt;br/>with new resources\&quot;]\n    end\n\n    AUTO --> EVICT[\&quot;Evict Pod&lt;br/>(respect PDB!)\&quot;] --> RECREATE[\&quot;Recreate Pod with&lt;br/>updated resources:&lt;br/>requests.cpu: 250m&lt;br/>requests.memory: 512Mi\&quot;]\n\n    style VPA_REC fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style OFF fill:#95a5a6,stroke:#7f8c8d,color:#fff\n    style AUTO fill:#27ae60,stroke:#1e8449,color:#fff\n    style EVICT fill:#f39c12,stroke:#d68910,color:#fff&quot;">flowchart TD
+    subgraph &quot;Data Collection (continuous)&quot;
+        METRICS[&quot;📊 Metrics: CPU/Memory&lt;br/>history over 8 days&quot;] --> VPA_REC[&quot;VPA Recommender&lt;br/>&lt;i>Analyze usage patterns&lt;/i>&quot;]
+    end
+
+    subgraph &quot;Recommendation&quot;
+        VPA_REC --> CALC_REC[&quot;📋 Recommendations:&lt;br/>&lt;br/>Lower bound: P10 = 100m CPU, 128Mi&lt;br/>Target: P50 = 250m CPU, 512Mi&lt;br/>Upper bound: P95 = 500m CPU, 1Gi&lt;br/>Uncapped: 800m CPU, 2Gi&quot;]
+    end
+
+    subgraph &quot;Update Modes&quot;
+        CALC_REC --> MODE{&quot;updateMode?&quot;}
+        MODE -->|&quot;Off&quot;| OFF[&quot;📊 Only show recommendations&lt;br/>kubectl describe vpa&quot;]
+        MODE -->|&quot;Initial&quot;| INITIAL[&quot;Set resources on&lt;br/>Pod creation only&lt;br/>(no live updates)&quot;]
+        MODE -->|&quot;Auto&quot;| AUTO[&quot;Evict Pod if far&lt;br/>from target, recreate&lt;br/>with new resources&quot;]
+    end
+
+    AUTO --> EVICT[&quot;Evict Pod&lt;br/>(respect PDB!)&quot;] --> RECREATE[&quot;Recreate Pod with&lt;br/>updated resources:&lt;br/>requests.cpu: 250m&lt;br/>requests.memory: 512Mi&quot;]
+
+    style VPA_REC fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style OFF fill:#95a5a6,stroke:#7f8c8d,color:#fff
+    style AUTO fill:#27ae60,stroke:#1e8449,color:#fff
+    style EVICT fill:#f39c12,stroke:#d68910,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>VPA vs HPA </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>HPA</strong>: Scale <strong>horizontally</strong> (thêm/bớt Pods) — dựa trên CPU/memory/custom metrics</li>
+<li><strong>VPA</strong>: Scale <strong>vertically</strong> (tăng/giảm resources per Pod) — dựa trên usage history</li>
+<li>⚠️ <strong>KHÔNG dùng HPA + VPA cùng metric</strong> (CPU) — conflicts!</li>
+<li>✅ <strong>Có thể kết hợp</strong>: HPA on custom metrics + VPA on CPU/memory</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-5-cluster-autoscaler">🔄 Workflow 5: Cluster Autoscaler<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-5-cluster-autoscaler" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Pods Pending → Cluster Autoscaler thêm Nodes</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant HPA as 📈 HPA\n    participant RSC as ⚙️ ReplicaSet&lt;br/>Controller\n    participant S as 📋 Scheduler\n    participant CA as 🖥️ Cluster&lt;br/>Autoscaler\n    participant CLOUD as ☁️ Cloud&lt;br/>Provider\n    participant KL as 🔧 kubelet\n\n    HPA->>RSC: Scale to 10 replicas\n\n    RSC->>RSC: Create 7 new Pods&lt;br/>(already have 3)\n\n    loop For each new Pod\n        S->>S: Try to schedule Pod\n        Note over S: ❌ No Node has enough&lt;br/>CPU/Memory!&lt;br/>Events: \&quot;0/3 nodes available:&lt;br/>insufficient cpu\&quot;\n    end\n\n    Note over S: 7 Pods stuck in Pending!\n\n    CA->>CA: Check every 10s:&lt;br/>Pending Pods exist?\n    Note over CA: ✅ Found 7 Pending Pods!&lt;br/>Simulate: Would adding Nodes fix it?\n\n    CA->>CLOUD: Request 3 new Nodes&lt;br/>(node group: n2-standard-4)\n    CLOUD-->>CA: Provisioning...\n\n    Note over CLOUD: VM creation: ~2-5 min\n\n    CLOUD->>KL: 3 new Nodes ready\n    KL->>KL: kubelet registers with&lt;br/>API Server\n    Note over S: 👁️ New Nodes available!\n\n    S->>S: Schedule Pending Pods&lt;br/>to new Nodes\n    KL->>KL: Start containers\n\n    Note over CA: Later: CPU usage drops&lt;br/>Nodes underutilized&lt;br/>→ Scale DOWN (cordon + drain)&quot;">sequenceDiagram
+    autonumber
+    participant HPA as 📈 HPA
+    participant RSC as ⚙️ ReplicaSet&lt;br/>Controller
+    participant S as 📋 Scheduler
+    participant CA as 🖥️ Cluster&lt;br/>Autoscaler
+    participant CLOUD as ☁️ Cloud&lt;br/>Provider
+    participant KL as 🔧 kubelet
+
+    HPA->>RSC: Scale to 10 replicas
+
+    RSC->>RSC: Create 7 new Pods&lt;br/>(already have 3)
+
+    loop For each new Pod
+        S->>S: Try to schedule Pod
+        Note over S: ❌ No Node has enough&lt;br/>CPU/Memory!&lt;br/>Events: &quot;0/3 nodes available:&lt;br/>insufficient cpu&quot;
+    end
+
+    Note over S: 7 Pods stuck in Pending!
+
+    CA->>CA: Check every 10s:&lt;br/>Pending Pods exist?
+    Note over CA: ✅ Found 7 Pending Pods!&lt;br/>Simulate: Would adding Nodes fix it?
+
+    CA->>CLOUD: Request 3 new Nodes&lt;br/>(node group: n2-standard-4)
+    CLOUD-->>CA: Provisioning...
+
+    Note over CLOUD: VM creation: ~2-5 min
+
+    CLOUD->>KL: 3 new Nodes ready
+    KL->>KL: kubelet registers with&lt;br/>API Server
+    Note over S: 👁️ New Nodes available!
+
+    S->>S: Schedule Pending Pods&lt;br/>to new Nodes
+    KL->>KL: Start containers
+
+    Note over CA: Later: CPU usage drops&lt;br/>Nodes underutilized&lt;br/>→ Scale DOWN (cordon + drain)
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="cluster-autoscaler-decision-flow">Cluster Autoscaler Decision Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cluster-autoscaler-decision-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    CHECK[\&quot;🔍 Check every 10s\&quot;] --> PENDING{\&quot;Unschedulable&lt;br/>Pods exist?\&quot;}\n\n    PENDING -->|\&quot;Yes\&quot;| SIMULATE[\&quot;Simulate: Would new Node&lt;br/>allow scheduling?\&quot;]\n    SIMULATE -->|\&quot;Yes\&quot;| SCALE_UP[\&quot;▲ Request new Nodes&lt;br/>from Node Group\&quot;]\n    SIMULATE -->|\&quot;No\&quot;| NO_ACTION[\&quot;Cannot help&lt;br/>(affinity, taints, etc.)\&quot;]\n\n    PENDING -->|\&quot;No\&quot;| UTIL_CHECK{\&quot;Node utilization&lt;br/>&lt; threshold?&lt;br/>(default: 50%)\&quot;}\n\n    UTIL_CHECK -->|\&quot;Yes (underutilized)\&quot;| DRAIN_CHECK{\&quot;Can Pods be&lt;br/>moved safely?&lt;br/>(check PDB, local storage)\&quot;}\n    DRAIN_CHECK -->|\&quot;Yes\&quot;| SCALE_DOWN[\&quot;▼ Cordon + Drain Node&lt;br/>→ Terminate VM\&quot;]\n    DRAIN_CHECK -->|\&quot;No\&quot;| SKIP[\&quot;⏳ Skip this Node&lt;br/>check again later\&quot;]\n\n    UTIL_CHECK -->|\&quot;No\&quot;| WAIT[\&quot;⏳ No action&lt;br/>Check again in 10s\&quot;]\n\n    style SCALE_UP fill:#27ae60,stroke:#1e8449,color:#fff\n    style SCALE_DOWN fill:#f39c12,stroke:#d68910,color:#fff\n    style NO_ACTION fill:#95a5a6,stroke:#7f8c8d,color:#fff\n    style WAIT fill:#95a5a6,stroke:#7f8c8d,color:#fff\n    style SKIP fill:#95a5a6,stroke:#7f8c8d,color:#fff&quot;">flowchart TD
+    CHECK[&quot;🔍 Check every 10s&quot;] --> PENDING{&quot;Unschedulable&lt;br/>Pods exist?&quot;}
+
+    PENDING -->|&quot;Yes&quot;| SIMULATE[&quot;Simulate: Would new Node&lt;br/>allow scheduling?&quot;]
+    SIMULATE -->|&quot;Yes&quot;| SCALE_UP[&quot;▲ Request new Nodes&lt;br/>from Node Group&quot;]
+    SIMULATE -->|&quot;No&quot;| NO_ACTION[&quot;Cannot help&lt;br/>(affinity, taints, etc.)&quot;]
+
+    PENDING -->|&quot;No&quot;| UTIL_CHECK{&quot;Node utilization&lt;br/>&lt; threshold?&lt;br/>(default: 50%)&quot;}
+
+    UTIL_CHECK -->|&quot;Yes (underutilized)&quot;| DRAIN_CHECK{&quot;Can Pods be&lt;br/>moved safely?&lt;br/>(check PDB, local storage)&quot;}
+    DRAIN_CHECK -->|&quot;Yes&quot;| SCALE_DOWN[&quot;▼ Cordon + Drain Node&lt;br/>→ Terminate VM&quot;]
+    DRAIN_CHECK -->|&quot;No&quot;| SKIP[&quot;⏳ Skip this Node&lt;br/>check again later&quot;]
+
+    UTIL_CHECK -->|&quot;No&quot;| WAIT[&quot;⏳ No action&lt;br/>Check again in 10s&quot;]
+
+    style SCALE_UP fill:#27ae60,stroke:#1e8449,color:#fff
+    style SCALE_DOWN fill:#f39c12,stroke:#d68910,color:#fff
+    style NO_ACTION fill:#95a5a6,stroke:#7f8c8d,color:#fff
+    style WAIT fill:#95a5a6,stroke:#7f8c8d,color:#fff
+    style SKIP fill:#95a5a6,stroke:#7f8c8d,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Scaling Layers </p></div>
+                  
+                </div>
+<div class="callout-content">
+<pre><code>Layer 1: HPA        — Scale Pods (seconds)
+Layer 2: Cluster AS — Scale Nodes (minutes)
+Layer 3: VPA        — Right-size Pods (hours/days)
+
+Traffic spike:
+1. HPA sees high CPU → Scale Pods: 3 → 10
+2. Scheduler: &quot;Not enough Nodes!&quot; → Pods Pending
+3. Cluster AS: Add 3 Nodes → ~3 min
+4. Scheduler: Place Pending Pods on new Nodes
+5. Later: Traffic drops → HPA scale down Pods
+6. Later: Cluster AS removes empty Nodes
+</code></pre>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-6-poddisruptionbudget-during-drain">🔄 Workflow 6: PodDisruptionBudget During Drain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-6-poddisruptionbudget-during-drain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Node maintenance → <code>kubectl drain node-1</code></p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant O as 👨‍🔧 Operator\n    participant API as 🔀 API Server\n    participant PDB as 📋 PDB&lt;br/>Controller\n    participant S as 📋 Scheduler\n    participant KL as 🔧 kubelet\n\n    O->>API: kubectl drain node-1&lt;br/>--ignore-daemonsets\n\n    Note over API: Node: node-1 cordoned&lt;br/>(no new Pods scheduled)\n\n    API->>API: List Pods on node-1:&lt;br/>webapp-1, webapp-2, webapp-3&lt;br/>(3 of 5 total replicas)\n\n    API->>PDB: Check PDB for webapp\n    Note over PDB: PDB: minAvailable=3&lt;br/>OR maxUnavailable=1&lt;br/>&lt;br/>Total healthy: 5&lt;br/>Would evict: 3 on node-1\n\n    rect rgb(200, 230, 200)\n        Note over API: Eviction 1/3\n        API->>API: Can evict webapp-1?&lt;br/>Healthy after: 5-1=4 ≥ minAvailable(3) ✅\n        API->>KL: Evict webapp-1\n        S->>S: Schedule replacement on node-2\n        Note over S: Wait: webapp-1 replacement Ready\n    end\n\n    rect rgb(200, 220, 240)\n        Note over API: Eviction 2/3\n        API->>API: Can evict webapp-2?&lt;br/>Healthy after: 4-1=3 ≥ minAvailable(3) ✅\n        API->>KL: Evict webapp-2\n        S->>S: Schedule replacement on node-3\n        Note over S: Wait: webapp-2 replacement Ready\n    end\n\n    rect rgb(255, 230, 230)\n        Note over API: Eviction 3/3\n        API->>API: Can evict webapp-3?&lt;br/>Healthy after: 3-1=2 &lt; minAvailable(3) ❌\n        Note over API: ⏳ WAIT until replacement&lt;br/>Pods are Ready (healthy=4)\n        Note over API: Then: 4-1=3 ≥ 3 ✅\n        API->>KL: Evict webapp-3\n    end\n\n    Note over O: ✅ Node drained safely&lt;br/>Always ≥ 3 healthy Pods!&quot;">sequenceDiagram
+    autonumber
+    participant O as 👨‍🔧 Operator
+    participant API as 🔀 API Server
+    participant PDB as 📋 PDB&lt;br/>Controller
+    participant S as 📋 Scheduler
+    participant KL as 🔧 kubelet
+
+    O->>API: kubectl drain node-1&lt;br/>--ignore-daemonsets
+
+    Note over API: Node: node-1 cordoned&lt;br/>(no new Pods scheduled)
+
+    API->>API: List Pods on node-1:&lt;br/>webapp-1, webapp-2, webapp-3&lt;br/>(3 of 5 total replicas)
+
+    API->>PDB: Check PDB for webapp
+    Note over PDB: PDB: minAvailable=3&lt;br/>OR maxUnavailable=1&lt;br/>&lt;br/>Total healthy: 5&lt;br/>Would evict: 3 on node-1
+
+    rect rgb(200, 230, 200)
+        Note over API: Eviction 1/3
+        API->>API: Can evict webapp-1?&lt;br/>Healthy after: 5-1=4 ≥ minAvailable(3) ✅
+        API->>KL: Evict webapp-1
+        S->>S: Schedule replacement on node-2
+        Note over S: Wait: webapp-1 replacement Ready
+    end
+
+    rect rgb(200, 220, 240)
+        Note over API: Eviction 2/3
+        API->>API: Can evict webapp-2?&lt;br/>Healthy after: 4-1=3 ≥ minAvailable(3) ✅
+        API->>KL: Evict webapp-2
+        S->>S: Schedule replacement on node-3
+        Note over S: Wait: webapp-2 replacement Ready
+    end
+
+    rect rgb(255, 230, 230)
+        Note over API: Eviction 3/3
+        API->>API: Can evict webapp-3?&lt;br/>Healthy after: 3-1=2 &lt; minAvailable(3) ❌
+        Note over API: ⏳ WAIT until replacement&lt;br/>Pods are Ready (healthy=4)
+        Note over API: Then: 4-1=3 ≥ 3 ✅
+        API->>KL: Evict webapp-3
+    end
+
+    Note over O: ✅ Node drained safely&lt;br/>Always ≥ 3 healthy Pods!
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="pdb-configuration-examples">PDB Configuration Examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pdb-configuration-examples" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph \&quot;minAvailable: 3\&quot;\n        MA[\&quot;5 total Pods&lt;br/>minAvailable: 3&lt;br/>→ Max 2 can be disrupted\&quot;]\n        MA1[\&quot;🟢 Pod 1\&quot;] &amp; MA2[\&quot;🟢 Pod 2\&quot;] &amp; MA3[\&quot;🟢 Pod 3\&quot;]\n        MA4[\&quot;🟡 Pod 4&lt;br/>&lt;i>can evict&lt;/i>\&quot;] &amp; MA5[\&quot;🟡 Pod 5&lt;br/>&lt;i>can evict&lt;/i>\&quot;]\n    end\n\n    subgraph \&quot;maxUnavailable: 1\&quot;\n        MU[\&quot;5 total Pods&lt;br/>maxUnavailable: 1&lt;br/>→ Max 1 can be disrupted\&quot;]\n        MU1[\&quot;🟢 Pod 1\&quot;] &amp; MU2[\&quot;🟢 Pod 2\&quot;] &amp; MU3[\&quot;🟢 Pod 3\&quot;] &amp; MU4[\&quot;🟢 Pod 4\&quot;]\n        MU5[\&quot;🟡 Pod 5&lt;br/>&lt;i>can evict&lt;/i>\&quot;]\n    end\n\n    style MA4 fill:#f39c12,stroke:#d68910,color:#fff\n    style MA5 fill:#f39c12,stroke:#d68910,color:#fff\n    style MU5 fill:#f39c12,stroke:#d68910,color:#fff&quot;">graph TD
+    subgraph &quot;minAvailable: 3&quot;
+        MA[&quot;5 total Pods&lt;br/>minAvailable: 3&lt;br/>→ Max 2 can be disrupted&quot;]
+        MA1[&quot;🟢 Pod 1&quot;] &amp; MA2[&quot;🟢 Pod 2&quot;] &amp; MA3[&quot;🟢 Pod 3&quot;]
+        MA4[&quot;🟡 Pod 4&lt;br/>&lt;i>can evict&lt;/i>&quot;] &amp; MA5[&quot;🟡 Pod 5&lt;br/>&lt;i>can evict&lt;/i>&quot;]
+    end
+
+    subgraph &quot;maxUnavailable: 1&quot;
+        MU[&quot;5 total Pods&lt;br/>maxUnavailable: 1&lt;br/>→ Max 1 can be disrupted&quot;]
+        MU1[&quot;🟢 Pod 1&quot;] &amp; MU2[&quot;🟢 Pod 2&quot;] &amp; MU3[&quot;🟢 Pod 3&quot;] &amp; MU4[&quot;🟢 Pod 4&quot;]
+        MU5[&quot;🟡 Pod 5&lt;br/>&lt;i>can evict&lt;/i>&quot;]
+    end
+
+    style MA4 fill:#f39c12,stroke:#d68910,color:#fff
+    style MA5 fill:#f39c12,stroke:#d68910,color:#fff
+    style MU5 fill:#f39c12,stroke:#d68910,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>PDB chỉ bảo vệ <strong>voluntary disruptions</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>✅ Bảo vệ: <code>kubectl drain</code>, cluster autoscaler scale-down, maintenance</li>
+<li>❌ KHÔNG bảo vệ: Node crash, OOMKill, hardware failure</li>
+<li>→ PDB + multi-AZ deployment = best availability</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-tổng-hợp-ha-mechanisms-matrix">📊 Tổng Hợp: HA Mechanisms Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tổng-hợp-ha-mechanisms-matrix" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Mechanism</th><th style="text-align:left;">What it does</th><th style="text-align:center;">Response Time</th><th style="text-align:center;">Scope</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>restartPolicy</strong></td><td style="text-align:left;">Restart crashed container</td><td style="text-align:center;">Immediate (+ backoff)</td><td style="text-align:center;">Container</td></tr><tr><td style="text-align:left;"><strong>Liveness Probe</strong></td><td style="text-align:left;">Kill stuck container</td><td style="text-align:center;">periodSeconds × failureThreshold</td><td style="text-align:center;">Container</td></tr><tr><td style="text-align:left;"><strong>Readiness Probe</strong></td><td style="text-align:left;">Remove unhealthy from traffic</td><td style="text-align:center;">periodSeconds × failureThreshold</td><td style="text-align:center;">Traffic</td></tr><tr><td style="text-align:left;"><strong>ReplicaSet</strong></td><td style="text-align:left;">Maintain desired Pod count</td><td style="text-align:center;">Seconds</td><td style="text-align:center;">Pod</td></tr><tr><td style="text-align:left;"><strong>Node Controller</strong></td><td style="text-align:left;">Detect dead Nodes</td><td style="text-align:center;">~40s detect, 5min evict</td><td style="text-align:center;">Node</td></tr><tr><td style="text-align:left;"><strong>HPA</strong></td><td style="text-align:left;">Scale Pods by metrics</td><td style="text-align:center;">15s check interval</td><td style="text-align:center;">Deployment</td></tr><tr><td style="text-align:left;"><strong>VPA</strong></td><td style="text-align:left;">Right-size Pod resources</td><td style="text-align:center;">Hours (analysis)</td><td style="text-align:center;">Pod resources</td></tr><tr><td style="text-align:left;"><strong>Cluster Autoscaler</strong></td><td style="text-align:left;">Add/remove Nodes</td><td style="text-align:center;">2-5 minutes</td><td style="text-align:center;">Node</td></tr><tr><td style="text-align:left;"><strong>PDB</strong></td><td style="text-align:left;">Protect during maintenance</td><td style="text-align:center;">N/A (constraint)</td><td style="text-align:center;">Pod availability</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-troubleshooting-ha--scaling">🔧 Troubleshooting HA &amp; Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-troubleshooting-ha--scaling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="common-issues--solutions">Common Issues &amp; Solutions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-issues--solutions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Symptom</th><th style="text-align:left;">Likely Cause</th><th style="text-align:left;">Debug Command</th><th style="text-align:left;">Fix</th></tr></thead><tbody><tr><td style="text-align:left;">Pod <code>CrashLoopBackOff</code> (restart loop)</td><td style="text-align:left;">App keeps crashing, backoff increasing</td><td style="text-align:left;"><code>kubectl logs &lt;pod> --previous</code></td><td style="text-align:left;">Fix app, check resource limits, check probes</td></tr><tr><td style="text-align:left;">Liveness probe kills healthy app</td><td style="text-align:left;">Probe timeout too short or checks dependency</td><td style="text-align:left;"><code>kubectl describe pod &lt;name></code> → Events</td><td style="text-align:left;">Increase <code>timeoutSeconds</code>, don’t check DB in liveness</td></tr><tr><td style="text-align:left;">Readiness: all Pods removed from Service</td><td style="text-align:left;">Readiness checks too strict</td><td style="text-align:left;"><code>kubectl get endpoints &lt;svc></code></td><td style="text-align:left;">Relax <code>failureThreshold</code> or check probe endpoint</td></tr><tr><td style="text-align:left;">HPA not scaling</td><td style="text-align:left;">Metrics Server not installed</td><td style="text-align:left;"><code>kubectl top pods</code> (should show metrics)</td><td style="text-align:left;">Install Metrics Server: <code>kubectl apply -f metrics-server.yaml</code></td></tr><tr><td style="text-align:left;">HPA flapping (up/down/up)</td><td style="text-align:left;">Target too close to actual</td><td style="text-align:left;"><code>kubectl describe hpa &lt;name></code></td><td style="text-align:left;">Increase <code>stabilizationWindowSeconds</code>, adjust target</td></tr><tr><td style="text-align:left;">Pods Pending after HPA scale-up</td><td style="text-align:left;">Not enough Node resources</td><td style="text-align:left;"><code>kubectl describe pod &lt;name></code> → Events</td><td style="text-align:left;">Enable Cluster Autoscaler or add Nodes</td></tr><tr><td style="text-align:left;"><code>kubectl drain</code> hangs</td><td style="text-align:left;">PDB preventing eviction</td><td style="text-align:left;"><code>kubectl get pdb -A</code></td><td style="text-align:left;">Wait for replacement Pods or use <code>--force</code></td></tr></tbody></table></div>
+<h3 id="useful-commands">Useful Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#useful-commands" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Monitoring scaling</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> top</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --containers</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">          # Pod CPU/memory usage</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> top</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> nodes</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                      # Node capacity usage</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> describe</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> hpa</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">            # HPA status + events</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> events</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --sort-by=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">'.lastTimestamp'</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -i</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> scale</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Probe debugging</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> describe</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pod</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A5</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Liveness\|Readiness\|Startup&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> custom-columns=&quot;NAME:.metadata.name,READY:.status.conditions[?(@.type=='Ready')].status&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Restart Policy behavior</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Always (default for Deployments): kubelet always restarts</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># OnFailure (use for Jobs): restart only on non-zero exit code</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Never (use for one-shot tasks): never restart</span></span></code></pre></figure>
+<hr/>
+<h2 id="-cross-references">📎 Cross-References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-cross-references" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Topic</th><th style="text-align:left;">Link</th></tr></thead><tbody><tr><td style="text-align:left;">Workload types and scaling behavior</td><td style="text-align:left;"><a href="../../.././04-workloads/06-workload-workflows" class="internal internal-link alias" data-slug="04-workloads/06-workload-workflows">4.6. Workload Workflows</a></td></tr><tr><td style="text-align:left;">Resource limits (QoS → OOMKill)</td><td style="text-align:left;"><a href="../../.././06-configuration/04-config-workflows" class="internal internal-link alias" data-slug="06-configuration/04-config-workflows">6.4. Config Workflows</a></td></tr><tr><td style="text-align:left;">Network traffic during scaling</td><td style="text-align:left;"><a href="../../.././05-networking/04-networking-workflows" class="internal internal-link alias" data-slug="05-networking/04-networking-workflows">5.4. Networking Workflows</a></td></tr><tr><td style="text-align:left;">Storage persistence during Pod restarts</td><td style="text-align:left;"><a href="../../.././07-storage/04-storage-workflows" class="internal internal-link alias" data-slug="07-storage/04-storage-workflows">7.4. Storage Workflows</a></td></tr><tr><td style="text-align:left;">Pod Security during scaling</td><td style="text-align:left;"><a href="../../.././09-security/04-security-workflows" class="internal internal-link alias" data-slug="09-security/04-security-workflows">9.4. Security Workflows</a></td></tr><tr><td style="text-align:left;">Architecture: Controller reconciliation</td><td style="text-align:left;"><a href="../../.././02-architecture/04-component-workflows" class="internal internal-link alias" data-slug="02-architecture/04-component-workflows">2.4. Component Workflows</a></td></tr></tbody></table></div>
+<hr/>
+<h2 id="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kiểm-tra-hiểu-biết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="câu-1-probe-configuration">Câu 1: Probe Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-1-probe-configuration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> Java app mất 90s để start, nhưng sau đó rất stable. Bạn cấu hình probes như thế nào?</p>
+<details>
+<summary>Xem đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># startupProbe: Cho app 90s+ để start</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">startupProbe</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  httpGet</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/health</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    port</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">8080</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  periodSeconds</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">10</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  failureThreshold</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">12</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # 10s × 12 = 120s max startup time</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # → Liveness/Readiness chỉ bắt đầu SAU khi startup pass</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># livenessProbe: Check app alive (sau startup)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">livenessProbe</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  httpGet</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/health</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    port</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">8080</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  periodSeconds</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">15</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  failureThreshold</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">3</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">   # Kill sau 45s unhealthy</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># readinessProbe: Check ready for traffic</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">readinessProbe</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  httpGet</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/ready</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    port</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">8080</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  periodSeconds</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  failureThreshold</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">   # Remove from traffic sau 10s</span></span></code></pre></figure>
+<p><strong>Tại sao startupProbe?</strong> Nếu không có nó, livenessProbe sẽ kill app trước khi nó kịp start!</p>
+</details>
+<h3 id="câu-2-hpa-calculation">Câu 2: HPA Calculation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-2-hpa-calculation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> HPA target CPU = 60%, min=2, max=15. Hiện tại 4 Pods, CPU avg = 90%. Bao nhiêu replicas?</p>
+<details>
+<summary>Xem đáp án</summary>
+<pre><code>Formula: desired = ⌈ current × (actual / target) ⌉
+
+desired = ⌈ 4 × (90 / 60) ⌉
+        = ⌈ 4 × 1.5 ⌉
+        = ⌈ 6.0 ⌉
+        = 6
+
+Check bounds: min=2 ≤ 6 ≤ max=15 ✅
+
+→ Scale from 4 → 6 Pods
+→ Scale UP immediate (no stabilization delay)
+</code></pre>
+</details>
+<h3 id="câu-3-pdb-vs-kubectl-drain">Câu 3: PDB vs kubectl drain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-3-pdb-vs-kubectl-drain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> 3 Pods trên Node-1, PDB minAvailable=2. <code>kubectl drain node-1 --timeout=30s</code>. Chuyện gì xảy ra?</p>
+<details>
+<summary>Xem đáp án</summary>
+<pre><code>Pod 1: Evict OK (3-1=2 ≥ minAvailable=2) ✅
+→ Wait for replacement Pod to be Ready...
+
+Pod 2: Can evict? 2-1=1 &lt; minAvailable=2 ❌
+→ WAIT until replacement Pod-1 is Ready
+→ Then 3-1=2 ≥ 2 ✅, evict Pod 2
+
+Pod 3: Same logic, wait for Pod-2 replacement...
+
+Nếu timeout=30s và replacement Pods chưa kịp Ready:
+→ drain command: ERROR - timeout!
+→ Node vẫn có Pods (drain chưa hoàn thành)
+→ Tăng --timeout hoặc dùng --force (bỏ qua PDB)
+</code></pre>
+<blockquote>
+<p><code>--force</code> flag bỏ qua PDB → có thể gây downtime!</p>
+</blockquote>
+</details>
+<hr/>
+<h2 id="-tiếp-theo">🚀 Tiếp Theo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tiếp-theo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Bạn đã hiểu đầy đủ cơ chế HA và auto-scaling!</p>
+<p><strong>Next:</strong> <a href="../../.././09-security/readme" class="internal internal-link alias" data-slug="09-security/readme">Phần 9: Security →</a></p>
+<hr/>
+<p><a href="../../../02---areas/k8s/08-high-availability/03-scaling" class="internal internal-link alias" data-slug="02---areas/k8s/08-high-availability/03-scaling">⬅️ 8.3. Scaling</a> | <a href="../../.././readme" class="internal internal-link alias" data-slug="readme">🏠 Mục Lục Chính</a> | <a href="../../../readme" class="internal internal-link alias" data-slug="readme">📂 Phần 8: HA &amp; Scaling</a> | <a href="../../.././09-security/readme" class="internal internal-link alias" data-slug="09-security/readme">➡️ Phần 9: Security</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-158" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#84-ha--scaling-workflows---luồng-self-healing--auto-scaling" data-for="84-ha--scaling-workflows---luồng-self-healing--auto-scaling">8.4. HA &amp; Scaling Workflows - Luồng Self-Healing &amp; Auto-Scaling</a></li><li class="depth-1"><a href="#-mục-tiêu-học" data-for="-mục-tiêu-học">🎯 Mục Tiêu Học</a></li><li class="depth-1"><a href="#-quy-tắc-màu-sắc-diagram" data-for="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram</a></li><li class="depth-1"><a href="#-workflow-1-complete-self-healing-pipeline" data-for="-workflow-1-complete-self-healing-pipeline">🔄 Workflow 1: Complete Self-Healing Pipeline</a></li><li class="depth-2"><a href="#node-failure-timeline" data-for="node-failure-timeline">Node Failure Timeline</a></li><li class="depth-1"><a href="#-workflow-2-probe-decision-logic" data-for="-workflow-2-probe-decision-logic">🔄 Workflow 2: Probe Decision Logic</a></li><li class="depth-2"><a href="#probe-execution-flow" data-for="probe-execution-flow">Probe Execution Flow</a></li><li class="depth-2"><a href="#probe-comparison" data-for="probe-comparison">Probe Comparison</a></li><li class="depth-1"><a href="#-workflow-3-hpa-control-loop" data-for="-workflow-3-hpa-control-loop">🔄 Workflow 3: HPA Control Loop</a></li><li class="depth-2"><a href="#complete-hpa-decision-flow" data-for="complete-hpa-decision-flow">Complete HPA Decision Flow</a></li><li class="depth-2"><a href="#hpa-scaling-visualization" data-for="hpa-scaling-visualization">HPA Scaling Visualization</a></li><li class="depth-1"><a href="#-workflow-4-vpa-recommendation-flow" data-for="-workflow-4-vpa-recommendation-flow">🔄 Workflow 4: VPA Recommendation Flow</a></li><li class="depth-1"><a href="#-workflow-5-cluster-autoscaler" data-for="-workflow-5-cluster-autoscaler">🔄 Workflow 5: Cluster Autoscaler</a></li><li class="depth-2"><a href="#cluster-autoscaler-decision-flow" data-for="cluster-autoscaler-decision-flow">Cluster Autoscaler Decision Flow</a></li><li class="depth-1"><a href="#-workflow-6-poddisruptionbudget-during-drain" data-for="-workflow-6-poddisruptionbudget-during-drain">🔄 Workflow 6: PodDisruptionBudget During Drain</a></li><li class="depth-2"><a href="#pdb-configuration-examples" data-for="pdb-configuration-examples">PDB Configuration Examples</a></li><li class="depth-1"><a href="#-tổng-hợp-ha-mechanisms-matrix" data-for="-tổng-hợp-ha-mechanisms-matrix">📊 Tổng Hợp: HA Mechanisms Matrix</a></li><li class="depth-1"><a href="#-troubleshooting-ha--scaling" data-for="-troubleshooting-ha--scaling">🔧 Troubleshooting HA &amp; Scaling</a></li><li class="depth-2"><a href="#common-issues--solutions" data-for="common-issues--solutions">Common Issues &amp; Solutions</a></li><li class="depth-2"><a href="#useful-commands" data-for="useful-commands">Useful Commands</a></li><li class="depth-1"><a href="#-cross-references" data-for="-cross-references">📎 Cross-References</a></li><li class="depth-1"><a href="#-kiểm-tra-hiểu-biết" data-for="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết</a></li><li class="depth-2"><a href="#câu-1-probe-configuration" data-for="câu-1-probe-configuration">Câu 1: Probe Configuration</a></li><li class="depth-2"><a href="#câu-2-hpa-calculation" data-for="câu-2-hpa-calculation">Câu 2: HPA Calculation</a></li><li class="depth-2"><a href="#câu-3-pdb-vs-kubectl-drain" data-for="câu-3-pdb-vs-kubectl-drain">Câu 3: PDB vs kubectl drain</a></li><li class="depth-1"><a href="#-tiếp-theo" data-for="-tiếp-theo">🚀 Tiếp Theo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/k8s/08-high-availability/readme" class="internal">Phần 8: High Availability &amp; Scaling</a></li><li><a href="../../../02---areas/k8s/readme" class="internal">Kubernetes Learning Guide - Hướng Dẫn Học Kubernetes Từ Đầu</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

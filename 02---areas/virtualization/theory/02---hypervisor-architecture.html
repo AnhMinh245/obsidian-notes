@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Hypervisor Architecture</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Hypervisor Architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Hypervisor Architecture"/><meta name="twitter:description" content="02 · Hypervisor Architecture ← 🖥️ Virtualization MOC 1."/><meta property="og:description" content="02 · Hypervisor Architecture ← 🖥️ Virtualization MOC 1."/><meta property="og:image:alt" content="02 · Hypervisor Architecture ← 🖥️ Virtualization MOC 1."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/virtualization/theory/02---hypervisor-architecture"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/virtualization/theory/02---hypervisor-architecture"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="02 · Hypervisor Architecture ← 🖥️ Virtualization MOC 1."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/virtualization/theory/02---hypervisor-architecture" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-461" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-461" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/virtualization/">Virtualization</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/virtualization/theory/">theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Hypervisor Architecture</a></div></nav><h1 class="article-title">Hypervisor Architecture</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/devops" class="internal internal-link tag-link">domain/devops</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Kiến trúc Hypervisor</span><span class="note-properties-separator">, </span><span class="note-properties-text">Type 1 vs Type 2</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-23T17:00:00.000Z">24 thg 4, 2026</time><span>8 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="02--hypervisor-architecture">02 · Hypervisor Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#02--hypervisor-architecture" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>← <a href="../../.././virtualization-moc" class="internal internal-link alias" data-slug="virtualization-moc">🖥️ Virtualization MOC</a></p>
+<hr/>
+<h2 id="1-hypervisor-là-gì">1. Hypervisor là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-hypervisor-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Hypervisor</strong> (hay <strong>Virtual Machine Monitor — VMM</strong>) là lớp phần mềm nằm giữa phần cứng vật lý và các máy ảo (VM). Nhiệm vụ:</p>
+<ol>
+<li><strong>Trừu tượng hoá phần cứng</strong> — tạo ra phần cứng ảo cho mỗi VM</li>
+<li><strong>Phân bổ tài nguyên</strong> — chia CPU, RAM, I/O cho các VM</li>
+<li><strong>Enforce isolation</strong> — đảm bảo VM không xâm phạm lẫn nhau</li>
+<li><strong>Intercept &amp; emulate</strong> — xử lý các instruction đặc quyền từ guest OS</li>
+</ol>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>Popek &amp; Goldberg (1974) — 3 tiêu chí của VMM</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<ol>
+<li><strong>Equivalence (Fidelity)</strong>: chương trình chạy trên VM phải cho kết quả giống hệt bare-metal</li>
+<li><strong>Resource control (Safety)</strong>: VMM phải kiểm soát hoàn toàn mọi tài nguyên vật lý</li>
+<li><strong>Efficiency</strong>: đa số instruction của guest phải chạy trực tiếp trên CPU, không cần emulation</li>
+</ol>
+</div>
+</blockquote>
+<hr/>
+<h2 id="2-type-1--bare-metal-hypervisor">2. Type 1 — Bare-metal Hypervisor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-type-1--bare-metal-hypervisor" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>┌─────────┐ ┌─────────┐ ┌─────────┐
+│  VM 1   │ │  VM 2   │ │  VM 3   │
+│ (Guest) │ │ (Guest) │ │ (Guest) │
+└────┬────┘ └────┬────┘ └────┬────┘
+     │           │           │
+╔════╧═══════════╧═══════════╧════╗
+║         Type 1 Hypervisor       ║
+║      (chạy trực tiếp trên      ║
+║          phần cứng)             ║
+╚════════════════╦════════════════╝
+                 │
+         ┌───────┴───────┐
+         │   Hardware    │
+         └───────────────┘
+</code></pre>
+<h3 id="đặc-điểm">Đặc điểm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#đặc-điểm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thuộc tính</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Vị trí</strong></td><td>Chạy trực tiếp trên phần cứng, KHÔNG cần host OS</td></tr><tr><td><strong>Hiệu năng</strong></td><td>Cao nhất — ít layer trung gian</td></tr><tr><td><strong>Security</strong></td><td>Mạnh — attack surface nhỏ, không có host OS để tấn công</td></tr><tr><td><strong>Use case</strong></td><td>Data center, production, enterprise</td></tr><tr><td><strong>Ví dụ</strong></td><td>VMware ESXi, Microsoft Hyper-V, Xen, KVM*</td></tr></tbody></table></div>
+<h3 id="các-sản-phẩm-type-1-tiêu-biểu">Các sản phẩm Type 1 tiêu biểu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-sản-phẩm-type-1-tiêu-biểu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Hypervisor</th><th>Đặc điểm nổi bật</th><th>License</th></tr></thead><tbody><tr><td><strong>VMware ESXi</strong></td><td>Mature nhất, vCenter ecosystem, vMotion, HA</td><td>Commercial</td></tr><tr><td><strong>Microsoft Hyper-V</strong></td><td>Tích hợp Windows Server, System Center</td><td>Commercial / Free Core</td></tr><tr><td><strong>Xen</strong></td><td>Tiên phong paravirt, dùng bởi AWS (Nitro gốc)</td><td>Open-source</td></tr><tr><td><strong>KVM</strong></td><td>Trong Linux kernel, QEMU userspace, libvirt API</td><td>Open-source (GPL)</td></tr><tr><td><strong>Proxmox VE</strong></td><td>KVM + LXC + web UI, ZFS, Ceph</td><td>Open-source (AGPL)</td></tr></tbody></table></div>
+<h3 id="kvm--type-1-hay-type-2">KVM — Type 1 hay Type 2?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kvm--type-1-hay-type-2" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>Tranh cãi phân loại KVM</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>KVM thường bị nhầm là Type 2 vì chạy “trên Linux”. Nhưng thực tế:</p>
+<ul>
+<li>KVM là <strong>kernel module</strong> (<code>kvm.ko</code>) — Linux kernel <strong>trở thành</strong> hypervisor</li>
+<li>Khi load KVM module, Linux kernel chạy ở <strong>VMX root mode</strong> (Ring -1)</li>
+<li>Guest OS chạy ở <strong>VMX non-root mode</strong></li>
+<li>Linux kernel vẫn quản lý scheduling, memory, I/O → đóng vai trò hypervisor</li>
+</ul>
+<p>→ <strong>KVM là Type 1</strong> biến thể: kernel = hypervisor, không phải app chạy trên OS.</p>
+</div>
+</blockquote>
+<pre><code>Trước khi load KVM:
+  Linux = OS bình thường
+
+Sau khi load KVM:
+  Linux kernel + kvm.ko = Hypervisor (Type 1)
+  ├── Host processes (Linux userspace) ← một &quot;guest&quot; đặc biệt
+  ├── VM 1 (QEMU process + guest kernel)
+  └── VM 2 (QEMU process + guest kernel)
+</code></pre>
+<hr/>
+<h2 id="3-type-2--hosted-hypervisor">3. Type 2 — Hosted Hypervisor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-type-2--hosted-hypervisor" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>┌─────────┐ ┌─────────┐
+│  VM 1   │ │  VM 2   │
+│ (Guest) │ │ (Guest) │
+└────┬────┘ └────┬────┘
+     │           │
+╔════╧═══════════╧════════════════╗
+║      Type 2 Hypervisor          ║
+║   (app chạy trên host OS)      ║
+╚════════════════╦════════════════╝
+                 │
+         ┌───────┴───────┐
+         │   Host OS     │
+         │  (Windows/    │
+         │  macOS/Linux) │
+         ├───────────────┤
+         │   Hardware    │
+         └───────────────┘
+</code></pre>
+<h3 id="đặc-điểm-1">Đặc điểm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#đặc-điểm-1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thuộc tính</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Vị trí</strong></td><td>Chạy như application trên host OS</td></tr><tr><td><strong>Hiệu năng</strong></td><td>Thấp hơn Type 1 — phải đi qua host OS</td></tr><tr><td><strong>Security</strong></td><td>Yếu hơn — host OS là attack surface lớn</td></tr><tr><td><strong>Use case</strong></td><td>Development, testing, learning, homelab nhỏ</td></tr><tr><td><strong>Ví dụ</strong></td><td>VMware Workstation/Fusion, VirtualBox, Parallels</td></tr></tbody></table></div>
+<h3 id="sản-phẩm-type-2-tiêu-biểu">Sản phẩm Type 2 tiêu biểu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sản-phẩm-type-2-tiêu-biểu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Hypervisor</th><th>OS host</th><th>License</th></tr></thead><tbody><tr><td><strong>VMware Workstation</strong></td><td>Windows, Linux</td><td>Free (Personal)</td></tr><tr><td><strong>VMware Fusion</strong></td><td>macOS</td><td>Free (Personal)</td></tr><tr><td><strong>Oracle VirtualBox</strong></td><td>Windows, macOS, Linux</td><td>Open-source (GPL)</td></tr><tr><td><strong>Parallels Desktop</strong></td><td>macOS</td><td>Commercial</td></tr><tr><td><strong>GNOME Boxes</strong></td><td>Linux (GNOME)</td><td>Open-source</td></tr></tbody></table></div>
+<hr/>
+<h2 id="4-so-sánh-type-1-vs-type-2">4. So sánh Type 1 vs Type 2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-so-sánh-type-1-vs-type-2" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>Type 1 (Bare-metal)</th><th>Type 2 (Hosted)</th></tr></thead><tbody><tr><td><strong>Hiệu năng</strong></td><td>Cao — truy cập hardware trực tiếp</td><td>Thấp hơn — qua host OS</td></tr><tr><td><strong>Latency</strong></td><td>Thấp</td><td>Cao hơn (thêm 1 layer)</td></tr><tr><td><strong>Security</strong></td><td>Mạnh — attack surface nhỏ</td><td>Yếu hơn — host OS exposed</td></tr><tr><td><strong>Management</strong></td><td>Cần tool riêng (vCenter, web UI)</td><td>Dùng GUI trên desktop</td></tr><tr><td><strong>Driver support</strong></td><td>Hạn chế (ESXi chỉ support HCL)</td><td>Tốt (dùng driver của host OS)</td></tr><tr><td><strong>Setup</strong></td><td>Phức tạp hơn, cần dedicated hardware</td><td>Đơn giản, cài như app</td></tr><tr><td><strong>Cost</strong></td><td>Cao (dedicated server)</td><td>Thấp (dùng laptop/desktop)</td></tr><tr><td><strong>Production</strong></td><td>✅</td><td>❌ (chỉ dev/test)</td></tr></tbody></table></div>
+<hr/>
+<h2 id="5-kiến-trúc-nội-bộ-hypervisor">5. Kiến trúc nội bộ Hypervisor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-kiến-trúc-nội-bộ-hypervisor" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-monolithic-vs-microkernel">5.1. Monolithic vs Microkernel<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-monolithic-vs-microkernel" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hai trường phái thiết kế hypervisor:</p>
+<pre><code>     Monolithic                          Microkernel
+┌──────────────────────┐      ┌──────────────────────────┐
+│    Hypervisor core   │      │   Thin hypervisor core   │
+│  ┌────────────────┐  │      │   (chỉ CPU scheduling    │
+│  │ CPU scheduling │  │      │    + memory isolation)    │
+│  │ Memory mgmt    │  │      └──────────┬───────────────┘
+│  │ I/O stack      │  │               │
+│  │ Device drivers │  │      ┌────────┴─────────────┐
+│  │ Network stack  │  │      │  Service VM (Dom0 /  │
+│  └────────────────┘  │      │  Parent partition)   │
+└──────────────────────┘      │  ┌──────────────┐    │
+                              │  │ Device drivers│    │
+                              │  │ I/O stack     │    │
+                              │  │ Management    │    │
+                              │  └──────────────┘    │
+                              └──────────────────────┘
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thiết kế</th><th>Ưu điểm</th><th>Nhược điểm</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>Monolithic</strong></td><td>Hiệu năng cao, ít context switch</td><td>Attack surface lớn, driver lỗi → crash toàn hệ</td><td>VMware ESXi</td></tr><tr><td><strong>Microkernel</strong></td><td>An toàn, modular, driver chạy riêng</td><td>Overhead từ inter-VM communication</td><td>Xen, Hyper-V</td></tr></tbody></table></div>
+<h3 id="52-kvmqemu-architecture-chi-tiết">5.2. KVM/QEMU Architecture (chi tiết)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-kvmqemu-architecture-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>KVM/QEMU là kiến trúc <strong>hybrid</strong> đặc biệt quan trọng vì là nền tảng của Proxmox, OpenStack, và nhiều cloud provider.</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                    User Space                           │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │  QEMU (VM1)  │  │  QEMU (VM2)  │  │   libvirt    │  │
+│  │  ┌────────┐  │  │  ┌────────┐  │  │  (virsh,     │  │
+│  │  │ vCPU   │  │  │  │ vCPU   │  │  │   virt-mgr)  │  │
+│  │  │ vRAM   │  │  │  │ vRAM   │  │  └──────────────┘  │
+│  │  │ vDisk  │  │  │  │ vDisk  │  │                     │
+│  │  │ vNIC   │  │  │  │ vNIC   │  │                     │
+│  │  └────┬───┘  │  │  └────┬───┘  │                     │
+│  └───────┼──────┘  └───────┼──────┘                     │
+│          │ ioctl           │ ioctl                       │
+├──────────┼─────────────────┼────────────────────────────┤
+│          ↓     Kernel Space          ↓                  │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │                KVM Module (kvm.ko)              │    │
+│  │  ┌─────────────┐  ┌──────────────────────────┐  │    │
+│  │  │ kvm-intel.ko│  │ VM scheduling (CFS)      │  │    │
+│  │  │ kvm-amd.ko  │  │ Memory management (EPT)  │  │    │
+│  │  └─────────────┘  │ Interrupt injection       │  │    │
+│  │                    └──────────────────────────┘  │    │
+│  └─────────────────────────────────────────────────┘    │
+├─────────────────────────────────────────────────────────┤
+│                    Hardware                             │
+│            VT-x / AMD-V + EPT/NPT + VT-d               │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Phân công vai trò:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Component</th><th>Vai trò</th></tr></thead><tbody><tr><td><strong>KVM kernel module</strong></td><td>Tạo <code>/dev/kvm</code>, quản lý VMX transitions, EPT, interrupt injection</td></tr><tr><td><strong>QEMU</strong></td><td>Userspace process mô phỏng hardware (disk controller, NIC, GPU, USB…)</td></tr><tr><td><strong>libvirt</strong></td><td>API layer chuẩn hoá — virsh, virt-manager, Proxmox, OpenStack đều gọi qua đây</td></tr><tr><td><strong>virtio</strong></td><td>Paravirtual drivers cho I/O hiệu năng cao (thay vì emulate hardware cũ)</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>QEMU có thể chạy không cần KVM</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>QEMU + KVM</strong>: hardware acceleration → gần native speed</li>
+<li><strong>QEMU thuần</strong>: full software emulation → rất chậm, nhưng có thể emulate CPU khác architecture (ARM trên x86)</li>
+</ul>
+</div>
+</blockquote>
+<h3 id="53-vmware-esxi-architecture">5.3. VMware ESXi Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-vmware-esxi-architecture" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│  Management Plane                                       │
+│  ┌──────────┐  ┌──────────┐  ┌─────────────────────┐   │
+│  │  DCUI    │  │  hostd   │  │   vpxa (vCenter     │   │
+│  │ (console)│  │ (mgmt    │  │    agent)            │   │
+│  │          │  │  daemon) │  │                      │   │
+│  └──────────┘  └──────────┘  └─────────────────────┘   │
+├─────────────────────────────────────────────────────────┤
+│  VMkernel                                               │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │ VM Management ─── CPU Scheduler ─── Memory Mgr │    │
+│  │ VMFS Driver ───── Network Stack ─── Device I/O  │    │
+│  └─────────────────────────────────────────────────┘    │
+├─────────────────────────────────────────────────────────┤
+│  Hardware                                               │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>VMkernel</strong> là proprietary microkernel của VMware — KHÔNG phải Linux:</p>
+<ul>
+<li>Viết từ đầu để tối ưu cho ảo hoá</li>
+<li>Hỗ trợ VMFS (filesystem cho datastore)</li>
+<li>Tích hợp vMotion, HA, DRS trong kernel level</li>
+<li>Driver model riêng → chỉ support hardware trong HCL (Hardware Compatibility List)</li>
+</ul>
+<hr/>
+<h2 id="6-management-layer">6. Management Layer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-management-layer" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Hypervisor một mình không đủ cho production — cần management platform:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Platform</th><th>Hypervisor</th><th>Tính năng nổi bật</th></tr></thead><tbody><tr><td><strong>VMware vCenter</strong></td><td>ESXi</td><td>vMotion, HA, DRS, vSAN, NSX</td></tr><tr><td><strong>Proxmox VE</strong></td><td>KVM + LXC</td><td>Web UI, ZFS, Ceph, HA cluster</td></tr><tr><td><strong>oVirt</strong></td><td>KVM</td><td>Red Hat upstream, datacenter management</td></tr><tr><td><strong>HPE Morpheus VME</strong></td><td>Multi-hypervisor</td><td>Hybrid cloud, automation, self-service</td></tr><tr><td><strong>OpenStack</strong></td><td>KVM (chủ yếu)</td><td>IaaS cloud, multi-tenant, API-driven</td></tr><tr><td><strong>Microsoft SCVMM</strong></td><td>Hyper-V</td><td>System Center ecosystem</td></tr></tbody></table></div>
+<h3 id="vai-trò-management-layer">Vai trò management layer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vai-trò-management-layer" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Sysadmin / Self-service Portal
+         │
+         ↓
+┌───────────────────────────┐
+│   Management Platform     │
+│  ┌─────────────────────┐  │
+│  │ Template management │  │
+│  │ VM lifecycle        │  │
+│  │ Live migration      │  │
+│  │ HA &amp; failover       │  │
+│  │ Resource scheduling │  │
+│  │ Backup/snapshot     │  │
+│  │ Monitoring/alerts   │  │
+│  │ RBAC / multi-tenant │  │
+│  └─────────────────────┘  │
+└──────────┬────────────────┘
+           │ API calls
+     ┌─────┴──────┐
+     │  Host 1    │  Host 2    │  Host N
+     │  (ESXi/    │  (ESXi/    │  (ESXi/
+     │   KVM)     │   KVM)     │   KVM)
+     └────────────┘────────────┘
+</code></pre>
+<hr/>
+<h2 id="7-nested-virtualization">7. Nested Virtualization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-nested-virtualization" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Nested virtualization</strong> = chạy hypervisor bên trong VM → tạo VM trong VM.</p>
+<pre><code>Physical Host
+└── Hypervisor L0 (KVM / ESXi)
+    └── VM (L1 Guest) — chạy hypervisor L1
+        └── Nested VM (L2 Guest)
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Use case</strong></td><td>Lab, testing, CI/CD, training (ví dụ: lab Morpheus trên Fedora KVM)</td></tr><tr><td><strong>Yêu cầu</strong></td><td>CPU phải support VMCS shadowing (Intel) hoặc SVM nesting (AMD)</td></tr><tr><td><strong>Hiệu năng</strong></td><td>L2 chậm hơn L1 đáng kể (thêm 1 layer trap)</td></tr><tr><td><strong>Enable</strong></td><td>KVM: <code>echo &quot;options kvm_intel nested=1&quot; > /etc/modprobe.d/kvm.conf</code></td></tr></tbody></table></div>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>Không dùng nested virt cho production</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nested chỉ phù hợp cho lab/testing. Production luôn dùng L1 trực tiếp (bare-metal hypervisor).</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="xem-thêm">Xem thêm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#xem-thêm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../01---fundamentals" class="internal internal-link alias" data-slug="01---fundamentals">01 - Fundamentals</a> — Khái niệm và phân loại ảo hoá</li>
+<li><a href="../../../02---areas/virtualization/theory/03---cpu-virtualization" class="internal internal-link alias" data-slug="02---areas/virtualization/theory/03---cpu-virtualization">03 - CPU Virtualization</a> — VT-x/AMD-V chi tiết, vCPU scheduling</li>
+<li><a href="../../../02---areas/virtualization/theory/07---io-and-device-virtualization" class="internal internal-link alias" data-slug="02---areas/virtualization/theory/07---io-and-device-virtualization">07 - IO and Device Virtualization</a> — QEMU device emulation, virtio</li>
+<li><a href="../../../08---platform-comparison" class="internal internal-link alias" data-slug="08---platform-comparison">08 - Platform Comparison</a> — So sánh chi tiết các nền tảng</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-411" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#02--hypervisor-architecture" data-for="02--hypervisor-architecture">02 · Hypervisor Architecture</a></li><li class="depth-1"><a href="#1-hypervisor-là-gì" data-for="1-hypervisor-là-gì">1. Hypervisor là gì?</a></li><li class="depth-1"><a href="#2-type-1--bare-metal-hypervisor" data-for="2-type-1--bare-metal-hypervisor">2. Type 1 — Bare-metal Hypervisor</a></li><li class="depth-2"><a href="#đặc-điểm" data-for="đặc-điểm">Đặc điểm</a></li><li class="depth-2"><a href="#các-sản-phẩm-type-1-tiêu-biểu" data-for="các-sản-phẩm-type-1-tiêu-biểu">Các sản phẩm Type 1 tiêu biểu</a></li><li class="depth-2"><a href="#kvm--type-1-hay-type-2" data-for="kvm--type-1-hay-type-2">KVM — Type 1 hay Type 2?</a></li><li class="depth-1"><a href="#3-type-2--hosted-hypervisor" data-for="3-type-2--hosted-hypervisor">3. Type 2 — Hosted Hypervisor</a></li><li class="depth-2"><a href="#đặc-điểm-1" data-for="đặc-điểm-1">Đặc điểm</a></li><li class="depth-2"><a href="#sản-phẩm-type-2-tiêu-biểu" data-for="sản-phẩm-type-2-tiêu-biểu">Sản phẩm Type 2 tiêu biểu</a></li><li class="depth-1"><a href="#4-so-sánh-type-1-vs-type-2" data-for="4-so-sánh-type-1-vs-type-2">4. So sánh Type 1 vs Type 2</a></li><li class="depth-1"><a href="#5-kiến-trúc-nội-bộ-hypervisor" data-for="5-kiến-trúc-nội-bộ-hypervisor">5. Kiến trúc nội bộ Hypervisor</a></li><li class="depth-2"><a href="#51-monolithic-vs-microkernel" data-for="51-monolithic-vs-microkernel">5.1. Monolithic vs Microkernel</a></li><li class="depth-2"><a href="#52-kvmqemu-architecture-chi-tiết" data-for="52-kvmqemu-architecture-chi-tiết">5.2. KVM/QEMU Architecture (chi tiết)</a></li><li class="depth-2"><a href="#53-vmware-esxi-architecture" data-for="53-vmware-esxi-architecture">5.3. VMware ESXi Architecture</a></li><li class="depth-1"><a href="#6-management-layer" data-for="6-management-layer">6. Management Layer</a></li><li class="depth-2"><a href="#vai-trò-management-layer" data-for="vai-trò-management-layer">Vai trò management layer</a></li><li class="depth-1"><a href="#7-nested-virtualization" data-for="7-nested-virtualization">7. Nested Virtualization</a></li><li class="depth-1"><a href="#xem-thêm" data-for="xem-thêm">Xem thêm</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/virtualization/theory/01---fundamentals" class="internal">Virtualization Fundamentals</a></li><li><a href="../../../02---areas/virtualization/theory/03---cpu-virtualization" class="internal">CPU Virtualization</a></li><li><a href="../../../02---areas/virtualization/theory/04---memory-virtualization" class="internal">Memory Virtualization</a></li><li><a href="../../../02---areas/virtualization/theory/06---network-virtualization" class="internal">Network Virtualization</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

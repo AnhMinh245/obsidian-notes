@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>04.2 - Chuyển đổi FSMO và Certificate Server</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="04.2 - Chuyển đổi FSMO và Certificate Server"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="04.2 - Chuyển đổi FSMO và Certificate Server"/><meta name="twitter:description" content="AD 2025 - Chuyển đổi FSMO và Certificate Server Tóm tắt nhanh Transfer 5 FSMO roles từ DC 2012R2 sang DC 2025 theo thứ tự: Schema Master → Domain Naming → RID → Infrastructure → PDC Emulator CA Migration có 2 lựa chọn: Full Migration (backup/restore, giữ CA name) hoặc New CA + Cross-certification Fu..."/><meta property="og:description" content="AD 2025 - Chuyển đổi FSMO và Certificate Server Tóm tắt nhanh Transfer 5 FSMO roles từ DC 2012R2 sang DC 2025 theo thứ tự: Schema Master → Domain Naming → RID → Infrastructure → PDC Emulator CA Migration có 2 lựa chọn: Full Migration (backup/restore, giữ CA name) hoặc New CA + Cross-certification Fu..."/><meta property="og:image:alt" content="AD 2025 - Chuyển đổi FSMO và Certificate Server Tóm tắt nhanh Transfer 5 FSMO roles từ DC 2012R2 sang DC 2025 theo thứ tự: Schema Master → Domain Naming → RID → Infrastructure → PDC Emulator CA Migration có 2 lựa chọn: Full Migration (backup/restore, giữ CA name) hoặc New CA + Cross-certification Fu..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="AD 2025 - Chuyển đổi FSMO và Certificate Server Tóm tắt nhanh Transfer 5 FSMO roles từ DC 2012R2 sang DC 2025 theo thứ tự: Schema Master → Domain Naming → RID → Infrastructure → PDC Emulator CA Migration có 2 lựa chọn: Full Migration (backup/restore, giữ CA name) hoặc New CA + Cross-certification Fu..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-483" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-483" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/">Windows Servers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/">AD Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/">04 - Nâng cấp và chuyển đổi</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>04.2 - Chuyển đổi FSMO và Certificate Server</a></div></nav><h1 class="article-title">04.2 - Chuyển đổi FSMO và Certificate Server</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/windows-server" class="internal internal-link tag-link">domain/windows-server</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">FSMO Transfer 2025</span><span class="note-properties-separator">, </span><span class="note-properties-text">CA Migration 2025</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>19 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="ad-2025---chuyển-đổi-fsmo-và-certificate-server">AD 2025 - Chuyển đổi FSMO và Certificate Server<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ad-2025---chuyển-đổi-fsmo-và-certificate-server" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tóm-tắt-nhanh">Tóm tắt nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Transfer 5 FSMO roles từ DC 2012R2 sang DC 2025 theo thứ tự: Schema Master → Domain Naming → RID → Infrastructure → PDC Emulator</li>
+<li>CA Migration có 2 lựa chọn: <strong>Full Migration</strong> (backup/restore, giữ CA name) hoặc <strong>New CA + Cross-certification</strong></li>
+<li>Full Migration là phương án được khuyến nghị — giữ nguyên certificate chain, client không cần thay đổi</li>
+<li>AIA và CDP phải cập nhật trỏ về server mới — đây là bước hay bị bỏ sót và gây lỗi certificate validation</li>
+<li><strong>Validation giữa mỗi bước là bắt buộc</strong> — không transfer FSMO tiếp nếu chưa xác nhận role trước hoạt động tốt</li>
+</ul>
+<hr/>
+<h2 id="fsmo-role-transfer">FSMO Role Transfer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fsmo-role-transfer" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="pre-transfer-checklist">Pre-Transfer Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pre-transfer-checklist" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Trước khi transfer bất kỳ FSMO role nào, cần đảm bảo <strong>tất cả</strong> điều kiện sau:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>#</th><th>Kiểm tra</th><th>Mục đích</th><th>Công cụ xác nhận</th><th>Pass?</th></tr></thead><tbody><tr><td>1</td><td>Replication health</td><td>Không có replication failure giữa DC nguồn và đích</td><td><code>repadmin /replsummary</code></td><td></td></tr><tr><td>2</td><td>DC 2025 healthy</td><td>DC đích hoạt động bình thường, mọi dcdiag test pass</td><td><code>dcdiag /v /c</code></td><td></td></tr><tr><td>3</td><td>Network connectivity</td><td>DC nguồn và đích liên lạc được trên tất cả AD ports</td><td>Ping + <code>Test-NetConnection -Port 135,389,445</code></td><td></td></tr><tr><td>4</td><td>AD backup</td><td>System State backup mới nhất trước transfer</td><td>Windows Server Backup</td><td></td></tr><tr><td>5</td><td>Current FSMO holder</td><td>Xác nhận chính xác DC nào đang giữ từng role</td><td><code>netdom query fsmo</code></td><td></td></tr><tr><td>6</td><td>DNS resolution</td><td>DC đích resolve được DC nguồn và ngược lại</td><td><code>nslookup</code> cả 2 chiều</td><td></td></tr><tr><td>7</td><td>Time sync</td><td>Time skew giữa DC nguồn và đích &lt; 5 phút</td><td><code>w32tm /stripchart /computer:&lt;target></code></td><td></td></tr><tr><td>8</td><td>SYSVOL healthy</td><td>DFS-R replication không có lỗi</td><td>Event Viewer → DFS Replication</td><td></td></tr></tbody></table></div>
+<h3 id="thứ-tự-transfer-và-lý-do">Thứ tự Transfer và lý do<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#thứ-tự-transfer-và-lý-do" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Thứ tự transfer đi từ <strong>ít disruptive nhất</strong> đến <strong>nhiều disruptive nhất</strong> — nếu có vấn đề ở role ít quan trọng, có thể dừng lại trước khi ảnh hưởng role quan trọng hơn.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant Old as DC 2012R2&lt;br/>Current FSMO holder\n    participant Admin as Admin&lt;br/>Performs transfer\n    participant New as DC 2025&lt;br/>FSMO target\n\n    Note over Old,New: Step 1 - Schema Master\n    Admin->>Old: Request transfer Schema Master\n    Old->>New: Transfer Schema Master role\n    Admin->>New: Validate: netdom query fsmo\n    Note right of New: Least disruptive&lt;br/>Only needed for schema changes\n\n    Note over Old,New: Step 2 - Domain Naming Master\n    Admin->>Old: Request transfer Domain Naming\n    Old->>New: Transfer Domain Naming Master role\n    Admin->>New: Validate: netdom query fsmo\n    Note right of New: Low disruption&lt;br/>Only for add/remove domain\n\n    Note over Old,New: Step 3 - RID Master\n    Admin->>Old: Request transfer RID Master\n    Old->>New: Transfer RID Master role\n    Admin->>New: Validate: create test user account\n    Note right of New: Medium disruption&lt;br/>DCs need RID pool for new objects\n\n    Note over Old,New: Step 4 - Infra Master\n    Admin->>Old: Request transfer Infrastructure\n    Old->>New: Transfer Infrastructure Master role\n    Admin->>New: Validate: netdom query fsmo\n    Note right of New: Medium disruption&lt;br/>Cross-domain reference update\n\n    Note over Old,New: Step 5 - PDC Emulator\n    Admin->>Old: Request transfer PDC Emulator\n    Old->>New: Transfer PDC Emulator role\n    Admin->>New: Validate: password change, time sync\n    Note right of New: Most disruptive&lt;br/>Password, time, GPO&quot;">sequenceDiagram
+    participant Old as DC 2012R2&lt;br/>Current FSMO holder
+    participant Admin as Admin&lt;br/>Performs transfer
+    participant New as DC 2025&lt;br/>FSMO target
+
+    Note over Old,New: Step 1 - Schema Master
+    Admin->>Old: Request transfer Schema Master
+    Old->>New: Transfer Schema Master role
+    Admin->>New: Validate: netdom query fsmo
+    Note right of New: Least disruptive&lt;br/>Only needed for schema changes
+
+    Note over Old,New: Step 2 - Domain Naming Master
+    Admin->>Old: Request transfer Domain Naming
+    Old->>New: Transfer Domain Naming Master role
+    Admin->>New: Validate: netdom query fsmo
+    Note right of New: Low disruption&lt;br/>Only for add/remove domain
+
+    Note over Old,New: Step 3 - RID Master
+    Admin->>Old: Request transfer RID Master
+    Old->>New: Transfer RID Master role
+    Admin->>New: Validate: create test user account
+    Note right of New: Medium disruption&lt;br/>DCs need RID pool for new objects
+
+    Note over Old,New: Step 4 - Infra Master
+    Admin->>Old: Request transfer Infrastructure
+    Old->>New: Transfer Infrastructure Master role
+    Admin->>New: Validate: netdom query fsmo
+    Note right of New: Medium disruption&lt;br/>Cross-domain reference update
+
+    Note over Old,New: Step 5 - PDC Emulator
+    Admin->>Old: Request transfer PDC Emulator
+    Old->>New: Transfer PDC Emulator role
+    Admin->>New: Validate: password change, time sync
+    Note right of New: Most disruptive&lt;br/>Password, time, GPO
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="validation-giữa-mỗi-fsmo-transfer">Validation giữa mỗi FSMO Transfer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#validation-giữa-mỗi-fsmo-transfer" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Nguyên tắc bắt buộc</strong>: sau mỗi role transfer, phải validate trước khi transfer role tiếp. Nếu validation fail → rollback role vừa transfer về DC cũ, điều tra nguyên nhân.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Role vừa transfer</th><th>Validation steps</th><th>Expected result</th></tr></thead><tbody><tr><td>Schema Master</td><td><code>netdom query fsmo</code> → xác nhận DC 2025 giữ role</td><td>DC 2025 hiện là Schema Master</td></tr><tr><td>Schema Master</td><td>Kiểm tra schema partition replication</td><td>Không error</td></tr><tr><td>Domain Naming</td><td><code>netdom query fsmo</code> → xác nhận</td><td>DC 2025 giữ Domain Naming</td></tr><tr><td>RID Master</td><td>Tạo thử user account trên DC khác</td><td>User tạo thành công (DC request RID pool từ RID Master mới)</td></tr><tr><td>RID Master</td><td><code>dcdiag /test:ridmanager /v</code></td><td>Pass</td></tr><tr><td>Infrastructure Master</td><td><code>netdom query fsmo</code> → xác nhận</td><td>DC 2025 giữ Infrastructure Master</td></tr><tr><td>PDC Emulator</td><td>Đổi password user → logon từ DC khác</td><td>Password mới hoạt động (replication từ PDC mới)</td></tr><tr><td>PDC Emulator</td><td><code>w32tm /query /status</code> trên DC khác</td><td>Source = DC 2025 (PDC mới)</td></tr><tr><td>PDC Emulator</td><td>Mở GPMC → kiểm tra DC target</td><td>GPMC connect đến PDC 2025</td></tr></tbody></table></div>
+<h3 id="chi-tiết-từng-fsmo-role-khi-transfer">Chi tiết từng FSMO Role khi Transfer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chi-tiết-từng-fsmo-role-khi-transfer" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="1-schema-master-forest-wide">1. Schema Master (Forest-wide)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-schema-master-forest-wide" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Tác động khi transfer</strong>: gần như không — Schema Master chỉ cần hoạt động khi có schema change (rất hiếm trong operation thường ngày)</li>
+<li><strong>Transfer trước vì</strong>: nếu có vấn đề, dễ transfer lại mà không ảnh hưởng operation — Schema Master “ngủ” hầu hết thời gian</li>
+<li><strong>Validation</strong>: xác nhận <code>netdom query fsmo</code> hiện đúng DC 2025; kiểm tra schema partition replicate không lỗi</li>
+<li><strong>Khi nào cần Schema Master</strong>: khi install Exchange, Lync/Skype, hoặc chạy <code>adprep /forestprep</code></li>
+</ul>
+<h4 id="2-domain-naming-master-forest-wide">2. Domain Naming Master (Forest-wide)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-domain-naming-master-forest-wide" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Tác động khi transfer</strong>: gần như không — chỉ cần khi add/remove domain trong forest</li>
+<li><strong>Transfer thứ 2 vì</strong>: cũng ít disruptive, và cùng scope forest-wide với Schema Master → nhóm 2 forest-wide roles transfer trước</li>
+<li><strong>Validation</strong>: xác nhận bằng <code>netdom query fsmo</code></li>
+<li><strong>Khi nào cần Domain Naming Master</strong>: khi tạo child domain mới, hoặc remove domain khỏi forest</li>
+</ul>
+<h4 id="3-rid-master-domain-wide">3. RID Master (Domain-wide)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-rid-master-domain-wide" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Tác động khi transfer</strong>: trung bình — mỗi DC cần <strong>RID pool</strong> (default 500 RID mỗi lần request) từ RID Master để tạo security principal mới (user, computer, group)</li>
+<li><strong>Rủi ro nếu RID Master offline</strong>: DC cạn RID pool → không tạo được user/computer/group mới</li>
+<li><strong>Mitigation</strong>: mỗi DC có RID pool buffer → chịu được vài ngày không có RID Master. Transfer nhanh, không để offline lâu</li>
+<li><strong>Validation</strong>: tạo thử user account trên DC khác (DC khác sẽ request RID pool từ RID Master mới)</li>
+<li><strong>Kiểm tra RID pool</strong>: <code>dcdiag /test:ridmanager /v</code> → xác nhận RID allocation hoạt động</li>
+</ul>
+<h4 id="4-infrastructure-master-domain-wide">4. Infrastructure Master (Domain-wide)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-infrastructure-master-domain-wide" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Tác động khi transfer</strong>: trung bình — Infrastructure Master cập nhật <strong>cross-domain reference</strong> (phantom record) khi object ở domain khác thay đổi</li>
+<li><strong>Lưu ý đặc biệt</strong>: trong <strong>single-domain forest</strong> (như dự án này), Infrastructure Master hầu như <strong>không có việc làm</strong> vì không có cross-domain reference</li>
+<li><strong>Nếu tất cả DC đều là GC</strong>: Infrastructure Master role trở nên <strong>redundant</strong> — GC đã có mọi thông tin từ mọi domain</li>
+<li><strong>Validation</strong>: <code>netdom query fsmo</code> xác nhận, kiểm tra Event Log trên DC mới</li>
+</ul>
+<h4 id="5-pdc-emulator-domain-wide">5. PDC Emulator (Domain-wide)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-pdc-emulator-domain-wide" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Transfer cuối cùng vì ảnh hưởng lớn nhất</strong> trong daily operation:
+<ul>
+<li><strong>Password changes</strong>: PDC Emulator nhận password change <strong>ưu tiên</strong> → khi user đổi password, change được replicate ngay đến PDC → nếu user logon vào DC khác với password mới trước khi replication hoàn tất, DC đó hỏi PDC để verify. <strong>Nếu PDC offline → password change có thể bị delay verify</strong></li>
+<li><strong>Time synchronization</strong>: PDC Emulator là <strong>authoritative time source</strong> cho domain → tất cả DC sync time từ PDC → client sync từ DC → nếu PDC transfer có vấn đề, toàn bộ time sync chain bị ảnh hưởng → <strong>Kerberos require time skew &lt; 5 phút</strong></li>
+<li><strong>Group Policy</strong>: GPMC mặc định mở GPO từ PDC Emulator → admin thấy “DC changed” nếu PDC chuyển site</li>
+<li><strong>Account lockout</strong>: PDC nhận lockout notification từ <strong>tất cả DC</strong> → cần PDC để unlock account và track lockout</li>
+</ul>
+</li>
+<li><strong>Validation bắt buộc</strong>:
+<ul>
+<li>Đổi password user → logon từ DC khác → thành công?</li>
+<li><code>w32tm /query /status</code> trên DC khác → source = PDC mới?</li>
+<li>Mở GPMC → check DC target = PDC 2025?</li>
+<li>Thử unlock account → hoạt động?</li>
+</ul>
+</li>
+</ul>
+<h3 id="transfer-vs-seize--khi-nào-dùng-cái-nào">Transfer vs Seize — Khi nào dùng cái nào<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#transfer-vs-seize--khi-nào-dùng-cái-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương thức</th><th>Khi nào dùng</th><th>Cách thực hiện</th><th>Rủi ro</th></tr></thead><tbody><tr><td><strong>Transfer</strong></td><td>DC nguồn <strong>online</strong>, healthy</td><td>GUI (AD Users &amp; Computers) hoặc PowerShell <code>Move-ADDirectoryServerOperationMasterRole</code></td><td><strong>Thấp</strong> — graceful handoff, DC nguồn tự nhả role</td></tr><tr><td><strong>Seize</strong></td><td>DC nguồn <strong>offline</strong>, không thể recover</td><td><code>ntdsutil</code> → <code>roles</code> → <code>seize</code></td><td><strong>Cao</strong> — DC nguồn <strong>KHÔNG ĐƯỢC</strong> online lại nếu đã bị seize Schema Master hoặc Domain Naming Master</td></tr></tbody></table></div>
+<p><strong>Quy tắc seize quan trọng</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Role bị seize</th><th>DC cũ có thể online lại?</th><th>Lý do</th></tr></thead><tbody><tr><td>Schema Master</td><td><strong>KHÔNG</strong></td><td>2 Schema Master = schema conflict nghiêm trọng</td></tr><tr><td>Domain Naming Master</td><td><strong>KHÔNG</strong></td><td>2 DNM = domain creation conflict</td></tr><tr><td>RID Master</td><td><strong>Có</strong> (sau sync)</td><td>RID pool quản lý được conflict</td></tr><tr><td>Infrastructure Master</td><td><strong>Có</strong></td><td>Phantom update không gây conflict nghiêm trọng</td></tr><tr><td>PDC Emulator</td><td><strong>Có</strong></td><td>PDC role tự negotiate, DC cũ tự nhả role khi thấy PDC mới</td></tr></tbody></table></div>
+<p><strong>Trong dự án này</strong>: luôn dùng <strong>Transfer</strong> — vì DC 2012R2 vẫn đang online và healthy. Chỉ Seize nếu DC cũ đột ngột chết và không thể recover.</p>
+<h3 id="fsmo-placement-best-practice">FSMO Placement Best Practice<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fsmo-placement-best-practice" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Trong dự án, đề xuất placement:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Role</th><th>DC đề xuất</th><th>Lý do</th></tr></thead><tbody><tr><td>Schema Master</td><td>DC2025-ROOT-01</td><td>ROOT site, cùng DC với FSMO khác cho đơn giản</td></tr><tr><td>Domain Naming Master</td><td>DC2025-ROOT-01</td><td>Forest-wide role, nhóm cùng Schema Master</td></tr><tr><td>RID Master</td><td>DC2025-ROOT-01</td><td>Dễ quản lý khi tập trung</td></tr><tr><td>PDC Emulator</td><td>DC2025-ROOT-01</td><td>ROOT site, đảm bảo external NTP access tốt</td></tr><tr><td>Infrastructure Master</td><td>DC2025-ROOT-02</td><td><strong>Tách</strong> sang DC khác — nếu DC-ROOT-01 fail, IM vẫn hoạt động</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Lưu ý</strong>: đặt 4/5 FSMO trên cùng 1 DC là acceptable trong single-domain forest nhỏ-trung bình. Nếu muốn thêm redundancy, có thể tách PDC Emulator sang DC khác.</p>
+</blockquote>
+<h3 id="rollback-strategy-cho-fsmo-transfer">Rollback Strategy cho FSMO Transfer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rollback-strategy-cho-fsmo-transfer" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nếu phát hiện vấn đề sau transfer → <strong>transfer ngược lại</strong> về DC cũ bằng cùng phương thức Transfer (không cần Seize)</li>
+<li>DC cũ vẫn online → rollback đơn giản, thực hiện trong vài phút</li>
+<li><strong>Nguyên tắc</strong>: không decommission DC cũ cho đến khi FSMO trên DC mới đã <strong>stable ít nhất 1 tuần</strong></li>
+<li>Rollback steps cụ thể:
+<ol>
+<li>Xác nhận DC cũ vẫn online và replication healthy</li>
+<li>Mở PowerShell trên DC đích (DC cũ): <code>Move-ADDirectoryServerOperationMasterRole -Identity &quot;DC-OLD-01&quot; -OperationMasterRole &lt;role></code></li>
+<li>Xác nhận bằng <code>netdom query fsmo</code></li>
+<li>Investigate root cause trước khi retry transfer</li>
+</ol>
+</li>
+</ul>
+<hr/>
+<h2 id="certificate-server-migration-ca-2012r2--2025">Certificate Server Migration (CA 2012R2 → 2025)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#certificate-server-migration-ca-2012r2--2025" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tổng-quan-chiến-lược">Tổng quan chiến lược<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-quan-chiến-lược" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Có 2 phương án chính cho CA migration:</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    START[\&quot;CA Migration&lt;br/>2012R2 to 2025\&quot;] --> DECIDE{\&quot;Choose approach\&quot;}\n\n    DECIDE --> OPT_A[\&quot;Option A: Full Migration&lt;br/>Backup/Restore CA\&quot;]\n    DECIDE --> OPT_B[\&quot;Option B: New CA&lt;br/>Cross-certification\&quot;]\n\n    OPT_A --> A1[\&quot;Keep same CA Name\&quot;]\n    OPT_A --> A2[\&quot;Certificate chain unchanged\&quot;]\n    OPT_A --> A3[\&quot;No client changes needed\&quot;]\n    OPT_A --> A4[\&quot;More complex to execute\&quot;]\n\n    OPT_B --> B1[\&quot;New CA Name\&quot;]\n    OPT_B --> B2[\&quot;Requires cross-cert trust\&quot;]\n    OPT_B --> B3[\&quot;Clients must trust new CA\&quot;]\n    OPT_B --> B4[\&quot;Simpler to execute\&quot;]\n\n    A1 --> REC[\&quot;RECOMMENDED:&lt;br/>Option A for this project\&quot;]\n    A2 --> REC\n    B3 --> NOTE[\&quot;Suitable when building&lt;br/>entirely new PKI\&quot;]\n\n    style REC fill:#e8f5e9,stroke:#4caf50\n    style NOTE fill:#e3f2fd,stroke:#2196f3&quot;">graph TD
+    START[&quot;CA Migration&lt;br/>2012R2 to 2025&quot;] --> DECIDE{&quot;Choose approach&quot;}
+
+    DECIDE --> OPT_A[&quot;Option A: Full Migration&lt;br/>Backup/Restore CA&quot;]
+    DECIDE --> OPT_B[&quot;Option B: New CA&lt;br/>Cross-certification&quot;]
+
+    OPT_A --> A1[&quot;Keep same CA Name&quot;]
+    OPT_A --> A2[&quot;Certificate chain unchanged&quot;]
+    OPT_A --> A3[&quot;No client changes needed&quot;]
+    OPT_A --> A4[&quot;More complex to execute&quot;]
+
+    OPT_B --> B1[&quot;New CA Name&quot;]
+    OPT_B --> B2[&quot;Requires cross-cert trust&quot;]
+    OPT_B --> B3[&quot;Clients must trust new CA&quot;]
+    OPT_B --> B4[&quot;Simpler to execute&quot;]
+
+    A1 --> REC[&quot;RECOMMENDED:&lt;br/>Option A for this project&quot;]
+    A2 --> REC
+    B3 --> NOTE[&quot;Suitable when building&lt;br/>entirely new PKI&quot;]
+
+    style REC fill:#e8f5e9,stroke:#4caf50
+    style NOTE fill:#e3f2fd,stroke:#2196f3
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="ca-migration-dry-run--test-trong-lab-trước">CA Migration Dry-Run — Test trong Lab trước<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ca-migration-dry-run--test-trong-lab-trước" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Bắt buộc</strong>: trước khi thực hiện CA migration trên production, phải test trong <strong>lab environment</strong>:</p>
+<ol>
+<li><strong>Dựng lab</strong>: DC 2012R2 + CA 2012R2 (clone/copy production hoặc tạo mới với similar config)</li>
+<li><strong>Test backup</strong>: backup CA database + key, verify backup file integrity</li>
+<li><strong>Test restore</strong>: restore lên server 2025, verify CA service start, certificate chain valid</li>
+<li><strong>Test AIA/CDP update</strong>: cập nhật pointers, verify CRL downloadable</li>
+<li><strong>Test certificate issuance</strong>: issue certificate mới, verify chain</li>
+<li><strong>Document issues</strong>: ghi lại mọi issue gặp trong lab → plan mitigation cho production</li>
+</ol>
+<p><strong>Thời gian lab test</strong>: nên dành <strong>1-2 ngày</strong> cho lab testing — đây là investment nhỏ so với rủi ro nếu fail production.</p>
+<h3 id="option-a-full-ca-migration-khuyến-nghị">Option A: Full CA Migration (Khuyến nghị)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-a-full-ca-migration-khuyến-nghị" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Nguyên lý</strong>: backup toàn bộ CA (database + private key + config) từ server cũ, restore lên server mới với <strong>cùng CA name</strong> → certificate chain không thay đổi, client không cần reconfigure.</p>
+<h4 id="ca-migration-workflow-chi-tiết">CA Migration Workflow chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ca-migration-workflow-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant OldCA as CA 2012R2&lt;br/>Old Server\n    participant Admin as Admin\n    participant NewCA as CA 2025&lt;br/>New Server\n\n    rect rgb(255, 249, 230)\n    Note over OldCA,NewCA: Phase 1 - Backup (30 min)\n    Admin->>OldCA: Backup CA Database\n    OldCA-->>Admin: certdb.dat + edb*.log\n    Admin->>OldCA: Export Private Key (PFX)\n    OldCA-->>Admin: CA-key.p12 (PFX) + password\n    Admin->>OldCA: Export Registry Config\n    OldCA-->>Admin: CA registry settings\n    Admin->>OldCA: Document AIA + CDP paths\n    Admin->>OldCA: Document Certificate Templates\n    end\n\n    rect rgb(230, 245, 255)\n    Note over OldCA,NewCA: Phase 2 - Install + Restore (1-2 hrs)\n    Admin->>NewCA: Install AD CS Role\n    Admin->>NewCA: Configure as Enterprise CA&lt;br/>Use existing key - import PFX\n    Note right of NewCA: CA Name MUST match old CA exactly\n    Admin->>NewCA: Restore CA Database\n    NewCA-->>Admin: CA database restored\n    Admin->>NewCA: Verify CA service start\n    end\n\n    rect rgb(230, 255, 230)\n    Note over OldCA,NewCA: Phase 3 - Update Pointers (1 hr)\n    Admin->>NewCA: Update CDP paths (HTTP URLs)\n    Admin->>NewCA: Update AIA paths (HTTP URLs)\n    Admin->>NewCA: Publish new CRL\n    NewCA-->>Admin: CRL published to AD + HTTP\n    end\n\n    rect rgb(240, 240, 255)\n    Note over OldCA,NewCA: Phase 4 - Validate (2 hrs)\n    Admin->>NewCA: Verify certificate chain\n    Admin->>NewCA: Test auto-enrollment\n    Admin->>NewCA: Verify CRL accessibility\n    Admin->>NewCA: Test certificate revocation\n    Admin->>NewCA: Issue test certificate\n    end\n\n    rect rgb(255, 230, 230)\n    Note over OldCA: Phase 5 - Transition (2-4 weeks)\n    Note over OldCA: DO NOT shut down immediately&lt;br/>Keep online 2-4 weeks\n    Note over OldCA: Only decommission when&lt;br/>everything is stable\n    end&quot;">sequenceDiagram
+    participant OldCA as CA 2012R2&lt;br/>Old Server
+    participant Admin as Admin
+    participant NewCA as CA 2025&lt;br/>New Server
+
+    rect rgb(255, 249, 230)
+    Note over OldCA,NewCA: Phase 1 - Backup (30 min)
+    Admin->>OldCA: Backup CA Database
+    OldCA-->>Admin: certdb.dat + edb*.log
+    Admin->>OldCA: Export Private Key (PFX)
+    OldCA-->>Admin: CA-key.p12 (PFX) + password
+    Admin->>OldCA: Export Registry Config
+    OldCA-->>Admin: CA registry settings
+    Admin->>OldCA: Document AIA + CDP paths
+    Admin->>OldCA: Document Certificate Templates
+    end
+
+    rect rgb(230, 245, 255)
+    Note over OldCA,NewCA: Phase 2 - Install + Restore (1-2 hrs)
+    Admin->>NewCA: Install AD CS Role
+    Admin->>NewCA: Configure as Enterprise CA&lt;br/>Use existing key - import PFX
+    Note right of NewCA: CA Name MUST match old CA exactly
+    Admin->>NewCA: Restore CA Database
+    NewCA-->>Admin: CA database restored
+    Admin->>NewCA: Verify CA service start
+    end
+
+    rect rgb(230, 255, 230)
+    Note over OldCA,NewCA: Phase 3 - Update Pointers (1 hr)
+    Admin->>NewCA: Update CDP paths (HTTP URLs)
+    Admin->>NewCA: Update AIA paths (HTTP URLs)
+    Admin->>NewCA: Publish new CRL
+    NewCA-->>Admin: CRL published to AD + HTTP
+    end
+
+    rect rgb(240, 240, 255)
+    Note over OldCA,NewCA: Phase 4 - Validate (2 hrs)
+    Admin->>NewCA: Verify certificate chain
+    Admin->>NewCA: Test auto-enrollment
+    Admin->>NewCA: Verify CRL accessibility
+    Admin->>NewCA: Test certificate revocation
+    Admin->>NewCA: Issue test certificate
+    end
+
+    rect rgb(255, 230, 230)
+    Note over OldCA: Phase 5 - Transition (2-4 weeks)
+    Note over OldCA: DO NOT shut down immediately&lt;br/>Keep online 2-4 weeks
+    Note over OldCA: Only decommission when&lt;br/>everything is stable
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="chi-tiết-từng-bước-migration">Chi tiết từng bước Migration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chi-tiết-từng-bước-migration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="1-backup-ca-database">1. Backup CA Database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-backup-ca-database" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Cần backup <strong>3 thành phần riêng biệt</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thành phần</th><th>Nội dung</th><th>Tại sao quan trọng</th><th>Cách backup</th></tr></thead><tbody><tr><td>CA Database</td><td><code>certdb.dat</code>, EDB logs</td><td>Chứa toàn bộ certificate đã cấp, revocation info, request history</td><td><code>certutil -backup &lt;path></code> hoặc CA MMC</td></tr><tr><td>Private Key</td><td>File PFX (PKCS#12)</td><td>Key dùng để <strong>sign certificate</strong> — mất key = rebuild PKI từ đầu</td><td><code>certutil -backup -p &lt;password> &lt;path></code></td></tr><tr><td>Registry Config</td><td><code>HKLM\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration</code></td><td>CDP, AIA, enrollment settings, template permissions</td><td><code>reg export</code> hoặc document thủ công</td></tr></tbody></table></div>
+<p><strong>Backup best practices</strong>:</p>
+<ul>
+<li>Tạo <strong>3 bản backup</strong> lưu ở <strong>3 vị trí khác nhau</strong> (local disk, USB encrypted, network share secured)</li>
+<li>PFX file <strong>phải có strong password</strong> (16+ ký tự, complex) — ghi password vào sealed envelope lưu offline</li>
+<li><strong>Verify backup</strong>: sau khi backup, test mở file PFX bằng <code>certutil -dump &lt;file.pfx></code> để xác nhận file hợp lệ</li>
+</ul>
+<h4 id="2-export-ca-private-key">2. Export CA Private Key<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-export-ca-private-key" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Sử dụng strong password bảo vệ file PFX — password này sẽ cần khi import vào CA mới</li>
+<li>Lưu trữ file PFX ở nơi an toàn — <strong>không để trên network share không mã hoá</strong>, không email</li>
+<li><strong>Nếu CA dùng HSM</strong> (Hardware Security Module):
+<ul>
+<li>Quy trình export khác hoàn toàn — key không rời HSM</li>
+<li>Cần <strong>vendor support</strong> từ nhà cung cấp HSM (Thales, Entrust, etc.)</li>
+<li>Options: clone HSM key sang HSM mới, hoặc re-key CA</li>
+<li><strong>Lên kế hoạch riêng</strong> cho HSM migration — phức tạp hơn nhiều</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-install-ad-cs-trên-dc-2025">3. Install AD CS trên DC 2025<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-install-ad-cs-trên-dc-2025" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Cài role AD CS — chọn <strong>“Use existing key”</strong> và import file PFX khi configure</li>
+<li><strong>CA Name phải giống hệt CA cũ</strong> — nếu khác tên, certificate chain sẽ đứt vì certificate chứa Issuer Name phải match CA Name</li>
+<li>CA Type: giữ nguyên loại cũ (<strong>Enterprise Root CA</strong> hoặc <strong>Enterprise Subordinate CA</strong>)</li>
+<li>Chọn đúng hash algorithm (SHA256 trở lên cho Server 2025)</li>
+</ul>
+<h4 id="4-restore-ca-database">4. Restore CA Database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-restore-ca-database" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Restore CA database files lên server mới — database chứa:
+<ul>
+<li>Tất cả certificate đã cấp (issued, revoked, expired)</li>
+<li>CRL (Certificate Revocation List) data</li>
+<li>Pending requests (nếu có)</li>
+</ul>
+</li>
+<li>Sau restore, start CA service và verify database loaded đúng</li>
+</ul>
+<h4 id="5-update-crl-distribution-points-cdp">5. Update CRL Distribution Points (CDP)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-update-crl-distribution-points-cdp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>CDP cho client biết <strong>tải CRL ở đâu</strong> để kiểm tra certificate có bị revoke không.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>CDP Path Type</th><th>Ví dụ</th><th>Cần update?</th><th>Hành động</th></tr></thead><tbody><tr><td>LDAP</td><td><code>ldap:///CN=&lt;CA>,CN=CDP,...</code></td><td><strong>Không</strong></td><td>LDAP path dùng AD lookup, không chứa server name</td></tr><tr><td>HTTP</td><td><code>http://oldserver.domain.local/CertEnroll/...</code></td><td><strong>Có</strong></td><td>Đổi sang <code>http://newserver.domain.local/CertEnroll/...</code></td></tr><tr><td>File</td><td><code>file://\\oldserver\CertEnroll\...</code></td><td><strong>Có</strong></td><td>Đổi sang <code>\\newserver\CertEnroll\...</code></td></tr></tbody></table></div>
+<h4 id="6-update-authority-information-access-aia">6. Update Authority Information Access (AIA)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-update-authority-information-access-aia" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>AIA cho client biết <strong>tải CA certificate ở đâu</strong> để build certificate chain. Cần update tương tự CDP:</p>
+<ul>
+<li>LDAP path: thường không cần đổi</li>
+<li>HTTP path: <strong>phải đổi</strong> sang server mới</li>
+<li>OCSP responder URL (nếu có): cập nhật nếu OCSP chạy trên server cũ</li>
+</ul>
+<h4 id="aiacdp-location-planning-cho-ca-mới">AIA/CDP Location Planning cho CA mới<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aiacdp-location-planning-cho-ca-mới" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Best practice</strong> cho AIA/CDP URLs:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khuyến nghị</th><th>Lý do</th></tr></thead><tbody><tr><td>Dùng <strong>DNS CNAME</strong> thay vì server hostname</td><td>Nếu CA move lần nữa, chỉ cần update CNAME, không cần reissue certificate</td></tr><tr><td>Ví dụ: <code>http://pki.domain.local/CertEnroll/...</code></td><td>CNAME <code>pki</code> trỏ đến server thật</td></tr><tr><td>Bật HTTP trên <strong>web server riêng</strong> (không phải CA)</td><td>Tách CRL hosting ra khỏi CA → CA fail không ảnh hưởng CRL download</td></tr><tr><td>Giữ LDAP path làm primary CDP</td><td>LDAP path hoạt động cho tất cả domain member, không cần HTTP</td></tr></tbody></table></div>
+<h4 id="7-republish-crl">7. Republish CRL<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-republish-crl" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Sau khi cập nhật CDP, <strong>publish CRL mới</strong> từ CA 2025</li>
+<li>CRL mới sẽ chứa CDP URLs mới</li>
+<li>Client sẽ tải CRL mới khi CRL cũ expire (hoặc force refresh qua <code>certutil -setreg ca\CRLFlags +CRLF_PUBLISH_EXPIRED_CERT_CRLS</code>)</li>
+<li><strong>Kiểm tra CRL validity period</strong>: nếu CRL expire trước khi migration hoàn tất → client sẽ <strong>reject tất cả certificate</strong> vì không verify được revocation → impact nghiêm trọng</li>
+</ul>
+<h4 id="8-verify-certificate-chain">8. Verify Certificate Chain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-verify-certificate-chain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Sau migration, xác nhận chain hoạt động end-to-end:</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    Client[\&quot;Client Certificate&lt;br/>Issued by CA\&quot;] --> IntCA[\&quot;Issuing CA Certificate&lt;br/>On new CA 2025\&quot;]\n    IntCA --> RootCA[\&quot;Root CA Certificate&lt;br/>In Trusted Root store\&quot;]\n\n    CRL[\&quot;CRL Check\&quot;] --> CDP_new[\&quot;CDP: New Server URL&lt;br/>HTTP + LDAP\&quot;]\n    AIA_check[\&quot;AIA Check\&quot;] --> AIA_new[\&quot;AIA: New Server URL&lt;br/>CA cert download\&quot;]\n\n    Client --> CRL\n    Client --> AIA_check\n\n    OCSP[\&quot;OCSP Check&lt;br/>If configured\&quot;] --> OCSP_new[\&quot;OCSP Responder&lt;br/>New URL\&quot;]\n    Client -.-> OCSP\n\n    style CDP_new fill:#e8f5e9,stroke:#4caf50\n    style AIA_new fill:#e8f5e9,stroke:#4caf50\n    style OCSP_new fill:#e8f5e9,stroke:#4caf50&quot;">graph TD
+    Client[&quot;Client Certificate&lt;br/>Issued by CA&quot;] --> IntCA[&quot;Issuing CA Certificate&lt;br/>On new CA 2025&quot;]
+    IntCA --> RootCA[&quot;Root CA Certificate&lt;br/>In Trusted Root store&quot;]
+
+    CRL[&quot;CRL Check&quot;] --> CDP_new[&quot;CDP: New Server URL&lt;br/>HTTP + LDAP&quot;]
+    AIA_check[&quot;AIA Check&quot;] --> AIA_new[&quot;AIA: New Server URL&lt;br/>CA cert download&quot;]
+
+    Client --> CRL
+    Client --> AIA_check
+
+    OCSP[&quot;OCSP Check&lt;br/>If configured&quot;] --> OCSP_new[&quot;OCSP Responder&lt;br/>New URL&quot;]
+    Client -.-> OCSP
+
+    style CDP_new fill:#e8f5e9,stroke:#4caf50
+    style AIA_new fill:#e8f5e9,stroke:#4caf50
+    style OCSP_new fill:#e8f5e9,stroke:#4caf50
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="cepces-migration-certificate-enrollment-policyservice">CEP/CES Migration (Certificate Enrollment Policy/Service)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cepces-migration-certificate-enrollment-policyservice" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Nếu hạ tầng hiện tại sử dụng <strong>CEP (Certificate Enrollment Policy Web Service)</strong> và <strong>CES (Certificate Enrollment Web Service)</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Component</th><th>Chức năng</th><th>Migration action</th></tr></thead><tbody><tr><td>CEP</td><td>Cho phép client (kể cả non-domain) tìm enrollment policy</td><td>Deploy CEP mới trên server 2025, cập nhật URL trong GPO</td></tr><tr><td>CES</td><td>Cho phép client enroll certificate qua HTTPS</td><td>Deploy CES mới, cấp certificate SSL cho CES endpoint</td></tr><tr><td>NDES</td><td>Network Device Enrollment Service (SCEP protocol)</td><td>Deploy NDES mới nếu dùng cho network device (router, switch)</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Lưu ý</strong>: CEP/CES thường không phổ biến trong deployment đơn giản. Kiểm tra xem hạ tầng hiện tại có dùng không trước khi plan migration.</p>
+</blockquote>
+<h3 id="option-b-new-ca--cross-certification">Option B: New CA + Cross-Certification<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-b-new-ca--cross-certification" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Khi nào dùng Option B</strong>:</p>
+<ul>
+<li>Muốn xây PKI <strong>hoàn toàn mới</strong>, không kế thừa cũ — “clean slate”</li>
+<li>CA cũ có vấn đề: key size yếu (1024-bit), algorithm cũ (SHA1), CA hierarchy không hợp lý</li>
+<li>Muốn restructure PKI hierarchy (ví dụ: từ single Root CA → Offline Root + Online Issuing CA)</li>
+</ul>
+<p><strong>Quy trình tóm tắt</strong>:</p>
+<ol>
+<li>Xây CA mới với CA name mới, key pair mới, hash algorithm mới</li>
+<li>Thiết lập <strong>cross-certification</strong>: CA mới issue certificate trust certificates từ CA cũ (và ngược lại)</li>
+<li>Phát hành CA certificate mới cho client qua <strong>Group Policy</strong> (Trusted Root CA store)</li>
+<li>Dần chuyển enrollment sang CA mới — certificate template trỏ đến CA mới</li>
+<li>Để certificate cũ <strong>expire tự nhiên</strong> — không revoke hàng loạt (gây disruption)</li>
+</ol>
+<p><strong>Cross-certification giải thích</strong>:</p>
+<ul>
+<li>Cross-certification = 2 CA <strong>trust lẫn nhau</strong> bằng cách mỗi CA issue certificate cho CA kia</li>
+<li>Khi client có certificate từ CA cũ, client cũng trust được vì CA mới cross-certify CA cũ</li>
+<li>Đây là <strong>bridge trust</strong> — cho phép transition period mà không phải reissue tất cả certificate ngay</li>
+</ul>
+<p><strong>Nhược điểm</strong>: phức tạp hơn ở phía client trust, cần thời gian transition dài hơn (có thể 6-12 tháng cho tất cả cert expire)</p>
+<h3 id="certificate-template-migration">Certificate Template Migration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#certificate-template-migration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Certificate Template lưu trong <strong>AD</strong> (<code>CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,...</code>)</li>
+<li>Template <strong>không cần migrate</strong> — đã nằm trong AD, CA mới đọc trực tiếp từ AD</li>
+<li>Chỉ cần xác nhận: CA mới có quyền <strong>issue</strong> các template cần thiết (check template permission)</li>
+</ul>
+<h4 id="template-versioning-và-upgrade">Template Versioning và Upgrade<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#template-versioning-và-upgrade" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Template Version</th><th>Windows Server</th><th>Capabilities</th></tr></thead><tbody><tr><td>Version 1</td><td>Server 2000/2003</td><td>Basic templates, không edit được</td></tr><tr><td>Version 2</td><td>Server 2003+</td><td>Editable, auto-enrollment, key archival</td></tr><tr><td>Version 3</td><td>Server 2008+</td><td>CNG (Cryptography Next Generation), Suite B</td></tr><tr><td>Version 4</td><td>Server 2012+</td><td>Key attestation</td></tr></tbody></table></div>
+<p><strong>Khi upgrade CA</strong>: cân nhắc upgrade template version để tận dụng tính năng mới:</p>
+<ul>
+<li><strong>Review key size</strong>: upgrade từ 1024-bit lên 2048-bit (hoặc 4096-bit)</li>
+<li><strong>Review hash algorithm</strong>: upgrade từ SHA1 lên SHA256/SHA384</li>
+<li><strong>Review validity period</strong>: certificate quá dài (10 năm) nên giảm xuống (1-3 năm)</li>
+<li><strong>Enable auto-enrollment</strong>: nếu chưa enable, đây là thời điểm tốt</li>
+</ul>
+<h3 id="client-trust-transition">Client Trust Transition<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#client-trust-transition" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Certificate đã cấp từ CA cũ</strong>: vẫn valid — vì CA certificate (trong Trusted Root store) không thay đổi (Option A giữ cùng key)</li>
+<li><strong>Certificate mới</strong>: cấp từ CA 2025, vẫn cùng CA identity → client trust tự động</li>
+<li><strong>Auto-enrollment</strong>: client tự request certificate mới khi certificate hiện tại gần expire — CA mới sẽ issue</li>
+<li><strong>Group Policy</strong>: đảm bảo Root CA certificate publish qua GPO → tất cả domain member tự động trust</li>
+</ul>
+<h3 id="rollback-strategy-chi-tiết">Rollback Strategy chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rollback-strategy-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="rollback-ca-migration">Rollback CA Migration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rollback-ca-migration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Bước rollback</th><th>Action</th><th>Thời gian ước tính</th></tr></thead><tbody><tr><td>1</td><td>Stop CA service trên server 2025</td><td>1 phút</td></tr><tr><td>2</td><td>Start CA service trên server cũ (2012R2)</td><td>2 phút</td></tr><tr><td>3</td><td>Revert CDP URLs: update CDP trỏ về server cũ</td><td>15 phút</td></tr><tr><td>4</td><td>Revert AIA URLs: update AIA trỏ về server cũ</td><td>15 phút</td></tr><tr><td>5</td><td>Republish CRL từ CA cũ</td><td>5 phút</td></tr><tr><td>6</td><td>Verify: test certificate chain, CRL download</td><td>30 phút</td></tr><tr><td><strong>Tổng</strong></td><td></td><td><strong>~1 giờ</strong></td></tr></tbody></table></div>
+<p><strong>Điều kiện rollback thành công</strong>: CA cũ (DC-OLD-01) <strong>vẫn online và CA database intact</strong> — đây là lý do không decommission DC cũ ngay.</p>
+<hr/>
+<h2 id="lưu-ý-quan-trọng">Lưu ý quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>FSMO Transfer nên thực hiện ngoài giờ cao điểm</strong> — đặc biệt PDC Emulator ảnh hưởng password change và time sync. Khuyến nghị: tối thứ 6 hoặc cuối tuần</li>
+<li><strong>CA private key là tài sản quan trọng nhất</strong> — mất key = mất toàn bộ PKI. Backup 3 bản, lưu offline, strong password</li>
+<li><strong>Không transfer FSMO rồi ngay lập tức migrate CA</strong> — để FSMO stable <strong>1-2 ngày</strong> trước khi làm CA. Nếu FSMO có vấn đề ẩn, sẽ surface trong 1-2 ngày</li>
+<li><strong>Kiểm tra CRL validity period</strong>: nếu CRL expire trước khi migration hoàn tất → client sẽ reject certificate. Plan migration timing phù hợp CRL validity</li>
+<li><strong>Test trong lab trước</strong>: CA migration <strong>bắt buộc</strong> test trên môi trường lab trước production — đây không phải optional</li>
+<li><strong>AIA/CDP update hay bị bỏ sót</strong>: đây là bước gây lỗi nhiều nhất — client không tải được CRL → certificate validation fail → application bị lỗi</li>
+</ul>
+<hr/>
+<h2 id="câu-hỏi-thường-gặp">Câu hỏi thường gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-thường-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="q-nếu-ca-cũ-dùng-sha1-có-nên-upgrade-lên-sha256-khi-migrate">Q: Nếu CA cũ dùng SHA1, có nên upgrade lên SHA256 khi migrate?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-nếu-ca-cũ-dùng-sha1-có-nên-upgrade-lên-sha256-khi-migrate" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>A</strong>: <strong>Có</strong>, nhưng cần lưu ý:</p>
+<ul>
+<li>SHA1 đã bị deprecated và không còn được trust bởi browser hiện đại</li>
+<li>Khi migrate CA: có thể chọn SHA256 cho <strong>new certificate</strong> mà <strong>không ảnh hưởng certificate cũ</strong> (certificate cũ vẫn dùng SHA1 cho đến khi expire)</li>
+<li>Cần test application compatibility với SHA256 — một số application/device cũ có thể không support</li>
+</ul>
+<h3 id="q-fsmo-transfer-mất-bao-lâu">Q: FSMO transfer mất bao lâu?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-fsmo-transfer-mất-bao-lâu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>A</strong>: Mỗi role transfer chỉ mất <strong>vài giây đến 1 phút</strong>. Phần lớn thời gian là <strong>validation sau transfer</strong>. Toàn bộ 5 role + validation: <strong>1-2 giờ</strong> (bao gồm thời gian giữa các role).</p>
+<h3 id="q-có-thể-đặt-ca-trên-dc-không">Q: Có thể đặt CA trên DC không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-có-thể-đặt-ca-trên-dc-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>A</strong>: <strong>Có thể</strong> nhưng <strong>không khuyến nghị</strong> cho production. Lý do:</p>
+<ul>
+<li>DC restart (patch) = CA service down → không issue/revoke certificate</li>
+<li>CA decommission phức tạp hơn vì phải tính cả DC role</li>
+<li>Tuy nhiên, trong small environment, co-locate CA trên DC là chấp nhận được</li>
+</ul>
+<hr/>
+<h2 id="liên-kết">Liên kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#liên-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki">02.2 - AD CS - Certificate Services và PKI</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad">01.3 - Domain Controller - Trái tim của AD</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers">04.1 - Triển khai Additional Domain Controllers</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.3---chuyển-đổi-ứng-dụng-và-dns" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.3---chuyển-đổi-ứng-dụng-và-dns">04.3 - Chuyển đổi ứng dụng và DNS</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration">04.4 - DHCP và RDS Migration</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện">04.5 - Kiểm thử toàn diện</a></li>
+<li><a href="../../../../moc---windows-server-ad-2025" class="internal internal-link alias" data-slug="moc---windows-server-ad-2025">MOC - Windows Server AD 2025</a></li>
+</ul>
+<hr/>
+<h2 id="tham-khảo">Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/transfer-or-seize-fsmo-roles-in-ad-ds" class="external external-link">Transfer or Seize FSMO Roles<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/migrate-ad-cs" class="external external-link">Migrate a Certification Authority<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/backup-and-restore" class="external external-link">AD CS Backup and Restore<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/fsmo-placement-and-optimization" class="external external-link">FSMO Role Placement Best Practices<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/certificate-template-concepts" class="external external-link">Certificate Template Concepts<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/cross-certification-and-qualified-subordination" class="external external-link">Cross-Certification and Qualified Subordination<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-433" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#ad-2025---chuyển-đổi-fsmo-và-certificate-server" data-for="ad-2025---chuyển-đổi-fsmo-và-certificate-server">AD 2025 - Chuyển đổi FSMO và Certificate Server</a></li><li class="depth-1"><a href="#tóm-tắt-nhanh" data-for="tóm-tắt-nhanh">Tóm tắt nhanh</a></li><li class="depth-1"><a href="#fsmo-role-transfer" data-for="fsmo-role-transfer">FSMO Role Transfer</a></li><li class="depth-2"><a href="#pre-transfer-checklist" data-for="pre-transfer-checklist">Pre-Transfer Checklist</a></li><li class="depth-2"><a href="#thứ-tự-transfer-và-lý-do" data-for="thứ-tự-transfer-và-lý-do">Thứ tự Transfer và lý do</a></li><li class="depth-2"><a href="#validation-giữa-mỗi-fsmo-transfer" data-for="validation-giữa-mỗi-fsmo-transfer">Validation giữa mỗi FSMO Transfer</a></li><li class="depth-2"><a href="#chi-tiết-từng-fsmo-role-khi-transfer" data-for="chi-tiết-từng-fsmo-role-khi-transfer">Chi tiết từng FSMO Role khi Transfer</a></li><li class="depth-2"><a href="#transfer-vs-seize--khi-nào-dùng-cái-nào" data-for="transfer-vs-seize--khi-nào-dùng-cái-nào">Transfer vs Seize — Khi nào dùng cái nào</a></li><li class="depth-2"><a href="#fsmo-placement-best-practice" data-for="fsmo-placement-best-practice">FSMO Placement Best Practice</a></li><li class="depth-2"><a href="#rollback-strategy-cho-fsmo-transfer" data-for="rollback-strategy-cho-fsmo-transfer">Rollback Strategy cho FSMO Transfer</a></li><li class="depth-1"><a href="#certificate-server-migration-ca-2012r2--2025" data-for="certificate-server-migration-ca-2012r2--2025">Certificate Server Migration (CA 2012R2 → 2025)</a></li><li class="depth-2"><a href="#tổng-quan-chiến-lược" data-for="tổng-quan-chiến-lược">Tổng quan chiến lược</a></li><li class="depth-2"><a href="#ca-migration-dry-run--test-trong-lab-trước" data-for="ca-migration-dry-run--test-trong-lab-trước">CA Migration Dry-Run — Test trong Lab trước</a></li><li class="depth-2"><a href="#option-a-full-ca-migration-khuyến-nghị" data-for="option-a-full-ca-migration-khuyến-nghị">Option A: Full CA Migration (Khuyến nghị)</a></li><li class="depth-2"><a href="#chi-tiết-từng-bước-migration" data-for="chi-tiết-từng-bước-migration">Chi tiết từng bước Migration</a></li><li class="depth-2"><a href="#cepces-migration-certificate-enrollment-policyservice" data-for="cepces-migration-certificate-enrollment-policyservice">CEP/CES Migration (Certificate Enrollment Policy/Service)</a></li><li class="depth-2"><a href="#option-b-new-ca--cross-certification" data-for="option-b-new-ca--cross-certification">Option B: New CA + Cross-Certification</a></li><li class="depth-2"><a href="#certificate-template-migration" data-for="certificate-template-migration">Certificate Template Migration</a></li><li class="depth-2"><a href="#client-trust-transition" data-for="client-trust-transition">Client Trust Transition</a></li><li class="depth-2"><a href="#rollback-strategy-chi-tiết" data-for="rollback-strategy-chi-tiết">Rollback Strategy chi tiết</a></li><li class="depth-1"><a href="#lưu-ý-quan-trọng" data-for="lưu-ý-quan-trọng">Lưu ý quan trọng</a></li><li class="depth-1"><a href="#câu-hỏi-thường-gặp" data-for="câu-hỏi-thường-gặp">Câu hỏi thường gặp</a></li><li class="depth-2"><a href="#q-nếu-ca-cũ-dùng-sha1-có-nên-upgrade-lên-sha256-khi-migrate" data-for="q-nếu-ca-cũ-dùng-sha1-có-nên-upgrade-lên-sha256-khi-migrate">Q: Nếu CA cũ dùng SHA1, có nên upgrade lên SHA256 khi migrate?</a></li><li class="depth-2"><a href="#q-fsmo-transfer-mất-bao-lâu" data-for="q-fsmo-transfer-mất-bao-lâu">Q: FSMO transfer mất bao lâu?</a></li><li class="depth-2"><a href="#q-có-thể-đặt-ca-trên-dc-không" data-for="q-có-thể-đặt-ca-trên-dc-không">Q: Có thể đặt CA trên DC không?</a></li><li class="depth-1"><a href="#liên-kết" data-for="liên-kết">Liên kết</a></li><li class="depth-1"><a href="#tham-khảo" data-for="tham-khảo">Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki" class="internal">02.2 - AD CS - Certificate Services và PKI</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers" class="internal">04.1 - Triển khai Additional Domain Controllers</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.3---chuyển-đổi-ứng-dụng-và-dns" class="internal">04.3 - Chuyển đổi ứng dụng và DNS</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal">04.4 - DHCP và RDS Migration</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal">04.5 - Kiểm thử toàn diện</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

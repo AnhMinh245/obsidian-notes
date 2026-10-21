@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Chương 09: AIOps &amp; Advanced Patterns</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Chương 09: AIOps &amp; Advanced Patterns"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Chương 09: AIOps &amp; Advanced Patterns"/><meta name="twitter:description" content="Chương 09: AIOps &amp; Advanced Patterns &quot;Khi hệ thống đủ phức tạp, con người không thể xem hết mọi dashboard."/><meta property="og:description" content="Chương 09: AIOps &amp; Advanced Patterns &quot;Khi hệ thống đủ phức tạp, con người không thể xem hết mọi dashboard."/><meta property="og:image:alt" content="Chương 09: AIOps &amp; Advanced Patterns &quot;Khi hệ thống đủ phức tạp, con người không thể xem hết mọi dashboard."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/09---aiops--and--advanced-patterns"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/09---aiops--and--advanced-patterns"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Chương 09: AIOps &amp; Advanced Patterns &quot;Khi hệ thống đủ phức tạp, con người không thể xem hết mọi dashboard."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/fundamentals/09---aiops--and--advanced-patterns" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-444" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-444" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/fundamentals/">Fundamentals</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Chương 09: AIOps &amp; Advanced Patterns</a></div></nav><h1 class="article-title">Chương 09: AIOps &amp; Advanced Patterns</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-03T17:00:00.000Z">04 thg 4, 2026</time><span>17 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="chương-09-aiops--advanced-patterns">Chương 09: AIOps &amp; Advanced Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chương-09-aiops--advanced-patterns" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote class="callout quote" data-callout="quote">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>&quot;Khi hệ thống đủ phức tạp, con người không thể xem hết mọi dashboard. AI phải làm tầng lọc đầu tiên.&quot; </p></div>
+                  
+                </div>
+</blockquote>
+<p><strong>Mục tiêu chương này</strong>: Hiểu cách AI/ML hỗ trợ Observability — từ anomaly detection tự động, automated root cause analysis (RCA), correlation engine, đến predictive analytics. Hiểu cách Chaos Engineering validate observability setup. Nắm xu hướng Observability-Driven Development và FinOps.</p>
+<p><strong>ShopVN evolution</strong>: ShopVN đã scale lên 50+ services, hàng nghìn metrics, hàng triệu logs/ngày. Team 5 người không thể ngồi xem dashboards 24/7. Cần AI để: (1) tự phát hiện bất thường, (2) tự nhóm alerts, (3) tự tìm root cause, (4) dự đoán vấn đề trước khi xảy ra.</p>
+<p><strong>Liên kết</strong>: AIOps dùng <strong>metrics</strong> (Ch03) để detect anomalies, <strong>traces</strong> (Ch04) và <strong>topology</strong> (Ch08) để correlate, <strong>SLO burn rate</strong> (Ch06) để đánh giá impact. Đây là “đỉnh” của Observability pyramid — kết hợp mọi thứ đã học.</p>
+<hr/>
+<h2 id="1-aiops-là-gì-và-tại-sao-cần">1. AIOps là gì và tại sao cần?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-aiops-là-gì-và-tại-sao-cần" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-định-nghĩa">1.1 Định nghĩa<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-định-nghĩa" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>AIOps</strong> = <strong>AI for IT Operations</strong> — dùng machine learning để tự động hóa các tác vụ mà trước đây phải làm thủ công trong Observability:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tác vụ</th><th>Trước AIOps (thủ công)</th><th>Với AIOps</th></tr></thead><tbody><tr><td>Detect anomaly</td><td>Đặt static threshold thủ công</td><td>AI tự học baseline, detect deviation</td></tr><tr><td>Find root cause</td><td>Lục logs, traces 30 phút</td><td>AI correlate tự động, &lt; 1 phút</td></tr><tr><td>Group alerts</td><td>Nhận 50 alerts riêng lẻ</td><td>AI nhóm thành 1 incident</td></tr><tr><td>Predict issues</td><td>Chờ đến khi vỡ</td><td>AI dự đoán disk full, OOM trước khi xảy ra</td></tr></tbody></table></div>
+<h3 id="12-tại-sao-cần--bài-toán-scale">1.2 Tại sao cần — bài toán scale<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-tại-sao-cần--bài-toán-scale" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>ShopVN 5 services (Chương 01-03):
+  5 dashboards, ~50 metrics, ~500 log entries/phút
+  → 1 engineer xem hết trong 5 phút ✅
+
+ShopVN 50 services (thực tế):
+  50 dashboards, ~5,000 metrics, ~50,000 log entries/phút
+  → 1 engineer KHÔNG THỂ xem hết → cần AI làm &quot;tầng lọc&quot; 🤖
+  
+ShopVN 500 services (enterprise):
+  500 dashboards, ~50,000 metrics, ~500,000 log entries/phút
+  → Không có AI = không thể vận hành → AIOps là BẮT BUỘC
+</code></pre>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>AIOps không thay thế engineer </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>AIOps <strong>lọc</strong> và <strong>ưu tiên</strong> thông tin để engineer tập trung vào đúng chỗ. Quyết định cuối cùng vẫn là con người. AI giống <strong>radar</strong> cho phi công — radar phát hiện vật thể, phi công quyết định hành động.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="2-anomaly-detection--phát-hiện-bất-thường-tự-động">2. Anomaly Detection — Phát hiện bất thường tự động<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-anomaly-detection--phát-hiện-bất-thường-tự-động" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-static-threshold-vs-anomaly-detection">2.1 Static Threshold vs Anomaly Detection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-static-threshold-vs-anomaly-detection" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Vấn đề với static threshold:</strong></p>
+<pre><code>Static: Alert khi requests > 1000/s
+
+Thứ 2 bình thường:     800/s → OK ✅
+Black Friday:          5000/s → ALERT! ❌ (nhưng đây là bình thường cho Black Friday!)
+Thứ 2 bất thường:     100/s  → No alert ❌ (nhưng traffic chỉ = 12% bình thường!)
+</code></pre>
+<p>Static threshold không hiểu <strong>context</strong>: “1000 req/s” nghĩa rất khác nhau vào lúc 14:00 thứ 6 (shopping peak) vs 3:00 sáng chủ nhật (gần 0).</p>
+<p><strong>Anomaly Detection giải quyết bằng cách học pattern:</strong></p>
+<pre><code>AI training (2-4 tuần data lịch sử):
+  &quot;ShopVN thường có traffic theo pattern:
+   - Thứ 2-5: 500-800 req/s ban ngày, 50-100 ban đêm
+   - Thứ 6-7: 800-1200 req/s ban ngày, 100-200 ban đêm
+   - Black Friday: 3000-5000 req/s (seasonal spike)
+   - Baseline cho thứ 3, 14:00: 600 req/s (σ = 80)&quot;
+
+AI detection:
+  Thứ 3, 14:00: actual = 600 req/s → trong baseline → OK ✅
+  Thứ 3, 14:00: actual = 150 req/s → 5.6σ dưới baseline → ANOMALY 🔔
+  Black Friday: actual = 4500 req/s → trong expected range → OK ✅
+</code></pre>
+<h3 id="22-cách-hoạt-động-chi-tiết">2.2 Cách hoạt động chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-cách-hoạt-động-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Phase 1: TRAINING (học pattern từ data lịch sử)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Thu thập 2-4 tuần data
+  → Phát hiện daily patterns (cao ban ngày, thấp ban đêm)
+  → Phát hiện weekly patterns (cao ngày giữa tuần, thấp weekend)
+  → Phát hiện seasonal patterns (cao dịp lễ, Tết)
+  → Tính baseline + standard deviation cho mỗi thời điểm
+  
+  Kết quả: &quot;Mô hình&quot; biết ShopVN traffic bình thường trông như thế nào
+
+Phase 2: DETECTION (so sánh thực tế vs mô hình)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Mỗi phút, so sánh giá trị thực tế vs baseline:
+  
+  deviation = |actual - baseline| / σ
+  
+  Nếu deviation > threshold (thường 3σ):
+    → ANOMALY DETECTED! 
+    → &quot;Giá trị hiện tại lệch BẤT THƯỜNG so với pattern đã học&quot;
+    → Gửi alert VỚI context: &quot;Expected 600 req/s, got 150 req/s&quot;
+</code></pre>
+<h3 id="23-trong-dynatrace--datadog">2.3 Trong Dynatrace &amp; Datadog<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-trong-dynatrace--datadog" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tool</th><th>Feature</th><th>Cách hoạt động</th></tr></thead><tbody><tr><td><strong>Dynatrace Davis AI</strong></td><td>Tự động detect anomalies trên MỌI metric</td><td>Baseline toàn bộ metrics tự động, không cần config</td></tr><tr><td><strong>Datadog Watchdog</strong></td><td>Anomaly detection + auto-RCA</td><td>ML scan liên tục, phát hiện lệch pattern → auto-investigate</td></tr><tr><td><strong>Datadog Anomaly Monitor</strong></td><td>Custom anomaly alert cho metric cụ thể</td><td>User chọn metric, Datadog tự học pattern → alert khi anomaly</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>So sánh Dynatrace vs Datadog approach </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>Dynatrace Davis AI</strong>: “Zero-config AI” — tự baseline mọi thứ, tự detect, tự correlate. Mạnh ở tự động, yếu ở customizable.</li>
+<li><strong>Datadog Watchdog</strong>: Tự động scan + cho phép user tạo custom anomaly monitors. Balance giữa automation và control.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="3-automated-root-cause-analysis-rca">3. Automated Root Cause Analysis (RCA)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-automated-root-cause-analysis-rca" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-manual-rca--câu-chuyện-quen-thuộc">3.1 Manual RCA — Câu chuyện quen thuộc<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-manual-rca--câu-chuyện-quen-thuộc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>14:30 Alert: &quot;Order Service error rate = 8%&quot;
+      → Minh mở Order Service dashboard → 502 errors → Payment failing
+14:33 → Minh mở Payment Service dashboard → healthy metrics??? 🤔  
+14:35 → Minh check Payment logs → &quot;connection refused to bank-api.vn&quot;
+14:38 → Minh check Bank API status → DOWN
+14:40 → Root cause found!
+      → 10 phút investigation cho 1 vấn đề tương đối đơn giản
+      → Nếu chain dài hơn (A → B → C → D → E) → có thể mất 30+ phút
+</code></pre>
+<h3 id="32-automated-rca--ai-làm-trong-vài-giây">3.2 Automated RCA — AI làm trong vài giây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-automated-rca--ai-làm-trong-vài-giây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>14:30 Alert: &quot;Order Service error rate = 8%&quot;
+14:30 Davis AI / Watchdog tự động:
+  
+  STEP 1: Detect symptom
+    → Order Service: error rate 8% (normally 0.3%) — anomaly confirmed
+    
+  STEP 2: Trace dependency chain
+    → Order Service gọi Payment Service
+    → Payment Service gọi Bank API
+    → Topology map: Order → Payment → Bank API
+    
+  STEP 3: Check each dependency
+    → Payment Service itself: healthy (no internal errors)
+    → Payment → Bank API: &quot;connection refused&quot; since 14:25
+    → Bank API: unreachable ← ROOT CAUSE
+    
+  STEP 4: Assess impact
+    → Affected: Order Service (8% errors)
+    → Affected users: ~200 in last 5 min
+    → SLO impact: Error budget consuming at 15x rate
+    
+  STEP 5: Present analysis
+    ┌───────────── AI Problem Card ─────────────┐
+    │ 🔴 Root Cause: Bank API unreachable        │
+    │                                             │
+    │ Chain: Order → Payment → Bank API 🔴       │
+    │                                             │
+    │ Impact:                                     │
+    │   • Order Service: 8% error rate            │
+    │   • ~200 users affected                     │
+    │   • Error budget: consuming 15x             │
+    │                                             │
+    │ Recommendation:                             │
+    │   Enable circuit breaker for payment        │
+    │                                             │
+    │ Started: 14:25 | Detected: 14:30            │
+    └─────────────────────────────────────────────┘
+    
+    → 0 phút manual investigation!
+</code></pre>
+<h3 id="33-ai-rca-hoạt-động-nhờ-đâu">3.3 AI RCA hoạt động nhờ đâu?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-ai-rca-hoạt-động-nhờ-đâu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AI RCA không phải “phép thuật”. Nó hoạt động nhờ <strong>kết hợp</strong> data từ mọi tầng:</p>
+<pre><code>AI RCA dùng:
+  ├── Metrics (Ch03): detect anomaly (error rate spike)
+  ├── Traces (Ch04): trace dependency chain (Order → Payment → Bank)
+  ├── Logs (Ch02): read error messages (&quot;connection refused&quot;)
+  ├── Topology (Ch08): biết service nào phụ thuộc service nào
+  └── SLO (Ch06): đánh giá impact (error budget burn rate)
+
+Tất cả kết hợp → AI &quot;nối các điểm&quot; thành câu chuyện hoàn chỉnh
+</code></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Đây là lý do phải có ĐẦY ĐỦ 3 pillars + infrastructure + SLO </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nếu thiếu traces → AI không biết Order phụ thuộc Payment<br/>
+Nếu thiếu logs → AI không biết error message cụ thể<br/>
+Nếu thiếu topology → AI không biết dependency chain<br/>
+→ AI RCA CHỈ MẠNH KHI data đầy đủ</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="4-correlation-engine--nhóm-alerts-liên-quan">4. Correlation Engine — Nhóm alerts liên quan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-correlation-engine--nhóm-alerts-liên-quan" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-vấn-đề-alert-storm">4.1 Vấn đề: Alert Storm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-vấn-đề-alert-storm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi Bank API chết, hệ thống tạo ra <strong>hàng loạt alerts</strong> — vì <strong>mỗi symptom</strong> trigger riêng:</p>
+<pre><code>Alert 1:  Order Service error rate HIGH
+Alert 2:  Payment Service error rate HIGH  
+Alert 3:  Payment Service latency HIGH
+Alert 4:  Order Service latency HIGH
+Alert 5:  Checkout success rate LOW
+Alert 6:  Revenue metric DROPPING
+Alert 7:  User complaints SPIKE
+Alert 8:  SLO burn rate HIGH
+Alert 9:  Cart abandonment rate HIGH
+... 20+ alerts, TẤT CẢ do CÙNG 1 root cause
+</code></pre>
+<p>On-call nhận <strong>20 notifications</strong> trong 5 phút → overwhelmed → “cái nào quan trọng???“</p>
+<h3 id="42-correlation-engine-giải-quyết">4.2 Correlation Engine giải quyết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-correlation-engine-giải-quyết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AI phân tích timing, dependencies, và correlations → <strong>nhóm</strong> 20 alerts thành 1 incident:</p>
+<pre><code>┌─── Unified Incident #INC-20260404 ───────────────────┐
+│                                                        │
+│ Root Cause: Bank API unreachable (external)            │
+│                                                        │
+│ Related Alerts: 20 alerts (auto-grouped)               │
+│   • 5 alerts: Service error rates                      │
+│   • 3 alerts: Latency degradation                      │
+│   • 4 alerts: Business metric drops                    │
+│   • 8 alerts: SLO/burn rate violations                 │
+│                                                        │
+│ Affected Services: Order, Payment, Checkout            │
+│ Timeline: Started 14:25, Detected 14:30                │
+│                                                        │
+│ → On-call nhận 1 notification thay vì 20               │
+│ → Focus đúng chỗ: Bank API                            │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Cách AI correlate:</strong></p>
+<ul>
+<li><strong>Thời gian</strong>: Alerts fire trong khoảng thời gian gần nhau (&lt; 5 min)</li>
+<li><strong>Topology</strong>: Alerts thuộc services trong cùng dependency chain</li>
+<li><strong>Similarity</strong>: Alerts có cùng error pattern (502, connection refused)</li>
+<li><strong>Causality</strong>: Service A phụ thuộc B, B lỗi → A lỗi → A là consequence, B là cause</li>
+</ul>
+<hr/>
+<h2 id="5-predictive-analytics--dự-đoán-trước-khi-vỡ">5. Predictive Analytics — Dự đoán trước khi vỡ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-predictive-analytics--dự-đoán-trước-khi-vỡ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-resource-exhaustion-prediction">5.1 Resource Exhaustion Prediction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-resource-exhaustion-prediction" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AI phân tích <strong>xu hướng</strong> để dự đoán khi nào resource hết:</p>
+<pre><code>Disk usage đang tăng dần:
+  Day 1:  50% (500 GB / 1000 GB)
+  Day 7:  55%
+  Day 14: 60%
+  Day 21: 65%
+  
+AI fits trendline: +0.71%/ngày
+
+Prediction: tại tốc độ hiện tại
+  → 100% (full) trong 70 ngày
+  → Alert: &quot;⚠️ Disk sẽ full khoảng ngày 12/6/2026.
+            Suggest: cleanup old data, expand volume, setup log rotation&quot;
+  → Fix TRƯỚC KHI trở thành outage!
+</code></pre>
+<p>Tương tự cho:</p>
+<ul>
+<li><strong>Memory leak</strong>: Memory tăng dần sau mỗi deployment → AI predict khi nào OOM</li>
+<li><strong>Certificate expiry</strong>: TLS cert hết hạn trong X ngày → reminder</li>
+<li><strong>Connection pool</strong>: Pool usage tăng → predict khi nào exhaustion</li>
+</ul>
+<h3 id="52-pattern-recognition--phát-hiện-correlation-ẩn">5.2 Pattern Recognition — Phát hiện correlation ẩn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-pattern-recognition--phát-hiện-correlation-ẩn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>AI observes 3 tháng data:
+  → Mỗi thứ 5, 10:00 → có deployment event
+  → Sau 20% deployments → error spike 15-30 phút
+  → Error spikes correlate với: deployments KHÔNG có canary rollout
+
+AI reports:
+  &quot;Deployments trên thứ 5 có tỷ lệ error spike 20% — cao gấp 3 lần
+   ngày khác. Correlation: deployments without canary rollout.
+   Recommendation: 
+   1. Enable canary deployment cho thứ 5
+   2. Schedule complex deploys vào thứ 2-3 (lower traffic)
+   3. Implement automated rollback khi error spike&quot;
+</code></pre>
+<hr/>
+<h2 id="6-chaos-engineering--observability">6. Chaos Engineering &amp; Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-chaos-engineering--observability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-chaos-engineering-là-gì">6.1 Chaos Engineering là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-chaos-engineering-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote>
+<p><strong>“Gây lỗi CÓ KIỂM SOÁT để kiểm tra hệ thống chịu lỗi tốt đến đâu.”</strong></p>
+</blockquote>
+<p>Thay vì chờ Bank API tự chết rồi mới biết hệ thống handle thế nào, bạn <strong>chủ động</strong> giả lập failure:</p>
+<pre><code>Câu hỏi Chaos Engineering trả lời:
+  1. &quot;Payment Service chết thì sao?&quot;           → Kill it
+  2. &quot;Database chậm 500ms thì sao?&quot;             → Inject latency
+  3. &quot;Network mất 50% packets thì sao?&quot;         → Simulate packet loss
+  4. &quot;Một pod bị OOMKilled thì sao?&quot;            → Kill pod
+  5. &quot;CPU spike 100% trên 1 node thì sao?&quot;      → Stress test
+</code></pre>
+<h3 id="62-chaos--observability--validate-setup">6.2 Chaos + Observability — Validate setup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-chaos--observability--validate-setup" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Chaos Engineering không chỉ test <strong>resilience</strong> (hệ thống có survive không) mà còn test <strong>observability</strong> (bạn có BIẾT hệ thống đang fail không):</p>
+<pre><code>━━━ VÍ DỤ: Chaos Experiment cho ShopVN ━━━
+
+HYPOTHESIS: 
+  &quot;Nếu Payment Service chết, circuit breaker sẽ activate trong 10 giây,
+   alert sẽ fire trong 2 phút, và orders sẽ nhận fallback response.&quot;
+
+EXPERIMENT: Kill Payment Service trong 5 phút
+
+KẾT QUẢ OBSERVABILITY:
+  ✅ Circuit breaker activated sau 10 giây → PASS
+  ✅ Alert fired sau 2 phút → PASS
+  ✅ Traces hiện rõ &quot;Payment → timeout → circuit breaker open&quot; → PASS
+  ❌ Logs thiếu context: không log retry attempts → FAIL
+     → Action: Thêm retry logging
+  ❌ Dashboard không hiện circuit breaker state → FAIL
+     → Action: Thêm circuit breaker gauge metric
+  ❌ Trace bị đứt sau circuit breaker (không propagate context) → FAIL
+     → Action: Fix trace propagation trong circuit breaker fallback
+</code></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Chaos Engineering = &quot;fire drill&quot; cho Observability </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Giống như diễn tập cháy giúp phát hiện lối thoát bị khóa, Chaos Engineering giúp phát hiện <strong>lỗ hổng</strong> trong observability setup — metrics thiếu, logs không đủ context, traces bị đứt.</p>
+</div>
+</blockquote>
+<h3 id="63-tools">6.3 Tools<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#63-tools" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tool</th><th>Mô tả</th><th>Platform</th></tr></thead><tbody><tr><td><strong>Chaos Monkey</strong> (Netflix)</td><td>Random kill instances</td><td>Cloud VMs</td></tr><tr><td><strong>Litmus</strong> (CNCF)</td><td>Full chaos experiments</td><td>Kubernetes native</td></tr><tr><td><strong>Gremlin</strong></td><td>Enterprise chaos platform</td><td>Any infrastructure</td></tr><tr><td><strong>Chaos Mesh</strong> (CNCF)</td><td>Kubernetes-focused chaos</td><td>Kubernetes</td></tr></tbody></table></div>
+<hr/>
+<h2 id="7-observability-driven-development-odd">7. Observability-Driven Development (ODD)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-observability-driven-development-odd" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="71-shift-left-observability--nghĩ-về-observability-từ-lúc-viết-code">7.1 Shift-left Observability — “Nghĩ về observability từ lúc viết code”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#71-shift-left-observability--nghĩ-về-observability-từ-lúc-viết-code" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>❌ TRƯỚC (reactive):
+  Design → Code → Deploy → Wait for PROBLEM → &quot;Ơ, chưa có monitoring&quot;
+  → Scramble: thêm logging, metrics, dashboard → CHẬM, MISS things
+
+✅ SAU (proactive, ODD):
+  Design → Define SLOs → Define key metrics → Add instrumentation → Code → Deploy
+  → Monitoring SẴN SÀNG từ ngày 1 → Problems detected NGAY khi develop
+</code></pre>
+<h3 id="72-feature-launch-checklist">7.2 Feature Launch Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#72-feature-launch-checklist" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi feature mới phải <strong>đi kèm</strong> observability artifacts:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light github-dark"><code data-language="markdown" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## Feature Launch Checklist — ShopVN &quot;Express Checkout&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">### Observability Requirements (PHẢI đầy đủ trước khi deploy)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> [ ] </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation">**SLO defined**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">: </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">      Success rate ≥ 99.9%, p99 latency &lt; 200ms</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> [ ] </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation">**Key metrics instrumented**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">:</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">      -</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation"> `shopvn_express_checkout_total{status}`</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">      -</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation"> `shopvn_express_checkout_duration_seconds`</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">      -</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation"> `shopvn_express_checkout_errors_total{error_type}`</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> [ ] </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation">**Custom business spans**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">:</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">      -</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation"> `validate_express_eligibility`</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">      -</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation"> `process_express_payment`</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">      -</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation"> `confirm_express_order`</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> [ ] </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation">**Structured logging**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">: </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">      All log entries include user_id, order_id, checkout_type</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> [ ] </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation">**Dashboard created**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">: </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">      [</span><span style="--shiki-light:#032F62;--shiki-light-text-decoration:underline;--shiki-dark:#DBEDFF;--shiki-dark-text-decoration:underline;" data-token-type="string">Express Checkout Dashboard</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">](</span><span style="--shiki-light:#24292E;--shiki-light-text-decoration:underline;--shiki-dark:#E1E4E8;--shiki-dark-text-decoration:underline;" data-token-type="normal">link</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> [ ] </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation">**Alerts configured**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">:</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">      -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> P1: express_checkout error rate > 5% for 2 min</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">      -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> P2: express_checkout p99 > 500ms for 10 min</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> [ ] </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation">**Runbook written**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">: </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">      [</span><span style="--shiki-light:#032F62;--shiki-light-text-decoration:underline;--shiki-dark:#DBEDFF;--shiki-dark-text-decoration:underline;" data-token-type="string">Express Checkout Runbook</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">](</span><span style="--shiki-light:#24292E;--shiki-light-text-decoration:underline;--shiki-dark:#E1E4E8;--shiki-dark-text-decoration:underline;" data-token-type="normal">link</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> [ ] </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation">**Chaos test completed**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">      Payment service kill → circuit breaker OK</span></span></code></pre></figure>
+<hr/>
+<h2 id="8-finops--quản-lý-chi-phí-observability">8. FinOps — Quản lý chi phí Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-finops--quản-lý-chi-phí-observability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="81-thực-tế-telemetry-data--chi-phí">8.1 Thực tế: Telemetry data = CHI PHÍ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#81-thực-tế-telemetry-data--chi-phí" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Observability data rất hữu ích — nhưng không miễn phí. Chi phí tăng theo volume:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Data Type</th><th>Volume ShopVN/tháng</th><th>Chi phí ước tính</th></tr></thead><tbody><tr><td><strong>Metrics</strong></td><td>50,000 time series</td><td>$200-500</td></tr><tr><td><strong>Logs</strong></td><td>100 GB/ngày = 3 TB/tháng</td><td>$300-1,000</td></tr><tr><td><strong>Traces</strong></td><td>10 GB/ngày = 300 GB/tháng</td><td>$100-300</td></tr><tr><td><strong>Total</strong></td><td></td><td><strong>$600-1,800/tháng</strong></td></tr></tbody></table></div>
+<p>Khi ShopVN scale 10x → chi phí cũng có thể scale 10x → <strong>$6,000-18,000/tháng</strong> → cần quản lý!</p>
+<h3 id="82-năm-chiến-lược-giảm-chi-phí">8.2 Năm chiến lược giảm chi phí<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#82-năm-chiến-lược-giảm-chi-phí" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>#</th><th>Strategy</th><th>Cách làm</th><th>Savings ước tính</th></tr></thead><tbody><tr><td>1</td><td><strong>Log sampling</strong></td><td>Log 100% errors, chỉ 10% success</td><td>70-90% log volume</td></tr><tr><td>2</td><td><strong>Trace sampling</strong></td><td>Tail-based: giữ errors + slow + 5% normal</td><td>80-95% trace volume</td></tr><tr><td>3</td><td><strong>Metric cardinality</strong></td><td>Loại bỏ labels không cần, xóa metrics không ai xem</td><td>30-50% metrics</td></tr><tr><td>4</td><td><strong>Retention tiers</strong></td><td>Hot (7d, SSD) → Warm (30d, HDD) → Cold (90d, S3) → Delete</td><td>40-60% storage</td></tr><tr><td>5</td><td><strong>Filter noise</strong></td><td>Loại health checks, favicon, static assets</td><td>20-30% overall</td></tr></tbody></table></div>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># OTel Collector — filter noise + sampling để giảm chi phí</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">processors</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Loại bỏ traces không có giá trị</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  filter</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    spans</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      exclude</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        match_type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">strict</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        attributes</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">          - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">key</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">http.target</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/health</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # Health check traces = noise</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">          - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">key</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">http.target</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/favicon.ico</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Static file requests = noise</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">          - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">key</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">http.target</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/robots.txt</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Chỉ giữ 10% traces bình thường, 100% errors</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  tail_sampling</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    policies</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">errors-always</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">     # Giữ 100% traces có lỗi</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">status_code</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        status_code</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">status_codes</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ERROR</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">slow-always</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # Giữ 100% traces chậm (> 2s)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">latency</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        latency</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">threshold_ms</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2000</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">normal-sample</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">     # Chỉ 10% traces bình thường</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">probabilistic</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        probabilistic</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">sampling_percentage</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">10</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Cost vs Coverage trade-off </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Giảm volume = giảm cost NHƯNG cũng giảm visibility. Nếu sample 10% traces → có thể miss 1 lỗi cụ thể. Luôn giữ <strong>100% errors</strong> — đó là data quan trọng nhất.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="9-tổng-kết-chương--tổng-kết-bộ-tài-liệu">9. Tổng Kết Chương &amp; Tổng Kết Bộ Tài Liệu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-tổng-kết-chương--tổng-kết-bộ-tài-liệu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="91-tổng-kết-chương-09">9.1 Tổng kết Chương 09<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#91-tổng-kết-chương-09" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept</th><th>Key Takeaway</th></tr></thead><tbody><tr><td><strong>AIOps</strong></td><td>AI filter + prioritize → engineer focus vào đúng chỗ</td></tr><tr><td><strong>Anomaly Detection</strong></td><td>Học pattern lịch sử, detect deviation tự động</td></tr><tr><td><strong>Automated RCA</strong></td><td>Kết hợp metrics + traces + topology → tìm root cause tự động</td></tr><tr><td><strong>Correlation Engine</strong></td><td>Nhóm 20 alerts → 1 incident với root cause</td></tr><tr><td><strong>Predictive Analytics</strong></td><td>Dự đoán resource exhaustion, pattern recognition</td></tr><tr><td><strong>Chaos Engineering</strong></td><td>Gây lỗi có kiểm soát → validate observability setup</td></tr><tr><td><strong>ODD</strong></td><td>Observability là requirement, không phải afterthought</td></tr><tr><td><strong>FinOps</strong></td><td>Quản lý chi phí: sampling + filtering + retention tiers</td></tr></tbody></table></div>
+<h3 id="92-hành-trình-shopvn--từ-mù-đến-thấy-rõ">9.2 Hành trình ShopVN — Từ “mù” đến “thấy rõ”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#92-hành-trình-shopvn--từ-mù-đến-thấy-rõ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Ch01: 🏗️ Xây dựng ShopVN
+      → Hiểu cách app hoạt động. Nhưng KHÔNG BIẾT gì khi có lỗi.
+
+Ch02: 📝 Thêm LOGS
+      → Biết CHUYỆN GÌ đã xảy ra (sự kiện cụ thể, chi tiết lỗi)
+      → ShopVN v2: có structured logging
+
+Ch03: 📊 Thêm METRICS
+      → Biết XU HƯỚNG (error rate tăng/giảm, latency lên/xuống)
+      → ShopVN v3: có RED metrics, percentiles
+
+Ch04: 🔍 Thêm TRACES
+      → Biết CHỖ NÀO chậm/lỗi (waterfall view, bottleneck)
+      → ShopVN v4: có distributed tracing, context propagation
+
+Ch05: 🔧 Instrument bằng OTel
+      → Tự động hóa thu thập, vendor-neutral
+      → ShopVN v5: OTel SDK + Collector + multi-backend
+
+Ch06: 🎯 Đặt SLOs
+      → Biết THẾ NÀO LÀ &quot;TỐT&quot; (mục tiêu rõ ràng, error budget)
+
+Ch07: 🔔 Setup ALERTING
+      → Biết KHI NÀO cần hành động (alert → triage → mitigate → post-mortem)
+
+Ch08: 🏛️ Thêm INFRA CONTEXT
+      → Biết TOÀN BỘ STACK (K8s, cloud, topology, change events)
+
+Ch09: 🤖 Áp dụng AIOps
+      → AI giúp PHÁT HIỆN, CORRELATE, DỰ ĐOÁN (scale vô hạn)
+</code></pre>
+<h3 id="93-cheat-sheet-toàn-bộ">9.3 Cheat Sheet Toàn Bộ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#93-cheat-sheet-toàn-bộ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tầng</th><th>Câu hỏi trả lời</th><th>Concepts chính</th></tr></thead><tbody><tr><td><strong>Logs</strong> (Ch02)</td><td>“Chuyện gì đã xảy ra cụ thể?”</td><td>Structured JSON, levels, correlation, pipeline</td></tr><tr><td><strong>Metrics</strong> (Ch03)</td><td>“Xu hướng tổng thể thế nào?”</td><td>Counter/Gauge/Histogram, RED/USE, percentiles, cardinality</td></tr><tr><td><strong>Traces</strong> (Ch04)</td><td>“Request đi qua đâu, chậm ở đâu?”</td><td>Spans, parent-child, context propagation, sampling</td></tr><tr><td><strong>Instrumentation</strong> (Ch05)</td><td>“Cách thu thập data”</td><td>OTel SDK, Collector, Semantic Conventions, OTLP</td></tr><tr><td><strong>SLO</strong> (Ch06)</td><td>“Thế nào là ‘đủ tốt’?”</td><td>SLI, SLO, SLA, Error Budget, Burn Rate</td></tr><tr><td><strong>Alerting</strong> (Ch07)</td><td>“Khi nào cần hành động?”</td><td>Symptoms vs causes, P1-P4, runbooks, blameless post-mortems</td></tr><tr><td><strong>Infrastructure</strong> (Ch08)</td><td>“Infra có ảnh hưởng gì?”</td><td>K8s, OOMKilled, DaemonSet, topology, change correlation</td></tr><tr><td><strong>AIOps</strong> (Ch09)</td><td>“AI giúp gì?”</td><td>Anomaly detection, auto RCA, correlation, prediction, chaos</td></tr></tbody></table></div>
+<h3 id="94-bước-tiếp-theo">9.4 Bước tiếp theo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#94-bước-tiếp-theo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bạn đã có <strong>nền tảng vững chắc</strong>. Giờ quay lại vendor-specific tools với hiểu biết sâu:</p>
+<ol>
+<li><strong>Dynatrace</strong> → Mỗi feature (Smartscape, Davis AI, PurePath) map với concept nào bạn đã học</li>
+<li><strong>Datadog</strong> → Service Map = topology, APM = traces, Watchdog = anomaly detection</li>
+<li><strong>OpenTelemetry hands-on</strong> → Setup OTel Collector, instrument ứng dụng thực</li>
+<li><strong>Chaos Engineering</strong> → Dựng Litmus trên K8s, chạy experiments</li>
+</ol>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>🎉 Chúc mừng bạn đã hoàn thành bộ tài liệu Observability Fundamentals! </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Tools sẽ thay đổi — Dynatrace sẽ có version mới, Datadog sẽ thêm features. Nhưng <strong>fundamentals không đổi</strong>: 3 pillars, SLOs, alert on symptoms, blameless culture. Kiến thức này theo bạn suốt career.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mapping-sang-dynatrace--datadog" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept trong chương</th><th>Dynatrace</th><th>Datadog</th></tr></thead><tbody><tr><td>Anomaly Detection</td><td><strong>Davis AI</strong> — baseline MỌI metric tự động, detect deviation</td><td><strong>Watchdog</strong> — ML scan tự động + <strong>Anomaly Monitor</strong> custom</td></tr><tr><td>Automated RCA</td><td><strong>Davis AI Problem Card</strong> — root cause chain, impact analysis tự động</td><td><strong>Watchdog RCA</strong> — insights với suggested root cause</td></tr><tr><td>Alert Correlation</td><td>Davis AI <strong>tự nhóm</strong> symptoms → 1 Problem (topology-aware)</td><td>Watchdog <strong>auto-group</strong> related alerts + <strong>Composite Monitors</strong></td></tr><tr><td>Predictive Analytics</td><td>Davis AI <strong>resource prediction</strong> (disk, memory exhaustion)</td><td><strong>Forecast Monitor</strong> — dự đoán metric trend, alert trước khi breach</td></tr><tr><td>Chaos Engineering</td><td><strong>Dynatrace + Keptn / LitmusChaos</strong> integration</td><td><strong>Datadog + Gremlin</strong> integration — observe chaos impact</td></tr><tr><td>FinOps (cost management)</td><td><strong>Cloud cost management</strong> + metric ingest cost tracking</td><td><strong>Cloud Cost Management</strong> + <strong>Estimated Usage Metrics</strong></td></tr><tr><td>Observability-Driven Dev</td><td><strong>Dynatrace SRE toolkit</strong> — SLO + Problem + Release monitoring</td><td><strong>CI Visibility + Service Catalog</strong> — service ownership + SLO</td></tr></tbody></table></div>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Davis AI vs Watchdog — So sánh triết lý </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>Davis AI (Dynatrace)</strong>: Deterministic AI — dùng topology graph (Smartscape) + causal analysis. Kết quả chính xác, ít false positives. Tự tạo Problems không cần user config.</li>
+<li><strong>Watchdog (Datadog)</strong>: ML-based — dùng statistical anomaly detection. Linh hoạt, cover nhiều use cases. Cần Monitors cho alerting chính thức.</li>
+<li>Cả hai đều solving cùng vấn đề: <strong>“Quá nhiều data, con người không xem hết”</strong>.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-tham-khảo">📚 Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://www.gartner.com/en/information-technology/glossary/aiops-artificial-intelligence-operations" class="external external-link">AIOps — Gartner Definition<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.dynatrace.com/docs/platform/davis-ai" class="external external-link">Dynatrace Davis AI Architecture<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.datadoghq.com/watchdog/" class="external external-link">Datadog Watchdog<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://principlesofchaos.org/" class="external external-link">Principles of Chaos Engineering<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://litmuschaos.io/docs/" class="external external-link">Litmus Chaos Documentation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.honeycomb.io/blog/observability-driven-development" class="external external-link">Observability-Driven Development — Honeycomb<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.finops.org/" class="external external-link">FinOps Foundation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-394" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#chương-09-aiops--advanced-patterns" data-for="chương-09-aiops--advanced-patterns">Chương 09: AIOps &amp; Advanced Patterns</a></li><li class="depth-1"><a href="#1-aiops-là-gì-và-tại-sao-cần" data-for="1-aiops-là-gì-và-tại-sao-cần">1. AIOps là gì và tại sao cần?</a></li><li class="depth-2"><a href="#11-định-nghĩa" data-for="11-định-nghĩa">1.1 Định nghĩa</a></li><li class="depth-2"><a href="#12-tại-sao-cần--bài-toán-scale" data-for="12-tại-sao-cần--bài-toán-scale">1.2 Tại sao cần — bài toán scale</a></li><li class="depth-1"><a href="#2-anomaly-detection--phát-hiện-bất-thường-tự-động" data-for="2-anomaly-detection--phát-hiện-bất-thường-tự-động">2. Anomaly Detection — Phát hiện bất thường tự động</a></li><li class="depth-2"><a href="#21-static-threshold-vs-anomaly-detection" data-for="21-static-threshold-vs-anomaly-detection">2.1 Static Threshold vs Anomaly Detection</a></li><li class="depth-2"><a href="#22-cách-hoạt-động-chi-tiết" data-for="22-cách-hoạt-động-chi-tiết">2.2 Cách hoạt động chi tiết</a></li><li class="depth-2"><a href="#23-trong-dynatrace--datadog" data-for="23-trong-dynatrace--datadog">2.3 Trong Dynatrace &amp; Datadog</a></li><li class="depth-1"><a href="#3-automated-root-cause-analysis-rca" data-for="3-automated-root-cause-analysis-rca">3. Automated Root Cause Analysis (RCA)</a></li><li class="depth-2"><a href="#31-manual-rca--câu-chuyện-quen-thuộc" data-for="31-manual-rca--câu-chuyện-quen-thuộc">3.1 Manual RCA — Câu chuyện quen thuộc</a></li><li class="depth-2"><a href="#32-automated-rca--ai-làm-trong-vài-giây" data-for="32-automated-rca--ai-làm-trong-vài-giây">3.2 Automated RCA — AI làm trong vài giây</a></li><li class="depth-2"><a href="#33-ai-rca-hoạt-động-nhờ-đâu" data-for="33-ai-rca-hoạt-động-nhờ-đâu">3.3 AI RCA hoạt động nhờ đâu?</a></li><li class="depth-1"><a href="#4-correlation-engine--nhóm-alerts-liên-quan" data-for="4-correlation-engine--nhóm-alerts-liên-quan">4. Correlation Engine — Nhóm alerts liên quan</a></li><li class="depth-2"><a href="#41-vấn-đề-alert-storm" data-for="41-vấn-đề-alert-storm">4.1 Vấn đề: Alert Storm</a></li><li class="depth-2"><a href="#42-correlation-engine-giải-quyết" data-for="42-correlation-engine-giải-quyết">4.2 Correlation Engine giải quyết</a></li><li class="depth-1"><a href="#5-predictive-analytics--dự-đoán-trước-khi-vỡ" data-for="5-predictive-analytics--dự-đoán-trước-khi-vỡ">5. Predictive Analytics — Dự đoán trước khi vỡ</a></li><li class="depth-2"><a href="#51-resource-exhaustion-prediction" data-for="51-resource-exhaustion-prediction">5.1 Resource Exhaustion Prediction</a></li><li class="depth-2"><a href="#52-pattern-recognition--phát-hiện-correlation-ẩn" data-for="52-pattern-recognition--phát-hiện-correlation-ẩn">5.2 Pattern Recognition — Phát hiện correlation ẩn</a></li><li class="depth-1"><a href="#6-chaos-engineering--observability" data-for="6-chaos-engineering--observability">6. Chaos Engineering &amp; Observability</a></li><li class="depth-2"><a href="#61-chaos-engineering-là-gì" data-for="61-chaos-engineering-là-gì">6.1 Chaos Engineering là gì?</a></li><li class="depth-2"><a href="#62-chaos--observability--validate-setup" data-for="62-chaos--observability--validate-setup">6.2 Chaos + Observability — Validate setup</a></li><li class="depth-2"><a href="#63-tools" data-for="63-tools">6.3 Tools</a></li><li class="depth-1"><a href="#7-observability-driven-development-odd" data-for="7-observability-driven-development-odd">7. Observability-Driven Development (ODD)</a></li><li class="depth-2"><a href="#71-shift-left-observability--nghĩ-về-observability-từ-lúc-viết-code" data-for="71-shift-left-observability--nghĩ-về-observability-từ-lúc-viết-code">7.1 Shift-left Observability — “Nghĩ về observability từ lúc viết code”</a></li><li class="depth-2"><a href="#72-feature-launch-checklist" data-for="72-feature-launch-checklist">7.2 Feature Launch Checklist</a></li><li class="depth-1"><a href="#8-finops--quản-lý-chi-phí-observability" data-for="8-finops--quản-lý-chi-phí-observability">8. FinOps — Quản lý chi phí Observability</a></li><li class="depth-2"><a href="#81-thực-tế-telemetry-data--chi-phí" data-for="81-thực-tế-telemetry-data--chi-phí">8.1 Thực tế: Telemetry data = CHI PHÍ</a></li><li class="depth-2"><a href="#82-năm-chiến-lược-giảm-chi-phí" data-for="82-năm-chiến-lược-giảm-chi-phí">8.2 Năm chiến lược giảm chi phí</a></li><li class="depth-1"><a href="#9-tổng-kết-chương--tổng-kết-bộ-tài-liệu" data-for="9-tổng-kết-chương--tổng-kết-bộ-tài-liệu">9. Tổng Kết Chương &amp; Tổng Kết Bộ Tài Liệu</a></li><li class="depth-2"><a href="#91-tổng-kết-chương-09" data-for="91-tổng-kết-chương-09">9.1 Tổng kết Chương 09</a></li><li class="depth-2"><a href="#92-hành-trình-shopvn--từ-mù-đến-thấy-rõ" data-for="92-hành-trình-shopvn--từ-mù-đến-thấy-rõ">9.2 Hành trình ShopVN — Từ “mù” đến “thấy rõ”</a></li><li class="depth-2"><a href="#93-cheat-sheet-toàn-bộ" data-for="93-cheat-sheet-toàn-bộ">9.3 Cheat Sheet Toàn Bộ</a></li><li class="depth-2"><a href="#94-bước-tiếp-theo" data-for="94-bước-tiếp-theo">9.4 Bước tiếp theo</a></li><li class="depth-1"><a href="#-mapping-sang-dynatrace--datadog" data-for="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog</a></li><li class="depth-1"><a href="#-tham-khảo" data-for="-tham-khảo">📚 Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/observability/datadog/labs/07---monitors--and--alerting" class="internal">Lab 07 — Monitors &amp; Alerting</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/04---davis-ai--and--problem-detection" class="internal">Lab 04 — Davis AI &amp; Problem Detection</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/05---problem-patterns--and--feature-flags" class="internal">Lab 05 — Problem Patterns &amp; Feature Flags</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/08---grail,-openpipeline--and--business-events" class="internal">Lab 08 — Grail, OpenPipeline &amp; Business Events</a></li><li><a href="../../../02---areas/observability/fundamentals/00---mục-lục--and--lộ-trình-học" class="internal">Observability Fundamentals — Mục Lục &amp; Lộ Trình Học</a></li><li><a href="../../../02---areas/observability/fundamentals/08---infrastructure-context" class="internal">Chương 08: Infrastructure Context</a></li><li><a href="../../../02---areas/observability/fundamentals/demo/readme" class="internal">ShopVN Demo — Hands-on Lab Guide</a></li><li><a href="../../../02---areas/observability/labs/00---lab-overview--and--roadmap" class="internal">Observability Platform Labs — Tổng Quan &amp; Lộ Trình</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

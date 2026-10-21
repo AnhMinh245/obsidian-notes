@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>5. Amazon EC2 – Basics</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="5. Amazon EC2 – Basics"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="5. Amazon EC2 – Basics"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 5."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 5."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 5."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/05---amazon-ec2---basics"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/05---amazon-ec2---basics"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 5."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/05---amazon-ec2---basics" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-51" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-51" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>5. Amazon EC2 – Basics</a></div></nav><h1 class="article-title">5. Amazon EC2 – Basics</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Amazon EC2 Basics</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-09-12T17:00:00.000Z">13 thg 9, 2026</time><span>12 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="5-amazon-ec2--basics">5. Amazon EC2 – Basics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-amazon-ec2--basics" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> EC2 là dịch vụ nền tảng nhất của AWS — gần như mọi kiến trúc trong khoá đều dựng trên EC2. Note này gồm 2 phần rất khác tính chất: (1) khái niệm cấu hình/bảo mật (5 trục cấu hình, Security Group, SSH) — <strong>thi rất nhiều</strong>; (2) 8 loại Purchasing Option — <strong>thi cực nhiều</strong>, gần như câu nào cũng hỏi kiểu “workload X thì mua loại nào”. Đọc kỹ bảng tổng hợp Purchasing Options và bảng từ khoá cuối bài trước khi thi.</p>
+</blockquote>
+<h2 id="amazon-ec2-là-gì">Amazon EC2 là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-ec2-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>EC2 (Elastic Compute Cloud)</strong> là dịch vụ thuê máy chủ ảo phổ biến nhất của AWS — nền tảng của <strong>Infrastructure as a Service (IaaS)</strong>.</p>
+<p>EC2 gồm 4 khả năng cốt lõi:</p>
+<ul>
+<li><strong>Thuê máy ảo</strong> (EC2 instances).</li>
+<li><strong>Lưu trữ dữ liệu</strong> trên ổ đĩa ảo (EBS).</li>
+<li><strong>Phân phối tải</strong> qua máy (ELB).</li>
+<li><strong>Tự động scale</strong> bằng Auto Scaling Group (ASG).</li>
+</ul>
+<h2 id="5-trục-cấu-hình-ec2">5 trục cấu hình EC2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-trục-cấu-hình-ec2" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Khi launch EC2, bạn cấu hình theo 5 trục:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Trục</th><th>Lựa chọn</th><th>Ghi chú</th></tr></thead><tbody><tr><td><strong>OS</strong></td><td>Linux, Windows, Mac OS</td><td>Ảnh hưởng AMI</td></tr><tr><td><strong>CPU</strong></td><td>Số vCPU, compute power</td><td>Chọn instance type</td></tr><tr><td><strong>RAM</strong></td><td>GB RAM</td><td>Chọn instance type</td></tr><tr><td><strong>Storage</strong></td><td>EBS/EFS (network) hoặc Instance Store (hardware)</td><td>Quan trọng cho DB</td></tr><tr><td><strong>Network</strong></td><td>Tốc độ card, Public IP</td><td>Enhanced Networking</td></tr><tr><td><strong>Security</strong></td><td>Security Group (firewall rules)</td><td></td></tr><tr><td><strong>Bootstrap</strong></td><td>EC2 User Data script</td><td>Chạy lúc first launch</td></tr></tbody></table></div>
+<h2 id="ec2-user-data--bootstrap-script">EC2 User Data — Bootstrap Script<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ec2-user-data--bootstrap-script" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Cho phép chạy script <strong>một lần duy nhất</strong> khi instance khởi động lần đầu.</li>
+<li>Chạy với quyền <strong>root user</strong>.</li>
+<li>Dùng để tự động: cài update, cài phần mềm, download files, cấu hình server.</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#!/bin/bash</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">yum</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> update</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -y</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">yum</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> install</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -y</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> httpd</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">systemctl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> start</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> httpd</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">systemctl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> enable</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> httpd</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;&lt;h1>Hello from EC2 User Data!&lt;/h1>&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> /var/www/html/index.html</span></span></code></pre></figure>
+<h2 id="ec2-instance-types--phân-loại-và-use-case">EC2 Instance Types — Phân loại và Use Case<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ec2-instance-types--phân-loại-và-use-case" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Quy ước đặt tên:</strong> <code>m5.2xlarge</code></p>
+<ul>
+<li><code>m</code> = instance family (m = general purpose)</li>
+<li><code>5</code> = generation (thế hệ 5)</li>
+<li><code>2xlarge</code> = kích thước</li>
+</ul>
+<h3 id="bảng-so-sánh-4-nhóm-instance-type-chính">Bảng so sánh 4 nhóm Instance Type chính<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-so-sánh-4-nhóm-instance-type-chính" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nhóm</th><th>Family</th><th>Đặc điểm</th><th>Use Case</th></tr></thead><tbody><tr><td><strong>General Purpose</strong></td><td>m, t, a</td><td>Cân bằng CPU/RAM/Network</td><td>Web server, code repo, nhỏ/vừa</td></tr><tr><td><strong>Compute Optimized</strong></td><td>c</td><td>CPU mạnh, tỷ lệ CPU/RAM cao</td><td>Batch processing, HPC, game server, ML training</td></tr><tr><td><strong>Memory Optimized</strong></td><td>r, x, z</td><td>RAM rất lớn</td><td>In-memory DB, distributed cache, BI analytics</td></tr><tr><td><strong>Storage Optimized</strong></td><td>i, d, h</td><td>IOPS cao, storage lớn</td><td>OLTP, NoSQL DB, data warehouse, distributed FS</td></tr></tbody></table></div>
+<blockquote>
+<p><strong><code>t2.micro</code></strong> là General Purpose — dùng trong free tier của khoá học.</p>
+</blockquote>
+<h3 id="compute-optimized-prefix-c">Compute Optimized (prefix <code>c</code>)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#compute-optimized-prefix-c" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dành cho workload cần CPU hiệu năng cao:</p>
+<ul>
+<li>Batch processing.</li>
+<li>Media transcoding.</li>
+<li>HPC (High Performance Computing).</li>
+<li>Scientific modeling, ML training.</li>
+<li>Dedicated gaming servers.</li>
+</ul>
+<h3 id="memory-optimized-prefix-r-x">Memory Optimized (prefix <code>r</code>, <code>x</code>)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#memory-optimized-prefix-r-x" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dành cho workload xử lý <strong>dataset lớn trong RAM</strong>:</p>
+<ul>
+<li>High performance relational/non-relational DB.</li>
+<li>Distributed web scale cache.</li>
+<li>In-memory DB tối ưu cho BI.</li>
+<li>Real-time processing big unstructured data.</li>
+</ul>
+<h3 id="storage-optimized-prefix-i-d">Storage Optimized (prefix <code>i</code>, <code>d</code>)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#storage-optimized-prefix-i-d" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dành cho workload cần <strong>IOPS cao, sequential read/write</strong>:</p>
+<ul>
+<li>OLTP frequency cao.</li>
+<li>NoSQL DB (Cassandra, MongoDB).</li>
+<li>Cache cho in-memory DB (Redis).</li>
+<li>Data warehousing.</li>
+<li>Distributed file systems (HDFS).</li>
+</ul>
+<h2 id="security-groups--tường-lửa-của-ec2">Security Groups — Tường lửa của EC2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#security-groups--tường-lửa-của-ec2" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Security Group</strong> là <strong>stateful firewall</strong> ở cấp EC2 instance — kiểm soát traffic vào (inbound) và ra (outbound).</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Internet[\&quot;Internet\&quot;] -->|\&quot;HTTP 80 — Allow\&quot;| SG[\&quot;Security Group\&quot;]\n    SG --> EC2[\&quot;EC2 Instance\&quot;]\n    EC2 -->|\&quot;response\&quot;| SG\n    SG -->|\&quot;outbound — Allow all\&quot;| Internet\n    Attacker[\&quot;Attacker\&quot;] -->|\&quot;Port 22 SSH — Blocked\&quot;| SG_Block[\&quot;❌ Blocked by SG\&quot;]&quot;">graph LR
+    Internet[&quot;Internet&quot;] -->|&quot;HTTP 80 — Allow&quot;| SG[&quot;Security Group&quot;]
+    SG --> EC2[&quot;EC2 Instance&quot;]
+    EC2 -->|&quot;response&quot;| SG
+    SG -->|&quot;outbound — Allow all&quot;| Internet
+    Attacker[&quot;Attacker&quot;] -->|&quot;Port 22 SSH — Blocked&quot;| SG_Block[&quot;❌ Blocked by SG&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Đặc điểm quan trọng:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>Mô tả</th></tr></thead><tbody><tr><td>Chỉ có rule ALLOW</td><td>Không có Deny rule — không allow = block</td></tr><tr><td><strong>Stateful</strong></td><td>Traffic đi vào được allow → response tự động được phép ra</td></tr><tr><td>Tham chiếu theo IP hoặc Security Group</td><td>Có thể cho phép SG khác thay vì IP</td></tr><tr><td>Gắn được vào nhiều instance</td><td>1 SG → nhiều EC2</td></tr><tr><td>Bound to region/VPC</td><td>SG không di chuyển qua region</td></tr><tr><td>”Outside” EC2</td><td>EC2 không thấy traffic đã bị block bởi SG</td></tr></tbody></table></div>
+<p><strong>Mặc định:</strong></p>
+<ul>
+<li>Inbound: <strong>block tất cả</strong>.</li>
+<li>Outbound: <strong>allow tất cả</strong>.</li>
+</ul>
+<p><strong>Debug tip:</strong></p>
+<ul>
+<li><strong>Timeout</strong> khi connect → lỗi Security Group (traffic bị block).</li>
+<li><strong>“Connection refused”</strong> → EC2 đang chạy nhưng app lỗi hoặc chưa khởi động.</li>
+</ul>
+<h3 id="ports-cần-nhớ">Ports cần nhớ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ports-cần-nhớ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Port</th><th>Protocol</th><th>Dùng cho</th></tr></thead><tbody><tr><td>22</td><td>SSH</td><td>Login Linux instance</td></tr><tr><td>21</td><td>FTP</td><td>Upload file (file share)</td></tr><tr><td>22</td><td>SFTP</td><td>Upload file qua SSH</td></tr><tr><td>80</td><td>HTTP</td><td>Website không mã hóa</td></tr><tr><td>443</td><td>HTTPS</td><td>Website mã hóa</td></tr><tr><td>3389</td><td>RDP</td><td>Login Windows instance</td></tr></tbody></table></div>
+<h2 id="kết-nối-vào-ec2--ssh--ec2-instance-connect">Kết nối vào EC2 — SSH &amp; EC2 Instance Connect<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kết-nối-vào-ec2--ssh--ec2-instance-connect" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Client[\&quot;Máy của bạn&lt;br/>(SSH client / PuTTY)\&quot;] -->|\&quot;port 22\&quot;| EC2[\&quot;EC2 Instance&lt;br/>(Linux, Public IP)\&quot;]&quot;">graph LR
+    Client[&quot;Máy của bạn&lt;br/>(SSH client / PuTTY)&quot;] -->|&quot;port 22&quot;| EC2[&quot;EC2 Instance&lt;br/>(Linux, Public IP)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>3 cách kết nối vào EC2 Linux:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cách</th><th>Nền tảng</th><th>Cần gì</th></tr></thead><tbody><tr><td><strong>SSH</strong> trực tiếp</td><td>Mac / Linux / Windows ≥ 10</td><td>Key pair (.pem) tự quản lý, port 22 mở</td></tr><tr><td><strong>PuTTY</strong></td><td>Windows &lt; 10</td><td>Convert key pair sang <code>.ppk</code>, port 22 mở</td></tr><tr><td><strong>EC2 Instance Connect</strong></td><td>Mọi nền tảng, ngay trên browser (Console)</td><td><strong>Không cần key pair tải về</strong> — AWS tự đẩy 1 temporary key lên EC2 lúc kết nối. Chỉ hoạt động out-of-the-box với <strong>Amazon Linux 2</strong>. Vẫn cần port 22 mở trong Security Group.</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Debug SSH:</strong> Nếu không cách nào kết nối được cũng không sao — khoá học ít dùng SSH trực tiếp, ưu tiên Console/User Data. Lỗi kết nối SSH gần như luôn là do <strong>Security Group chưa mở port 22</strong> (xem phần Security Group ở trên).</p>
+</blockquote>
+<h2 id="ec2-instance-purchasing-options">EC2 Instance Purchasing Options<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ec2-instance-purchasing-options" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="-1-on-demand-instances">🟩 <strong>1. On-Demand Instances</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-1-on-demand-instances" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Thuê theo giờ / theo giây, giá cố định.</strong></p>
+<ul>
+<li>Không cam kết thời gian.</li>
+<li>Muốn tạo → tạo. Muốn tắt → tắt.</li>
+<li>Giá cao nhất trong tất cả các lựa chọn.</li>
+</ul>
+<p><strong>Dùng khi:</strong></p>
+<ul>
+<li>Lab học, test nhanh.</li>
+<li>Workload unpredictable.</li>
+<li>Chạy ngắn hạn.</li>
+</ul>
+<h3 id="-2-reserved-instances-ri">🟦 <strong>2. Reserved Instances (RI)</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-2-reserved-instances-ri" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Trả trước 1 hoặc 3 năm để được giảm giá (giảm 40–70%)</strong>, trong đó có 2 loại:</p>
+<p><strong>✔ Standard RI</strong></p>
+<ul>
+<li>Giảm giá cao nhất.</li>
+<li>Ít linh hoạt (không đổi type/region dễ dàng).</li>
+<li>Cam kết 1 hoặc 3 năm.</li>
+</ul>
+<p><strong>✔ Convertible RI</strong></p>
+<ul>
+<li>Có thể đổi instance type (ví dụ m5 → m6i).</li>
+<li>Giảm giá ít hơn Standard RI.</li>
+</ul>
+<p><strong>Dùng khi:</strong></p>
+<ul>
+<li>Workload chạy 24/7 ổn định (database, hệ thống core).</li>
+</ul>
+<h3 id="-3-savings-plans">🟧 <strong>3. Savings Plans</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-3-savings-plans" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Giảm giá giống RI nhưng linh hoạt hơn rất nhiều, 2 loại:</p>
+<p>✔ <strong>Compute Savings Plans</strong> (linh hoạt nhất)</p>
+<ul>
+<li>Giảm giá 60–66%.</li>
+<li>Không cần cố định instance type, region, hay OS.</li>
+<li>Miễn sao bạn commit chi tiêu, ví dụ: <strong>5 USD/giờ trong 1 năm</strong>.</li>
+</ul>
+<p>✔ <strong>EC2 Instance Savings Plans</strong></p>
+<ul>
+<li>Giảm giá cao hơn Compute SP.</li>
+<li>Nhưng bị giới hạn theo <strong>family</strong> (ví dụ m5, t3, c6g…).</li>
+</ul>
+<p><strong>Dùng khi:</strong></p>
+<ul>
+<li>Muốn tiết kiệm nhưng vẫn linh hoạt trong scaling, chuyển region, đổi instance family.</li>
+</ul>
+<h3 id="-4-spot-instances">🟨 <strong>4. Spot Instances</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-4-spot-instances" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Rẻ nhất (giảm 70–90% so với On-Demand).</strong> Nhưng có rủi ro: AWS có thể thu hồi instance bất cứ lúc nào, báo trước 2 phút.</p>
+<p><strong>Dùng khi:</strong></p>
+<ul>
+<li>Batch job</li>
+<li>Big data processing</li>
+<li>CI/CD runners</li>
+<li>Training ML</li>
+<li>Không phù hợp database hoặc workload cần ổn định.</li>
+</ul>
+<h3 id="-5-dedicated-hosts">🟫 <strong>5. Dedicated Hosts</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-5-dedicated-hosts" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bạn thuê nguyên <strong>máy vật lý</strong> — không ai chia sẻ với bạn.</p>
+<ul>
+<li>Dùng cho yêu cầu license Windows / SQL Server cần “BYOL (Bring Your Own License)”.</li>
+<li>Dùng cho compliance: PCI, HIPAA, banking.</li>
+</ul>
+<p><strong>Rất đắt.</strong></p>
+<h3 id="-6-dedicated-instances">🟪 <strong>6. Dedicated Instances</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-6-dedicated-instances" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Vẫn chạy trên máy vật lý riêng (không share với account khác).</li>
+<li>Nhưng bạn <strong>không sở hữu hẳn</strong> host như Dedicated Host.</li>
+<li>Giá thấp hơn Dedicated Host.</li>
+</ul>
+<p>Dùng khi:</p>
+<ul>
+<li>Cần isolation cấp account.</li>
+</ul>
+<h3 id="-7-capacity-reservations">🟫 <strong>7. Capacity Reservations</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-7-capacity-reservations" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bạn giữ chỗ capacity trong region/zone để đảm bảo khi cần là có máy launch liền, có 2 loại:</p>
+<p>✔ <strong>On-Demand Capacity Reservations</strong></p>
+<ul>
+<li>Pay-as-you-go</li>
+<li>Không discount</li>
+<li>Chỉ để đảm bảo có capacity</li>
+</ul>
+<p>✔ <strong>Savings Plans with Capacity Reservation</strong></p>
+<ul>
+<li>Combine với SP để vừa giữ chỗ vừa giảm giá.</li>
+</ul>
+<p>Dùng khi:</p>
+<ul>
+<li>Workload critical cần đảm bảo capacity trong peak load.</li>
+</ul>
+<h3 id="-8-ec2-fleet--spot-fleet">🟩 <strong>8. EC2 Fleet / Spot Fleet</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-8-ec2-fleet--spot-fleet" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Tập hợp nhiều loại instance purchasing options (Spot + On-Demand + RI) để tự tối ưu chi phí.</p>
+<p>Dùng cho:</p>
+<ul>
+<li>Auto-scaling</li>
+<li>Large-scale worker nodes</li>
+<li>HPC / ML workload</li>
+</ul>
+<h3 id="bảng-phân-loại-ec2-purchasing-options">Bảng phân loại EC2 Purchasing Options<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-phân-loại-ec2-purchasing-options" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại mua</th><th>Giá</th><th>Độ linh hoạt</th><th>Rủi ro</th><th>Khi nào dùng?</th><th>Ghi nhớ nhanh</th></tr></thead><tbody><tr><td><strong>On-Demand</strong></td><td>💰💰💰 (cao)</td><td>⭐⭐⭐⭐</td><td>Thấp</td><td>Test, workload không ổn định</td><td><em>Dùng bao nhiêu trả bấy nhiêu</em></td></tr><tr><td><strong>Reserved Instance (RI)</strong></td><td>💰💰 (rẻ hơn 40–70%)</td><td>⭐</td><td>Thấp</td><td>Workload chạy 24/7 ổn định</td><td><em>Cam kết 1–3 năm để giảm giá</em></td></tr><tr><td><strong>Savings Plans (SP)</strong></td><td>💰 (rẻ nhất sau Spot)</td><td>⭐⭐⭐⭐</td><td>Thấp</td><td>Workload dài hạn nhưng cần linh hoạt</td><td><em>Cam kết theo $$, không theo loại máy</em></td></tr><tr><td><strong>Spot Instance</strong></td><td>💰 (siêu rẻ, giảm 70–90%)</td><td>⭐⭐⭐</td><td><strong>Cao</strong></td><td>Batch, BigData, CI/CD</td><td><em>AWS thu hồi bất cứ lúc nào</em></td></tr><tr><td><strong>Dedicated Host</strong></td><td>💰💰💰💰 (đắt nhất)</td><td>⭐</td><td>Thấp</td><td>BYOL (Windows/SQL), compliance</td><td><em>Thuê nguyên máy vật lý</em></td></tr><tr><td><strong>Dedicated Instance</strong></td><td>💰💰💰 (đắt)</td><td>⭐⭐</td><td>Thấp</td><td>Cần tách biệt tenant</td><td><em>Host không share với account khác</em></td></tr><tr><td><strong>Capacity Reservation</strong></td><td>💰💰💰</td><td>⭐⭐</td><td>Thấp</td><td>Cần đảm bảo capacity trong peak</td><td><em>Giữ chỗ capacity trước</em></td></tr><tr><td><strong>EC2 Fleet / Spot Fleet</strong></td><td>Tối ưu tự động</td><td>⭐⭐⭐</td><td>TB</td><td>Chạy scale lớn + tối ưu chi phí</td><td><em>Mix Spot + OD + RI để auto tối ưu</em></td></tr></tbody></table></div>
+<h3 id="price-comparison-example--m4large--us-east-1">Price Comparison Example – m4.large – us-east-1<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#price-comparison-example--m4large--us-east-1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="../../../attachments/saa-c03-stephane-maarek/05---amazon-ec2---basics/image-10.png" alt width="auto" height="auto"/></p>
+<h2 id="spot-instance-và-spot-fleet">Spot Instance và Spot Fleet<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spot-instance-và-spot-fleet" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="-1-spot-instance--mua-instance-giá-siêu-rẻ-nhưng-có-rủi-ro">🟧 <strong>1) Spot Instance — mua instance giá siêu rẻ nhưng có rủi ro</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-1-spot-instance--mua-instance-giá-siêu-rẻ-nhưng-có-rủi-ro" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>🎯 <strong>Định nghĩa ngắn gọn:</strong> Spot Instance là EC2 mà bạn mua với <strong>giá giảm 70–90%</strong> so với On-Demand, vì bạn đang “mua lại capacity dư” của AWS.</p>
+<p>Nhưng AWS có quyền <strong>thu hồi (terminate)</strong> Spot Instance bất cứ lúc nào khi:</p>
+<ul>
+<li>AWS cần capacity, hoặc</li>
+<li>Giá Spot tăng vượt mức bạn sẵn sàng trả</li>
+</ul>
+<p>AWS báo trước <strong>2 phút</strong>, rồi instance bị shutdown.</p>
+<p>🔍 <strong>Khi nào nên dùng Spot Instance?</strong></p>
+<p>Dùng cho workload:</p>
+<ul>
+<li>Không quan trọng nếu bị gián đoạn</li>
+<li>Tự chạy lại được</li>
+<li>Có checkpoint hoặc retry</li>
+<li>Batch jobs</li>
+<li>Data processing (Spark, Hadoop)</li>
+<li>Rendering</li>
+<li>ML training</li>
+<li>CI/CD runners</li>
+</ul>
+<p>❌ Không dùng cho:</p>
+<ul>
+<li>Database</li>
+<li>Web server chịu tải liên tục</li>
+<li>App yêu cầu high availability</li>
+<li>Session-based workload</li>
+</ul>
+<p>💡 <strong>Điểm mạnh của Spot Instance</strong></p>
+<ul>
+<li>Giá rẻ nhất trong tất cả loại EC2</li>
+<li>Rất phù hợp để scale-out theo nhu cầu</li>
+<li>Tốt khi bạn chỉ cần compute, không cần độ bền</li>
+</ul>
+<p>⚠️ <strong>Điểm yếu</strong></p>
+<ul>
+<li>Bị kết thúc bất cứ lúc nào</li>
+<li>Phải thiết kế ứng dụng dạng resilient / stateless</li>
+<li>Không phù hợp workload cần long-running stable instance</li>
+</ul>
+<p><img src="../../../attachments/saa-c03-stephane-maarek/05---amazon-ec2---basics/image-11.png" alt width="auto" height="auto"/></p>
+<h3 id="-2-spot-fleet--đội-quân-nhiều-spot-instance--on-demand-để-tối-ưu-chi-phí">🟦 <strong>2) Spot Fleet — đội quân nhiều Spot Instance + On-Demand để tối ưu chi phí</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-2-spot-fleet--đội-quân-nhiều-spot-instance--on-demand-để-tối-ưu-chi-phí" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bạn có thể tưởng tượng: Spot Instance = <em>thuê máy lẻ</em>, còn Spot Fleet = <em>thuê nguyên đội máy + AWS tự chọn loại rẻ nhất cho bạn</em>.</p>
+<p>🎯 <strong>Định nghĩa ngắn gọn:</strong></p>
+<p><strong>Spot Fleet là một cơ chế tự động</strong> để:</p>
+<ul>
+<li>Chạy <strong>nhiều loại Spot Instance khác nhau</strong> (t2, t3, m5, c6g…)</li>
+<li>Mix Spot + On-Demand</li>
+<li>Giữ số lượng instance đúng theo target capacity</li>
+<li>Tự động thay instance khi bị AWS thu hồi</li>
+<li>Tự động chọn loại instance rẻ nhất / available nhất</li>
+</ul>
+<p>Nói cách khác: 👉 <strong>Spot Fleet = Auto-scaling dành riêng cho Spot</strong>, 👉 <strong>Spot Fleet = tự động chọn instance type + tự động tối ưu chi phí</strong></p>
+<h3 id="-spot-fleet-hoạt-động-thế-nào">🟩 Spot Fleet hoạt động thế nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-spot-fleet-hoạt-động-thế-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bạn chỉ cần khai báo:</p>
+<ul>
+<li>Bao nhiêu capacity cần (ví dụ 20 vCPU hoặc 5 instances)</li>
+<li>Những loại instance nào chấp nhận (m4, m5, c5, t3…)</li>
+<li>Mix bao nhiêu Spot, bao nhiêu On-Demand</li>
+<li>Chiến lược:</li>
+</ul>
+<p>✔ <strong>lowestPrice</strong> → chọn loại instance rẻ nhất</p>
+<p>✔ <strong>diversified</strong> → chia đều nhiều loại để giảm nguy cơ bị thu hồi</p>
+<p>✔ <strong>capacityOptimized</strong> (phổ biến nhất) → chọn instance ít bị reclaim nhất, giúp job chạy ổn định hơn</p>
+<p>Sau đó AWS lo hết.</p>
+<h3 id="-so-sánh-nhanh-spot-instance-vs-spot-fleet">🟦 So sánh nhanh Spot Instance vs Spot Fleet<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-so-sánh-nhanh-spot-instance-vs-spot-fleet" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>Spot Instance</th><th>Spot Fleet</th></tr></thead><tbody><tr><td>Khái niệm</td><td>Một instance đơn lẻ</td><td>Một nhóm auto-managed Spot</td></tr><tr><td>Tự động chọn instance rẻ</td><td>❌ Không</td><td>✔ Có</td></tr><tr><td>Tự thay thế khi bị hủy</td><td>❌ Không</td><td>✔ Có</td></tr><tr><td>Trộn Spot + On-Demand</td><td>❌ Không</td><td>✔ Có</td></tr><tr><td>Dùng cho workload lớn</td><td>❌ Hạn chế</td><td>✔ Rất phù hợp</td></tr><tr><td>Yêu cầu người dùng chọn loại instance</td><td>✔ Có</td><td>❌ Không cần (AWS chọn hộ)</td></tr></tbody></table></div>
+<h3 id="-ví-dụ-thực-tế">🟩 Ví dụ thực tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-ví-dụ-thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>💡 <strong>Spot Instance</strong></p>
+<p>Bạn muốn chạy một job Hadoop 1 lần → bạn launch 1–2 Spot Instance. Nếu bị thu hồi, bạn chạy lại.</p>
+<p>💡 <strong>Spot Fleet</strong></p>
+<p>Bạn cần cluster 50 worker nodes giá rẻ để xử lý dữ liệu 1 triệu record.</p>
+<p>Spot Fleet sẽ:</p>
+<ul>
+<li>Tự chọn các instance family rẻ nhất</li>
+<li>Dùng cả 10 loại instance khác nhau</li>
+<li>Tự gom 50 nodes</li>
+<li>Nếu 3 nodes bị revoke → tự launch 3 nodes mới</li>
+<li>Có thể chọn mix: 80% Spot, 20% On-Demand để đảm bảo capacity luôn ổn định</li>
+</ul>
+<h2 id="bảng-từ-khoá-đề-thi">Bảng từ khoá đề thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-từ-khoá-đề-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Từ khoá trong đề</th><th>Chọn</th></tr></thead><tbody><tr><td>”Workload CPU cao, batch/HPC/ML training”</td><td><strong>Compute Optimized (c)</strong></td></tr><tr><td>“Dataset lớn cần load hết vào RAM, in-memory DB”</td><td><strong>Memory Optimized (r/x/z)</strong></td></tr><tr><td>“IOPS cao, NoSQL DB, data warehouse”</td><td><strong>Storage Optimized (i/d/h)</strong></td></tr><tr><td>“Test ngắn hạn, workload không đoán trước”</td><td><strong>On-Demand</strong></td></tr><tr><td>”Chạy 24/7 ổn định 1-3 năm, DB core”</td><td><strong>Reserved Instance</strong></td></tr><tr><td>”Muốn giảm giá dài hạn nhưng vẫn linh hoạt đổi instance type/region”</td><td><strong>Savings Plans</strong></td></tr><tr><td>”Chấp nhận gián đoạn, có checkpoint/retry, batch/CI/ML training rẻ nhất”</td><td><strong>Spot Instance</strong></td></tr><tr><td>”Cần license riêng (BYOL) hoặc compliance mức phần cứng”</td><td><strong>Dedicated Host</strong></td></tr><tr><td>”Cần isolation cấp account nhưng không cần nguyên máy vật lý”</td><td><strong>Dedicated Instance</strong></td></tr><tr><td>”Đảm bảo có capacity sẵn cho sự kiện sắp tới, không cần giảm giá”</td><td><strong>Capacity Reservation</strong></td></tr><tr><td>”Cluster hàng chục/trăm node, tự động mix Spot+On-Demand, tự thay node bị thu hồi”</td><td><strong>Spot Fleet / EC2 Fleet</strong></td></tr><tr><td>”Không cần tải key pair, connect ngay trên browser”</td><td><strong>EC2 Instance Connect</strong></td></tr><tr><td>”Script chỉ chạy đúng 1 lần lúc khởi động đầu tiên”</td><td><strong>EC2 User Data</strong></td></tr><tr><td>”SSH timeout” vs “Connection refused”</td><td>SG chặn port (timeout) vs app lỗi/chưa chạy (refused)</td></tr></tbody></table></div>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Security Group timeout</strong> → lỗi SG (traffic bị block). <strong>Connection refused</strong> → app lỗi.</li>
+<li>Security Group là <strong>stateful</strong> — không cần allow outbound cho response của inbound rule đã allow.</li>
+<li><strong>Spot Instance</strong> bị thu hồi báo trước <strong>2 phút</strong> — không dùng cho database hay workload cần ổn định.</li>
+<li><strong>Dedicated Host</strong> ≠ <strong>Dedicated Instance</strong>: Host thuê nguyên máy vật lý (BYOL, compliance); Instance chỉ không share với account khác.</li>
+<li><strong>Savings Plans</strong> linh hoạt hơn Reserved Instance (cam kết theo $$ không phải instance type).</li>
+<li><strong>Spot Fleet</strong> = tự động mix nhiều loại Spot + On-Demand để tối ưu chi phí.</li>
+<li>User Data script chạy <strong>một lần</strong> — chỉ lần đầu boot, không chạy lại khi restart.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>EC2 là nền tảng của mọi thứ trên AWS — hiểu rõ instance types, SG, purchasing options là bắt buộc.</li>
+<li>Security Group “stateful” là điểm phân biệt với NACL (stateless) — nhớ kỹ.</li>
+<li>Purchasing options: On-Demand → Savings Plans → Reserved → Spot (rẻ nhất nhưng rủi ro).</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>EC2 Instance Types — 4 nhóm và use case đặc trưng</li>
+<li>Security Groups — stateful, default deny inbound / allow outbound</li>
+<li>EC2 Purchasing Options — so sánh tất cả loại (có bảng tổng hợp)</li>
+<li>Spot Instance vs Spot Fleet — cơ chế và chiến lược allocation</li>
+<li>EC2 Instance Connect vs SSH/PuTTY truyền thống</li>
+</ul>
+<h2 id="xem-thêm">Xem thêm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#xem-thêm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.2---compute---ec2,-lambda,-fargate" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.2---compute---ec2,-lambda,-fargate">3.2 - Compute - EC2, Lambda, Fargate</a> — EC2 trong bức tranh compute tổng thể</li>
+<li><a href="../../../02---areas/cloud/aws-saa-c03/domain-4---cost-optimized-architectures/4.1---ec2-pricing---on-demand,-ri,-spot,-savings-plans" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-4---cost-optimized-architectures/4.1---ec2-pricing---on-demand,-ri,-spot,-savings-plans">4.1 - EC2 Pricing - On-Demand, RI, Spot, Savings Plans</a> — đào sâu hơn về tối ưu chi phí Purchasing Options</li>
+<li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/06---ec2---solutions-architect-associate-level" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/06---ec2---solutions-architect-associate-level">06 - EC2 - Solutions Architect Associate Level</a> — Placement Groups, ENI, Hibernate (tiếp nối bài này)</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-51" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#5-amazon-ec2--basics" data-for="5-amazon-ec2--basics">5. Amazon EC2 – Basics</a></li><li class="depth-1"><a href="#amazon-ec2-là-gì" data-for="amazon-ec2-là-gì">Amazon EC2 là gì?</a></li><li class="depth-1"><a href="#5-trục-cấu-hình-ec2" data-for="5-trục-cấu-hình-ec2">5 trục cấu hình EC2</a></li><li class="depth-1"><a href="#ec2-user-data--bootstrap-script" data-for="ec2-user-data--bootstrap-script">EC2 User Data — Bootstrap Script</a></li><li class="depth-1"><a href="#ec2-instance-types--phân-loại-và-use-case" data-for="ec2-instance-types--phân-loại-và-use-case">EC2 Instance Types — Phân loại và Use Case</a></li><li class="depth-2"><a href="#bảng-so-sánh-4-nhóm-instance-type-chính" data-for="bảng-so-sánh-4-nhóm-instance-type-chính">Bảng so sánh 4 nhóm Instance Type chính</a></li><li class="depth-2"><a href="#compute-optimized-prefix-c" data-for="compute-optimized-prefix-c">Compute Optimized (prefix c)</a></li><li class="depth-2"><a href="#memory-optimized-prefix-r-x" data-for="memory-optimized-prefix-r-x">Memory Optimized (prefix r, x)</a></li><li class="depth-2"><a href="#storage-optimized-prefix-i-d" data-for="storage-optimized-prefix-i-d">Storage Optimized (prefix i, d)</a></li><li class="depth-1"><a href="#security-groups--tường-lửa-của-ec2" data-for="security-groups--tường-lửa-của-ec2">Security Groups — Tường lửa của EC2</a></li><li class="depth-2"><a href="#ports-cần-nhớ" data-for="ports-cần-nhớ">Ports cần nhớ</a></li><li class="depth-1"><a href="#kết-nối-vào-ec2--ssh--ec2-instance-connect" data-for="kết-nối-vào-ec2--ssh--ec2-instance-connect">Kết nối vào EC2 — SSH &amp; EC2 Instance Connect</a></li><li class="depth-1"><a href="#ec2-instance-purchasing-options" data-for="ec2-instance-purchasing-options">EC2 Instance Purchasing Options</a></li><li class="depth-2"><a href="#-1-on-demand-instances" data-for="-1-on-demand-instances">🟩 1. On-Demand Instances</a></li><li class="depth-2"><a href="#-2-reserved-instances-ri" data-for="-2-reserved-instances-ri">🟦 2. Reserved Instances (RI)</a></li><li class="depth-2"><a href="#-3-savings-plans" data-for="-3-savings-plans">🟧 3. Savings Plans</a></li><li class="depth-2"><a href="#-4-spot-instances" data-for="-4-spot-instances">🟨 4. Spot Instances</a></li><li class="depth-2"><a href="#-5-dedicated-hosts" data-for="-5-dedicated-hosts">🟫 5. Dedicated Hosts</a></li><li class="depth-2"><a href="#-6-dedicated-instances" data-for="-6-dedicated-instances">🟪 6. Dedicated Instances</a></li><li class="depth-2"><a href="#-7-capacity-reservations" data-for="-7-capacity-reservations">🟫 7. Capacity Reservations</a></li><li class="depth-2"><a href="#-8-ec2-fleet--spot-fleet" data-for="-8-ec2-fleet--spot-fleet">🟩 8. EC2 Fleet / Spot Fleet</a></li><li class="depth-2"><a href="#bảng-phân-loại-ec2-purchasing-options" data-for="bảng-phân-loại-ec2-purchasing-options">Bảng phân loại EC2 Purchasing Options</a></li><li class="depth-2"><a href="#price-comparison-example--m4large--us-east-1" data-for="price-comparison-example--m4large--us-east-1">Price Comparison Example – m4.large – us-east-1</a></li><li class="depth-1"><a href="#spot-instance-và-spot-fleet" data-for="spot-instance-và-spot-fleet">Spot Instance và Spot Fleet</a></li><li class="depth-2"><a href="#-1-spot-instance--mua-instance-giá-siêu-rẻ-nhưng-có-rủi-ro" data-for="-1-spot-instance--mua-instance-giá-siêu-rẻ-nhưng-có-rủi-ro">🟧 1) Spot Instance — mua instance giá siêu rẻ nhưng có rủi ro</a></li><li class="depth-2"><a href="#-2-spot-fleet--đội-quân-nhiều-spot-instance--on-demand-để-tối-ưu-chi-phí" data-for="-2-spot-fleet--đội-quân-nhiều-spot-instance--on-demand-để-tối-ưu-chi-phí">🟦 2) Spot Fleet — đội quân nhiều Spot Instance + On-Demand để tối ưu chi phí</a></li><li class="depth-2"><a href="#-spot-fleet-hoạt-động-thế-nào" data-for="-spot-fleet-hoạt-động-thế-nào">🟩 Spot Fleet hoạt động thế nào?</a></li><li class="depth-2"><a href="#-so-sánh-nhanh-spot-instance-vs-spot-fleet" data-for="-so-sánh-nhanh-spot-instance-vs-spot-fleet">🟦 So sánh nhanh Spot Instance vs Spot Fleet</a></li><li class="depth-2"><a href="#-ví-dụ-thực-tế" data-for="-ví-dụ-thực-tế">🟩 Ví dụ thực tế</a></li><li class="depth-1"><a href="#bảng-từ-khoá-đề-thi" data-for="bảng-từ-khoá-đề-thi">Bảng từ khoá đề thi</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="depth-1"><a href="#xem-thêm" data-for="xem-thêm">Xem thêm</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

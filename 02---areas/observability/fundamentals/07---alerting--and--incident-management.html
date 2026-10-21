@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Chương 07: Alerting &amp; Incident Management</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Chương 07: Alerting &amp; Incident Management"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Chương 07: Alerting &amp; Incident Management"/><meta name="twitter:description" content="Chương 07: Alerting &amp; Incident Management &quot;An alert is a signal that something needs human attention RIGHT NOW."/><meta property="og:description" content="Chương 07: Alerting &amp; Incident Management &quot;An alert is a signal that something needs human attention RIGHT NOW."/><meta property="og:image:alt" content="Chương 07: Alerting &amp; Incident Management &quot;An alert is a signal that something needs human attention RIGHT NOW."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/07---alerting--and--incident-management"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/07---alerting--and--incident-management"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Chương 07: Alerting &amp; Incident Management &quot;An alert is a signal that something needs human attention RIGHT NOW."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/fundamentals/07---alerting--and--incident-management" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-442" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-442" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/fundamentals/">Fundamentals</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Chương 07: Alerting &amp; Incident Management</a></div></nav><h1 class="article-title">Chương 07: Alerting &amp; Incident Management</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-03T17:00:00.000Z">04 thg 4, 2026</time><span>17 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="chương-07-alerting--incident-management">Chương 07: Alerting &amp; Incident Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chương-07-alerting--incident-management" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote class="callout quote" data-callout="quote">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>&quot;An alert is a signal that something needs human attention RIGHT NOW. If it doesn't, it shouldn't be an alert.&quot; </p></div>
+                  
+                </div>
+</blockquote>
+<p><strong>Mục tiêu chương này</strong>: Hiểu cách thiết kế hệ thống cảnh báo mà <strong>không spam</strong> (alert fatigue) cũng <strong>không bỏ lỡ</strong> (miss critical issues). Nắm quy trình incident từ detect → triage → mitigate → resolve → post-mortem. Biết cách viết runbook và post-mortem <strong>blameless</strong>.</p>
+<p><strong>ShopVN evolution</strong>: ShopVN có SLOs và Error Budget (Ch06). Giờ cần: (1) Alert khi burn rate tăng, (2) Quy trình để on-call respond, (3) Runbook để xử lý nhanh, (4) Post-mortem để không lặp lại lỗi.</p>
+<p><strong>Liên kết</strong>: Alert trigger dựa trên <strong>metrics</strong> (Ch03) và <strong>SLO burn rate</strong> (Ch06). Investigation dùng <strong>traces</strong> (Ch04) và <strong>logs</strong> (Ch02).</p>
+<hr/>
+<h2 id="1-alert-design-philosophy--triết-lý-thiết-kế-cảnh-báo">1. Alert Design Philosophy — “Triết lý” thiết kế cảnh báo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-alert-design-philosophy--triết-lý-thiết-kế-cảnh-báo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-alert-on-symptoms-not-causes">1.1 Alert on Symptoms, NOT Causes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-alert-on-symptoms-not-causes" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Đây là lỗi phổ biến nhất khi thiết kế alerts: alert trên <strong>nguyên nhân</strong> (causes) thay vì <strong>triệu chứng</strong> (symptoms).</p>
+<pre><code>❌ Alert on CAUSE: &quot;CPU > 80%&quot;
+   → CPU 80% có thể hoàn toàn bình thường (flash sale, batch job)
+   → Bạn nhận alert → check → mọi thứ OK → bỏ qua
+   → Ngày nào cũng nhận → BỎ QUA TẤT CẢ → alert fatigue
+
+✅ Alert on SYMPTOM: &quot;Error rate > 1% for 5 minutes&quot;
+   → Error rate tăng = USER ĐANG BỊ ẢNH HƯỞNG
+   → Nhận alert → check → thấy Payment timeout → fix
+   → Mỗi alert đều CÓ Ý NGHĨA → team tin tưởng alert system
+</code></pre>
+<p><strong>Distinction rõ ràng:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Symptoms (triệu chứng — alert!)</th><th>Causes (nguyên nhân — investigate!)</th></tr></thead><tbody><tr><td>Error rate tăng</td><td>CPU cao, memory leak</td></tr><tr><td>Latency p99 > threshold</td><td>Slow DB query, network issue</td></tr><tr><td>SLO burn rate cao</td><td>Bad deployment, resource contention</td></tr><tr><td>Throughput giảm đột ngột</td><td>Upstream dependency down</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Rule: Alert trên symptoms, investigate causes </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Alert nói: “Có vấn đề — user bị ảnh hưởng!”<br/>
+Investigation (dashboard, traces, logs) nói: “Nguyên nhân là gì?”</p>
+<p>CPU dashboard vẫn hữu ích — nhưng trong vai trò <strong>investigation tool</strong>, KHÔNG phải alert trigger.</p>
+</div>
+</blockquote>
+<h3 id="12-bốn-tiêu-chí-của-alert-tốt">1.2 Bốn tiêu chí của Alert tốt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-bốn-tiêu-chí-của-alert-tốt" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi alert phải pass cả 4 tiêu chí. Nếu fail bất kỳ cái nào → xem xét loại bỏ hoặc redesign:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>Câu hỏi kiểm tra</th><th>Ví dụ fail</th></tr></thead><tbody><tr><td><strong>Actionable</strong></td><td>Nhận alert → biết phải LÀM GÌ?</td><td>”Memory 60%” → rồi sao? Không biết phải làm gì</td></tr><tr><td><strong>Urgent</strong></td><td>Có cần xử lý NGAY, hay để mai cũng được?</td><td>”TLS cert hết hạn trong 30 ngày” → không urgent, đây là task</td></tr><tr><td><strong>Real</strong></td><td>Phản ánh vấn đề thật, hay là noise?</td><td>”CPU spike 2 phút” → có thể là cron job bình thường</td></tr><tr><td><strong>Unique</strong></td><td>Cùng vấn đề có gửi nhiều alerts?</td><td>50 alerts cho “Payment down” → nên nhóm thành 1</td></tr></tbody></table></div>
+<hr/>
+<h2 id="2-severity-levels--không-phải-mọi-alert-đều-khẩn-cấp">2. Severity Levels — Không phải mọi alert đều “khẩn cấp”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-severity-levels--không-phải-mọi-alert-đều-khẩn-cấp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-phân-loại-p1-p4">2.1 Phân loại P1-P4<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-phân-loại-p1-p4" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>P1 CRITICAL — &quot;Nhà đang cháy&quot; 🔥
+   → User impact rõ ràng, revenue đang mất
+   → Response: NGAY LẬP TỨC, gọi điện, wake up on-call
+   → Ví dụ: Checkout broken, 0% orders thành công
+
+P2 HIGH — &quot;Khói đang bốc lên&quot; 🟠
+   → Một phần users bị ảnh hưởng, degraded experience
+   → Response: Trong 15 phút
+   → Ví dụ: p99 latency > 2 giây, error rate 3%
+
+P3 MEDIUM — &quot;Có mùi lạ&quot; 🟡
+   → Chưa ảnh hưởng user nhưng có dấu hiệu bất thường
+   → Response: Trong 1 giờ (business hours)
+   → Ví dụ: DB connection pool > 80%, disk usage > 85%
+
+P4 INFO — &quot;Ghi nhận&quot; ℹ️
+   → Không cần action ngay, ghi nhận để review
+   → Response: Next business day
+   → Ví dụ: Deployment completed, traffic pattern unusual
+</code></pre>
+<h3 id="22-shopvn-alert-matrix">2.2 ShopVN Alert Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-shopvn-alert-matrix" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">shopvn_alerts </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;P1_CRITICAL&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;order_service_down&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;condition&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;availability &lt; 99</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">% f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">or 5 min&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;notify&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;PagerDuty (phone call)&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Slack #incidents&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Email management&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;runbook&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:   </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;link to runbook&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;slo&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:       </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Order Service Availability 99.9%&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;payment_errors_spike&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;condition&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;payment error rate > 5</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">% f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">or 2 min&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;notify&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;PagerDuty (phone call)&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Slack #incidents&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;runbook&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:   </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;link to runbook&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;slo&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:       </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Payment Service Availability 99.99%&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;P2_HIGH&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;high_latency&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;condition&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;p99 latency > 2s for 10 min&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;notify&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Slack #alerts (push)&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Email on-call&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;runbook&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:   </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;link to runbook&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;error_budget_burning&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;condition&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;burn rate > 5x for 1 hour&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ← SLO-based alert!</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;notify&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Slack #alerts (push)&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;runbook&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:   </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;link to runbook&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;P3_MEDIUM&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;elevated_errors&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;condition&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;error rate > 1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">% f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">or 15 min&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;notify&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Slack #monitoring (no push)&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;runbook&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:   </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;link to runbook&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;db_pool_pressure&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;condition&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;active connections > 80</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">% f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">or 10 min&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;notify&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Slack #monitoring (no push)&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;runbook&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:   </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;link to runbook&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;P4_INFO&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;deploy_completed&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;condition&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;deployment event detected&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;notify&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Dashboard only, no notification&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;cert_expiry&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;condition&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;TLS cert expires &lt; 30 days&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;notify&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:    [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Slack #ops-tasks (weekly)&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<hr/>
+<h2 id="3-alert-fatigue--kẻ-giết-người-âm-thầm">3. Alert Fatigue — Kẻ giết người âm thầm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-alert-fatigue--kẻ-giết-người-âm-thầm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-vấn-đề-cậu-bé-chăn-cừu">3.1 Vấn đề: “Cậu bé chăn cừu”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-vấn-đề-cậu-bé-chăn-cừu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Alert fatigue xảy ra khi team nhận <strong>quá nhiều alerts</strong> — hầu hết không actionable — dẫn đến <strong>bỏ qua tất cả</strong>, kể cả alerts quan trọng:</p>
+<pre><code>Tuần 1:  Nhận 5 alerts/ngày   → Xử lý hết, hệ thống alert đáng tin 💚
+Tuần 2:  Nhận 20 alerts/ngày  → Bắt đầu skip vài cái &quot;không quan trọng&quot; 🟡
+Tháng 2: Nhận 100 alerts/ngày → Mute channel, chỉ xem khi rảnh 🟠
+Tháng 3: Nhận 200 alerts/ngày → Bỏ qua TẤT CẢ 🔴
+Ngày X:  Alert THẬT SỰ quan trọng → Bỏ qua → OUTAGE 4 giờ 💀
+</code></pre>
+<p>Đây không phải lý thuyết — đây là câu chuyện thật ở <strong>rất nhiều</strong> công ty.</p>
+<h3 id="32-năm-chiến-lược-chống-alert-fatigue">3.2 Năm chiến lược chống Alert Fatigue<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-năm-chiến-lược-chống-alert-fatigue" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>1. Threshold tuning</strong>: Review mỗi alert — nếu trigger quá thường xuyên mà không cần action → nâng threshold hoặc xóa.</p>
+<p><strong>2. Alert grouping</strong>: Khi Payment Service chết → 20 alerts (order error, checkout error, revenue drop, latency spike…) → Nhóm thành <strong>1 incident</strong> với root cause “Payment down”.</p>
+<p><strong>3. Deduplication</strong>: Không gửi lại alert đang active. Alert “error rate high” đang hiện → không gửi lại mỗi 5 phút.</p>
+<p><strong>4. Silencing &amp; Maintenance windows</strong>: Khi deploying, khi running chaos tests → tạm tắt alerts liên quan. Khi đã biết vấn đề và đang fix → silence để tránh distraction.</p>
+<p><strong>5. Weekly alert review ritual</strong>: Mỗi tuần, team review:</p>
+<pre><code>- Alert nào fire nhiều nhất tuần qua?
+- Alert nào fire mà không cần action? → Tune hoặc XÓA
+- Alert nào cần action nhưng runbook thiếu? → Bổ sung runbook
+- Alert nào có false positive? → Fix condition
+</code></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Alert review là BẮT BUỘC </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Hệ thống alert không phải “setup xong bỏ đó”. Nó cần <strong>maintain liên tục</strong> — giống như code cần refactor, alerts cần tuning. Mỗi lần thay đổi hệ thống → review alerts.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="4-alert-routing--đúng-người-đúng-kênh-đúng-lúc">4. Alert Routing — Đúng người, đúng kênh, đúng lúc<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-alert-routing--đúng-người-đúng-kênh-đúng-lúc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>┌────────────────┐
+│   Alert Fire!   │
+└───────┬────────┘
+        │
+        ▼ Severity?
+   ┌────┴────────────────────────────────────────────┐
+   │                                                  │
+   ▼ P1                    ▼ P2                ▼ P3-P4
+┌──────────┐         ┌──────────┐         ┌──────────┐
+│PagerDuty │         │  Slack   │         │  Slack   │
+│Phone call│         │  Push    │         │  No push │
+│→ On-call │         │  notif   │         │  channel │
+│  engineer│         │  → team  │         │  only    │
+└──────────┘         └──────────┘         └──────────┘
+     │                    │
+     ▼                    ▼
+┌──────────┐         ┌──────────┐
+│  Slack   │         │  Email   │
+│#incidents│         │ on-call  │
+│  + Mgmt  │         │          │
+└──────────┘         └──────────┘
+</code></pre>
+<p><strong>On-call rotation</strong>: Team members thay phiên nhau trực. PagerDuty / OpsGenie quản lý schedule và escalation.</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Escalation policy </p></div>
+                  
+                </div>
+<div class="callout-content">
+<pre><code>0 min:  Alert → Primary on-call (Minh)
+5 min:  Không acknowledge? → Secondary on-call (Hà)
+15 min: Vẫn không? → Team lead (Phong)
+30 min: Vẫn không? → Engineering manager
+</code></pre>
+<p>Đảm bảo <strong>luôn có người nhận</strong>, kể cả khi primary on-call đang ngủ hoặc không có sóng.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="5-incident-response-workflow">5. Incident Response Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-incident-response-workflow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-năm-giai-đoạn">5.1 Năm giai đoạn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-năm-giai-đoạn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────────┐
+│  DETECT  │───►│  TRIAGE  │───►│ MITIGATE │───►│ RESOLVE  │───►│ POST-MORTEM  │
+│  &quot;Cháy!&quot; │    │&quot;Cháy to  │    │&quot;Dập lửa  │    │&quot;Tìm và   │    │&quot;Tại sao cháy?│
+│          │    │ hay nhỏ?&quot;│    │ ngay!&quot;   │    │ fix root │    │ Làm sao để  │
+│          │    │          │    │          │    │ cause&quot;   │    │ không lặp?&quot; │
+└──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────────┘
+  Alert fires    Assess           Stop the        Fix root         Learn from
+  PagerDuty      severity         bleeding        cause            the incident
+                 &amp; impact         FIRST!
+</code></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>MITIGATE trước, RESOLVE sau </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Mitigate = <strong>dập lửa</strong> — dừng bleeding ngay (rollback, circuit breaker, scale up).<br/>
+Resolve = <strong>tìm root cause</strong> — fix vĩnh viễn (fix code, thêm redundancy).</p>
+<p><strong>Đừng</strong> cố fix root cause khi hệ thống đang cháy. Dập lửa trước. Fix sau.</p>
+</div>
+</blockquote>
+<h3 id="52-shopvn-incident-example--walkthrough-chi-tiết">5.2 ShopVN Incident Example — Walkthrough chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-shopvn-incident-example--walkthrough-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hãy theo dõi một incident từ đầu đến cuối:</p>
+<pre><code>═══════════════════════════════════════════════
+DETECT — 14:30
+═══════════════════════════════════════════════
+Alert fires: &quot;ShopVN Order Service error rate > 5% for 5 min&quot;
+Severity: P1 (checkout affected)
+PagerDuty calls on-call: Minh
+Minh acknowledges at 14:32
+
+═══════════════════════════════════════════════
+TRIAGE — 14:32-14:35
+═══════════════════════════════════════════════
+Minh opens incident channel: #inc-20260404-order-errors
+
+Checks dashboard:
+  Error rate: 8% (normally 0.3%) — confirmed, REAL issue
+  Error type: 502 Bad Gateway (Order → Payment fails)
+  Started: ~14:25
+  Users affected: estimated 200 in last 5 min
+  
+Assessment: P1 confirmed — checkout is broken for ~8% of users
+Posts update: &quot;@team P1: Order→Payment returning 502. Investigating.&quot;
+
+═══════════════════════════════════════════════
+MITIGATE — 14:35-14:40
+═══════════════════════════════════════════════
+Minh follows runbook → &quot;Order High Error Rate&quot;
+
+Step 1: Check downstream services
+  → Payment Service status: 🟢 healthy (no errors from Payment itself)
+  → But Payment → Bank API: 🔴 &quot;Connection refused: bank-api.vn:443&quot;
+  → ROOT LOCATION: Bank API (external) is unreachable
+
+Step 2: Mitigate immediately
+  → Enable circuit breaker for Bank API (feature flag toggle)
+  → Circuit breaker: OPEN → Payment returns &quot;fallback&quot; response
+  → Order Service: fallback = &quot;Đơn hàng đang xử lý, thanh toán sẽ retry&quot;
+  → Error rate drops: 8% → 0.5% ✅
+
+Posts update: &quot;Mitigated. Circuit breaker enabled. Bank API unreachable.
+             Errors down from 8% to 0.5%.&quot;
+
+═══════════════════════════════════════════════
+RESOLVE — 14:40-14:45
+═══════════════════════════════════════════════
+Check Bank API status page: &quot;Scheduled maintenance 14:00-15:00&quot;
+→ Root cause: Bank API đang bảo trì, KHÔNG thông báo trước cho ShopVN
+
+14:45: Bank API comes back online
+14:46: Circuit breaker resets: HALF-OPEN → test 1 request → OK → CLOSED
+14:47: Error rate: 0.2% (normal)
+
+Posts update: &quot;Resolved. Bank API back online. Incident closed.
+             Post-mortem scheduled for tomorrow.&quot;
+
+═══════════════════════════════════════════════
+POST-MORTEM — Next day, 10:00
+═══════════════════════════════════════════════
+(Xem phần 7)
+</code></pre>
+<hr/>
+<h2 id="6-runbooks--khi-cháy-thì-làm-gì">6. Runbooks — “Khi cháy thì làm gì”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-runbooks--khi-cháy-thì-làm-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Runbook = <strong>step-by-step guide</strong> cho on-call engineer. Mục đích: <strong>ai cũng có thể xử lý</strong>, kể cả engineer mới join team tuần trước.</p>
+<h3 id="61-shopvn-runbook-template">6.1 ShopVN Runbook Template<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-shopvn-runbook-template" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light github-dark"><code data-language="markdown" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation"># 🔥 Runbook: ShopVN Order Service — High Error Rate</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## Trigger</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Alert: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">`order_service_error_rate > 1% for 5 min`</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">SLO affected: Order Service Availability (99.9%)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## Quick Assessment (&lt; 2 phút)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">1.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Open dashboard: [</span><span style="--shiki-light:#032F62;--shiki-light-text-decoration:underline;--shiki-dark:#DBEDFF;--shiki-dark-text-decoration:underline;" data-token-type="string">Order Service Overview</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">](</span><span style="--shiki-light:#24292E;--shiki-light-text-decoration:underline;--shiki-dark:#E1E4E8;--shiki-dark-text-decoration:underline;" data-token-type="normal">link</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">2.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Confirm error rate is genuinely elevated (not a blip)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">3.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Check error type: </span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> 4xx errors? → Client-side issue, P3</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> 5xx errors? → Server-side issue, P1-P2</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## Diagnosis (&lt; 5 phút)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">### Step 1: Which endpoints are failing?</span></span></code></pre></figure>
+<p>DQL: fetch logs<br/>
+| filter service == “order-service” AND status_code >= 500<br/>
+| summarize count(), by: {endpoint}</p>
+<pre><code>
+### Step 2: Check downstream dependencies
+- [ ] Product Service healthy? → [Dashboard](link)
+- [ ] Payment Service healthy? → [Dashboard](link)  
+- [ ] Database healthy? → [Dashboard](link)
+- [ ] Any external APIs down? → [Status page](link)
+
+### Step 3: Recent deployments?
+</code></pre>
+<p>DQL: fetch events<br/>
+| filter event_type <span class="text-highlight"> &quot;deployment&quot; AND service </span> “order-service”<br/>
+| filter timestamp > now() - 1h</p>
+<pre><code>
+## Mitigation Actions
+
+### If: Downstream service (Payment/Product) is failing
+→ Enable circuit breaker: Feature flag console → CircuitBreaker → ON
+→ This returns graceful fallback instead of 502
+
+### If: Database overloaded
+→ Check connection pool: [Dashboard](link)
+→ If pool exhausted: `kubectl scale --replicas=6 deployment/order-service`
+
+### If: Recent deployment caused regression  
+→ Rollback: `kubectl rollout undo deployment/order-service`
+→ Verify error rate drops within 5 minutes
+
+### If: Unknown root cause
+→ Check traces: [Trace search](link) Filter: status=ERROR, service=order-service
+→ Read error logs: [Log search](link) Filter: level=ERROR, service=order-service
+
+## Escalation
+- Not resolved in 15 min → Call team lead: Phong (+84-xxx)
+- Payment flow affected → Notify finance: finance@shopvn.com
+- Customer complaints → Notify support: support-lead@shopvn.com
+</code></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Runbook best practices </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>Mỗi P1/P2 alert <strong>phải</strong> có runbook link đính kèm</li>
+<li>Runbook phải <strong>cụ thể</strong>: có link dashboard, có exact commands, có phone numbers</li>
+<li>Review runbook <strong>sau mỗi incident</strong> — nếu runbook thiếu bước → bổ sung ngay</li>
+<li>Test runbook <strong>định kỳ</strong> (dry-run) — giống fire drill</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="7-blameless-post-mortems--học-từ-lỗi-không-đổ-lỗi">7. Blameless Post-mortems — Học từ lỗi, không đổ lỗi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-blameless-post-mortems--học-từ-lỗi-không-đổ-lỗi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="71-tại-sao-blameless">7.1 Tại sao “Blameless”?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#71-tại-sao-blameless" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>❌ Blame culture:
+   &quot;Minh deploy code lỗi lên production, gây outage 20 phút&quot;
+   → Hậu quả: Minh bị khiển trách
+   → Lần sau: Minh SỢ deploy → deploy ít → tích lũy thay đổi lớn → deploy lớn → BUG LỚN HƠN
+   → Mọi người sợ report issues → vấn đề bị che giấu → bùng phát thành outage  
+
+✅ Blameless culture:
+   &quot;Hệ thống CHO PHÉP code lỗi đến production — thiếu auto testing, thiếu canary deploy&quot;
+   → Focus: Sửa SYSTEM, không phạt NGƯỜI  
+   → Hành động: Thêm automated testing gate, thêm canary rollout, thêm rollback tự động
+   → Lần sau: Mọi người thoải mái report → phát hiện sớm → fix nhanh
+</code></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Blameless ≠ Accountless </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Blameless không có nghĩa “không ai chịu trách nhiệm”. Mọi action item đều <strong>có owner và deadline</strong>. Nhưng focus là “hệ thống cần gì để prevent điều này?” chứ không phải “ai gây ra điều này?“</p>
+</div>
+</blockquote>
+<h3 id="72-post-mortem-template-shopvn">7.2 Post-mortem Template (ShopVN)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#72-post-mortem-template-shopvn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light github-dark"><code data-language="markdown" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation"># Post-mortem: ShopVN Order Service Outage — 2026-04-04</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## Summary</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Order Service trải qua 8% error rate trong 20 phút do Bank API </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">bảo trì không thông báo, ảnh hưởng ~2,000 users và ~500 đơn hàng.</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## Impact</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| Metric | Giá trị |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">|--------|---------|</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| Duration | 14:25 — 14:45 (20 phút) |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| Users affected | ~2,000 (unable to checkout) |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| Orders affected | ~500 (failed to create) |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| Revenue impact | ~150M VND delayed (recovered after fix) |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| SLO impact | Error budget consumed </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation">**15%**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> (was 58%, now 43%) |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| Severity | P1 |</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## Timeline (UTC+7)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| Time | Event |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">|------|-------|</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 14:25 | Bank API starts returning 503 Service Unavailable |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 14:25 | Payment Service begins logging &quot;connection refused&quot; errors |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 14:26 | Order Service error rate rises from 0.3% to 3% |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 14:30 | Alert fires: &quot;error rate > 5% for 5 min&quot; → PagerDuty calls Minh |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 14:32 | Minh acknowledges, opens #inc-20260404 |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 14:35 | Root cause identified: Bank API unreachable |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 14:38 | Circuit breaker enabled via feature flag |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 14:40 | Error rate drops to 0.5% |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 14:45 | Bank API comes back online, circuit breaker resets |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 14:47 | Error rate returns to 0.2% (normal). Incident closed. |</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## Root Cause Analysis</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Bank API (external payment provider) performed scheduled maintenance  </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">from 14:00-15:00 </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation">**without notifying ShopVN**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">. </span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">ShopVN's Payment Service calls Bank API synchronously. When Bank API </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">returned 503, Payment Service returned 502 to Order Service, which </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">returned 502 to the client.</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation">**Contributing factors:**</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">1.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> No circuit breaker was configured for Bank API calls (FIXED during incident)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">2.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> No fallback payment path existed</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">3.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Bank API didn't communicate maintenance schedule</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## What went well ✅</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Alert fired within 5 minutes of impact start</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> On-call responded in 2 minutes</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Root cause identified in 3 minutes (traces + logs were clear)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Mitigation (circuit breaker) reduced errors from 8% to 0.5%</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## What didn't go well ❌</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> 5 minutes detection delay (alert fired at 14:30, issue started 14:25)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> No circuit breaker was pre-configured</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> No backup payment provider</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Bank API maintenance wasn't tracked</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## Action Items</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| # | Action | Owner | Priority | Due | Status |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">|---|--------|-------|----------|-----|--------|</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 1 | Keep circuit breaker enabled permanently | Minh | P1 | Done | ✅ |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 2 | Implement backup payment provider (MoMo/ZaloPay) | Team | P1 | 2026-04-15 | 🔄 |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 3 | Request Bank API maintenance schedule | PM Linh | P2 | 2026-04-08 | 📋 |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 4 | Add SLO burn rate alert (faster detection) | Minh | P2 | 2026-04-06 | 📋 |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 5 | Add Bank API health check monitoring | DevOps | P3 | 2026-04-10 | 📋 |</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">| 6 | Create dedicated status page for external deps | Team | P3 | 2026-04-20 | 📋 |</span></span></code></pre></figure>
+<h3 id="73-post-mortem-review-meeting">7.3 Post-mortem review meeting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#73-post-mortem-review-meeting" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Agenda (30-45 phút):
+1. Timeline walkthrough (ai cần không cần đã đọc trước)
+2. Root cause discussion — &quot;Tại sao hệ thống cho phép điều này?&quot;
+3. Action items review — mỗi item có owner, priority, due date
+4. Process improvement — &quot;Cần thay đổi gì ở quy trình?&quot;
+5. Share &amp; archive — lưu post-mortem, chia sẻ với team rộng hơn
+</code></pre>
+<hr/>
+<h2 id="8-static-vs-dynamic-thresholds">8. Static vs Dynamic Thresholds<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-static-vs-dynamic-thresholds" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="81-static-threshold--đơn-giản-nhưng-ngu">8.1 Static Threshold — Đơn giản nhưng “ngu”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#81-static-threshold--đơn-giản-nhưng-ngu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">alert</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ShopVN_High_Error_Rate</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">condition</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">shopvn_error_rate > 0.01</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # > 1%</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">5m</span></span></code></pre></figure>
+<p><strong>Vấn đề</strong>: Traffic thay đổi theo thời gian:</p>
+<ul>
+<li><strong>Ban ngày</strong> (1000 req/s): error 1% = 10 errors/s → đáng lo</li>
+<li><strong>3 giờ sáng</strong> (10 req/s): error 1% = 0.1 errors/s → có thể 1 retry bình thường</li>
+</ul>
+<h3 id="82-dynamic-threshold--thông-minh-hơn">8.2 Dynamic Threshold — “Thông minh” hơn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#82-dynamic-threshold--thông-minh-hơn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Anomaly Detection baseline:
+  &quot;ShopVN thường có 500 req/s lúc 14:00 thứ 3, ±100 (2σ)&quot;
+
+Hôm nay, 14:00 thứ 3:
+  Actual: 50 req/s → lệch -450, vượt xa 2σ → ANOMALY → Alert 🔔
+  
+Đây là AIOps — sẽ học sâu hơn ở [[09 - AIOps &amp; Advanced Patterns]]
+</code></pre>
+<h3 id="83-khi-nào-dùng-cái-nào">8.3 Khi nào dùng cái nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#83-khi-nào-dùng-cái-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Trường hợp</th><th>Chọn</th><th>Lý do</th></tr></thead><tbody><tr><td>SLO burn rate</td><td>Static</td><td>Burn rate đã tự normalize theo traffic</td></tr><tr><td>Error rate</td><td>Static OK</td><td>Nhưng dynamic tốt hơn cho traffic biến động</td></tr><tr><td>Throughput drop</td><td>Dynamic</td><td>Traffic pattern phụ thuộc thời gian (ngày/đêm, weekday/weekend)</td></tr><tr><td>Resource metrics</td><td>Static</td><td>CPU > 95% luôn là vấn đề, không cần AI</td></tr></tbody></table></div>
+<hr/>
+<h2 id="9-tổng-kết">9. Tổng Kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-tổng-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept</th><th>Key Takeaway</th></tr></thead><tbody><tr><td><strong>Alert Philosophy</strong></td><td>Alert trên <strong>symptoms</strong> (user impact), investigate <strong>causes</strong></td></tr><tr><td><strong>4 Tiêu chí</strong></td><td>Actionable + Urgent + Real + Unique → nếu fail 1 → review alert</td></tr><tr><td><strong>Severity Levels</strong></td><td>P1-P4, mỗi level có kênh notify và response time riêng</td></tr><tr><td><strong>Alert Fatigue</strong></td><td>Quá nhiều alert = bỏ qua tất cả = nguy hiểm hơn không có alert</td></tr><tr><td><strong>Incident Process</strong></td><td>Detect → Triage → <strong>Mitigate (dập lửa trước!)</strong> → Resolve → Post-mortem</td></tr><tr><td><strong>Runbooks</strong></td><td>Step-by-step cho on-call — cụ thể, có links, có phone numbers</td></tr><tr><td><strong>Blameless Post-mortems</strong></td><td>Fix <strong>hệ thống</strong>, không blame <strong>con người</strong></td></tr></tbody></table></div>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>ShopVN sau Chương 07 </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>ShopVN có hệ thống alert được thiết kế cẩn thận (P1-P4), runbooks rõ ràng, incident process bài bản, và quy trình post-mortem blameless. Team tự tin xử lý incidents.</p>
+<p>Nhưng mọi thứ đều chạy trên <strong>infrastructure</strong> — K8s clusters, cloud VMs, load balancers. Khi app chậm, có thể nguyên nhân nằm ở tầng infra chứ không phải code. Cần <strong>infrastructure context</strong>.</p>
+<p>👉 Chương tiếp theo <a href="../../../02---areas/observability/fundamentals/08---infrastructure-context" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/08---infrastructure-context">08 - Infrastructure Context</a>: Observability trong môi trường cloud-native.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mapping-sang-dynatrace--datadog" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept trong chương</th><th>Dynatrace</th><th>Datadog</th></tr></thead><tbody><tr><td>Alert on Symptoms</td><td><strong>Davis AI Problems</strong> — tự detect anomaly, chỉ alert khi real impact</td><td><strong>Monitors</strong> — user define conditions (metric, log, APM, composite)</td></tr><tr><td>Severity Levels</td><td>Problem severity: <strong>Resource, Error, Slowdown, Availability, Custom</strong></td><td>Monitor priority: <strong>P1–P5</strong>, Incident severity</td></tr><tr><td>Alert Routing</td><td><strong>Alerting Profiles</strong> + <strong>Problem Notifications</strong> → email, Slack, PagerDuty</td><td><strong>Notification channels</strong> + <strong>Escalation policies</strong> trên từng Monitor</td></tr><tr><td>Alert Grouping</td><td>Davis AI <strong>tự nhóm</strong> related symptoms thành 1 Problem</td><td><strong>Watchdog Alerts</strong> tự nhóm; Monitors cần manual composite</td></tr><tr><td>Incident Management</td><td><strong>Problems feed</strong> — timeline, root cause, affected entities</td><td><strong>Incident Management</strong> — declare incidents, timeline, postmortem</td></tr><tr><td>Runbooks</td><td>Link runbook URL trong <strong>Problem notification payload</strong></td><td><strong>Runbook URL field</strong> trong Monitor definition — link tự động</td></tr><tr><td>Maintenance Window</td><td><strong>Maintenance windows</strong> — suppress alerts cho entity/tag group</td><td><strong>Monitor Downtimes</strong> — schedule silence cho monitors/tags</td></tr></tbody></table></div>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Davis AI vs Manual Monitors </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>Dynatrace Davis</strong>: “Zero-config alerting” — Davis tự tạo Problems khi detect anomaly (không cần define monitors).</li>
+<li><strong>Datadog</strong>: “Config-driven alerting” — user phải define Monitors rõ ràng, nhưng linh hoạt hơn (multi-alert, composite, SLO monitors).</li>
+<li>Trên thực tế: DT dùng Davis + Custom alerts, DD dùng Watchdog + Monitors.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-tham-khảo">📚 Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://sre.google/sre-book/being-on-call/" class="external external-link">Google SRE Book — Being On-Call<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://sre.google/sre-book/postmortem-culture/" class="external external-link">Google SRE Book — Postmortem Culture<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://sre.google/workbook/alerting-on-slos/" class="external external-link">Google SRE Workbook — Alerting on SLOs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://response.pagerduty.com/" class="external external-link">PagerDuty Incident Response Guide<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.atlassian.com/incident-management/handbook" class="external external-link">Atlassian Incident Management Best Practices<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-392" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#chương-07-alerting--incident-management" data-for="chương-07-alerting--incident-management">Chương 07: Alerting &amp; Incident Management</a></li><li class="depth-1"><a href="#1-alert-design-philosophy--triết-lý-thiết-kế-cảnh-báo" data-for="1-alert-design-philosophy--triết-lý-thiết-kế-cảnh-báo">1. Alert Design Philosophy — “Triết lý” thiết kế cảnh báo</a></li><li class="depth-2"><a href="#11-alert-on-symptoms-not-causes" data-for="11-alert-on-symptoms-not-causes">1.1 Alert on Symptoms, NOT Causes</a></li><li class="depth-2"><a href="#12-bốn-tiêu-chí-của-alert-tốt" data-for="12-bốn-tiêu-chí-của-alert-tốt">1.2 Bốn tiêu chí của Alert tốt</a></li><li class="depth-1"><a href="#2-severity-levels--không-phải-mọi-alert-đều-khẩn-cấp" data-for="2-severity-levels--không-phải-mọi-alert-đều-khẩn-cấp">2. Severity Levels — Không phải mọi alert đều “khẩn cấp”</a></li><li class="depth-2"><a href="#21-phân-loại-p1-p4" data-for="21-phân-loại-p1-p4">2.1 Phân loại P1-P4</a></li><li class="depth-2"><a href="#22-shopvn-alert-matrix" data-for="22-shopvn-alert-matrix">2.2 ShopVN Alert Matrix</a></li><li class="depth-1"><a href="#3-alert-fatigue--kẻ-giết-người-âm-thầm" data-for="3-alert-fatigue--kẻ-giết-người-âm-thầm">3. Alert Fatigue — Kẻ giết người âm thầm</a></li><li class="depth-2"><a href="#31-vấn-đề-cậu-bé-chăn-cừu" data-for="31-vấn-đề-cậu-bé-chăn-cừu">3.1 Vấn đề: “Cậu bé chăn cừu”</a></li><li class="depth-2"><a href="#32-năm-chiến-lược-chống-alert-fatigue" data-for="32-năm-chiến-lược-chống-alert-fatigue">3.2 Năm chiến lược chống Alert Fatigue</a></li><li class="depth-1"><a href="#4-alert-routing--đúng-người-đúng-kênh-đúng-lúc" data-for="4-alert-routing--đúng-người-đúng-kênh-đúng-lúc">4. Alert Routing — Đúng người, đúng kênh, đúng lúc</a></li><li class="depth-1"><a href="#5-incident-response-workflow" data-for="5-incident-response-workflow">5. Incident Response Workflow</a></li><li class="depth-2"><a href="#51-năm-giai-đoạn" data-for="51-năm-giai-đoạn">5.1 Năm giai đoạn</a></li><li class="depth-2"><a href="#52-shopvn-incident-example--walkthrough-chi-tiết" data-for="52-shopvn-incident-example--walkthrough-chi-tiết">5.2 ShopVN Incident Example — Walkthrough chi tiết</a></li><li class="depth-1"><a href="#6-runbooks--khi-cháy-thì-làm-gì" data-for="6-runbooks--khi-cháy-thì-làm-gì">6. Runbooks — “Khi cháy thì làm gì”</a></li><li class="depth-2"><a href="#61-shopvn-runbook-template" data-for="61-shopvn-runbook-template">6.1 ShopVN Runbook Template</a></li><li class="depth-1"><a href="#7-blameless-post-mortems--học-từ-lỗi-không-đổ-lỗi" data-for="7-blameless-post-mortems--học-từ-lỗi-không-đổ-lỗi">7. Blameless Post-mortems — Học từ lỗi, không đổ lỗi</a></li><li class="depth-2"><a href="#71-tại-sao-blameless" data-for="71-tại-sao-blameless">7.1 Tại sao “Blameless”?</a></li><li class="depth-2"><a href="#72-post-mortem-template-shopvn" data-for="72-post-mortem-template-shopvn">7.2 Post-mortem Template (ShopVN)</a></li><li class="depth-2"><a href="#73-post-mortem-review-meeting" data-for="73-post-mortem-review-meeting">7.3 Post-mortem review meeting</a></li><li class="depth-1"><a href="#8-static-vs-dynamic-thresholds" data-for="8-static-vs-dynamic-thresholds">8. Static vs Dynamic Thresholds</a></li><li class="depth-2"><a href="#81-static-threshold--đơn-giản-nhưng-ngu" data-for="81-static-threshold--đơn-giản-nhưng-ngu">8.1 Static Threshold — Đơn giản nhưng “ngu”</a></li><li class="depth-2"><a href="#82-dynamic-threshold--thông-minh-hơn" data-for="82-dynamic-threshold--thông-minh-hơn">8.2 Dynamic Threshold — “Thông minh” hơn</a></li><li class="depth-2"><a href="#83-khi-nào-dùng-cái-nào" data-for="83-khi-nào-dùng-cái-nào">8.3 Khi nào dùng cái nào?</a></li><li class="depth-1"><a href="#9-tổng-kết" data-for="9-tổng-kết">9. Tổng Kết</a></li><li class="depth-1"><a href="#-mapping-sang-dynatrace--datadog" data-for="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog</a></li><li class="depth-1"><a href="#-tham-khảo" data-for="-tham-khảo">📚 Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/observability/datadog/labs/07---monitors--and--alerting" class="internal">Lab 07 — Monitors &amp; Alerting</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/04---davis-ai--and--problem-detection" class="internal">Lab 04 — Davis AI &amp; Problem Detection</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/05---problem-patterns--and--feature-flags" class="internal">Lab 05 — Problem Patterns &amp; Feature Flags</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/07---slos,-alerting-profiles--and--management-zones" class="internal">Lab 07 — SLOs, Alerting Profiles &amp; Management Zones</a></li><li><a href="../../../02---areas/observability/fundamentals/00---mục-lục--and--lộ-trình-học" class="internal">Observability Fundamentals — Mục Lục &amp; Lộ Trình Học</a></li><li><a href="../../../02---areas/observability/fundamentals/06---sli,-slo--and--error-budgets" class="internal">Chương 06: SLI, SLO &amp; Error Budgets</a></li><li><a href="../../../02---areas/observability/fundamentals/08---infrastructure-context" class="internal">Chương 08: Infrastructure Context</a></li><li><a href="../../../02---areas/observability/fundamentals/demo/readme" class="internal">ShopVN Demo — Hands-on Lab Guide</a></li><li><a href="../../../02---areas/observability/labs/00---lab-overview--and--roadmap" class="internal">Observability Platform Labs — Tổng Quan &amp; Lộ Trình</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

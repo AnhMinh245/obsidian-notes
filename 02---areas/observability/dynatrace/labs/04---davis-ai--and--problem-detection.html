@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Lab 04 — Davis AI &amp; Problem Detection</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Lab 04 — Davis AI &amp; Problem Detection"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Lab 04 — Davis AI &amp; Problem Detection"/><meta name="twitter:description" content="Lab 04 — Davis AI &amp; Problem Detection ⏱️ Thời gian: ~60 phút (bao gồm ~20 phút chờ Davis detect) 📋 Prerequisites: Lab 03 hoàn thành 🔗 Source: Dynatrace/easytrade 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu vai trò của Davis AI / Dynatrace Intelligence trong problem detection và root-cause analysis T..."/><meta property="og:description" content="Lab 04 — Davis AI &amp; Problem Detection ⏱️ Thời gian: ~60 phút (bao gồm ~20 phút chờ Davis detect) 📋 Prerequisites: Lab 03 hoàn thành 🔗 Source: Dynatrace/easytrade 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu vai trò của Davis AI / Dynatrace Intelligence trong problem detection và root-cause analysis T..."/><meta property="og:image:alt" content="Lab 04 — Davis AI &amp; Problem Detection ⏱️ Thời gian: ~60 phút (bao gồm ~20 phút chờ Davis detect) 📋 Prerequisites: Lab 03 hoàn thành 🔗 Source: Dynatrace/easytrade 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu vai trò của Davis AI / Dynatrace Intelligence trong problem detection và root-cause analysis T..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/labs/04---davis-ai--and--problem-detection"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/labs/04---davis-ai--and--problem-detection"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Lab 04 — Davis AI &amp; Problem Detection ⏱️ Thời gian: ~60 phút (bao gồm ~20 phút chờ Davis detect) 📋 Prerequisites: Lab 03 hoàn thành 🔗 Source: Dynatrace/easytrade 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu vai trò của Davis AI / Dynatrace Intelligence trong problem detection và root-cause analysis T..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/dynatrace/labs/04---davis-ai--and--problem-detection" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-421" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-421" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/">Dynatrace</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/labs/">Labs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Lab 04 — Davis AI &amp; Problem Detection</a></div></nav><h1 class="article-title">Lab 04 — Davis AI &amp; Problem Detection</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/dynatrace" class="internal internal-link tag-link">domain/dynatrace</a><span class="note-properties-separator">, </span><a href="../../../../tags/labs" class="internal internal-link tag-link">labs</a><span class="note-properties-separator">, </span><a href="../../../../tags/davis-ai" class="internal internal-link tag-link">davis-ai</a><span class="note-properties-separator">, </span><a href="../../../../tags/problems" class="internal internal-link tag-link">problems</a><span class="note-properties-separator">, </span><a href="../../../../tags/aiops" class="internal internal-link tag-link">aiops</a><span class="note-properties-separator">, </span><a href="../../../../tags/hands-on" class="internal internal-link tag-link">hands-on</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-07T17:00:00.000Z">08 thg 4, 2026</time><span>9 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="lab-04--davis-ai--problem-detection">Lab 04 — Davis AI &amp; Problem Detection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lab-04--davis-ai--problem-detection" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>⏱️ <strong>Thời gian</strong>: ~60 phút (bao gồm ~20 phút chờ Davis detect)<br/>
+📋 <strong>Prerequisites</strong>: <a href="../../../../02---areas/observability/dynatrace/labs/03---log-monitoring--and--log-viewer" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/labs/03---log-monitoring--and--log-viewer">Lab 03</a> hoàn thành<br/>
+🔗 <strong>Source</strong>: <a href="https://github.com/Dynatrace/easytrade" class="external external-link">Dynatrace/easytrade<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</blockquote>
+<hr/>
+<h2 id="-mục-tiêu">🎯 Mục Tiêu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mục-tiêu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau lab này, bạn sẽ:</p>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Hiểu vai trò của Davis AI / Dynatrace Intelligence trong problem detection và root-cause analysis</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Trigger problem pattern bằng EasyTrade feature flag</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Quan sát Davis AI phát hiện và phân tích problem</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Đọc Problem Card — root cause analysis, impact, timeline</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Resolve problem bằng cách disable flag → quan sát recovery</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> So sánh: Davis AI vs rule-based monitoring (Datadog monitors)</li>
+</ul>
+<hr/>
+<h2 id="-kiến-thức-nền">📚 Kiến Thức Nền<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kiến-thức-nền" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="fundamentals">Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="../../../../02---areas/observability/fundamentals/09---aiops--and--advanced-patterns" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/09---aiops--and--advanced-patterns">Ch.09 — AIOps &amp; Advanced Patterns</a><br/>
+→ AI-powered anomaly detection, alert correlation, noise reduction</li>
+<li><a href="../../../../02---areas/observability/fundamentals/07---alerting--and--incident-management" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/07---alerting--and--incident-management">Ch.07 — Alerting</a><br/>
+→ Static thresholds vs dynamic baselines</li>
+</ul>
+<h3 id="dynatrace-theory">Dynatrace Theory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dynatrace-theory" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="../../../../02---areas/observability/dynatrace/associate_theory/02---davis-ai-và-problem-detection" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/associate_theory/02---davis-ai-và-problem-detection">Ch.02 — Davis AI &amp; Problem Detection</a><br/>
+→ Davis AI architecture, deterministic vs probabilistic, problem lifecycle</li>
+</ul>
+<h3 id="cách-học-lab-này">Cách học lab này<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-học-lab-này" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Hãy xem Davis như một công cụ tạo giả thuyết điều tra có ngữ cảnh topology </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>Problem card thường giúp bạn rút ngắn thời gian tìm điểm bắt đầu, nhưng không thay thế việc xác minh bằng timeline, impacted entities, traces, logs, và metrics.</li>
+<li>Độ trễ detect trong lab này là một phần của bài học. Nếu bạn bật flag rồi tắt quá nhanh, Davis có thể chưa có đủ tín hiệu để tạo problem hoặc phân tích rõ root cause.</li>
+<li>Câu hỏi quan trọng nhất khi đọc một problem card không phải “Davis nói gì?” mà là “Tín hiệu nào trong card này đủ mạnh để mình tin, và tín hiệu nào mình vẫn phải tự kiểm tra lại?“.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="1-davis-ai--không-giống-ai-bạn-nghĩ">1. Davis AI — Không Giống AI Bạn Nghĩ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-davis-ai--không-giống-ai-bạn-nghĩ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-davis-ai-không-chỉ-là-ai-chatbot-hay-anomaly-detector">1.1. Davis AI không chỉ là “AI chatbot” hay anomaly detector<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-davis-ai-không-chỉ-là-ai-chatbot-hay-anomaly-detector" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Hiểu lầm phổ biến </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nhiều người nghĩ “AI” = chỉ có LLM hoặc deep learning. Với Dynatrace, phần bạn thấy trong lab này chủ yếu là <strong>causal + topology-aware problem analysis</strong>.</p>
+</div>
+</blockquote>
+<p>Dynatrace docs hiện dùng umbrella <strong>Dynatrace Intelligence</strong> cho nhiều loại AI khác nhau. Riêng trong Problems workflow của lab này, phần quan trọng nhất là:</p>
+<ul>
+<li><strong>Input</strong>: Topology (Smartscape) + Metrics + Events</li>
+<li><strong>Core reasoning</strong>: Causal analysis dựa trên dependencies và thời gian phát sinh tín hiệu</li>
+<li><strong>Output</strong>: Root cause candidate + impacted entities + timeline giải thích được</li>
+</ul>
+<pre><code>Traditional monitoring:
+  CPU > 80% → Alert! (rule-based, static threshold)
+  → 100 services bị CPU spike → 100 alerts → ALERT STORM
+
+Davis AI:
+  CPU > baseline → anomaly detected
+  → Correlate với Smartscape topology
+  → Tìm root cause: Service X bị memory leak → gây cascade
+  → TẠO 1 PROBLEM với root cause = Service X
+  → Bao gồm tất cả impacted services trong 1 problem card
+</code></pre>
+<h3 id="12-davis-ai-flow">1.2. Davis AI Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-davis-ai-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>     Metrics change detected
+            │
+            ▼
+     Baseline comparison
+     (tự học từ lịch sử)
+            │
+            ▼
+     Anomaly confirmed?
+     ├── NO → ignore
+     └── YES
+            │
+            ▼
+     Smartscape topology analysis
+     (ai depend on ai?)
+            │
+            ▼
+     Causal correlation
+     (anomaly X gây ra anomaly Y?)
+            │
+            ▼
+     Root cause identification
+            │
+            ▼
+     PROBLEM CREATED
+     ├── Root cause entity
+     ├── Impacted entities
+     ├── Timeline
+     └── Suggested resolution
+</code></pre>
+<p>💡 <strong>Cách nên hiểu cho lab này</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Approach</th><th>Ưu điểm</th><th>Nhược điểm</th></tr></thead><tbody><tr><td><strong>Rule-based</strong></td><td>Đơn giản, dễ debug</td><td>Dễ tạo alert storm, thiếu context</td></tr><tr><td><strong>Baseline/anomaly detection</strong></td><td>Tự thích nghi hơn threshold tĩnh</td><td>Có thể phát hiện “có gì đó lạ” nhưng chưa đủ root cause</td></tr><tr><td><strong>Causal analysis trên topology</strong></td><td>Giải thích được blast radius và root cause tốt hơn</td><td>Phụ thuộc vào topology/signal quality</td></tr></tbody></table></div>
+<blockquote>
+<p>🔗 <strong>Fundamentals</strong>: <a href="../../../../02---areas/observability/fundamentals/09---aiops--and--advanced-patterns#3-automated-root-cause-analysis-rca" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/09---aiops--and--advanced-patterns">Ch.09 — AIOps</a>. Davis AI = practical implementation của concept “intelligent correlation” — giảm noise, tìm root cause tự động.</p>
+</blockquote>
+<hr/>
+<h2 id="2-easytrade-problem-patterns">2. EasyTrade Problem Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-easytrade-problem-patterns" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>EasyTrade có <strong>4 problem patterns</strong> tích hợp sẵn, toggle bằng feature flags:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Pattern</th><th>Flag Name</th><th>Mô tả</th><th>Ảnh hưởng</th></tr></thead><tbody><tr><td><strong>DB Not Responding</strong></td><td><code>db_not_responding</code></td><td>Database throws errors</td><td>No new trades possible</td></tr><tr><td><strong>Aggregator Slowdown</strong></td><td><code>ergo_aggregator_slowdown</code></td><td>40% traffic drop + slowdown</td><td>Performance degradation</td></tr><tr><td><strong>Factory Crisis</strong></td><td><code>factory_crisis</code></td><td>Credit card orders blocked</td><td>Business impact</td></tr><tr><td><strong>High CPU</strong></td><td><code>high_cpu_usage</code></td><td>CPU spike + throttling</td><td>Infrastructure impact</td></tr></tbody></table></div>
+<h3 id="kiểm-tra-trạng-thái-hiện-tại">Kiểm tra trạng thái hiện tại<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kiểm-tra-trạng-thái-hiện-tại" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lab$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -s</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> http://localhost/feature-flag-service/v1/flags</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> .</span></span></code></pre></figure>
+<p>Tất cả flags nên ở trạng thái <code>&quot;enabled&quot;: false</code>.</p>
+<hr/>
+<h2 id="3-trigger-problem-db_not_responding">3. Trigger Problem: <code>db_not_responding</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-trigger-problem-db_not_responding" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-tại-sao-chọn-pattern-này">3.1. Tại sao chọn pattern này?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-tại-sao-chọn-pattern-này" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><code>db_not_responding</code> là pattern rõ ràng nhất:</p>
+<ul>
+<li>Database bắt đầu throw errors</li>
+<li>Services phụ thuộc DB lần lượt fail</li>
+<li>Davis AI sẽ trace cascade: DB → services → user impact</li>
+<li>Root cause rõ ràng: database entity</li>
+</ul>
+<h3 id="32-enable-problem-pattern">3.2. Enable problem pattern<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-enable-problem-pattern" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lab$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> PUT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;http://localhost/feature-flag-service/v1/flags/db_not_responding&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> '{&quot;enabled&quot;: true}'</span></span></code></pre></figure>
+<p>🔍 <strong>Verify flag đã bật:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lab$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -s</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> http://localhost/feature-flag-service/v1/flags/db_not_responding</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> .</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># &quot;enabled&quot;: true</span></span></code></pre></figure>
+<h3 id="33-️-chờ-davis-ai-detect">3.3. ⏱️ Chờ Davis AI detect<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-️-chờ-davis-ai-detect" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Davis AI cần thời gian! </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Theo chính README của EasyTrade, pattern <code>DbNotResponding</code> thường cần khoảng <strong>20 phút</strong> chạy liên tục mới đủ signal để tạo problem rõ ràng trên Dynatrace. Baseline quality và traffic thực tế vẫn có thể làm thời gian này ngắn hơn hoặc dài hơn.</p>
+</div>
+</blockquote>
+<p>Trong khi chờ, bạn có thể:</p>
+<ol>
+<li><strong>Quan sát real-time trên Services page</strong>: Failure rate tăng dần</li>
+<li><strong>Xem logs</strong>: ERROR logs tăng đột biến</li>
+<li><strong>Xem PurePath</strong>: Traces bắt đầu có error nodes</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Xem logs để confirm errors</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lab$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> docker</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> compose</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> logs</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --tail</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 20</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> broker-service</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> 2>&amp;1</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -i</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> error</span></span></code></pre></figure>
+<hr/>
+<h2 id="4--phân-tích-problem-card">4. 🔍 Phân Tích Problem Card<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4--phân-tích-problem-card" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-mở-problems-page">4.1. Mở Problems page<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-mở-problems-page" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Trên Dynatrace UI → <strong>Problems</strong> app</li>
+<li>Bạn sẽ thấy problem mới xuất hiện</li>
+</ol>
+<h3 id="42-problem-card-structure">4.2. Problem Card structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-problem-card-structure" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Click vào problem → Problem Card gồm:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Section</th><th>Nội dung</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>Title</strong></td><td>Tóm tắt problem (ví dụ: “Failure rate increase”)</td><td>Quick summary</td></tr><tr><td><strong>Status</strong></td><td>OPEN → chưa resolve</td><td>Lifecycle state</td></tr><tr><td><strong>Impact</strong></td><td>Services bị ảnh hưởng</td><td>Blast radius</td></tr><tr><td><strong>Root cause</strong></td><td>Entity gây ra problem</td><td>AI-determined origin</td></tr><tr><td><strong>Impacted services</strong></td><td>Danh sách services bị ảnh hưởng</td><td>Cascade visualization</td></tr><tr><td><strong>Timeline</strong></td><td>Sequence of events</td><td>Chronological story</td></tr><tr><td><strong>Visual resolution path</strong></td><td>Suggested actions</td><td>Remediation guidance</td></tr></tbody></table></div>
+<h3 id="43-deep-dive-root-cause">4.3. Deep dive: Root Cause<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-deep-dive-root-cause" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>🔍 <strong>Quan sát</strong>:</p>
+<p>Davis AI sẽ xác định root cause là <strong>database-related</strong> entity:</p>
+<ul>
+<li>Root cause: MSSQL Database (hoặc database service)</li>
+<li>Reason: Failure rate anomaly detected</li>
+<li>Cascade: DB fail → broker-service errors → user impact</li>
+</ul>
+<p>💡 <strong>Tại sao Davis biết database là root cause, không phải broker-service?</strong></p>
+<ol>
+<li>Davis xem <strong>Smartscape topology</strong>: broker-service <strong>depends on</strong> MSSQL</li>
+<li>Davis thấy: MSSQL errors xuất hiện <strong>TRƯỚC</strong> broker-service errors</li>
+<li>Kết luận: MSSQL là <strong>nguyên nhân</strong>, broker-service là <strong>hệ quả</strong></li>
+</ol>
+<p>Đây là <strong>causal analysis</strong> — timeline + topology = root cause determination.</p>
+<h3 id="44-deep-dive-impact-analysis">4.4. Deep dive: Impact Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#44-deep-dive-impact-analysis" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Xem section <strong>Impacted services</strong></li>
+<li>Davis liệt kê TẤT CẢ services bị ảnh hưởng bởi DB failure</li>
+<li>Bao gồm cả services không trực tiếp call DB nhưng bị ảnh hưởng gián tiếp</li>
+</ol>
+<pre><code>Root Cause: [MSSQL Database]
+     ↓ impacts
+[broker-service]  → Failure rate: 0% → 45%
+     ↓ impacts
+[pricing-service] → Failure rate: 0% → 30%
+     ↓ impacts
+[accountservice]  → Failure rate: 0% → 25%
+</code></pre>
+<h3 id="45-deep-dive-timeline">4.5. Deep dive: Timeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#45-deep-dive-timeline" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Xem <strong>Timeline</strong> section</li>
+<li>Observerve sequence:
+<ul>
+<li><code>T+0</code>: DB starts throwing errors</li>
+<li><code>T+2min</code>: broker-service failure rate increases</li>
+<li><code>T+3min</code>: pricing-service affected</li>
+<li><code>T+5min</code>: Davis creates problem (after confirming anomaly)</li>
+<li><code>T+10min</code>: Davis completes root cause analysis</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>🔗 <strong>Fundamentals</strong>: <a href="../../../../02---areas/observability/fundamentals/09---aiops--and--advanced-patterns#4-correlation-engine--nhóm-alerts-liên-quan" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/09---aiops--and--advanced-patterns">Ch.07 — Alert Correlation</a>. Trong traditional monitoring (Datadog monitors), bạn sẽ nhận <strong>3-5 separate alerts</strong> (1 cho DB, 1 cho broker, 1 cho pricing…). Davis tạo <strong>1 problem</strong> covering tất cả — noise reduction.</p>
+</blockquote>
+<hr/>
+<h2 id="5-resolve-problem--disable-flag">5. Resolve Problem — Disable Flag<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-resolve-problem--disable-flag" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-disable-problem-pattern">5.1. Disable problem pattern<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-disable-problem-pattern" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lab$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> PUT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;http://localhost/feature-flag-service/v1/flags/db_not_responding&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> '{&quot;enabled&quot;: false}'</span></span></code></pre></figure>
+<h3 id="52--quan-sát-recovery">5.2. 🔍 Quan sát recovery<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52--quan-sát-recovery" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Trên Problems page, problem status sẽ chuyển sang <strong>RESOLVED</strong> (sau vài phút)</li>
+<li>Services failure rate giảm về 0%</li>
+<li>Timeline trên Problem Card ghi nhận thời điểm recovery</li>
+</ol>
+<p>💡 <strong>Davis tự detect recovery:</strong></p>
+<ul>
+<li>Davis so sánh metrics sau khi disable flag với baseline</li>
+<li>Khi metrics trở về baseline → Davis đánh dấu problem = RESOLVED</li>
+<li>Bạn <strong>không cần</strong> manually close problem</li>
+</ul>
+<h3 id="53-problem-lifecycle-summary">5.3. Problem lifecycle summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-problem-lifecycle-summary" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>OPEN → Davis detects anomaly, creates problem
+  ↓
+CONFIRMED → Root cause identified, impact analyzed
+  ↓
+RESOLVED → Metrics return to baseline, auto-closed
+</code></pre>
+<hr/>
+<h2 id="6-so-sánh-davis-ai-vs-datadog-monitors">6. So Sánh: Davis AI vs Datadog Monitors<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-so-sánh-davis-ai-vs-datadog-monitors" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Datadog Monitors</th><th>Davis AI</th></tr></thead><tbody><tr><td><strong>Configuration</strong></td><td>Manual — bạn phải tạo monitor cho mỗi metric</td><td>Zero-config — Davis monitor mọi thứ tự động</td></tr><tr><td><strong>Detection</strong></td><td>Threshold-based (static hoặc anomaly)</td><td>Baseline-based (tự học) + topology-aware</td></tr><tr><td><strong>Correlation</strong></td><td>Không có — mỗi monitor = 1 alert riêng</td><td>Tự correlate — gộp related alerts vào 1 problem</td></tr><tr><td><strong>Root cause</strong></td><td>Không có — bạn tự tìm</td><td>Tự xác định bằng causal analysis</td></tr><tr><td><strong>False positives</strong></td><td>Phụ thuộc threshold configuration</td><td>Ít hơn — topology context giảm noise</td></tr><tr><td><strong>Flexibility</strong></td><td>Rất flexible — configure bất kỳ metric/condition</td><td>Ít flexible — Davis quyết định, ít tuỳ chỉnh</td></tr><tr><td><strong>Transparency</strong></td><td>Rõ ràng — bạn biết rule</td><td>”Black box” — phải trust Davis</td></tr></tbody></table></div>
+<p>💡 <strong>Không có cái nào tốt hơn hoàn toàn:</strong></p>
+<ul>
+<li>Davis AI tốt cho: large-scale environments, microservices, khi bạn không biết monitor gì</li>
+<li>Datadog Monitors tốt cho: specific business rules, custom conditions, khi bạn cần control</li>
+</ul>
+<hr/>
+<h2 id="7--mini-challenge-debug-một-incident-bằng-davis">7. 🔥 Mini Challenge: Debug Một Incident Bằng Davis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7--mini-challenge-debug-một-incident-bằng-davis" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Bài tập thực hành </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Hãy tự trigger một problem, rồi thực hiện debugging workflow hoàn chỉnh. Đo thời gian để xem bạn mất bao lâu từ trigger → root cause.</p>
+</div>
+</blockquote>
+<h3 id="scenario">Scenario<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scenario" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote>
+<p>🔔 “Users phàn nàn trades bị chậm. Không rõ nguyên nhân.”</p>
+</blockquote>
+<h3 id="hướng-dẫn">Hướng dẫn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hướng-dẫn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Trigger</strong> (giả lập incident):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lab$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> PUT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;http://localhost/feature-flag-service/v1/flags/high_cpu_usage&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> '{&quot;enabled&quot;: true}'</span></span></code></pre></figure>
+</li>
+<li>
+<p>⏱️ <strong>Bắt đầu đo thời gian</strong></p>
+</li>
+<li>
+<p><strong>Investigation workflow — tự làm theo thứ tự:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Mở <strong>Problems</strong> — Davis đã phát hiện chưa?</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Nếu chưa: Vào <strong>Services</strong> → broker-service → thấy gì bất thường?</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Mở <strong>Host</strong> → CPU metrics → xác nhận CPU anomaly</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Khi Davis tạo Problem → đọc Problem Card:
+<ul>
+<li>Root cause là entity nào?</li>
+<li>Impact radius bao nhiêu services?</li>
+<li>Timeline bắt đầu lúc nào?</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Resolve:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lab$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> PUT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;http://localhost/feature-flag-service/v1/flags/high_cpu_usage&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> '{&quot;enabled&quot;: false}'</span></span></code></pre></figure>
+</li>
+<li>
+<p>⏱️ <strong>Dừng đo thời gian</strong></p>
+</li>
+</ol>
+<h3 id="tự-đánh-giá">Tự đánh giá<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tự-đánh-giá" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thời gian</th><th>Level</th></tr></thead><tbody><tr><td>&lt; 5 phút</td><td>⭐⭐⭐ Thành thạo — biết navigate, đọc Problem Card nhanh</td></tr><tr><td>5–15 phút</td><td>⭐⭐ Cơ bản — cần quen UI hơn</td></tr><tr><td>> 15 phút</td><td>⭐ Cần ôn lại Labs 01–04</td></tr></tbody></table></div>
+<hr/>
+<h2 id="️-troubleshooting">⚠️ Troubleshooting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#️-troubleshooting" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="davis-không-tạo-problem">Davis không tạo problem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#davis-không-tạo-problem" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Baseline chưa đủ</strong>: Đảm bảo EasyTrade chạy > 2 giờ trước khi trigger problem</li>
+<li><strong>Anomaly quá nhỏ</strong>: Có thể Davis coi anomaly không đủ significant</li>
+<li><strong>Kiểm tra</strong>: <code>Settings → Anomaly detection</code> → xem thresholds</li>
+</ul>
+<h3 id="problem-tạo-nhưng-không-có-root-cause">Problem tạo nhưng không có root cause<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#problem-tạo-nhưng-không-có-root-cause" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Smartscape topology chưa đầy đủ</li>
+<li>Restart EasyTrade để OneAgent re-inject:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lab$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> docker</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> compose</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> restart</span></span></code></pre></figure>
+</li>
+<li>Chờ 10-15 phút cho topology stabilize</li>
+</ul>
+<h3 id="feature-flag-không-hoạt-động">Feature flag không hoạt động<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#feature-flag-không-hoạt-động" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Verify feature flag service đang chạy</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lab$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> docker</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> compose</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ps</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> feature-flag</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Restart nếu cần</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lab$</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> docker</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> compose</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> restart</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> feature-flag-service</span></span></code></pre></figure>
+<hr/>
+<h2 id="-kết-nối-fundamentals">🔗 Kết Nối Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kết-nối-fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept (Fundamentals)</th><th>Dynatrace Implementation</th></tr></thead><tbody><tr><td><strong>AIOps</strong> (Ch.09)</td><td>Davis AI = practical AIOps — anomaly detection + causal analysis</td></tr><tr><td><strong>Alert Correlation</strong> (Ch.07)</td><td>Davis gộp multiple anomalies → 1 problem (noise reduction)</td></tr><tr><td><strong>Dynamic Baselines</strong> (Ch.07)</td><td>Davis tự học baseline từ lịch sử, không cần manual thresholds</td></tr><tr><td><strong>Root Cause Analysis</strong> (Ch.09)</td><td>Topology-aware causal analysis — follow dependency chain</td></tr><tr><td><strong>Cascading Failures</strong> (Ch.01)</td><td>DB failure → service failures → user impact = cascade visible</td></tr><tr><td><strong>MTTR Reduction</strong> (Ch.07)</td><td>Problem card = immediate context → faster resolution</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-verify-checklist">✅ Verify Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-verify-checklist" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Feature flag <code>db_not_responding</code> enabled thành công</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Observed: Failure rate tăng trên Services page</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Davis AI tạo Problem (có thể mất 10-20 phút)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Problem Card hiện: root cause, impacted services, timeline</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Root cause = database-related entity</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Feature flag disabled → services recover</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Problem status chuyển sang RESOLVED</li>
+</ul>
+<hr/>
+<p><strong>Bước tiếp theo:</strong> <a href="../../../../02---areas/observability/dynatrace/labs/05---problem-patterns--and--feature-flags" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/labs/05---problem-patterns--and--feature-flags">05 - Problem Patterns &amp; Feature Flags</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-371" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#lab-04--davis-ai--problem-detection" data-for="lab-04--davis-ai--problem-detection">Lab 04 — Davis AI &amp; Problem Detection</a></li><li class="depth-1"><a href="#-mục-tiêu" data-for="-mục-tiêu">🎯 Mục Tiêu</a></li><li class="depth-1"><a href="#-kiến-thức-nền" data-for="-kiến-thức-nền">📚 Kiến Thức Nền</a></li><li class="depth-2"><a href="#fundamentals" data-for="fundamentals">Fundamentals</a></li><li class="depth-2"><a href="#dynatrace-theory" data-for="dynatrace-theory">Dynatrace Theory</a></li><li class="depth-2"><a href="#cách-học-lab-này" data-for="cách-học-lab-này">Cách học lab này</a></li><li class="depth-1"><a href="#1-davis-ai--không-giống-ai-bạn-nghĩ" data-for="1-davis-ai--không-giống-ai-bạn-nghĩ">1. Davis AI — Không Giống AI Bạn Nghĩ</a></li><li class="depth-2"><a href="#11-davis-ai-không-chỉ-là-ai-chatbot-hay-anomaly-detector" data-for="11-davis-ai-không-chỉ-là-ai-chatbot-hay-anomaly-detector">1.1. Davis AI không chỉ là “AI chatbot” hay anomaly detector</a></li><li class="depth-2"><a href="#12-davis-ai-flow" data-for="12-davis-ai-flow">1.2. Davis AI Flow</a></li><li class="depth-1"><a href="#2-easytrade-problem-patterns" data-for="2-easytrade-problem-patterns">2. EasyTrade Problem Patterns</a></li><li class="depth-2"><a href="#kiểm-tra-trạng-thái-hiện-tại" data-for="kiểm-tra-trạng-thái-hiện-tại">Kiểm tra trạng thái hiện tại</a></li><li class="depth-1"><a href="#3-trigger-problem-db_not_responding" data-for="3-trigger-problem-db_not_responding">3. Trigger Problem: db_not_responding</a></li><li class="depth-2"><a href="#31-tại-sao-chọn-pattern-này" data-for="31-tại-sao-chọn-pattern-này">3.1. Tại sao chọn pattern này?</a></li><li class="depth-2"><a href="#32-enable-problem-pattern" data-for="32-enable-problem-pattern">3.2. Enable problem pattern</a></li><li class="depth-2"><a href="#33-️-chờ-davis-ai-detect" data-for="33-️-chờ-davis-ai-detect">3.3. ⏱️ Chờ Davis AI detect</a></li><li class="depth-1"><a href="#4--phân-tích-problem-card" data-for="4--phân-tích-problem-card">4. 🔍 Phân Tích Problem Card</a></li><li class="depth-2"><a href="#41-mở-problems-page" data-for="41-mở-problems-page">4.1. Mở Problems page</a></li><li class="depth-2"><a href="#42-problem-card-structure" data-for="42-problem-card-structure">4.2. Problem Card structure</a></li><li class="depth-2"><a href="#43-deep-dive-root-cause" data-for="43-deep-dive-root-cause">4.3. Deep dive: Root Cause</a></li><li class="depth-2"><a href="#44-deep-dive-impact-analysis" data-for="44-deep-dive-impact-analysis">4.4. Deep dive: Impact Analysis</a></li><li class="depth-2"><a href="#45-deep-dive-timeline" data-for="45-deep-dive-timeline">4.5. Deep dive: Timeline</a></li><li class="depth-1"><a href="#5-resolve-problem--disable-flag" data-for="5-resolve-problem--disable-flag">5. Resolve Problem — Disable Flag</a></li><li class="depth-2"><a href="#51-disable-problem-pattern" data-for="51-disable-problem-pattern">5.1. Disable problem pattern</a></li><li class="depth-2"><a href="#52--quan-sát-recovery" data-for="52--quan-sát-recovery">5.2. 🔍 Quan sát recovery</a></li><li class="depth-2"><a href="#53-problem-lifecycle-summary" data-for="53-problem-lifecycle-summary">5.3. Problem lifecycle summary</a></li><li class="depth-1"><a href="#6-so-sánh-davis-ai-vs-datadog-monitors" data-for="6-so-sánh-davis-ai-vs-datadog-monitors">6. So Sánh: Davis AI vs Datadog Monitors</a></li><li class="depth-1"><a href="#7--mini-challenge-debug-một-incident-bằng-davis" data-for="7--mini-challenge-debug-một-incident-bằng-davis">7. 🔥 Mini Challenge: Debug Một Incident Bằng Davis</a></li><li class="depth-2"><a href="#scenario" data-for="scenario">Scenario</a></li><li class="depth-2"><a href="#hướng-dẫn" data-for="hướng-dẫn">Hướng dẫn</a></li><li class="depth-2"><a href="#tự-đánh-giá" data-for="tự-đánh-giá">Tự đánh giá</a></li><li class="depth-1"><a href="#️-troubleshooting" data-for="️-troubleshooting">⚠️ Troubleshooting</a></li><li class="depth-2"><a href="#davis-không-tạo-problem" data-for="davis-không-tạo-problem">Davis không tạo problem</a></li><li class="depth-2"><a href="#problem-tạo-nhưng-không-có-root-cause" data-for="problem-tạo-nhưng-không-có-root-cause">Problem tạo nhưng không có root cause</a></li><li class="depth-2"><a href="#feature-flag-không-hoạt-động" data-for="feature-flag-không-hoạt-động">Feature flag không hoạt động</a></li><li class="depth-1"><a href="#-kết-nối-fundamentals" data-for="-kết-nối-fundamentals">🔗 Kết Nối Fundamentals</a></li><li class="depth-1"><a href="#-verify-checklist" data-for="-verify-checklist">✅ Verify Checklist</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/dynatrace/labs/00---setup-easytrade--and--oneagent" class="internal">Lab 00 — Setup EasyTrade &amp; OneAgent</a></li><li><a href="../../../../02---areas/observability/dynatrace/labs/03---log-monitoring--and--log-viewer" class="internal">Lab 03 — Log Monitoring &amp; Log Viewer</a></li><li><a href="../../../../02---areas/observability/dynatrace/labs/05---problem-patterns--and--feature-flags" class="internal">Lab 05 — Problem Patterns &amp; Feature Flags</a></li><li><a href="../../../../02---areas/observability/labs/00---lab-overview--and--roadmap" class="internal">Observability Platform Labs — Tổng Quan &amp; Lộ Trình</a></li><li><a href="../../../../02---areas/observability/labs/platform-comparison-—-datadog-vs-dynatrace" class="internal">Datadog vs Dynatrace — So Sánh Chi Tiết</a></li><li><a href="../../../../02---areas/observability/labs/real-world-incident-scenarios" class="internal">Real-World Incident Scenarios</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

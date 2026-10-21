@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>4.6. Workload Workflows - Luồng Hoạt Động Của Các Workload Types</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="4.6. Workload Workflows - Luồng Hoạt Động Của Các Workload Types"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="4.6. Workload Workflows - Luồng Hoạt Động Của Các Workload Types"/><meta name="twitter:description" content="4.6."/><meta property="og:description" content="4.6."/><meta property="og:image:alt" content="4.6."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/04-workloads/06-workload-workflows"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/04-workloads/06-workload-workflows"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="4.6."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/k8s/04-workloads/06-workload-workflows" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-138" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-138" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/">K8S</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/04-workloads/">04-workloads</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>4.6. Workload Workflows - Luồng Hoạt Động Của Các Workload Types</a></div></nav><h1 class="article-title">4.6. Workload Workflows - Luồng Hoạt Động Của Các Workload Types</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/k8s" class="internal internal-link tag-link">domain/k8s</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-09T17:00:00.000Z">10 thg 4, 2026</time><span>12 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="46-workload-workflows---luồng-hoạt-động-của-các-workload-types">4.6. Workload Workflows - Luồng Hoạt Động Của Các Workload Types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#46-workload-workflows---luồng-hoạt-động-của-các-workload-types" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>Chi tiết cách từng loại Workload hoạt động end-to-end, từ YAML đến Pod chạy thực tế</p>
+</blockquote>
+<hr/>
+<h2 id="-mục-tiêu-học">🎯 Mục Tiêu Học<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mục-tiêu-học" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau khi học xong phần này, bạn sẽ:</p>
+<ul>
+<li>✅ Trace được <strong>full lifecycle</strong> của mỗi workload type</li>
+<li>✅ Hiểu <strong>thứ tự tạo/xoá</strong> Pods trong StatefulSet vs Deployment</li>
+<li>✅ Nắm rõ <strong>DaemonSet reaction</strong> khi Node join/leave</li>
+<li>✅ Hiểu <strong>Job retry logic</strong> và backoff policy</li>
+<li>✅ Biết chọn đúng workload type qua <strong>Decision Tree</strong></li>
+</ul>
+<hr/>
+<h2 id="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-quy-tắc-màu-sắc-diagram" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Quy tắc màu nhất quán trong toàn bộ tài liệu </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>💙 <strong>Xanh dương</strong> <code>#3498db</code> — Deployment, Controllers, orchestration</li>
+<li>💚 <strong>Xanh lá</strong> <code>#27ae60</code> — Success, Running, Healthy</li>
+<li>🧡 <strong>Cam</strong> <code>#f39c12</code> — Pending, Warning, Processing</li>
+<li>❤️ <strong>Đỏ</strong> <code>#e74c3c</code> — Error, Failed, Crash</li>
+<li>💜 <strong>Tím</strong> <code>#9b59b6</code> — Advanced (HPA, VPA, StatefulSet)</li>
+<li>⬜ <strong>Xám</strong> <code>#95a5a6</code> — Infrastructure, Inactive</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-1-deployment--replicaset--pod-full-chain">🔄 Workflow 1: Deployment → ReplicaSet → Pod (Full Chain)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-1-deployment--replicaset--pod-full-chain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: <code>kubectl apply -f deployment.yaml</code> với <code>replicas: 3</code></p>
+</blockquote>
+<h3 id="sequence-diagram">Sequence Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sequence-diagram" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant U as 👤 User\n    participant API as 🔀 API Server\n    participant ETCD as 💾 etcd\n    participant DC as ⚙️ Deployment&lt;br/>Controller\n    participant RSC as ⚙️ ReplicaSet&lt;br/>Controller\n    participant S as 📋 Scheduler\n    participant KL as 🔧 kubelet\n\n    U->>API: kubectl apply -f deployment.yaml\n    Note over API: Authn → Authz → Admission&lt;br/>→ Validate → Mutate\n\n    API->>ETCD: Write Deployment object\n    ETCD-->>API: ACK\n    API-->>U: deployment.apps/webapp created\n\n    Note over DC: 👁️ Watch: New Deployment!&lt;br/>Template hash = 7d8bc4c5d\n    DC->>API: Create ReplicaSet&lt;br/>webapp-7d8bc4c5d (replicas=3)\n    Note over DC: ownerReferences → Deployment\n\n    API->>ETCD: Write ReplicaSet\n\n    Note over RSC: 👁️ Watch: New RS!&lt;br/>Desired=3, Current=0\n    loop Create 3 Pods\n        RSC->>API: Create Pod (Pending, nodeName=\&quot;\&quot;)\n    end\n    API->>ETCD: Write 3 Pods\n\n    loop Cho mỗi Pending Pod\n        Note over S: 👁️ Watch: Unscheduled Pod!\n        S->>S: Filter → Score → Bind\n        S->>API: Update pod.spec.nodeName\n    end\n\n    loop Trên mỗi assigned Node\n        Note over KL: 👁️ Watch: Pod assigned to me!\n        KL->>KL: Init Containers → Sandbox&lt;br/>→ Pull Image → Start\n        KL->>API: Update status: Running, Ready\n    end\n\n    Note over API: 💚 Deployment READY 3/3&quot;">sequenceDiagram
+    autonumber
+    participant U as 👤 User
+    participant API as 🔀 API Server
+    participant ETCD as 💾 etcd
+    participant DC as ⚙️ Deployment&lt;br/>Controller
+    participant RSC as ⚙️ ReplicaSet&lt;br/>Controller
+    participant S as 📋 Scheduler
+    participant KL as 🔧 kubelet
+
+    U->>API: kubectl apply -f deployment.yaml
+    Note over API: Authn → Authz → Admission&lt;br/>→ Validate → Mutate
+
+    API->>ETCD: Write Deployment object
+    ETCD-->>API: ACK
+    API-->>U: deployment.apps/webapp created
+
+    Note over DC: 👁️ Watch: New Deployment!&lt;br/>Template hash = 7d8bc4c5d
+    DC->>API: Create ReplicaSet&lt;br/>webapp-7d8bc4c5d (replicas=3)
+    Note over DC: ownerReferences → Deployment
+
+    API->>ETCD: Write ReplicaSet
+
+    Note over RSC: 👁️ Watch: New RS!&lt;br/>Desired=3, Current=0
+    loop Create 3 Pods
+        RSC->>API: Create Pod (Pending, nodeName=&quot;&quot;)
+    end
+    API->>ETCD: Write 3 Pods
+
+    loop Cho mỗi Pending Pod
+        Note over S: 👁️ Watch: Unscheduled Pod!
+        S->>S: Filter → Score → Bind
+        S->>API: Update pod.spec.nodeName
+    end
+
+    loop Trên mỗi assigned Node
+        Note over KL: 👁️ Watch: Pod assigned to me!
+        KL->>KL: Init Containers → Sandbox&lt;br/>→ Pull Image → Start
+        KL->>API: Update status: Running, Ready
+    end
+
+    Note over API: 💚 Deployment READY 3/3
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="ownership-chain">Ownership Chain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ownership-chain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    DEP[\&quot;📦 Deployment&lt;br/>&lt;i>webapp&lt;/i>&lt;br/>replicas: 3\&quot;] -->|\&quot;owns&lt;br/>ownerReferences\&quot;| RS[\&quot;📋 ReplicaSet&lt;br/>&lt;i>webapp-7d8bc4c5d&lt;/i>&lt;br/>replicas: 3\&quot;]\n    RS -->|\&quot;owns&lt;br/>ownerReferences\&quot;| P1[\&quot;🟢 Pod&lt;br/>webapp-7d8bc4c5d-abc12\&quot;]\n    RS -->|\&quot;owns\&quot;| P2[\&quot;🟢 Pod&lt;br/>webapp-7d8bc4c5d-def34\&quot;]\n    RS -->|\&quot;owns\&quot;| P3[\&quot;🟢 Pod&lt;br/>webapp-7d8bc4c5d-ghi56\&quot;]\n\n    P1 -->|\&quot;scheduled on\&quot;| N1[\&quot;🖥️ Node worker-1\&quot;]\n    P2 -->|\&quot;scheduled on\&quot;| N2[\&quot;🖥️ Node worker-2\&quot;]\n    P3 -->|\&quot;scheduled on\&quot;| N1\n\n    style DEP fill:#3498db,stroke:#2980b9,color:#fff\n    style RS fill:#2ecc71,stroke:#27ae60,color:#fff\n    style P1 fill:#27ae60,stroke:#1e8449,color:#fff\n    style P2 fill:#27ae60,stroke:#1e8449,color:#fff\n    style P3 fill:#27ae60,stroke:#1e8449,color:#fff\n    style N1 fill:#95a5a6,stroke:#7f8c8d,color:#fff\n    style N2 fill:#95a5a6,stroke:#7f8c8d,color:#fff&quot;">graph TD
+    DEP[&quot;📦 Deployment&lt;br/>&lt;i>webapp&lt;/i>&lt;br/>replicas: 3&quot;] -->|&quot;owns&lt;br/>ownerReferences&quot;| RS[&quot;📋 ReplicaSet&lt;br/>&lt;i>webapp-7d8bc4c5d&lt;/i>&lt;br/>replicas: 3&quot;]
+    RS -->|&quot;owns&lt;br/>ownerReferences&quot;| P1[&quot;🟢 Pod&lt;br/>webapp-7d8bc4c5d-abc12&quot;]
+    RS -->|&quot;owns&quot;| P2[&quot;🟢 Pod&lt;br/>webapp-7d8bc4c5d-def34&quot;]
+    RS -->|&quot;owns&quot;| P3[&quot;🟢 Pod&lt;br/>webapp-7d8bc4c5d-ghi56&quot;]
+
+    P1 -->|&quot;scheduled on&quot;| N1[&quot;🖥️ Node worker-1&quot;]
+    P2 -->|&quot;scheduled on&quot;| N2[&quot;🖥️ Node worker-2&quot;]
+    P3 -->|&quot;scheduled on&quot;| N1
+
+    style DEP fill:#3498db,stroke:#2980b9,color:#fff
+    style RS fill:#2ecc71,stroke:#27ae60,color:#fff
+    style P1 fill:#27ae60,stroke:#1e8449,color:#fff
+    style P2 fill:#27ae60,stroke:#1e8449,color:#fff
+    style P3 fill:#27ae60,stroke:#1e8449,color:#fff
+    style N1 fill:#95a5a6,stroke:#7f8c8d,color:#fff
+    style N2 fill:#95a5a6,stroke:#7f8c8d,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Cascade Delete </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Khi xoá Deployment:</p>
+<ol>
+<li>Deployment Controller xoá <strong>tất cả ReplicaSets</strong> (cả old revisions)</li>
+<li>ReplicaSet Controller xoá <strong>tất cả Pods</strong> thuộc RS đó</li>
+<li>kubelet stop containers → cleanup → GC</li>
+</ol>
+<p>→ Xoá Deployment = tất cả sạch. Xoá Pod = RS tạo lại ngay.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-2-statefulset--ordered-startup--identity">🔄 Workflow 2: StatefulSet — Ordered Startup &amp; Identity<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-2-statefulset--ordered-startup--identity" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Deploy <code>StatefulSet</code> cho database cluster (3 replicas)</p>
+</blockquote>
+<h3 id="ordered-creation-tuần-tự-không-song-song">Ordered Creation (tuần tự, KHÔNG song song)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ordered-creation-tuần-tự-không-song-song" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant SSC as ⚙️ StatefulSet&lt;br/>Controller\n    participant API as 🔀 API Server\n    participant S as 📋 Scheduler\n    participant KL as 🔧 kubelet\n    participant PVC as 💾 PVC\n\n    Note over SSC: 👁️ Watch: New StatefulSet!&lt;br/>replicas=3, serviceName=postgres\n\n    rect rgb(200, 230, 200)\n        Note over SSC: Phase 1: Create Pod-0\n        SSC->>API: Create PVC postgres-data-postgres-0\n        SSC->>API: Create Pod postgres-0\n        S->>API: Assign postgres-0 → worker-1\n        KL->>KL: Mount PVC → Start container\n        KL->>API: postgres-0: Ready ✅\n    end\n\n    rect rgb(200, 220, 240)\n        Note over SSC: Phase 2: Create Pod-1&lt;br/>(ONLY after Pod-0 Ready!)\n        SSC->>API: Create PVC postgres-data-postgres-1\n        SSC->>API: Create Pod postgres-1\n        S->>API: Assign postgres-1 → worker-2\n        KL->>KL: Mount PVC → Start container\n        KL->>API: postgres-1: Ready ✅\n    end\n\n    rect rgb(220, 200, 240)\n        Note over SSC: Phase 3: Create Pod-2&lt;br/>(ONLY after Pod-1 Ready!)\n        SSC->>API: Create PVC postgres-data-postgres-2\n        SSC->>API: Create Pod postgres-2\n        S->>API: Assign postgres-2 → worker-1\n        KL->>KL: Mount PVC → Start container\n        KL->>API: postgres-2: Ready ✅\n    end\n\n    Note over SSC: ✅ All 3 Pods Running&lt;br/>Ordered startup complete!&quot;">sequenceDiagram
+    autonumber
+    participant SSC as ⚙️ StatefulSet&lt;br/>Controller
+    participant API as 🔀 API Server
+    participant S as 📋 Scheduler
+    participant KL as 🔧 kubelet
+    participant PVC as 💾 PVC
+
+    Note over SSC: 👁️ Watch: New StatefulSet!&lt;br/>replicas=3, serviceName=postgres
+
+    rect rgb(200, 230, 200)
+        Note over SSC: Phase 1: Create Pod-0
+        SSC->>API: Create PVC postgres-data-postgres-0
+        SSC->>API: Create Pod postgres-0
+        S->>API: Assign postgres-0 → worker-1
+        KL->>KL: Mount PVC → Start container
+        KL->>API: postgres-0: Ready ✅
+    end
+
+    rect rgb(200, 220, 240)
+        Note over SSC: Phase 2: Create Pod-1&lt;br/>(ONLY after Pod-0 Ready!)
+        SSC->>API: Create PVC postgres-data-postgres-1
+        SSC->>API: Create Pod postgres-1
+        S->>API: Assign postgres-1 → worker-2
+        KL->>KL: Mount PVC → Start container
+        KL->>API: postgres-1: Ready ✅
+    end
+
+    rect rgb(220, 200, 240)
+        Note over SSC: Phase 3: Create Pod-2&lt;br/>(ONLY after Pod-1 Ready!)
+        SSC->>API: Create PVC postgres-data-postgres-2
+        SSC->>API: Create Pod postgres-2
+        S->>API: Assign postgres-2 → worker-1
+        KL->>KL: Mount PVC → Start container
+        KL->>API: postgres-2: Ready ✅
+    end
+
+    Note over SSC: ✅ All 3 Pods Running&lt;br/>Ordered startup complete!
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="statefulset-vs-deployment--identity-comparison">StatefulSet vs Deployment — Identity Comparison<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#statefulset-vs-deployment--identity-comparison" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph \&quot;Deployment Pods (Random)\&quot;\n        DP1[\&quot;webapp-7d8b-abc12&lt;br/>IP: 10.244.1.5&lt;br/>&lt;i>random name&lt;/i>\&quot;]\n        DP2[\&quot;webapp-7d8b-def34&lt;br/>IP: 10.244.2.8&lt;br/>&lt;i>random name&lt;/i>\&quot;]\n        DP3[\&quot;webapp-7d8b-ghi56&lt;br/>IP: 10.244.3.2&lt;br/>&lt;i>random name&lt;/i>\&quot;]\n    end\n\n    subgraph \&quot;StatefulSet Pods (Ordered)\&quot;\n        SP1[\&quot;postgres-0&lt;br/>IP: 10.244.1.5&lt;br/>DNS: postgres-0.postgres&lt;br/>PVC: data-postgres-0\&quot;]\n        SP2[\&quot;postgres-1&lt;br/>IP: 10.244.2.8&lt;br/>DNS: postgres-1.postgres&lt;br/>PVC: data-postgres-1\&quot;]\n        SP3[\&quot;postgres-2&lt;br/>IP: 10.244.3.2&lt;br/>DNS: postgres-2.postgres&lt;br/>PVC: data-postgres-2\&quot;]\n    end\n\n    style DP1 fill:#3498db,stroke:#2980b9,color:#fff\n    style DP2 fill:#3498db,stroke:#2980b9,color:#fff\n    style DP3 fill:#3498db,stroke:#2980b9,color:#fff\n    style SP1 fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style SP2 fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style SP3 fill:#9b59b6,stroke:#8e44ad,color:#fff&quot;">graph LR
+    subgraph &quot;Deployment Pods (Random)&quot;
+        DP1[&quot;webapp-7d8b-abc12&lt;br/>IP: 10.244.1.5&lt;br/>&lt;i>random name&lt;/i>&quot;]
+        DP2[&quot;webapp-7d8b-def34&lt;br/>IP: 10.244.2.8&lt;br/>&lt;i>random name&lt;/i>&quot;]
+        DP3[&quot;webapp-7d8b-ghi56&lt;br/>IP: 10.244.3.2&lt;br/>&lt;i>random name&lt;/i>&quot;]
+    end
+
+    subgraph &quot;StatefulSet Pods (Ordered)&quot;
+        SP1[&quot;postgres-0&lt;br/>IP: 10.244.1.5&lt;br/>DNS: postgres-0.postgres&lt;br/>PVC: data-postgres-0&quot;]
+        SP2[&quot;postgres-1&lt;br/>IP: 10.244.2.8&lt;br/>DNS: postgres-1.postgres&lt;br/>PVC: data-postgres-1&quot;]
+        SP3[&quot;postgres-2&lt;br/>IP: 10.244.3.2&lt;br/>DNS: postgres-2.postgres&lt;br/>PVC: data-postgres-2&quot;]
+    end
+
+    style DP1 fill:#3498db,stroke:#2980b9,color:#fff
+    style DP2 fill:#3498db,stroke:#2980b9,color:#fff
+    style DP3 fill:#3498db,stroke:#2980b9,color:#fff
+    style SP1 fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style SP2 fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style SP3 fill:#9b59b6,stroke:#8e44ad,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Ordered Deletion (ngược lại Creation) </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Scale down 3 → 1:</p>
+<ul>
+<li>Xoá <code>postgres-2</code> trước → chờ Terminated</li>
+<li>Xoá <code>postgres-1</code> → chờ Terminated</li>
+<li><code>postgres-0</code> giữ lại (Pod cuối)</li>
+</ul>
+<p><strong>PVCs KHÔNG bị xoá</strong> khi scale down → dữ liệu an toàn!</p>
+</div>
+</blockquote>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>StatefulSet DNS Format </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Mỗi Pod có DNS riêng theo format:</p>
+<pre><code>&lt;pod-name>.&lt;service-name>.&lt;namespace>.svc.cluster.local
+</code></pre>
+<p>Ví dụ:</p>
+<pre><code>postgres-0.postgres.default.svc.cluster.local  → Pod 0
+postgres-1.postgres.default.svc.cluster.local  → Pod 1
+postgres-2.postgres.default.svc.cluster.local  → Pod 2
+</code></pre>
+<p>→ Dùng DNS này cho replication connection giữa DB nodes!</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-3-daemonset--pod-per-node">🔄 Workflow 3: DaemonSet — Pod Per Node<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-3-daemonset--pod-per-node" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Deploy monitoring agent lên mọi Node</p>
+</blockquote>
+<h3 id="node-joinleave-reaction">Node Join/Leave Reaction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#node-joinleave-reaction" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    subgraph \&quot;DaemonSet Controller Loop\&quot;\n        WATCH[\&quot;👁️ Watch Nodes&lt;br/>&amp; DaemonSet spec\&quot;]\n        WATCH --> CHECK{\&quot;Node list&lt;br/>thay đổi?\&quot;}\n\n        CHECK -->|\&quot;New Node joins\&quot;| JOIN\n        CHECK -->|\&quot;Node removed\&quot;| LEAVE\n        CHECK -->|\&quot;No change\&quot;| WATCH\n    end\n\n    subgraph \&quot;Node Joins Cluster\&quot;\n        JOIN[\&quot;🖥️ New Node&lt;br/>worker-4 joined\&quot;] --> TAINT{\&quot;Node has&lt;br/>untolerated&lt;br/>Taints?\&quot;}\n        TAINT -->|\&quot;No\&quot;| CREATE[\&quot;✅ Create Pod&lt;br/>on worker-4\&quot;]\n        TAINT -->|\&quot;Yes\&quot;| SKIP[\&quot;⏭️ Skip Node&lt;br/>(DaemonSet tolerates&lt;br/>only specific taints)\&quot;]\n    end\n\n    subgraph \&quot;Node Leaves Cluster\&quot;\n        LEAVE[\&quot;💀 Node worker-2&lt;br/>removed/drained\&quot;] --> EVICT[\&quot;Pod trên worker-2&lt;br/>bị evict/terminated\&quot;]\n        EVICT --> NORESCHEDULE[\&quot;❌ KHÔNG tạo Pod mới&lt;br/>trên Node khác&lt;br/>(DaemonSet ≠ Deployment)\&quot;]\n    end\n\n    CREATE --> RUNNING[\&quot;🟢 Monitoring agent&lt;br/>running on worker-4\&quot;]\n\n    style JOIN fill:#27ae60,stroke:#1e8449,color:#fff\n    style LEAVE fill:#e74c3c,stroke:#c0392b,color:#fff\n    style CREATE fill:#27ae60,stroke:#1e8449,color:#fff\n    style SKIP fill:#f39c12,stroke:#d68910,color:#fff\n    style NORESCHEDULE fill:#95a5a6,stroke:#7f8c8d,color:#fff&quot;">flowchart TD
+    subgraph &quot;DaemonSet Controller Loop&quot;
+        WATCH[&quot;👁️ Watch Nodes&lt;br/>&amp; DaemonSet spec&quot;]
+        WATCH --> CHECK{&quot;Node list&lt;br/>thay đổi?&quot;}
+
+        CHECK -->|&quot;New Node joins&quot;| JOIN
+        CHECK -->|&quot;Node removed&quot;| LEAVE
+        CHECK -->|&quot;No change&quot;| WATCH
+    end
+
+    subgraph &quot;Node Joins Cluster&quot;
+        JOIN[&quot;🖥️ New Node&lt;br/>worker-4 joined&quot;] --> TAINT{&quot;Node has&lt;br/>untolerated&lt;br/>Taints?&quot;}
+        TAINT -->|&quot;No&quot;| CREATE[&quot;✅ Create Pod&lt;br/>on worker-4&quot;]
+        TAINT -->|&quot;Yes&quot;| SKIP[&quot;⏭️ Skip Node&lt;br/>(DaemonSet tolerates&lt;br/>only specific taints)&quot;]
+    end
+
+    subgraph &quot;Node Leaves Cluster&quot;
+        LEAVE[&quot;💀 Node worker-2&lt;br/>removed/drained&quot;] --> EVICT[&quot;Pod trên worker-2&lt;br/>bị evict/terminated&quot;]
+        EVICT --> NORESCHEDULE[&quot;❌ KHÔNG tạo Pod mới&lt;br/>trên Node khác&lt;br/>(DaemonSet ≠ Deployment)&quot;]
+    end
+
+    CREATE --> RUNNING[&quot;🟢 Monitoring agent&lt;br/>running on worker-4&quot;]
+
+    style JOIN fill:#27ae60,stroke:#1e8449,color:#fff
+    style LEAVE fill:#e74c3c,stroke:#c0392b,color:#fff
+    style CREATE fill:#27ae60,stroke:#1e8449,color:#fff
+    style SKIP fill:#f39c12,stroke:#d68910,color:#fff
+    style NORESCHEDULE fill:#95a5a6,stroke:#7f8c8d,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="daemonset-visual--pod-per-node">DaemonSet Visual — Pod Per Node<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#daemonset-visual--pod-per-node" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    DS[\&quot;📦 DaemonSet: node-exporter\&quot;] --> P1 &amp; P2 &amp; P3 &amp; P4\n\n    subgraph \&quot;worker-1\&quot;\n        P1[\&quot;🟢 node-exporter-abc\&quot;]\n    end\n    subgraph \&quot;worker-2\&quot;\n        P2[\&quot;🟢 node-exporter-def\&quot;]\n    end\n    subgraph \&quot;worker-3\&quot;\n        P3[\&quot;🟢 node-exporter-ghi\&quot;]\n    end\n    subgraph \&quot;worker-4 (new!)\&quot;\n        P4[\&quot;🟢 node-exporter-jkl&lt;br/>&lt;i>auto-created!&lt;/i>\&quot;]\n    end\n\n    style DS fill:#3498db,stroke:#2980b9,color:#fff\n    style P1 fill:#27ae60,stroke:#1e8449,color:#fff\n    style P2 fill:#27ae60,stroke:#1e8449,color:#fff\n    style P3 fill:#27ae60,stroke:#1e8449,color:#fff\n    style P4 fill:#f39c12,stroke:#d68910,color:#fff&quot;">graph TD
+    DS[&quot;📦 DaemonSet: node-exporter&quot;] --> P1 &amp; P2 &amp; P3 &amp; P4
+
+    subgraph &quot;worker-1&quot;
+        P1[&quot;🟢 node-exporter-abc&quot;]
+    end
+    subgraph &quot;worker-2&quot;
+        P2[&quot;🟢 node-exporter-def&quot;]
+    end
+    subgraph &quot;worker-3&quot;
+        P3[&quot;🟢 node-exporter-ghi&quot;]
+    end
+    subgraph &quot;worker-4 (new!)&quot;
+        P4[&quot;🟢 node-exporter-jkl&lt;br/>&lt;i>auto-created!&lt;/i>&quot;]
+    end
+
+    style DS fill:#3498db,stroke:#2980b9,color:#fff
+    style P1 fill:#27ae60,stroke:#1e8449,color:#fff
+    style P2 fill:#27ae60,stroke:#1e8449,color:#fff
+    style P3 fill:#27ae60,stroke:#1e8449,color:#fff
+    style P4 fill:#f39c12,stroke:#d68910,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>DaemonSet vs Deployment — Key Difference </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>DaemonSet</strong>: Exactly <strong>1 Pod per eligible Node</strong> — Pod gắn liền Node</li>
+<li><strong>Deployment</strong>: N Pods <strong>phân phối</strong> trên các Nodes — Pod có thể di chuyển</li>
+</ul>
+<p>Node bị xoá → DaemonSet Pod mất luôn (không reschedule)<br/>
+Node bị xoá → Deployment Pod được tạo lại trên Node khác!</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-4-job--completion--retry-logic">🔄 Workflow 4: Job — Completion &amp; Retry Logic<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-4-job--completion--retry-logic" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Batch processing job với <code>backoffLimit: 6</code></p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    START[\&quot;📋 Job Created&lt;br/>completions: 3&lt;br/>parallelism: 2&lt;br/>backoffLimit: 6\&quot;] --> BATCH1\n\n    subgraph \&quot;Batch 1 (parallelism=2)\&quot;\n        BATCH1[\&quot;Launch 2 Pods&lt;br/>simultaneously\&quot;] --> POD1_R{\&quot;Pod-1&lt;br/>result?\&quot;}\n        BATCH1 --> POD2_R{\&quot;Pod-2&lt;br/>result?\&quot;}\n\n        POD1_R -->|\&quot;✅ Exit 0\&quot;| DONE1[\&quot;Completion 1/3 ✅\&quot;]\n        POD1_R -->|\&quot;❌ Exit 1\&quot;| RETRY1[\&quot;Retry Pod-1&lt;br/>failures: 1/6\&quot;]\n\n        POD2_R -->|\&quot;✅ Exit 0\&quot;| DONE2[\&quot;Completion 2/3 ✅\&quot;]\n        POD2_R -->|\&quot;❌ Exit 1\&quot;| RETRY2[\&quot;Retry Pod-2&lt;br/>failures: 2/6\&quot;]\n    end\n\n    RETRY1 --> BACKOFF1[\&quot;⏱️ Backoff&lt;br/>10s → 20s → 40s\&quot;]\n    RETRY2 --> BACKOFF1\n    BACKOFF1 --> REBATCH[\&quot;Retry failed Pods\&quot;]\n    REBATCH --> RECHECK{\&quot;Total failures&lt;br/> ≥ backoffLimit?\&quot;}\n    RECHECK -->|\&quot;No\&quot;| BATCH1\n    RECHECK -->|\&quot;Yes (≥6)\&quot;| FAILED[\&quot;❌ Job FAILED&lt;br/>status: Failed&lt;br/>reason: BackoffLimitExceeded\&quot;]\n\n    DONE1 --> CHECK_COMPLETE\n    DONE2 --> CHECK_COMPLETE\n\n    subgraph \&quot;Batch 2\&quot;\n        CHECK_COMPLETE{\&quot;All completions&lt;br/>done?\&quot;}\n        CHECK_COMPLETE -->|\&quot;No (2/3)\&quot;| BATCH2[\&quot;Launch Pod-3\&quot;]\n        BATCH2 --> POD3_R{\&quot;Pod-3&lt;br/>result?\&quot;}\n        POD3_R -->|\&quot;✅ Exit 0\&quot;| DONE3[\&quot;Completion 3/3 ✅\&quot;]\n        CHECK_COMPLETE -->|\&quot;Yes (3/3)\&quot;| SUCCESS\n    end\n\n    DONE3 --> SUCCESS[\&quot;🟢 Job SUCCEEDED&lt;br/>status: Complete&lt;br/>3/3 completions\&quot;]\n\n    style START fill:#3498db,stroke:#2980b9,color:#fff\n    style SUCCESS fill:#27ae60,stroke:#1e8449,color:#fff\n    style FAILED fill:#e74c3c,stroke:#c0392b,color:#fff\n    style BACKOFF1 fill:#f39c12,stroke:#d68910,color:#fff&quot;">flowchart TD
+    START[&quot;📋 Job Created&lt;br/>completions: 3&lt;br/>parallelism: 2&lt;br/>backoffLimit: 6&quot;] --> BATCH1
+
+    subgraph &quot;Batch 1 (parallelism=2)&quot;
+        BATCH1[&quot;Launch 2 Pods&lt;br/>simultaneously&quot;] --> POD1_R{&quot;Pod-1&lt;br/>result?&quot;}
+        BATCH1 --> POD2_R{&quot;Pod-2&lt;br/>result?&quot;}
+
+        POD1_R -->|&quot;✅ Exit 0&quot;| DONE1[&quot;Completion 1/3 ✅&quot;]
+        POD1_R -->|&quot;❌ Exit 1&quot;| RETRY1[&quot;Retry Pod-1&lt;br/>failures: 1/6&quot;]
+
+        POD2_R -->|&quot;✅ Exit 0&quot;| DONE2[&quot;Completion 2/3 ✅&quot;]
+        POD2_R -->|&quot;❌ Exit 1&quot;| RETRY2[&quot;Retry Pod-2&lt;br/>failures: 2/6&quot;]
+    end
+
+    RETRY1 --> BACKOFF1[&quot;⏱️ Backoff&lt;br/>10s → 20s → 40s&quot;]
+    RETRY2 --> BACKOFF1
+    BACKOFF1 --> REBATCH[&quot;Retry failed Pods&quot;]
+    REBATCH --> RECHECK{&quot;Total failures&lt;br/> ≥ backoffLimit?&quot;}
+    RECHECK -->|&quot;No&quot;| BATCH1
+    RECHECK -->|&quot;Yes (≥6)&quot;| FAILED[&quot;❌ Job FAILED&lt;br/>status: Failed&lt;br/>reason: BackoffLimitExceeded&quot;]
+
+    DONE1 --> CHECK_COMPLETE
+    DONE2 --> CHECK_COMPLETE
+
+    subgraph &quot;Batch 2&quot;
+        CHECK_COMPLETE{&quot;All completions&lt;br/>done?&quot;}
+        CHECK_COMPLETE -->|&quot;No (2/3)&quot;| BATCH2[&quot;Launch Pod-3&quot;]
+        BATCH2 --> POD3_R{&quot;Pod-3&lt;br/>result?&quot;}
+        POD3_R -->|&quot;✅ Exit 0&quot;| DONE3[&quot;Completion 3/3 ✅&quot;]
+        CHECK_COMPLETE -->|&quot;Yes (3/3)&quot;| SUCCESS
+    end
+
+    DONE3 --> SUCCESS[&quot;🟢 Job SUCCEEDED&lt;br/>status: Complete&lt;br/>3/3 completions&quot;]
+
+    style START fill:#3498db,stroke:#2980b9,color:#fff
+    style SUCCESS fill:#27ae60,stroke:#1e8449,color:#fff
+    style FAILED fill:#e74c3c,stroke:#c0392b,color:#fff
+    style BACKOFF1 fill:#f39c12,stroke:#d68910,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Job Parameters </p></div>
+                  
+                </div>
+<div class="callout-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Parameter</th><th>Ý nghĩa</th><th>Default</th></tr></thead><tbody><tr><td><code>completions</code></td><td>Tổng Pods cần success</td><td>1</td></tr><tr><td><code>parallelism</code></td><td>Max Pods chạy đồng thời</td><td>1</td></tr><tr><td><code>backoffLimit</code></td><td>Max failures trước khi Job fail</td><td>6</td></tr><tr><td><code>activeDeadlineSeconds</code></td><td>Timeout toàn Job</td><td>none</td></tr><tr><td><code>ttlSecondsAfterFinished</code></td><td>Auto-cleanup sau khi done</td><td>none</td></tr></tbody></table></div>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-5-cronjob--scheduling-decision">🔄 Workflow 5: CronJob — Scheduling Decision<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-5-cronjob--scheduling-decision" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Backup database mỗi ngày lúc 2:00 AM</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant CC as ⏰ CronJob&lt;br/>Controller\n    participant API as 🔀 API Server\n    participant JC as ⚙️ Job&lt;br/>Controller\n    participant KL as 🔧 kubelet\n\n    Note over CC: schedule: \&quot;0 2 * * *\&quot;&lt;br/>Check every 10s\n\n    loop Mỗi 10 giây\n        CC->>CC: Is it 2:00 AM?\n    end\n\n    Note over CC: ⏰ 2:00 AM triggered!\n\n    CC->>CC: Check concurrencyPolicy\n    alt concurrencyPolicy: Forbid\n        Note over CC: Previous Job running?&lt;br/>→ SKIP this run\n    else concurrencyPolicy: Replace\n        Note over CC: Previous Job running?&lt;br/>→ DELETE old, CREATE new\n    else concurrencyPolicy: Allow (default)\n        Note over CC: Create regardless\n    end\n\n    CC->>API: Create Job&lt;br/>db-backup-28495320\n    API->>API: Save Job → etcd\n\n    JC->>API: Create Pod for Job\n    KL->>KL: Run backup script\n    KL->>API: Pod completed (exit 0)\n\n    JC->>API: Job status: Complete\n\n    Note over CC: Check history limits:&lt;br/>successfulJobsHistoryLimit: 3&lt;br/>failedJobsHistoryLimit: 1\n    CC->>API: Cleanup old Jobs&lt;br/>(keep last 3 successful)&quot;">sequenceDiagram
+    autonumber
+    participant CC as ⏰ CronJob&lt;br/>Controller
+    participant API as 🔀 API Server
+    participant JC as ⚙️ Job&lt;br/>Controller
+    participant KL as 🔧 kubelet
+
+    Note over CC: schedule: &quot;0 2 * * *&quot;&lt;br/>Check every 10s
+
+    loop Mỗi 10 giây
+        CC->>CC: Is it 2:00 AM?
+    end
+
+    Note over CC: ⏰ 2:00 AM triggered!
+
+    CC->>CC: Check concurrencyPolicy
+    alt concurrencyPolicy: Forbid
+        Note over CC: Previous Job running?&lt;br/>→ SKIP this run
+    else concurrencyPolicy: Replace
+        Note over CC: Previous Job running?&lt;br/>→ DELETE old, CREATE new
+    else concurrencyPolicy: Allow (default)
+        Note over CC: Create regardless
+    end
+
+    CC->>API: Create Job&lt;br/>db-backup-28495320
+    API->>API: Save Job → etcd
+
+    JC->>API: Create Pod for Job
+    KL->>KL: Run backup script
+    KL->>API: Pod completed (exit 0)
+
+    JC->>API: Job status: Complete
+
+    Note over CC: Check history limits:&lt;br/>successfulJobsHistoryLimit: 3&lt;br/>failedJobsHistoryLimit: 1
+    CC->>API: Cleanup old Jobs&lt;br/>(keep last 3 successful)
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="cronjob-concurrency-policies">CronJob Concurrency Policies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cronjob-concurrency-policies" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph \&quot;Allow (default)\&quot;\n        A_TRIGGER[\&quot;⏰ 2:00 AM\&quot;] --> A_OLD[\&quot;Job-1 still running\&quot;]\n        A_OLD --> A_NEW[\&quot;✅ Create Job-2 anyway&lt;br/>&lt;i>Both run simultaneously&lt;/i>\&quot;]\n    end\n\n    subgraph \&quot;Forbid\&quot;\n        F_TRIGGER[\&quot;⏰ 2:00 AM\&quot;] --> F_OLD[\&quot;Job-1 still running\&quot;]\n        F_OLD --> F_SKIP[\&quot;⏭️ SKIP this schedule&lt;br/>&lt;i>Wait for next trigger&lt;/i>\&quot;]\n    end\n\n    subgraph \&quot;Replace\&quot;\n        R_TRIGGER[\&quot;⏰ 2:00 AM\&quot;] --> R_OLD[\&quot;Job-1 still running\&quot;]\n        R_OLD --> R_DEL[\&quot;🗑️ Delete Job-1\&quot;]\n        R_DEL --> R_NEW[\&quot;✅ Create Job-2&lt;br/>&lt;i>Replace old with new&lt;/i>\&quot;]\n    end\n\n    style A_NEW fill:#27ae60,stroke:#1e8449,color:#fff\n    style F_SKIP fill:#f39c12,stroke:#d68910,color:#fff\n    style R_DEL fill:#e74c3c,stroke:#c0392b,color:#fff\n    style R_NEW fill:#27ae60,stroke:#1e8449,color:#fff&quot;">graph TD
+    subgraph &quot;Allow (default)&quot;
+        A_TRIGGER[&quot;⏰ 2:00 AM&quot;] --> A_OLD[&quot;Job-1 still running&quot;]
+        A_OLD --> A_NEW[&quot;✅ Create Job-2 anyway&lt;br/>&lt;i>Both run simultaneously&lt;/i>&quot;]
+    end
+
+    subgraph &quot;Forbid&quot;
+        F_TRIGGER[&quot;⏰ 2:00 AM&quot;] --> F_OLD[&quot;Job-1 still running&quot;]
+        F_OLD --> F_SKIP[&quot;⏭️ SKIP this schedule&lt;br/>&lt;i>Wait for next trigger&lt;/i>&quot;]
+    end
+
+    subgraph &quot;Replace&quot;
+        R_TRIGGER[&quot;⏰ 2:00 AM&quot;] --> R_OLD[&quot;Job-1 still running&quot;]
+        R_OLD --> R_DEL[&quot;🗑️ Delete Job-1&quot;]
+        R_DEL --> R_NEW[&quot;✅ Create Job-2&lt;br/>&lt;i>Replace old with new&lt;/i>&quot;]
+    end
+
+    style A_NEW fill:#27ae60,stroke:#1e8449,color:#fff
+    style F_SKIP fill:#f39c12,stroke:#d68910,color:#fff
+    style R_DEL fill:#e74c3c,stroke:#c0392b,color:#fff
+    style R_NEW fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Missed Schedules </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nếu CronJob Controller bị down > <code>startingDeadlineSeconds</code> (default 100s):</p>
+<ul>
+<li>Missed schedules <strong>≥ 100</strong> → CronJob ngừng schedule, cần manual intervention</li>
+<li>Missed &lt; 100 → Run ngay khi Controller khôi phục</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-6-decision-tree--chọn-workload-type">🔄 Workflow 6: Decision Tree — Chọn Workload Type<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-6-decision-tree--chọn-workload-type" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>“Ứng dụng của tôi nên dùng Workload nào?”</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    START[\&quot;🤔 Chọn Workload Type?\&quot;] --> Q1{\&quot;App chạy&lt;br/>liên tục hay&lt;br/>theo batch?\&quot;}\n\n    Q1 -->|\&quot;Liên tục&lt;br/>(long-running)\&quot;| Q2{\&quot;App cần&lt;br/>stable identity&lt;br/>&amp; ordered ops?\&quot;}\n    Q1 -->|\&quot;Batch / One-time\&quot;| Q5{\&quot;Cần schedule&lt;br/>lặp lại?\&quot;}\n\n    Q2 -->|\&quot;Không&lt;br/>(stateless)\&quot;| Q3{\&quot;Cần chạy trên&lt;br/>MỌI Node?\&quot;}\n    Q2 -->|\&quot;Có&lt;br/>(stateful, DB)\&quot;| SS[\&quot;💜 StatefulSet&lt;br/>• Stable network ID&lt;br/>• Ordered startup/shutdown&lt;br/>• Persistent storage per Pod&lt;br/>&lt;br/>VD: PostgreSQL, MongoDB,&lt;br/>Kafka, ZooKeeper\&quot;]\n\n    Q3 -->|\&quot;Không&lt;br/>(chạy N replicas)\&quot;| DEP[\&quot;💙 Deployment&lt;br/>• Rolling update&lt;br/>• Rollback&lt;br/>• Horizontal scaling&lt;br/>&lt;br/>VD: Web server, API,&lt;br/>Frontend, Microservices\&quot;]\n    Q3 -->|\&quot;Có&lt;br/>(1 Pod per Node)\&quot;| DS[\&quot;🧡 DaemonSet&lt;br/>• 1 Pod per Node&lt;br/>• Auto-add on new Nodes&lt;br/>• Node-level agents&lt;br/>&lt;br/>VD: Monitoring agent,&lt;br/>Log collector, CNI plugin\&quot;]\n\n    Q5 -->|\&quot;Có&lt;br/>(cron schedule)\&quot;| CJ[\&quot;⏰ CronJob&lt;br/>• Cron expression&lt;br/>• Auto-create Jobs&lt;br/>• History management&lt;br/>&lt;br/>VD: Nightly backup,&lt;br/>Report generation\&quot;]\n    Q5 -->|\&quot;Không&lt;br/>(run once)\&quot;| Q6{\&quot;Cần completions&lt;br/>nhiều hơn 1?\&quot;}\n\n    Q6 -->|\&quot;Có&lt;br/>(parallel batch)\&quot;| JOB_P[\&quot;📋 Job (parallel)&lt;br/>• completions: N&lt;br/>• parallelism: M&lt;br/>&lt;br/>VD: Image processing,&lt;br/>Data migration\&quot;]\n    Q6 -->|\&quot;Không&lt;br/>(single task)\&quot;| JOB_S[\&quot;📋 Job (simple)&lt;br/>• completions: 1&lt;br/>• backoffLimit&lt;br/>&lt;br/>VD: DB seed,&lt;br/>One-time setup\&quot;]\n\n    style DEP fill:#3498db,stroke:#2980b9,color:#fff\n    style SS fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style DS fill:#f39c12,stroke:#d68910,color:#fff\n    style CJ fill:#e67e22,stroke:#d35400,color:#fff\n    style JOB_P fill:#27ae60,stroke:#1e8449,color:#fff\n    style JOB_S fill:#2ecc71,stroke:#27ae60,color:#fff&quot;">flowchart TD
+    START[&quot;🤔 Chọn Workload Type?&quot;] --> Q1{&quot;App chạy&lt;br/>liên tục hay&lt;br/>theo batch?&quot;}
+
+    Q1 -->|&quot;Liên tục&lt;br/>(long-running)&quot;| Q2{&quot;App cần&lt;br/>stable identity&lt;br/>&amp; ordered ops?&quot;}
+    Q1 -->|&quot;Batch / One-time&quot;| Q5{&quot;Cần schedule&lt;br/>lặp lại?&quot;}
+
+    Q2 -->|&quot;Không&lt;br/>(stateless)&quot;| Q3{&quot;Cần chạy trên&lt;br/>MỌI Node?&quot;}
+    Q2 -->|&quot;Có&lt;br/>(stateful, DB)&quot;| SS[&quot;💜 StatefulSet&lt;br/>• Stable network ID&lt;br/>• Ordered startup/shutdown&lt;br/>• Persistent storage per Pod&lt;br/>&lt;br/>VD: PostgreSQL, MongoDB,&lt;br/>Kafka, ZooKeeper&quot;]
+
+    Q3 -->|&quot;Không&lt;br/>(chạy N replicas)&quot;| DEP[&quot;💙 Deployment&lt;br/>• Rolling update&lt;br/>• Rollback&lt;br/>• Horizontal scaling&lt;br/>&lt;br/>VD: Web server, API,&lt;br/>Frontend, Microservices&quot;]
+    Q3 -->|&quot;Có&lt;br/>(1 Pod per Node)&quot;| DS[&quot;🧡 DaemonSet&lt;br/>• 1 Pod per Node&lt;br/>• Auto-add on new Nodes&lt;br/>• Node-level agents&lt;br/>&lt;br/>VD: Monitoring agent,&lt;br/>Log collector, CNI plugin&quot;]
+
+    Q5 -->|&quot;Có&lt;br/>(cron schedule)&quot;| CJ[&quot;⏰ CronJob&lt;br/>• Cron expression&lt;br/>• Auto-create Jobs&lt;br/>• History management&lt;br/>&lt;br/>VD: Nightly backup,&lt;br/>Report generation&quot;]
+    Q5 -->|&quot;Không&lt;br/>(run once)&quot;| Q6{&quot;Cần completions&lt;br/>nhiều hơn 1?&quot;}
+
+    Q6 -->|&quot;Có&lt;br/>(parallel batch)&quot;| JOB_P[&quot;📋 Job (parallel)&lt;br/>• completions: N&lt;br/>• parallelism: M&lt;br/>&lt;br/>VD: Image processing,&lt;br/>Data migration&quot;]
+    Q6 -->|&quot;Không&lt;br/>(single task)&quot;| JOB_S[&quot;📋 Job (simple)&lt;br/>• completions: 1&lt;br/>• backoffLimit&lt;br/>&lt;br/>VD: DB seed,&lt;br/>One-time setup&quot;]
+
+    style DEP fill:#3498db,stroke:#2980b9,color:#fff
+    style SS fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style DS fill:#f39c12,stroke:#d68910,color:#fff
+    style CJ fill:#e67e22,stroke:#d35400,color:#fff
+    style JOB_P fill:#27ae60,stroke:#1e8449,color:#fff
+    style JOB_S fill:#2ecc71,stroke:#27ae60,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="-tổng-hợp-workload-comparison-matrix">📊 Tổng Hợp: Workload Comparison Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tổng-hợp-workload-comparison-matrix" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Feature</th><th style="text-align:center;">Deployment</th><th style="text-align:center;">StatefulSet</th><th style="text-align:center;">DaemonSet</th><th style="text-align:center;">Job</th><th style="text-align:center;">CronJob</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>Pod naming</strong></td><td style="text-align:center;">Random hash</td><td style="text-align:center;">Ordinal (0, 1, 2)</td><td style="text-align:center;">Random hash</td><td style="text-align:center;">Random hash</td><td style="text-align:center;">Via Job</td></tr><tr><td style="text-align:left;"><strong>Scaling</strong></td><td style="text-align:center;">Parallel</td><td style="text-align:center;">Ordered</td><td style="text-align:center;">1 per Node</td><td style="text-align:center;">completions</td><td style="text-align:center;">Via Job</td></tr><tr><td style="text-align:left;"><strong>Update strategy</strong></td><td style="text-align:center;">RollingUpdate / Recreate</td><td style="text-align:center;">RollingUpdate / OnDelete</td><td style="text-align:center;">RollingUpdate / OnDelete</td><td style="text-align:center;">N/A</td><td style="text-align:center;">N/A</td></tr><tr><td style="text-align:left;"><strong>Stable network ID</strong></td><td style="text-align:center;">❌</td><td style="text-align:center;">✅ (Headless Svc)</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td></tr><tr><td style="text-align:left;"><strong>Persistent storage</strong></td><td style="text-align:center;">Shared PVC</td><td style="text-align:center;">PVC per Pod</td><td style="text-align:center;">HostPath typical</td><td style="text-align:center;">Temporary</td><td style="text-align:center;">Temporary</td></tr><tr><td style="text-align:left;"><strong>Self-healing</strong></td><td style="text-align:center;">✅ Recreate Pod</td><td style="text-align:center;">✅ Recreate Pod</td><td style="text-align:center;">✅ on eligible Node</td><td style="text-align:center;">✅ Retry</td><td style="text-align:center;">✅ Via Job</td></tr><tr><td style="text-align:left;"><strong>Rollback</strong></td><td style="text-align:center;">✅ revision history</td><td style="text-align:center;">✅ revision history</td><td style="text-align:center;">✅ revision history</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td></tr><tr><td style="text-align:left;"><strong>Typical use</strong></td><td style="text-align:center;">Stateless apps</td><td style="text-align:center;">Databases, queues</td><td style="text-align:center;">Node agents</td><td style="text-align:center;">Batch, migration</td><td style="text-align:center;">Scheduled tasks</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-troubleshooting-workloads">🔧 Troubleshooting Workloads<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-troubleshooting-workloads" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="common-issues--solutions">Common Issues &amp; Solutions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-issues--solutions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Symptom</th><th style="text-align:left;">Likely Cause</th><th style="text-align:left;">Debug Command</th><th style="text-align:left;">Fix</th></tr></thead><tbody><tr><td style="text-align:left;">Pod stuck <code>Pending</code></td><td style="text-align:left;">Insufficient resources or no matching Node</td><td style="text-align:left;"><code>kubectl describe pod &lt;name></code> → Events</td><td style="text-align:left;">Add Nodes, adjust requests, fix nodeSelector</td></tr><tr><td style="text-align:left;">Pod <code>CrashLoopBackOff</code></td><td style="text-align:left;">App crash on startup</td><td style="text-align:left;"><code>kubectl logs &lt;pod> --previous</code></td><td style="text-align:left;">Fix app code, check env vars, check image</td></tr><tr><td style="text-align:left;">Deployment not progressing</td><td style="text-align:left;">Image pull error or probe fail</td><td style="text-align:left;"><code>kubectl rollout status deploy/&lt;name></code></td><td style="text-align:left;">Fix image name, check probe config</td></tr><tr><td style="text-align:left;">StatefulSet stuck at Pod-0</td><td style="text-align:left;">Pod-0 not Ready, blocking ordered creation</td><td style="text-align:left;"><code>kubectl describe pod &lt;sts>-0</code></td><td style="text-align:left;">Fix readinessProbe, check PVC binding</td></tr><tr><td style="text-align:left;">DaemonSet missing on Node</td><td style="text-align:left;">Node has untolerated taint</td><td style="text-align:left;"><code>kubectl describe node &lt;name></code> → Taints</td><td style="text-align:left;">Add toleration to DaemonSet spec</td></tr><tr><td style="text-align:left;">Job stuck / not completing</td><td style="text-align:left;">Container exit code ≠ 0</td><td style="text-align:left;"><code>kubectl logs job/&lt;name></code></td><td style="text-align:left;">Fix script, increase backoffLimit</td></tr><tr><td style="text-align:left;">CronJob not triggering</td><td style="text-align:left;">Schedule syntax wrong or suspended</td><td style="text-align:left;"><code>kubectl get cronjob -o yaml</code></td><td style="text-align:left;">Fix cron expression, check <code>suspend: false</code></td></tr></tbody></table></div>
+<h3 id="useful-debug-commands">Useful Debug Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#useful-debug-commands" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Pod-level debugging</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> describe</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pod</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">pod-nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">            # Events, state, conditions</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> logs</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">pod-nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --previous</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">          # Logs of previous crash</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> logs</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">pod-nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -c</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">containe</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">r</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # Specific container logs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">pod-nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> /bin/sh</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # Shell into container</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Workload-level debugging</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> rollout</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> status</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> deployment/</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Track rollout progress</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> rollout</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> history</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> deployment/</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">   # View revision history</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> events</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --sort-by=.lastTimestamp</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> # Cluster events timeline</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Resource inspection</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> wide</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                    # Show Node assignment</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> top</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                            # Live CPU/memory usage</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> rs</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                              # ReplicaSets (Deployment history)</span></span></code></pre></figure>
+<hr/>
+<h2 id="-cross-references">📎 Cross-References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-cross-references" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Topic</th><th style="text-align:left;">Link</th></tr></thead><tbody><tr><td style="text-align:left;">Deployment → ReplicaSet → Pod flow (architecture view)</td><td style="text-align:left;"><a href="../../.././02-architecture/04-component-workflows" class="internal internal-link alias" data-slug="02-architecture/04-component-workflows">2.4. Component Workflows</a></td></tr><tr><td style="text-align:left;">Pod resource configuration (requests/limits)</td><td style="text-align:left;"><a href="../../.././06-configuration/03-resource-management" class="internal internal-link alias" data-slug="06-configuration/03-resource-management">6.3. Resource Management</a></td></tr><tr><td style="text-align:left;">PVC per Pod (StatefulSet storage)</td><td style="text-align:left;"><a href="../../.././07-storage/04-storage-workflows" class="internal internal-link alias" data-slug="07-storage/04-storage-workflows">7.4. Storage Workflows</a></td></tr><tr><td style="text-align:left;">HPA scaling Deployments</td><td style="text-align:left;"><a href="../../.././08-high-availability/04-ha-workflows" class="internal internal-link alias" data-slug="08-high-availability/04-ha-workflows">8.4. HA Workflows</a></td></tr><tr><td style="text-align:left;">Health checks for workloads</td><td style="text-align:left;"><a href="../../.././08-high-availability/02-health-checks" class="internal internal-link alias" data-slug="08-high-availability/02-health-checks">8.2. Health Checks</a></td></tr></tbody></table></div>
+<hr/>
+<h2 id="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kiểm-tra-hiểu-biết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="câu-1-statefulset-ordering">Câu 1: StatefulSet Ordering<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-1-statefulset-ordering" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> StatefulSet <code>redis</code> có 5 replicas. Bạn scale down từ 5 → 2. Thứ tự xoá Pods là gì? PVCs có bị xoá không?</p>
+<details>
+<summary>Xem đáp án</summary>
+<pre><code>Thứ tự xoá (reverse ordinal):
+1. redis-4 → Terminated ✅
+2. redis-3 → Terminated ✅
+3. redis-2 → Terminated ✅
+→ Còn lại: redis-0, redis-1
+
+PVCs: KHÔNG bị xoá!
+- pvc-redis-data-redis-2 → vẫn tồn tại (Bound, nhưng không ai dùng)
+- pvc-redis-data-redis-3 → vẫn tồn tại
+- pvc-redis-data-redis-4 → vẫn tồn tại
+
+Nếu scale up lại → Pods sẽ re-attach PVCs cũ → Data vẫn còn!
+</code></pre>
+</details>
+<h3 id="câu-2-daemonset-vs-deployment">Câu 2: DaemonSet vs Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-2-daemonset-vs-deployment" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> Bạn cần deploy Fluentd log collector. Nên dùng Deployment hay DaemonSet? Tại sao?</p>
+<details>
+<summary>Xem đáp án</summary>
+<p><strong>DaemonSet!</strong> Vì:</p>
+<ol>
+<li>Fluentd cần chạy trên <strong>MỌI Node</strong> để collect logs từ tất cả containers</li>
+<li>DaemonSet đảm bảo <strong>exactly 1 Pod/Node</strong> — không thừa không thiếu</li>
+<li>Khi Node mới join → Auto-deploy Fluentd (không cần manual)</li>
+<li>Fluentd cần access <strong>Node-level resources</strong> (<code>/var/log</code>, hostPath)</li>
+</ol>
+<p>Deployment không phù hợp vì:</p>
+<ul>
+<li>Không đảm bảo mỗi Node đều có Pod</li>
+<li>Scheduler có thể dồn tất cả Pods lên 1 Node</li>
+<li>Không auto-react khi Node join/leave</li>
+</ul>
+</details>
+<h3 id="câu-3-job-failure">Câu 3: Job Failure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-3-job-failure" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> Job có <code>backoffLimit: 4</code>, <code>completions: 1</code>. Pod fail liên tục. Chuyện gì xảy ra?</p>
+<details>
+<summary>Xem đáp án</summary>
+<pre><code>Attempt 1: Pod created → Failed (exit 1)
+  → Backoff: 10s wait
+Attempt 2: Pod created → Failed (exit 1)
+  → Backoff: 20s wait
+Attempt 3: Pod created → Failed (exit 1)
+  → Backoff: 40s wait
+Attempt 4: Pod created → Failed (exit 1)
+  → Backoff: 80s wait
+Attempt 5: Would be attempt #5 → BUT backoffLimit=4 reached!
+
+→ Job status: Failed
+→ Reason: BackoffLimitExceeded
+→ Tổng cộng 5 Pods (1 original + 4 retries)
+→ All Pods remain (status: Failed) until TTL cleanup
+</code></pre>
+<blockquote>
+<p>backoffLimit counts <strong>retries</strong>, không phải total attempts.<br/>
+Exponential backoff: 10s → 20s → 40s → 80s → 160s → … (max 6 min)</p>
+</blockquote>
+</details>
+<hr/>
+<h2 id="-tiếp-theo">🚀 Tiếp Theo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tiếp-theo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Bạn đã hiểu luồng hoạt động của tất cả Workload types!</p>
+<p><strong>Next:</strong> <a href="../../.././05-networking/readme" class="internal internal-link alias" data-slug="05-networking/readme">Phần 5: Networking →</a></p>
+<hr/>
+<p><a href="../../../02---areas/k8s/04-workloads/05-jobs-cronjobs" class="internal internal-link alias" data-slug="02---areas/k8s/04-workloads/05-jobs-cronjobs">⬅️ 4.5. Jobs &amp; CronJobs</a> | <a href="../../.././readme" class="internal internal-link alias" data-slug="readme">🏠 Mục Lục Chính</a> | <a href="../../../readme" class="internal internal-link alias" data-slug="readme">📂 Phần 4: Workloads</a> | <a href="../../.././05-networking/readme" class="internal internal-link alias" data-slug="05-networking/readme">➡️ Phần 5: Networking</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-138" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#46-workload-workflows---luồng-hoạt-động-của-các-workload-types" data-for="46-workload-workflows---luồng-hoạt-động-của-các-workload-types">4.6. Workload Workflows - Luồng Hoạt Động Của Các Workload Types</a></li><li class="depth-1"><a href="#-mục-tiêu-học" data-for="-mục-tiêu-học">🎯 Mục Tiêu Học</a></li><li class="depth-1"><a href="#-quy-tắc-màu-sắc-diagram" data-for="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram</a></li><li class="depth-1"><a href="#-workflow-1-deployment--replicaset--pod-full-chain" data-for="-workflow-1-deployment--replicaset--pod-full-chain">🔄 Workflow 1: Deployment → ReplicaSet → Pod (Full Chain)</a></li><li class="depth-2"><a href="#sequence-diagram" data-for="sequence-diagram">Sequence Diagram</a></li><li class="depth-2"><a href="#ownership-chain" data-for="ownership-chain">Ownership Chain</a></li><li class="depth-1"><a href="#-workflow-2-statefulset--ordered-startup--identity" data-for="-workflow-2-statefulset--ordered-startup--identity">🔄 Workflow 2: StatefulSet — Ordered Startup &amp; Identity</a></li><li class="depth-2"><a href="#ordered-creation-tuần-tự-không-song-song" data-for="ordered-creation-tuần-tự-không-song-song">Ordered Creation (tuần tự, KHÔNG song song)</a></li><li class="depth-2"><a href="#statefulset-vs-deployment--identity-comparison" data-for="statefulset-vs-deployment--identity-comparison">StatefulSet vs Deployment — Identity Comparison</a></li><li class="depth-1"><a href="#-workflow-3-daemonset--pod-per-node" data-for="-workflow-3-daemonset--pod-per-node">🔄 Workflow 3: DaemonSet — Pod Per Node</a></li><li class="depth-2"><a href="#node-joinleave-reaction" data-for="node-joinleave-reaction">Node Join/Leave Reaction</a></li><li class="depth-2"><a href="#daemonset-visual--pod-per-node" data-for="daemonset-visual--pod-per-node">DaemonSet Visual — Pod Per Node</a></li><li class="depth-1"><a href="#-workflow-4-job--completion--retry-logic" data-for="-workflow-4-job--completion--retry-logic">🔄 Workflow 4: Job — Completion &amp; Retry Logic</a></li><li class="depth-1"><a href="#-workflow-5-cronjob--scheduling-decision" data-for="-workflow-5-cronjob--scheduling-decision">🔄 Workflow 5: CronJob — Scheduling Decision</a></li><li class="depth-2"><a href="#cronjob-concurrency-policies" data-for="cronjob-concurrency-policies">CronJob Concurrency Policies</a></li><li class="depth-1"><a href="#-workflow-6-decision-tree--chọn-workload-type" data-for="-workflow-6-decision-tree--chọn-workload-type">🔄 Workflow 6: Decision Tree — Chọn Workload Type</a></li><li class="depth-1"><a href="#-tổng-hợp-workload-comparison-matrix" data-for="-tổng-hợp-workload-comparison-matrix">📊 Tổng Hợp: Workload Comparison Matrix</a></li><li class="depth-1"><a href="#-troubleshooting-workloads" data-for="-troubleshooting-workloads">🔧 Troubleshooting Workloads</a></li><li class="depth-2"><a href="#common-issues--solutions" data-for="common-issues--solutions">Common Issues &amp; Solutions</a></li><li class="depth-2"><a href="#useful-debug-commands" data-for="useful-debug-commands">Useful Debug Commands</a></li><li class="depth-1"><a href="#-cross-references" data-for="-cross-references">📎 Cross-References</a></li><li class="depth-1"><a href="#-kiểm-tra-hiểu-biết" data-for="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết</a></li><li class="depth-2"><a href="#câu-1-statefulset-ordering" data-for="câu-1-statefulset-ordering">Câu 1: StatefulSet Ordering</a></li><li class="depth-2"><a href="#câu-2-daemonset-vs-deployment" data-for="câu-2-daemonset-vs-deployment">Câu 2: DaemonSet vs Deployment</a></li><li class="depth-2"><a href="#câu-3-job-failure" data-for="câu-3-job-failure">Câu 3: Job Failure</a></li><li class="depth-1"><a href="#-tiếp-theo" data-for="-tiếp-theo">🚀 Tiếp Theo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/k8s/04-workloads/readme" class="internal">Phần 4: Workloads - Quản Lý Ứng Dụng</a></li><li><a href="../../../02---areas/k8s/readme" class="internal">Kubernetes Learning Guide - Hướng Dẫn Học Kubernetes Từ Đầu</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

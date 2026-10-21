@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Chương 04: Three Pillars Deep Dive — Traces</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Chương 04: Three Pillars Deep Dive — Traces"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Chương 04: Three Pillars Deep Dive — Traces"/><meta name="twitter:description" content="Chương 04: Three Pillars Deep Dive — Traces &quot;Distributed tracing cho bạn thấy hành trình chi tiết của một request xuyên suốt hệ thống — như camera giám sát từng bước đi của một kiện hàng qua hệ thống logistics.&quot; Mục tiêu chương này: Hiểu trace/span là gì, tại sao cần context propagation, s..."/><meta property="og:description" content="Chương 04: Three Pillars Deep Dive — Traces &quot;Distributed tracing cho bạn thấy hành trình chi tiết của một request xuyên suốt hệ thống — như camera giám sát từng bước đi của một kiện hàng qua hệ thống logistics.&quot; Mục tiêu chương này: Hiểu trace/span là gì, tại sao cần context propagation, s..."/><meta property="og:image:alt" content="Chương 04: Three Pillars Deep Dive — Traces &quot;Distributed tracing cho bạn thấy hành trình chi tiết của một request xuyên suốt hệ thống — như camera giám sát từng bước đi của một kiện hàng qua hệ thống logistics.&quot; Mục tiêu chương này: Hiểu trace/span là gì, tại sao cần context propagation, s..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/04---three-pillars-deep-dive---traces"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/04---three-pillars-deep-dive---traces"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Chương 04: Three Pillars Deep Dive — Traces &quot;Distributed tracing cho bạn thấy hành trình chi tiết của một request xuyên suốt hệ thống — như camera giám sát từng bước đi của một kiện hàng qua hệ thống logistics.&quot; Mục tiêu chương này: Hiểu trace/span là gì, tại sao cần context propagation, s..."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/fundamentals/04---three-pillars-deep-dive---traces" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-439" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-439" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/fundamentals/">Fundamentals</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Chương 04: Three Pillars Deep Dive — Traces</a></div></nav><h1 class="article-title">Chương 04: Three Pillars Deep Dive — Traces</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-05T17:00:00.000Z">06 thg 4, 2026</time><span>11 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="chương-04-three-pillars-deep-dive--traces">Chương 04: Three Pillars Deep Dive — Traces<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chương-04-three-pillars-deep-dive--traces" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote class="callout quote" data-callout="quote">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>&quot;Distributed tracing cho bạn thấy hành trình chi tiết của một request xuyên suốt hệ thống — như camera giám sát từng bước đi của một kiện hàng qua hệ thống logistics.&quot; </p></div>
+                  
+                </div>
+</blockquote>
+<p><strong>Mục tiêu chương này</strong>: Hiểu trace/span là gì, tại sao cần context propagation, sampling strategies, và quan trọng nhất — cách <strong>kết hợp 3 pillars</strong> để debug hiệu quả.</p>
+<p><strong>ShopVN evolution</strong>: Thêm <strong>tracing</strong> vào ShopVN (v4) — giờ mỗi request có thể “quan sát” từng bước.</p>
+<hr/>
+<h2 id="1-tại-sao-distributed-tracing-ra-đời">1. Tại sao Distributed Tracing ra đời?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-tại-sao-distributed-tracing-ra-đời" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-monolith-vs-microservices--sự-chuyển-đổi-tạo-ra-vấn-đề-mới">1.1 Monolith vs Microservices — Sự chuyển đổi tạo ra vấn đề mới<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-monolith-vs-microservices--sự-chuyển-đổi-tạo-ra-vấn-đề-mới" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Thời monolith</strong> (1 ứng dụng duy nhất): Mọi code chạy trong 1 process. Khi request chậm → bật profiler → thấy function nào mất nhiều thời gian nhất. Đơn giản.</p>
+<p><strong>Thời microservices</strong> (nhiều services): Một request đi qua 5-10 services, mỗi service là process riêng, chạy trên server riêng. Khi request chậm → <strong>chậm ở service nào?</strong></p>
+<pre><code>User bấm &quot;Đặt hàng&quot; trên ShopVN. Request đi qua:
+
+Browser → API Gateway → Order Service → Product Service (check stock)
+                                      → Payment Service → Bank API (charge)
+                                      → Database (save order)
+                                      → Notification Service (send email)
+
+Tổng latency = 3 giây. Nhưng...
+
+- Product check mất bao lâu? 
+- Payment mất bao lâu? 
+- Database mất bao lâu?
+- Cái nào là BOTTLENECK?
+
+Logs: mỗi service có logs riêng → phải lục 5 bộ logs khác nhau
+Metrics: biết &quot;p99 = 3s&quot; nhưng KHÔNG BIẾT 3s đó phân bổ thế nào
+
+→ CẦN MỘT CÁCH ĐỂ &quot;NỐI&quot; MỌI THỨ LẠI
+</code></pre>
+<p><strong>Distributed Tracing</strong> ra đời để giải quyết chính xác vấn đề này: <strong>theo dõi một request duy nhất xuyên suốt mọi services</strong>, đo thời gian <strong>từng bước</strong>, và hiển thị dưới dạng trực quan.</p>
+<h3 id="12-lịch-sử">1.2 Lịch sử<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-lịch-sử" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Năm</th><th>Sự kiện</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td>2010</td><td>Google công bố Dapper paper</td><td>Nền tảng lý thuyết cho distributed tracing</td></tr><tr><td>2012</td><td>Twitter open-source Zipkin</td><td>Implementation đầu tiên dành cho cộng đồng</td></tr><tr><td>2015</td><td>Uber open-source Jaeger</td><td>Alternative mạnh mẽ với Zipkin</td></tr><tr><td>2019</td><td>OpenTelemetry ra đời</td><td>Hợp nhất OpenTracing + OpenCensus thành tiêu chuẩn duy nhất</td></tr><tr><td>2023+</td><td>OTel trở thành CNCF graduated</td><td>Tiêu chuẩn de facto của ngành</td></tr></tbody></table></div>
+<hr/>
+<h2 id="2-core-concepts--trace-span-và-parent-child">2. Core Concepts — Trace, Span, và Parent-Child<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-core-concepts--trace-span-và-parent-child" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-trace--toàn-bộ-hành-trình">2.1 Trace — “Toàn bộ hành trình”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-trace--toàn-bộ-hành-trình" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Một <strong>Trace</strong> đại diện cho <strong>toàn bộ hành trình của một request</strong> từ lúc vào hệ thống đến lúc hoàn thành. Mọi thứ liên quan đến request đó — dù xảy ra ở bao nhiêu services — đều thuộc cùng một Trace.</p>
+<p>Mỗi trace có <strong>Trace ID</strong> duy nhất — chuỗi ký tự dùng để liên kết mọi thứ lại.</p>
+<pre><code>Trace ID: abc-123-def-456
+
+Trace này chứa MỌI THỨ xảy ra khi user U001 bấm &quot;Đặt hàng&quot;
+— dù xảy ra ở Order Service, Product Service, Payment Service, hay Database.
+</code></pre>
+<h3 id="22-span--một-bước-trong-hành-trình">2.2 Span — “Một bước trong hành trình”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-span--một-bước-trong-hành-trình" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi <strong>Span</strong> đại diện cho <strong>một đơn vị công việc</strong> (operation) trong trace. Khi Order Service gọi Product Service, đó là một span. Khi Product Service query database, đó là một span khác.</p>
+<p>Một span chứa tất cả thông tin cần thiết:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;trace_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:    </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;abc-123-def-456&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,      </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Thuộc trace nào</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;span_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:     </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;span-789&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,             </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// ID riêng của span này</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;parent_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:   </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;span-456&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,             </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Span cha (ai gọi tôi?)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;operation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:   </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;POST /api/v1/orders&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Đang làm gì</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:     </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;order-service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,        </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Ở service nào</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;start_time&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:  </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;14:30:05.100&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,         </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Bắt đầu lúc nào</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;duration_ms&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">850</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,                    </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Mất bao lâu</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:      </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;OK&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,                   </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Thành công hay lỗi</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;attributes&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {                        </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Metadata bổ sung</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;http.method&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;POST&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;http.status_code&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">201</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;user.id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;U001&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;product.id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;SP001&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<h3 id="23-parent-child--cây-phả-hệ-của-request">2.3 Parent-Child — Cây phả hệ của request<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-parent-child--cây-phả-hệ-của-request" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Spans tạo thành cấu trúc <strong>cây</strong> — span cha gọi span con:</p>
+<pre><code>Order Service      Product Service        Payment Service
+     │                    │                      │
+     ├── validate_input   │                      │
+     │                    │                      │
+     ├── check_inventory ─┤                      │
+     │                    ├── query_product_db    │
+     │                    │                      │
+     ├── process_payment ─┼──────────────────────┤
+     │                    │                      ├── call_bank_api
+     │                    │                      │
+     ├── save_to_db       │                      │
+     │                    │                      │
+     └── send_notification│                      │
+</code></pre>
+<p>Và khi visualize dưới dạng <strong>waterfall/timeline</strong> (đây là view bạn sẽ thấy trong Dynatrace/Datadog):</p>
+<pre><code>Timeline:   0ms         200ms        500ms        800ms   950ms
+            │            │            │            │       │
+Gateway     ████████████████████████████████████████████████ 950ms
+  Order     ·███████████████████████████████████████████████ 900ms
+    Product ·████████····                                    100ms
+    Payment ·········█████████████████████████████           500ms
+      Bank  ··········███████████████████████████            450ms  ← BOTTLENECK!
+    DB      ···································████           50ms
+    Notify  ·····································██          30ms
+</code></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Power of Tracing </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nhìn vào waterfall trên, bạn thấy <strong>NGAY LẬP TỨC</strong>:</p>
+<ul>
+<li>Payment mất 500ms, chiếm hơn nửa tổng thời gian</li>
+<li>Trong 500ms đó, Bank API chiếm 450ms → <strong>đây là root cause</strong></li>
+<li>Product check nhanh (100ms), DB nhanh (50ms) → không phải vấn đề</li>
+</ul>
+<p><strong>Không cần đoán. Không cần lục logs. Nhìn 1 cái là biết.</strong></p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="3-context-propagation--chuyền-cờ-qua-các-services">3. Context Propagation — “Chuyền cờ” qua các services<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-context-propagation--chuyền-cờ-qua-các-services" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-vấn-đề">3.1 Vấn đề<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-vấn-đề" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi service chạy trên process/container riêng. Khi Order Service gọi Payment Service, Payment Service nhận được một HTTP request <strong>bình thường</strong> — nó không tự biết mình đang xử lý request thuộc trace nào.</p>
+<p><strong>Vậy làm sao tất cả spans biết chúng thuộc cùng một trace?</strong></p>
+<h3 id="32-giải-pháp-truyền-trace-context-qua-http-headers">3.2 Giải pháp: Truyền trace context qua HTTP headers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-giải-pháp-truyền-trace-context-qua-http-headers" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi Service A gọi Service B, nó <strong>gắn thêm trace information vào HTTP headers</strong>. Service B đọc headers → biết trace_id → tạo span thuộc cùng trace.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="http" data-theme="github-light github-dark"><code data-language="http" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">POST</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> /api/v1/payments </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">HTTP</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">/</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1.1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">Host</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> payment-service:5002</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">Content-Type</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> application/json</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">traceparent</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> 00-abc123def456-span789-01      ← ĐÂY LÀ CONTEXT!</span></span></code></pre></figure>
+<p><strong>Phân tích <code>traceparent</code> header</strong> (W3C Trace Context standard):</p>
+<pre><code>traceparent: 00-abc123def456-span789-01
+              │  │             │       │
+              │  │             │       └─ Flags: 01 = sampled (đang được trace)
+              │  │             └──────── Parent Span ID: span cha (Order Service)
+              │  └────────────────────── Trace ID: ID chung cho toàn bộ request
+              └───────────────────────── Version: 00 (current)
+</code></pre>
+<h3 id="33-shopvn-implementation-manual--để-hiểu-bản-chất">3.3 ShopVN implementation (manual — để hiểu bản chất):<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-shopvn-implementation-manual--để-hiểu-bản-chất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># order_service.py — ShopVN v4: Thêm manual tracing</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> uuid, time</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="punctuation">@app.route</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;/api/v1/orders&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">methods</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;POST&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">])</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> create_order</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">():</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Nhận trace_id từ upstream, hoặc tạo mới nếu đây là entry point</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    trace_id </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> request.headers.get(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;X-Trace-ID&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="property">str</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(uuid.uuid4()))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    parent_span_id </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> request.headers.get(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;X-Span-ID&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">None</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    my_span_id </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="property"> str</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(uuid.uuid4())[:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">16</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]    </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ID riêng cho span này</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    span_start </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> time.time()  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Bắt đầu đo thời gian</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Khi gọi service khác → PHẢI truyền trace context</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    propagation_headers </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;X-Trace-ID&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: trace_id,           </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Giữ nguyên trace_id</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;X-Span-ID&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: my_span_id,          </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Span hiện tại = parent của service tiếp</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;traceparent&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;00-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">{</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">trace_id</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">}</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">{</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">my_span_id</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">}</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">-01&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Gọi Product Service — kèm trace context</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    product_resp </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> requests.get(</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;http://product-service:5001/api/v1/products/</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">{</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">product_id</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">}</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        headers</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">propagation_headers  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ← TRUYỀN CONTEXT!</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    )</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Gọi Payment Service — cũng kèm trace context</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    payment_resp </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> requests.post(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;http://payment-service:5002/api/v1/payments&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        json</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;amount&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: total},</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">        headers</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">propagation_headers  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ← TRUYỀN CONTEXT!</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    )</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Kết thúc span, ghi lại duration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    span_data </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;trace_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: trace_id,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;span_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: my_span_id,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;parent_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: parent_span_id,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;operation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;create_order&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;duration_ms&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: (time.time() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> span_start) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1000</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;OK&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    send_span_to_collector(span_data)  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Gửi đến trace collector</span></span></code></pre></figure>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Trong thực tế — không ai viết thủ công! </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Code trên chỉ để bạn <strong>hiểu bản chất</strong> context propagation hoạt động thế nào. Trong thực tế, <strong>OpenTelemetry SDK làm tất cả tự động</strong> — bạn không cần viết một dòng propagation nào. Xem <a href="../../../02---areas/observability/fundamentals/05---instrumentation--and--opentelemetry" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/05---instrumentation--and--opentelemetry">05 - Instrumentation &amp; OpenTelemetry</a>.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="4-sampling--trace-mọi-thứ-hay-chọn-lọc">4. Sampling — Trace mọi thứ hay chọn lọc?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-sampling--trace-mọi-thứ-hay-chọn-lọc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-vấn-đề-chi-phí">4.1 Vấn đề: Chi phí<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-vấn-đề-chi-phí" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>ShopVN xử lý 10,000 requests/giây. Mỗi request tạo ~8 spans. → <strong>80,000 spans/giây</strong> = rất nhiều data. Lưu trữ tất cả rất tốn kém.</p>
+<h3 id="42-head-based-sampling--quyết-định-ngay-từ-đầu">4.2 Head-based Sampling — Quyết định ngay từ đầu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-head-based-sampling--quyết-định-ngay-từ-đầu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Request đến API Gateway → Tung đồng xu (10% probability)
+  - Mặt ngửa (10%) → Trace request này, đánh dấu sampled=01 ✅
+  - Mặt sấp (90%) → KHÔNG trace, đánh dấu sampled=00 ❌
+  
+Mọi service downstream đọc flag → tuân theo quyết định ban đầu.
+(Nếu Gateway nói &quot;không trace&quot; → Product, Payment cũng không trace)
+</code></pre>
+<p><strong>Ưu</strong>: Đơn giản, chi phí dự đoán được (trace 10% = 10% data).<br/>
+<strong>Nhược</strong>: Bạn có thể <strong>bỏ lỡ</strong> request lỗi nếu nó rơi vào 90% không sample. Request lỗi hiếm (0.1%) → có thể không bao giờ bắt được trong 10% sample!</p>
+<h3 id="43-tail-based-sampling--quyết-định-sau-khi-request-hoàn-thành">4.3 Tail-based Sampling — Quyết định sau khi request hoàn thành<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-tail-based-sampling--quyết-định-sau-khi-request-hoàn-thành" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Mọi request đều được trace (collect hết).
+Sau khi request hoàn thành → Collector xem xét:
+  ✅ Có error? → Giữ
+  ✅ Duration > 2s? → Giữ (slow request — đáng xem)
+  ✅ Random 5% requests bình thường → Giữ (baseline)
+  ❌ Request bình thường, nhanh, không lỗi → BỎ
+</code></pre>
+<p><strong>Ưu</strong>: <strong>Không bao giờ bỏ lỡ errors</strong> — mọi request lỗi đều được giữ.<br/>
+<strong>Nhược</strong>: Phải buffer <strong>toàn bộ</strong> spans trước khi quyết định → tốn RAM. Phức tạp hơn.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>Head-based</th><th>Tail-based</th></tr></thead><tbody><tr><td>Quyết định khi nào</td><td>Đầu request</td><td>Cuối request</td></tr><tr><td>Miss errors?</td><td>Có thể</td><td>Không</td></tr><tr><td>Resource usage</td><td>Thấp</td><td>Cao (cần buffer)</td></tr><tr><td>Complexity</td><td>Đơn giản</td><td>Phức tạp</td></tr><tr><td>Best for</td><td>High-traffic, budget limited</td><td>Error-sensitive systems</td></tr></tbody></table></div>
+<hr/>
+<h2 id="5-kết-nối-three-pillars--sức-mạnh-tổng-hợp">5. Kết nối Three Pillars — Sức mạnh tổng hợp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-kết-nối-three-pillars--sức-mạnh-tổng-hợp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Đây là phần quan trọng nhất: <strong>3 pillars không đứng riêng lẻ</strong> mà kết hợp thành workflow debug cực mạnh.</p>
+<pre><code>┌──────────────────────────────────────────────────┐
+│                  MỘT REQUEST                     │
+│                                                   │
+│  TRACE (trace_id = abc-123)                       │
+│  ├── Span: API Gateway       — 950ms             │
+│  │   ├── Span: Order Service — 900ms             │
+│  │   │   ├── Span: Product   — 100ms             │
+│  │   │   ├── Span: Payment   — 500ms 🔴          │
+│  │   │   ├── Span: Database  — 50ms              │
+│  │   │   └── Span: Notify    — 30ms              │
+│  │   │                                            │
+│  │   │   METRICS (per span):                      │
+│  │   │   duration, status_code, db.rows_affected  │
+│  │   │                                            │
+│  │   │   LOGS (kèm trace_id):                     │
+│  │   │   &quot;Creating order...&quot;, &quot;Payment failed...&quot; │
+│  │                                                │
+└──────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="workflow-debug-thực-tế-order-service-lỗi">Workflow debug thực tế: “Order Service lỗi!”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workflow-debug-thực-tế-order-service-lỗi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>🔔 BƯỚC 1 — METRICS phát hiện vấn đề
+   Dashboard: &quot;Order Service error rate tăng từ 0.3% lên 8%!&quot;
+   → Xác nhận: CÓ VẤN ĐỀ. Nhưng vấn đề gì?
+
+🔍 BƯỚC 2 — TRACES xác định vị trí
+   Mở traces lỗi của Order Service:
+   → Waterfall view: Payment span hiện đỏ, duration = 5000ms (timeout)
+   → Cụ thể hơn: Bank API span = &quot;connection refused&quot;
+   → Biết rồi: BANK API BỊ CHẾT. Nhưng lỗi chính xác là gì?
+
+📋 BƯỚC 3 — LOGS cung cấp chi tiết
+   Search: trace_id = &quot;abc-123&quot; AND service = &quot;payment-service&quot;
+   → Log: &quot;Bank API returned HTTP 503: Service Temporarily Unavailable&quot;
+   → Log kèm message từ bank: &quot;Scheduled maintenance until 15:00&quot;
+   → ROOT CAUSE: Bank API đang bảo trì theo lịch!
+
+✅ GIẢI PHÁP: Enable circuit breaker, switch sang backup payment provider.
+</code></pre>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Sức mạnh kết hợp </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>Metrics</strong> alone: “Có lỗi” (biết symptom)</li>
+<li><strong>Traces</strong> alone: “Lỗi ở Payment → Bank API” (biết location)</li>
+<li><strong>Logs</strong> alone: “Bank API trả 503: maintenance” (biết detail)</li>
+<li><strong>Cả 3 kết hợp</strong>: Symptom → Location → Root Cause → Fix. <strong>Trong vài phút.</strong></li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="6-tổng-kết">6. Tổng Kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-tổng-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept</th><th>Key Takeaway</th></tr></thead><tbody><tr><td>Trace</td><td>Toàn bộ hành trình 1 request, xuyên mọi services</td></tr><tr><td>Span</td><td>1 operation trong trace, có duration + status + attributes</td></tr><tr><td>Parent-Child</td><td>Spans tạo thành cây — span cha gọi span con</td></tr><tr><td>Context Propagation</td><td>Truyền trace_id qua HTTP headers (traceparent)</td></tr><tr><td>Head Sampling</td><td>Quyết định đầu, đơn giản, có thể miss errors</td></tr><tr><td>Tail Sampling</td><td>Quyết định cuối, giữ mọi errors, tốn resource hơn</td></tr><tr><td>3 Pillars Combined</td><td>Metrics (detect) → Traces (locate) → Logs (detail)</td></tr></tbody></table></div>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>ShopVN sau Chương 04 </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>ShopVN đã có đủ <strong>3 pillars</strong>: Logs + Metrics + Traces. Nhưng code đang implement thủ công — phải tự tạo trace_id, tự truyền headers, tự đo duration. Rất nhiều <strong>boilerplate code</strong>, dễ sót, khó maintain.</p>
+<p>👉 Chương tiếp theo <a href="../../../02---areas/observability/fundamentals/05---instrumentation--and--opentelemetry" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/05---instrumentation--and--opentelemetry">05 - Instrumentation &amp; OpenTelemetry</a>: Dùng <strong>OpenTelemetry</strong> để <strong>tự động hóa</strong> tất cả — chỉ cần vài dòng config.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mapping-sang-dynatrace--datadog" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept trong chương</th><th>Dynatrace</th><th>Datadog</th></tr></thead><tbody><tr><td>Distributed Trace</td><td><strong>PurePath</strong> — distributed trace end-to-end, tự động capture</td><td><strong>APM Trace</strong> — distributed trace với flamegraph</td></tr><tr><td>Spans + Waterfall</td><td><strong>PurePath waterfall</strong> — phân tích từng node call</td><td><strong>Trace flamegraph</strong> — từng span hiện thời gian + lỗi</td></tr><tr><td>Parent-Child Spans</td><td>PurePath tự nối spans qua <strong>OneAgent context</strong></td><td>APM tự nối qua <strong>dd-trace headers</strong></td></tr><tr><td>Context Propagation</td><td><strong>OneAgent</strong> inject/extract tự động (W3C Trace Context)</td><td><strong>ddtrace</strong> inject/extract tự động (B3/W3C headers)</td></tr><tr><td>Trace → Logs correlation</td><td>Click PurePath node → <strong>xem logs liên quan</strong> trong cùng view</td><td>Click span → <strong>“View Related Logs”</strong> link tự động</td></tr><tr><td>Sampling</td><td>OneAgent <strong>Adaptive traffic management</strong> — tự quyết sample rate</td><td><strong>Ingestion Controls</strong> — head-based + custom rules</td></tr><tr><td>Service Map từ traces</td><td><strong>Smartscape</strong> — topology tự build từ PurePath data</td><td><strong>Service Map</strong> — dependency graph từ trace data</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-demo--chạy-thử-shopvn-v4-tracing">🧪 Demo — Chạy thử ShopVN v4 (Tracing)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-demo--chạy-thử-shopvn-v4-tracing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Thấy distributed trace waterfall trực tiếp trong terminal — giống Jaeger/Dynatrace PurePath:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>File</th><th>Mô tả</th></tr></thead><tbody><tr><td><code>demo/v4_with_tracing.py</code></td><td>ShopVN v4: thêm manual tracing + waterfall view trong console</td></tr></tbody></table></div>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Terminal 1</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">source</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> .env/bin/activate</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">python3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> v4_with_tracing.py</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Terminal 2: Gửi ít requests để đọc rõ từng trace</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">source</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> .env/bin/activate</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">python3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> simulate_traffic.py</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 10</span></span></code></pre></figure>
+<p><strong>Quan sát ở terminal server — Waterfall view:</strong></p>
+<pre><code>  🔍 TRACE: a1b2c3d4...  (Total: 185ms)
+  ─────────────────────────────────────────
+  ✅ order-service: POST /api/v1/orders   |████████████████████| 185ms
+  ✅   product-service: check_inventory   |███·················|  35ms
+  ✅   payment-service: process_payment   |···█████████████····| 120ms
+  ✅   database: db_insert_order          |················███·|  15ms
+</code></pre>
+<p>Khi lỗi — thấy ngay 🔴 ở đâu:</p>
+<pre><code>  🔴   payment-service: process_payment   |·███████████████████| 3100ms
+       ↳ ERROR: Payment gateway timeout
+</code></pre>
+<p><strong>Mapping lý thuyết → code:</strong></p>
+<ul>
+<li><strong>Span</strong> (phần 2.2) → class <code>Span</code> trong code: trace_id, span_id, parent_id, duration, status, attributes</li>
+<li><strong>Parent-Child</strong> (phần 2.3) → <code>trace.start_span(&quot;check_inventory&quot;, parent_span)</code>: span con thuộc span cha</li>
+<li><strong>Waterfall View</strong> (phần 2.3) → method <code>print_waterfall()</code>: vẽ timeline trực quan</li>
+<li><strong>Context Propagation</strong> (phần 3) → Trace object được truyền qua các hàm service (trong thực tế qua HTTP headers)</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Thử nghiệm </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Chạy 10-20 requests, quan sát: requests nào có Payment chậm? Product chậm? DB lỗi? Waterfall cho bạn thấy <strong>ngay lập tức</strong> mà không cần lục logs.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-tham-khảo">📚 Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://research.google/pubs/pub36356/" class="external external-link">Google Dapper Paper (2010)<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> — Paper gốc về distributed tracing</li>
+<li><a href="https://www.w3.org/TR/trace-context/" class="external external-link">W3C Trace Context Standard<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> — <code>traceparent</code> header specification</li>
+<li><a href="https://opentelemetry.io/docs/concepts/signals/traces/" class="external external-link">OpenTelemetry Tracing Concepts<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.jaegertracing.io/docs/" class="external external-link">Jaeger Documentation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.oreilly.com/library/view/distributed-tracing-in/9781492056621/" class="external external-link">Distributed Tracing in Practice — O’Reilly<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-389" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#chương-04-three-pillars-deep-dive--traces" data-for="chương-04-three-pillars-deep-dive--traces">Chương 04: Three Pillars Deep Dive — Traces</a></li><li class="depth-1"><a href="#1-tại-sao-distributed-tracing-ra-đời" data-for="1-tại-sao-distributed-tracing-ra-đời">1. Tại sao Distributed Tracing ra đời?</a></li><li class="depth-2"><a href="#11-monolith-vs-microservices--sự-chuyển-đổi-tạo-ra-vấn-đề-mới" data-for="11-monolith-vs-microservices--sự-chuyển-đổi-tạo-ra-vấn-đề-mới">1.1 Monolith vs Microservices — Sự chuyển đổi tạo ra vấn đề mới</a></li><li class="depth-2"><a href="#12-lịch-sử" data-for="12-lịch-sử">1.2 Lịch sử</a></li><li class="depth-1"><a href="#2-core-concepts--trace-span-và-parent-child" data-for="2-core-concepts--trace-span-và-parent-child">2. Core Concepts — Trace, Span, và Parent-Child</a></li><li class="depth-2"><a href="#21-trace--toàn-bộ-hành-trình" data-for="21-trace--toàn-bộ-hành-trình">2.1 Trace — “Toàn bộ hành trình”</a></li><li class="depth-2"><a href="#22-span--một-bước-trong-hành-trình" data-for="22-span--một-bước-trong-hành-trình">2.2 Span — “Một bước trong hành trình”</a></li><li class="depth-2"><a href="#23-parent-child--cây-phả-hệ-của-request" data-for="23-parent-child--cây-phả-hệ-của-request">2.3 Parent-Child — Cây phả hệ của request</a></li><li class="depth-1"><a href="#3-context-propagation--chuyền-cờ-qua-các-services" data-for="3-context-propagation--chuyền-cờ-qua-các-services">3. Context Propagation — “Chuyền cờ” qua các services</a></li><li class="depth-2"><a href="#31-vấn-đề" data-for="31-vấn-đề">3.1 Vấn đề</a></li><li class="depth-2"><a href="#32-giải-pháp-truyền-trace-context-qua-http-headers" data-for="32-giải-pháp-truyền-trace-context-qua-http-headers">3.2 Giải pháp: Truyền trace context qua HTTP headers</a></li><li class="depth-2"><a href="#33-shopvn-implementation-manual--để-hiểu-bản-chất" data-for="33-shopvn-implementation-manual--để-hiểu-bản-chất">3.3 ShopVN implementation (manual — để hiểu bản chất):</a></li><li class="depth-1"><a href="#4-sampling--trace-mọi-thứ-hay-chọn-lọc" data-for="4-sampling--trace-mọi-thứ-hay-chọn-lọc">4. Sampling — Trace mọi thứ hay chọn lọc?</a></li><li class="depth-2"><a href="#41-vấn-đề-chi-phí" data-for="41-vấn-đề-chi-phí">4.1 Vấn đề: Chi phí</a></li><li class="depth-2"><a href="#42-head-based-sampling--quyết-định-ngay-từ-đầu" data-for="42-head-based-sampling--quyết-định-ngay-từ-đầu">4.2 Head-based Sampling — Quyết định ngay từ đầu</a></li><li class="depth-2"><a href="#43-tail-based-sampling--quyết-định-sau-khi-request-hoàn-thành" data-for="43-tail-based-sampling--quyết-định-sau-khi-request-hoàn-thành">4.3 Tail-based Sampling — Quyết định sau khi request hoàn thành</a></li><li class="depth-1"><a href="#5-kết-nối-three-pillars--sức-mạnh-tổng-hợp" data-for="5-kết-nối-three-pillars--sức-mạnh-tổng-hợp">5. Kết nối Three Pillars — Sức mạnh tổng hợp</a></li><li class="depth-2"><a href="#workflow-debug-thực-tế-order-service-lỗi" data-for="workflow-debug-thực-tế-order-service-lỗi">Workflow debug thực tế: “Order Service lỗi!”</a></li><li class="depth-1"><a href="#6-tổng-kết" data-for="6-tổng-kết">6. Tổng Kết</a></li><li class="depth-1"><a href="#-mapping-sang-dynatrace--datadog" data-for="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog</a></li><li class="depth-1"><a href="#-demo--chạy-thử-shopvn-v4-tracing" data-for="-demo--chạy-thử-shopvn-v4-tracing">🧪 Demo — Chạy thử ShopVN v4 (Tracing)</a></li><li class="depth-1"><a href="#-tham-khảo" data-for="-tham-khảo">📚 Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/observability/datadog/labs/03---log-collection--and--log-explorer" class="internal">Lab 03 — Log Collection &amp; Log Explorer</a></li><li><a href="../../../02---areas/observability/datadog/labs/04---apm--and--distributed-tracing" class="internal">Lab 04 — APM &amp; Distributed Tracing</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/02---services,-purepath--and--database" class="internal">Lab 02 — Services, PurePath &amp; Database</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/03---log-monitoring--and--log-viewer" class="internal">Lab 03 — Log Monitoring &amp; Log Viewer</a></li><li><a href="../../../02---areas/observability/fundamentals/00---mục-lục--and--lộ-trình-học" class="internal">Observability Fundamentals — Mục Lục &amp; Lộ Trình Học</a></li><li><a href="../../../02---areas/observability/fundamentals/01---application-logic-fundamentals" class="internal">Chương 01: Application Logic Fundamentals</a></li><li><a href="../../../02---areas/observability/fundamentals/02---three-pillars-deep-dive---logs" class="internal">Chương 02: Three Pillars Deep Dive — Logs</a></li><li><a href="../../../02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics" class="internal">Chương 03: Three Pillars Deep Dive — Metrics</a></li><li><a href="../../../02---areas/observability/fundamentals/demo/readme" class="internal">ShopVN Demo — Hands-on Lab Guide</a></li><li><a href="../../../02---areas/observability/labs/00---lab-overview--and--roadmap" class="internal">Observability Platform Labs — Tổng Quan &amp; Lộ Trình</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

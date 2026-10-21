@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Phần 8: Logs &amp; APM — Tại Sao và Cách Thức Hoạt Động</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Phần 8: Logs &amp; APM — Tại Sao và Cách Thức Hoạt Động"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Phần 8: Logs &amp; APM — Tại Sao và Cách Thức Hoạt Động"/><meta name="twitter:description" content="Phần 8: Logs &amp; APM — Tại Sao và Cách Thức Hoạt Động Tỷ trọng ước tính: ~12-15% đề thi · Độ khó: Trung bình–Cao PHẦN A: LOG MANAGEMENT 8.1 Log Lifecycle — Chuỗi Xử Lý Từ Đầu Đến Cuối Tại sao cần pipeline phức tạp? Logs từ các hệ thống khác nhau có format hoàn toàn khác nhau: NGINX access log: 192..."/><meta property="og:description" content="Phần 8: Logs &amp; APM — Tại Sao và Cách Thức Hoạt Động Tỷ trọng ước tính: ~12-15% đề thi · Độ khó: Trung bình–Cao PHẦN A: LOG MANAGEMENT 8.1 Log Lifecycle — Chuỗi Xử Lý Từ Đầu Đến Cuối Tại sao cần pipeline phức tạp? Logs từ các hệ thống khác nhau có format hoàn toàn khác nhau: NGINX access log: 192..."/><meta property="og:image:alt" content="Phần 8: Logs &amp; APM — Tại Sao và Cách Thức Hoạt Động Tỷ trọng ước tính: ~12-15% đề thi · Độ khó: Trung bình–Cao PHẦN A: LOG MANAGEMENT 8.1 Log Lifecycle — Chuỗi Xử Lý Từ Đầu Đến Cuối Tại sao cần pipeline phức tạp? Logs từ các hệ thống khác nhau có format hoàn toàn khác nhau: NGINX access log: 192..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/datadog_fundamentals_full/08_logs_apm"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/datadog_fundamentals_full/08_logs_apm"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Phần 8: Logs &amp; APM — Tại Sao và Cách Thức Hoạt Động Tỷ trọng ước tính: ~12-15% đề thi · Độ khó: Trung bình–Cao PHẦN A: LOG MANAGEMENT 8.1 Log Lifecycle — Chuỗi Xử Lý Từ Đầu Đến Cuối Tại sao cần pipeline phức tạp? Logs từ các hệ thống khác nhau có format hoàn toàn khác nhau: NGINX access log: 192..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/datadog/datadog_fundamentals_full/08_logs_apm" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-307" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-307" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/">Datadog</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/datadog_fundamentals_full/">datadog_fundamentals_full</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Phần 8: Logs &amp; APM — Tại Sao và Cách Thức Hoạt Động</a></div></nav><h1 class="article-title">Phần 8: Logs &amp; APM — Tại Sao và Cách Thức Hoạt Động</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/datadog" class="internal internal-link tag-link">domain/datadog</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-12T17:00:00.000Z">13 thg 6, 2026</time><span>21 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="phần-8-logs--apm--tại-sao-và-cách-thức-hoạt-động">Phần 8: Logs &amp; APM — Tại Sao và Cách Thức Hoạt Động<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-8-logs--apm--tại-sao-và-cách-thức-hoạt-động" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Tỷ trọng ước tính</strong>: ~12-15% đề thi · <strong>Độ khó</strong>: Trung bình–Cao</p>
+</blockquote>
+<hr/>
+<h2 id="phần-a-log-management">PHẦN A: LOG MANAGEMENT<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-a-log-management" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<hr/>
+<h2 id="81-log-lifecycle--chuỗi-xử-lý-từ-đầu-đến-cuối">8.1 Log Lifecycle — Chuỗi Xử Lý Từ Đầu Đến Cuối<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#81-log-lifecycle--chuỗi-xử-lý-từ-đầu-đến-cuối" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tại-sao-cần-pipeline-phức-tạp">Tại sao cần pipeline phức tạp?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-cần-pipeline-phức-tạp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Logs từ các hệ thống khác nhau có format hoàn toàn khác nhau:</p>
+<pre><code>NGINX access log:
+  192.168.1.1 - - [15/Mar/2024:14:23:01 +0700] &quot;GET /api/users HTTP/1.1&quot; 200 1234
+
+Python app log:
+  2024-03-15 14:23:01,412 ERROR web-api Connection refused to DB
+
+JSON log (structured):
+  {&quot;timestamp&quot;:&quot;2024-03-15T14:23:01Z&quot;,&quot;level&quot;:&quot;ERROR&quot;,&quot;service&quot;:&quot;web-api&quot;,&quot;message&quot;:&quot;DB timeout&quot;}
+
+Syslog:
+  Mar 15 14:23:01 web-01 nginx: 1234 bytes sent to 192.168.1.1
+</code></pre>
+<p>Bạn không thể search across tất cả logs nếu mỗi cái có timestamp format, severity level, IP address khác nhau. <strong>Pipelines chuẩn hoá chúng</strong>.</p>
+<hr/>
+<h3 id="the-journey-of-a-log--toàn-bộ-hành-trình">The Journey of a Log — Toàn Bộ Hành Trình<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-journey-of-a-log--toàn-bộ-hành-trình" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code> ┌──────────────────────────────────────────────────────────────────┐
+ │                    THE JOURNEY OF A LOG                          │
+ │                                                                  │
+ │  1. EMISSION (Nguồn phát)                                       │
+ │     └─→ App/System tạo log entry                                │
+ │         (file log, stdout, syslog, API...)                      │
+ │                          │                                       │
+ │                          ▼                                       │
+ │  2. INGESTION (Thu thập)                                        │
+ │     └─→ Agent đọc log → gửi qua Ingest API (HTTPS 443)         │
+ │         Hoặc: SDK, Lambda, custom forwarder                     │
+ │                          │                                       │
+ │                          ▼                                       │
+ │  3. JSON PREPROCESSING                                          │
+ │     └─→ Nếu log là JSON → tự động parse thành attributes        │
+ │         Nếu không → giữ nguyên raw message                      │
+ │                          │                                       │
+ │                          ▼                                       │
+ │  4. LOG PIPELINE PROCESSING                                     │
+ │     └─→ Chạy qua chuỗi Pipelines (tuần tự):                    │
+ │         ├─ Grok Parser → extract fields từ unstructured text    │
+ │         ├─ Status Remapper → chuẩn hoá severity                 │
+ │         ├─ Date Remapper → set đúng timestamp                   │
+ │         ├─ Service Remapper → map service name                  │
+ │         ├─ GeoIP, URL Parser, etc.                              │
+ │         └─ Category Processor → nhóm giá trị                   │
+ │                          │                                       │
+ │                          ▼                                       │
+ │  5. STANDARD ATTRIBUTE NORMALIZATION                            │
+ │     └─→ Chuẩn hoá attribute names giữa các nguồn:              │
+ │         client_ip, duration, status → tên thống nhất            │
+ │                          │                                       │
+ │                          ▼                                       │
+ │  6. SENSITIVE DATA SCANNER (optional)                           │
+ │     └─→ Quét và redact PII: credit cards, emails, SSN...       │
+ │         &quot;4111-XXXX-XXXX-1234&quot; thay vì số thẻ thật              │
+ │                          │                                       │
+ │                          ▼                                       │
+ │  7. SECURITY RULES                                              │
+ │     └─→ Evaluate log against Cloud SIEM detection rules         │
+ │                          │                                       │
+ │                          ▼                                       │
+ │  8. ERROR TRACKING                                              │
+ │     └─→ Nhóm error logs có cùng stack trace thành Issues        │
+ │         Giảm noise: 1000 error logs → 1 Issue                   │
+ │                          │                                       │
+ │                          ▼                                       │
+ │  9. LOG ANOMALY DETECTION                                       │
+ │     └─→ ML tự phát hiện patterns bất thường trong log volume    │
+ │         (spike/drop đột ngột so với baseline)                   │
+ │                          │                                       │
+ │                          ▼                                       │
+ │  10. ROUTING — Bất kỳ combination nào:                          │
+ │      │                                                           │
+ │      ├─▶ LIVE TAIL (bắt buộc)                                   │
+ │      │   └─ Stream realtime, KHÔNG lưu, KHÔNG tính phí          │
+ │      │                                                           │
+ │      ├─▶ GENERATE METRICS                                       │
+ │      │   └─ Tạo metrics từ log patterns (count, gauge)          │
+ │      │   └─ Ví dụ: Đếm số error logs/phút → metric alert       │
+ │      │                                                           │
+ │      ├─▶ INDEXES                                                │
+ │      │   └─ Lưu searchable trong Datadog (15 ngày default)      │
+ │      │   └─ CHỈ logs quan trọng → tiết kiệm chi phí            │
+ │      │                                                           │
+ │      ├─▶ LOG FORWARDING                                         │
+ │      │   ├─ External/Online Archives (S3, GCS, Azure Blob)      │
+ │      │   │  └─ Lưu lâu dài, rehydrate khi cần                  │
+ │      │   └─ Custom Destinations                                 │
+ │      │      └─ Gửi đến Splunk, Elasticsearch, webhook...       │
+ │      │                                                           │
+ │      └─▶ CLOUD SIEM                                             │
+ │          └─ Security analysis, threat detection                 │
+ │                                                                  │
+ └──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="bảng-tóm-tắt-các-bước">Bảng tóm tắt các bước<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-tóm-tắt-các-bước" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>#</th><th>Bước</th><th>Mô tả</th><th>Bắt buộc?</th></tr></thead><tbody><tr><td>1</td><td><strong>Emission</strong></td><td>App tạo log</td><td>✅</td></tr><tr><td>2</td><td><strong>Ingestion</strong></td><td>Agent/API gửi lên Datadog</td><td>✅</td></tr><tr><td>3</td><td><strong>JSON Preprocessing</strong></td><td>Auto-parse JSON logs</td><td>✅ (tự động)</td></tr><tr><td>4</td><td><strong>Pipeline Processing</strong></td><td>Grok, Remappers, Parsers</td><td>✅</td></tr><tr><td>5</td><td><strong>Standard Attributes</strong></td><td>Chuẩn hoá attribute names</td><td>✅ (tự động)</td></tr><tr><td>6</td><td><strong>Sensitive Data Scanner</strong></td><td>Redact PII data</td><td>⚠️ Optional</td></tr><tr><td>7</td><td><strong>Security Rules</strong></td><td>SIEM detection</td><td>⚠️ Optional</td></tr><tr><td>8</td><td><strong>Error Tracking</strong></td><td>Nhóm errors thành Issues</td><td>⚠️ Optional</td></tr><tr><td>9</td><td><strong>Anomaly Detection</strong></td><td>ML phát hiện bất thường</td><td>⚠️ Optional</td></tr><tr><td>10</td><td><strong>Routing</strong></td><td>Live Tail, Metrics, Index, Archive, SIEM</td><td>✅</td></tr></tbody></table></div>
+<h3 id="routing--chi-tiết-các-đường-đi">Routing — Chi tiết các đường đi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#routing--chi-tiết-các-đường-đi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>★ Logging Without Limits™ = Bạn CHỌN logs đi đâu sau khi xử lý:
+
+  TẤT CẢ logs đã ingest → Live Tail (luôn có, free, realtime stream)
+                        → Generate Metrics (tạo metric từ log, không cần index)
+                        → Indexes (searchable, tính phí theo volume)  
+                        → Log Forwarding → Archives (S3/GCS, rẻ, lưu lâu)
+                                         → Custom Destinations (Splunk, etc.)
+                        → Cloud SIEM (security analysis)
+
+  BẠN KHÔNG MẤT LOG: Dù không index, log vẫn qua Live Tail và có thể Archive.
+  BẠN TIẾT KIỆM TIỀN: Chỉ trả tiền cho logs được Index.
+</code></pre>
+<blockquote>
+<p>📚 Tham khảo: <a href="https://docs.datadoghq.com/logs/guide/getting-started-lwl/" class="external external-link">Logging Without Limits Guide<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> · <a href="https://docs.datadoghq.com/logs/explorer/" class="external external-link">Getting Started with Log Explorer<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> · <a href="https://learn.datadoghq.com/courses/log-alerting-investigation" class="external external-link">Track Logs for Alerting<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</blockquote>
+<hr/>
+<h2 id="82-logging-without-limits--tại-sao-đây-là-innovation-quan-trọng">8.2 Logging Without Limits™ — Tại Sao Đây Là Innovation Quan Trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#82-logging-without-limits--tại-sao-đây-là-innovation-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="trước-khi-có-logging-without-limits">Trước khi có Logging Without Limits<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#trước-khi-có-logging-without-limits" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Mô hình cũ:
+  Thu thập logs → Index TẤT CẢ → Tính tiền theo volume indexed
+
+Hệ quả:
+  1. Team phải chọn: &quot;Collect log gì? Không collect cái kia để tiết kiệm tiền&quot;
+  2. Khi có incident: &quot;Ôi, chúng ta đã filter mất debug logs rồi!&quot;
+  3. Compliance: &quot;Log retention 7 năm = chi phí index 7 năm = cực kỳ đắt&quot;
+</code></pre>
+<h3 id="logging-without-limits--mô-hình-mới">Logging Without Limits — Mô Hình Mới<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#logging-without-limits--mô-hình-mới" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Ingest tất cả (cheap)
+        │
+        ├──→ Analyze/Search NOW → Index (searchable, expensive)
+        │          │
+        │          └─→ Chỉ logs quan trọng: errors, security, business-critical
+        │          
+        └──→ Archive ALL → S3/GCS (cheap, not searchable)
+                   │
+                   └─→ Rehydrate khi cần: giải nén từ archive vào index tạm thời
+</code></pre>
+<p><strong>Lợi ích</strong>:</p>
+<ul>
+<li>✅ Thu thập <strong>100%</strong> logs → không bao giờ mất data</li>
+<li>✅ Chỉ trả tiền index cho <strong>10-20%</strong> logs quan trọng</li>
+<li>✅ Khi cần investigate debug logs → <strong>Rehydrate</strong> từ archive (pull tạm về index)</li>
+<li>✅ Long-term retention với chi phí thấp (S3 ~ 0.023$/GB/month)</li>
+</ul>
+<hr/>
+<h2 id="83-log-pipelines--cơ-chế-xử-lý">8.3 Log Pipelines — Cơ Chế Xử Lý<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#83-log-pipelines--cơ-chế-xử-lý" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="pipeline-là-gì-trong-code">Pipeline là gì trong code?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pipeline-là-gì-trong-code" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Pseudocode — cách pipeline hoạt động</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> process_log</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(raw_log):</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    log </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> parse_base(raw_log)  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Basic JSON/string parsing</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> pipeline </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> enabled_pipelines:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> pipeline.filter.matches(log):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> processor </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> pipeline.processors:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">                log </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> processor.apply(log)  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Mutate log</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> log</span></span></code></pre></figure>
+<h3 id="các-processors-quan-trọng">Các Processors Quan Trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-processors-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>1. Grok Parser — Parse unstructured text</strong></p>
+<p>Grok là pattern-matching language để extract cấu trúc từ text:</p>
+<pre><code>Raw log: &quot;192.168.1.1 GET /api/users 200 1234ms&quot;
+
+Grok rule: %{IP:client_ip} %{WORD:method} %{DATA:path} %{NUMBER:status:integer} %{NUMBER:duration}ms
+
+Extracted attributes:
+  client_ip: &quot;192.168.1.1&quot;
+  method: &quot;GET&quot;
+  path: &quot;/api/users&quot;
+  status: 200         (integer, not string!)
+  duration: 1234      (integer)
+</code></pre>
+<p><strong>Syntax breakdown</strong>: <code>%{MATCHER:ATTRIBUTE_NAME:FILTER}</code></p>
+<ul>
+<li><code>MATCHER</code>: Pre-defined pattern: <code>IP</code>, <code>WORD</code>, <code>NUMBER</code>, <code>DATA</code>, <code>DATE</code></li>
+<li><code>ATTRIBUTE_NAME</code>: Tên attribute sẽ có trong log</li>
+<li><code>FILTER</code> (optional): Post-processor biến đổi dữ liệu: <code>integer</code>, <code>double</code>, <code>lowercase</code>, <code>keyvalue</code></li>
+</ul>
+<p><strong>Rule về Grok order</strong>: Nhiều rules trong 1 Grok parser → <strong>rule đầu tiên match</strong> sẽ được áp dụng, stop ở đó.</p>
+<p><strong>2. Log Date Remapper — Đặt đúng timestamp</strong></p>
+<pre><code>Vấn đề: Log được Datadog nhận lúc 14:23:05 UTC, nhưng log xảy ra lúc 14:23:01 UTC
+        (4 giây delay do batching, network)
+
+Nếu không remap:
+  Log hiển thị timestamp: 14:23:05 (thời điểm Datadog nhận)
+  Thực tế event: 14:23:01
+
+Với Log Date Remapper:
+  Processor: &quot;Dùng attribute 'timestamp' của log làm official timestamp&quot;
+  Kết quả: Log hiển thị 14:23:01 (thời điểm thực sự xảy ra)
+</code></pre>
+<p><strong>3. Service Remapper — Định danh service</strong></p>
+<pre><code>App emit logs với field &quot;app_name&quot;: &quot;web-api&quot;
+Datadog cần field &quot;service&quot; để correlate với APM traces
+
+Service Remapper:
+  &quot;Dùng attribute 'app_name' làm official 'service' của log&quot;
+  → Log.service = log.app_name = &quot;web-api&quot;
+  → Giờ log có thể correlate với APM traces của service web-api
+</code></pre>
+<p><strong>4. GeoIP Parser — Location từ IP</strong></p>
+<pre><code>Client IP: 203.113.145.12
+
+GeoIP Parser lookup:
+  → Country: Vietnam
+  → City: Ho Chi Minh City
+  → Lat: 10.8231, Lon: 106.6297
+  → ISP: Viettel
+
+Log được enrich với geo data → Dashboard &quot;Users by Geography&quot;!
+</code></pre>
+<p><strong>5. Category Processor — Group values</strong></p>
+<pre><code>HTTP status codes có hàng trăm values (200, 201, 301, 400, 404, 500...)
+
+Category Processor:
+  200-299 → &quot;success&quot;
+  300-399 → &quot;redirect&quot;
+  400-499 → &quot;client_error&quot;
+  500-599 → &quot;server_error&quot;
+
+→ Thay vì filter by exact status code, filter by category!
+→ &quot;Server errors trong 1 giờ qua&quot; dễ hơn nhiều
+</code></pre>
+<hr/>
+<h2 id="84-log-collection-config--kích-hoạt-và-cấu-hình">8.4 Log Collection Config — Kích Hoạt và Cấu Hình<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#84-log-collection-config--kích-hoạt-và-cấu-hình" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="bước-1-enable-log-collection-agent">Bước 1: Enable log collection (Agent)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bước-1-enable-log-collection-agent" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># /etc/datadog-agent/datadog.yaml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">logs_enabled</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">true   ← PHẢI THÊM DÒNG NÀY! Default = false (disabled)</span></span></code></pre></figure>
+<p><strong>Tại sao default disabled?</strong> Logs có thể chứa sensitive data (PII, passwords). Datadog yêu cầu <strong>explicit opt-in</strong> để đảm bảo người dùng biết và đồng ý.</p>
+<h3 id="bước-2-config-log-source">Bước 2: Config log source<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bước-2-config-log-source" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># /etc/datadog-agent/conf.d/myapp.d/conf.yaml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">logs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">file</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                    # Loại source</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/var/log/myapp/*.log</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Glob pattern hỗ trợ wildcards!</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    service</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">myapp</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                # Service name → UST correlation</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    source</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">python</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                # Source → Datadog chọn pipeline phù hợp</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    tags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">env:production</span></span></code></pre></figure>
+<p><strong><code>source</code> field quan trọng</strong>: Datadog dùng source để <strong>tự động apply pipeline</strong> phù hợp:</p>
+<ul>
+<li><code>source: nginx</code> → Auto apply NGINX pipeline (đã có sẵn)</li>
+<li><code>source: python</code> → Apply Python log pipeline</li>
+<li><code>source: custom</code> → Không apply pipeline nào tự động</li>
+</ul>
+<hr/>
+<h2 id="85-facets--tìm-kiếm-và-lọc-logs-hiệu-quả">8.5 Facets — Tìm Kiếm Và Lọc Logs Hiệu Quả<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#85-facets--tìm-kiếm-và-lọc-logs-hiệu-quả" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="facet-là-gì">Facet là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#facet-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi bạn mở <strong>Log Explorer</strong>, thanh bên trái hiển thị các <strong>Facets</strong> — đây là các attributes được <strong>index và searchable</strong>, cho phép lọc, nhóm, và aggregate logs.</p>
+<pre><code>★ Attribute vs Facet:
+
+  ATTRIBUTE = trường dữ liệu trong log (VD: status_code, duration, user_id)
+             → Luôn tồn tại nếu pipeline extract ra
+             → Nhưng KHÔNG THỂ filter/group trong Log Explorer!
+
+  FACET = attribute được &quot;đăng ký&quot; để tìm kiếm
+          → Xuất hiện ở sidebar Log Explorer
+          → Dùng được trong filter, group by, analytics
+          → Cần tạo THỦ CÔNG (không tự động!)
+</code></pre>
+<h3 id="2-loại-facets">2 loại Facets<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-loại-facets" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Mô tả</th><th>Ví dụ</th><th>Dùng khi</th></tr></thead><tbody><tr><td><strong>Facet</strong> (qualitative)</td><td>Giá trị rời rạc, dùng để <strong>lọc và nhóm</strong></td><td><code>status</code>, <code>env</code>, <code>service</code>, <code>endpoint</code></td><td>Bạn muốn filter hoặc group by</td></tr><tr><td><strong>Measure</strong> (quantitative)</td><td>Giá trị số, dùng để <strong>tính toán</strong> (avg, sum, percentile)</td><td><code>duration</code>, <code>response_size</code>, <code>status_code</code></td><td>Bạn muốn aggregate (avg latency, max size)</td></tr></tbody></table></div>
+<h3 id="cách-tạo-facet">Cách tạo Facet<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-tạo-facet" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Bước 1: Mở Log Explorer
+Bước 2: Click vào 1 log có attribute bạn muốn
+Bước 3: Hover lên attribute (VD: @http.status_code)
+Bước 4: Click biểu tượng &quot;⚙&quot; → &quot;Create facet for @http.status_code&quot;
+Bước 5: Chọn group (VD: &quot;Web Access&quot;) và type (Facet hoặc Measure)
+Bước 6: Save → Facet xuất hiện ở sidebar!
+
+Chú ý: Facet chỉ áp dụng cho logs MỚI từ lúc tạo.
+         Logs cũ KHÔNG được re-index.
+</code></pre>
+<h3 id="facets-mặc-định-built-in">Facets mặc định (built-in)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#facets-mặc-định-built-in" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Datadog tự cung cấp một số facets sẵn có, không cần tạo:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Facet</th><th>Mô tả</th></tr></thead><tbody><tr><td><code>Host</code></td><td>Hostname gửi log</td></tr><tr><td><code>Service</code></td><td>Service name (UST)</td></tr><tr><td><code>Source</code></td><td>Nguồn log (nginx, python…)</td></tr><tr><td><code>Status</code></td><td>Severity (info, warn, error)</td></tr><tr><td><code>Timestamp</code></td><td>Thời gian log</td></tr></tbody></table></div>
+<p><strong>★ Exam tip</strong>: “Để filter logs theo custom attribute, cần làm gì?” → <strong>Tạo Facet</strong> cho attribute đó trong Log Explorer.</p>
+<hr/>
+<h2 id="86-log-patterns--tự-động-nhóm-logs-giống-nhau">8.6 Log Patterns — Tự Động Nhóm Logs Giống Nhau<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#86-log-patterns--tự-động-nhóm-logs-giống-nhau" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="vấn-đề-log-noise">Vấn đề: Log noise<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề-log-noise" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Log Explorer hiển thị 50,000 logs trong 1 giờ.
+95% là các dòng giống nhau:
+  &quot;Connection established to db-replica-01&quot;
+  &quot;Connection established to db-replica-02&quot;
+  &quot;Connection established to db-replica-03&quot;
+  ... 47,000 dòng tương tự
+
+Bạn không thể tìm thấy 50 dòng ERROR thực sự quan trọng trong đống noise này!
+</code></pre>
+<h3 id="giải-pháp-log-patterns">Giải pháp: Log Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#giải-pháp-log-patterns" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Datadog <strong>tự động cluster</strong> logs có cấu trúc giống nhau thành <strong>Patterns</strong>:</p>
+<pre><code>Thay vì 47,000 dòng riêng lẻ:
+
+  PATTERN: &quot;Connection established to &lt;db-replica-*>&quot;  [47,000 logs]
+  PATTERN: &quot;Request processed in &lt;*>ms&quot;                [2,800 logs]
+  PATTERN: &quot;ERROR: Timeout connecting to &lt;*>&quot;          [50 logs]  ← ĐÂY MỚI QUAN TRỌNG!
+  PATTERN: &quot;User &lt;*> logged in from &lt;*>&quot;               [150 logs]
+
+→ 4 patterns thay vì 50,000 dòng rieng lẻ!
+</code></pre>
+<h3 id="cách-sử-dụng">Cách sử dụng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-sử-dụng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Log Explorer → Tab &quot;Patterns&quot; (thay vì tab &quot;List&quot;)
+
+  Hiển thị:
+  │ Pattern                              │ Count  │ Status │
+  ├──────────────────────────────────────┼────────┼────────┤
+  │ Connection established to &lt;*>         │ 47,000 │ INFO   │
+  │ Request processed in &lt;*>ms            │ 2,800  │ INFO   │
+  │ User &lt;*> logged in from &lt;*>           │ 150    │ INFO   │
+  │ ERROR: Timeout connecting to &lt;*>      │ 50     │ ERROR  │ ← Focus vào đây!
+
+Click vào pattern → xem tất cả logs thuộc pattern đó
+</code></pre>
+<h3 id="lợi-ích">Lợi ích<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lợi-ích" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Giảm noise</strong>: Từ 50,000 → 4 patterns, nhìn ngay được vấn đề</li>
+<li><strong>Phát hiện anomaly</strong>: Pattern mới xuất hiện = điều gì đó thay đổi</li>
+<li><strong>Tạo metric từ pattern</strong>: Đếm số lần xuất hiện của 1 pattern → alert khi spike</li>
+</ul>
+<p><strong>★ Exam tip</strong>: “Giảm log noise khi troubleshoot?” → <strong>Log Patterns</strong> (tab Patterns trong Log Explorer)</p>
+<hr/>
+<h2 id="86a-index-management--exclusion-filters--kiểm-soát-chi-phí-logs">8.6a Index Management &amp; Exclusion Filters — Kiểm Soát Chi Phí Logs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#86a-index-management--exclusion-filters--kiểm-soát-chi-phí-logs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+<h3 id="vấn-đề-không-phải-log-nào-cũng-cần-search">Vấn đề: Không phải log nào cũng cần search<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề-không-phải-log-nào-cũng-cần-search" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Lưu TẤT CẢ logs vào index → search nhanh, nhưng:
+  10 TB logs/tháng × $1.70/GB indexed = ~$17,000/tháng!
+  
+  Trong đó:
+    Health check logs (GET /healthz)       → 60% volume, 0% giá trị troubleshoot
+    Debug logs từ dev service              → 20% volume, thỉnh thoảng cần
+    ERROR + WARN từ production             → 20% volume, luôn cần search ngay
+</code></pre>
+<h3 id="giải-pháp-multiple-indexes--exclusion-filters">Giải pháp: Multiple Indexes + Exclusion Filters<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#giải-pháp-multiple-indexes--exclusion-filters" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Log Pipeline Output → Routing Rules:
+
+  Rule 1: status:error OR status:warn → Index &quot;production-critical&quot;
+          Retention: 30 ngày. Không exclusion filter.
+  
+  Rule 2: env:staging → Index &quot;staging&quot;
+          Retention: 7 ngày. Exclusion: healthcheck logs.
+  
+  Rule 3: * (tất cả còn lại) → Index &quot;default&quot;
+          Retention: 3 ngày. Exclusion: debug + healthcheck.
+</code></pre>
+<h3 id="exclusion-filters">Exclusion Filters<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exclusion-filters" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Nằm trên mỗi Index</strong> — lọc bỏ logs TRƯỚC khi index (tiết kiệm chi phí)</li>
+<li>Filter dựa trên query syntax: <code>source:nginx status:info @http.url_details.path:&quot;/health*&quot;</code></li>
+<li>Logs bị exclude vẫn đi qua Live Tail (15 phút) và vẫn được Archive</li>
+<li><strong>Quan trọng</strong>: Exclusion filter chỉ ảnh hưởng indexing, KHÔNG ảnh hưởng ingestion hay archiving</li>
+</ul>
+<h3 id="daily-quota">Daily Quota<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#daily-quota" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Mỗi index có thể set <strong>daily quota</strong> (events/ngày)</li>
+<li>Khi đạt quota → logs bị drop (không index thêm)</li>
+<li>Dùng để tránh cost spike bất ngờ</li>
+</ul>
+<p><strong>★ Exam tip</strong>: “Giảm chi phí log indexing?” → <strong>Exclusion Filters</strong> (trên Index) + <strong>Multiple Indexes</strong> (retention khác nhau)</p>
+<hr/>
+<h2 id="86b-log-archives--rehydration--lưu-trữ-dài-hạn">8.6b Log Archives &amp; Rehydration — Lưu Trữ Dài Hạn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#86b-log-archives--rehydration--lưu-trữ-dài-hạn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+<h3 id="vấn-đề-index-chỉ-giữ-logs-3-30-ngày">Vấn đề: Index chỉ giữ logs 3-30 ngày<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề-index-chỉ-giữ-logs-3-30-ngày" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Sau retention period, logs biến mất khỏi Log Explorer. Nhưng compliance yêu cầu giữ 1-7 năm.</p>
+<h3 id="log-archives">Log Archives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#log-archives" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Luồng logs:
+  Ingest → Pipeline Processing → Index (searchable, 3-30 ngày)
+                                ↘ Archive (cold storage, 1-7+ năm)
+
+Archive destinations:
+  - Amazon S3
+  - Google Cloud Storage (GCS)
+  - Azure Blob Storage
+
+Config:
+  Logs → Configuration → Archives → New Archive
+  - Chọn destination (S3 bucket, GCS bucket, etc.)
+  - Filter query: &quot;*&quot; (tất cả) hoặc filter cụ thể
+  - Archive path: logs/datadog/YYYY/MM/DD/HH/
+</code></pre>
+<h3 id="archive-routing">Archive Routing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#archive-routing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Có thể tạo <strong>nhiều archives</strong> với filter khác nhau</li>
+<li>Ví dụ: <code>env:production</code> → S3 bucket compliance, <code>*</code> → GCS bucket general</li>
+<li>Logs match nhiều archives → được archive vào tất cả</li>
+</ul>
+<h3 id="rehydration--khôi-phục-logs-từ-archive">Rehydration — Khôi Phục Logs Từ Archive<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rehydration--khôi-phục-logs-từ-archive" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Khi cần điều tra sự cố 3 tháng trước:
+
+  Archives → chọn time range + filter → &quot;Rehydrate&quot;
+  → Datadog tạo Historical Index (tạm thời)
+  → Logs xuất hiện lại trong Log Explorer
+  → Sau khi done → xoá Historical Index
+</code></pre>
+<ul>
+<li>Rehydration <strong>tốn thời gian</strong> (giờ đến ngày, tuỳ volume)</li>
+<li>Rehydrated logs xuất hiện trong <strong>Historical Index</strong> riêng</li>
+<li>Có thể query như logs bình thường trong Log Explorer</li>
+</ul>
+<h3 id="tổng-hợp-logging-without-limits--3-phần">Tổng hợp: Logging Without Limits™ = 3 phần<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-hợp-logging-without-limits--3-phần" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phần</th><th>Mô tả</th><th>Retention</th></tr></thead><tbody><tr><td><strong>Ingest</strong></td><td>Nhận TẤT CẢ logs, processing pipeline</td><td>Real-time</td></tr><tr><td><strong>Index</strong></td><td>Chỉ index logs cần search</td><td>3-30 ngày (configurable)</td></tr><tr><td><strong>Archive</strong></td><td>Lưu raw logs vào cloud storage</td><td>1-7+ năm</td></tr></tbody></table></div>
+<p><strong>★ Exam tip</strong>: “Logging Without Limits gồm mấy phần?” → <strong>3 phần</strong>: Ingest all → Index selective → Archive all. Rehydration = khôi phục logs từ archive.</p>
+<hr/>
+<h2 id="87-submitting-events--gửi-sự-kiện-vào-datadog">8.7 Submitting Events — Gửi Sự Kiện Vào Datadog<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#87-submitting-events--gửi-sự-kiện-vào-datadog" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Events là <strong>sự kiện rời rạc</strong> (không phải metrics liên tục) — như deployments, alerts, config changes. Events được hiển thị trên <strong>Event Stream</strong> và có thể overlay lên graphs.</p>
+<h3 id="4-cách-gửi-events">4 cách gửi Events<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-cách-gửi-events" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cách</th><th>Mô tả</th><th>Khi nào dùng</th></tr></thead><tbody><tr><td><strong>API</strong></td><td>POST request lên Datadog API (<code>/api/v1/events</code>)</td><td>Scripts, automation, custom tools</td></tr><tr><td><strong>DogStatsD</strong></td><td><code>statsd.event()</code> qua UDP</td><td>App instrumentation, high-performance</td></tr><tr><td><strong>Custom Agent Check</strong></td><td><code>self.event()</code> trong Python check</td><td>Mở rộng Agent integrations</td></tr><tr><td><strong>Email</strong></td><td>Gửi email đến địa chỉ events của Datadog</td><td>Legacy systems, CI/CD không có SDK</td></tr></tbody></table></div>
+<h3 id="format-hỗ-trợ-json-và-plain-text">Format hỗ trợ: <strong>JSON</strong> và <strong>Plain Text</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#format-hỗ-trợ-json-và-plain-text" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Ví dụ Event qua API (JSON)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;title&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Deployed v2.1.0 to production&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;text&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;%%% </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> Deployment completed successfully.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> [View release](https://github.com/myapp/releases/v2.1.0)</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> %%%&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;priority&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;normal&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;tags&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;environment:production&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;service:web-api&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;alert_type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;info&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<h3 id="các-fields-của-event">Các fields của Event<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-fields-của-event" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Field</th><th>Bắt buộc</th><th>Mô tả</th><th>Giá trị</th></tr></thead><tbody><tr><td><code>title</code></td><td>✅</td><td>Tiêu đề event</td><td>String</td></tr><tr><td><code>text</code></td><td>✅</td><td>Nội dung (hỗ trợ Markdown <code>%%%</code>)</td><td>String</td></tr><tr><td><code>priority</code></td><td>⚠️</td><td>Độ ưu tiên</td><td><code>normal</code> hoặc <code>low</code></td></tr><tr><td><code>tags</code></td><td>⚠️</td><td>Tags gắn cho event</td><td>Array of <code>key:value</code></td></tr><tr><td><code>alert_type</code></td><td>⚠️</td><td>Loại cảnh báo</td><td><code>info</code>, <code>warning</code>, <code>error</code>, <code>success</code></td></tr></tbody></table></div>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Gửi Event qua curl</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;https://api.datadoghq.com/api/v1/events&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;DD-API-KEY: ${</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">DD_API_KEY</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="punctuation">}&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;title&quot;: &quot;Database migration completed&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;text&quot;: &quot;Migrated 50 tables in 3 minutes&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;tags&quot;: [&quot;service:database&quot;, &quot;env:production&quot;],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;alert_type&quot;: &quot;success&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  }'</span></span></code></pre></figure>
+<p><strong>★ Use case</strong>: Overlay events lên dashboard graph → thấy rõ <strong>deployment lúc 14:00</strong> làm <strong>error rate tăng lúc 14:05</strong>.</p>
+<blockquote>
+<p>📚 Tham khảo: <a href="https://docs.datadoghq.com/events/guides/email/" class="external external-link">Events with Email<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> · <a href="https://docs.datadoghq.com/api/latest/events/" class="external external-link">Post an Event<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</blockquote>
+<hr/>
+<h2 id="88-submitting-logs--logging-endpoints">8.8 Submitting Logs — Logging Endpoints<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#88-submitting-logs--logging-endpoints" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Datadog cung cấp nhiều <strong>logging endpoints</strong> hỗ trợ cả kết nối SSL-encrypted và unencrypted. <strong>Luôn dùng encrypted endpoint khi có thể.</strong> Agent mặc định dùng encrypted endpoint.</p>
+<h3 id="bảng-endpoints-eu-site-ví-dụ">Bảng Endpoints (EU site ví dụ)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-endpoints-eu-site-ví-dụ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Type</th><th>Endpoint</th><th>Port</th><th>Dùng cho</th></tr></thead><tbody><tr><td><strong>HTTPS</strong></td><td><code>http-intake.logs.datadoghq.eu</code></td><td>443</td><td>Custom forwarder (JSON/plain text)</td></tr><tr><td><strong>HTTPS</strong></td><td><code>agent-http-intake.logs.datadoghq.eu</code></td><td>443</td><td><strong>Agent</strong> gửi logs (JSON, HTTPS)</td></tr><tr><td><strong>HTTPS</strong></td><td><code>lambda-http-intake.logs.datadoghq.eu</code></td><td>443</td><td>Lambda functions (raw/syslog/JSON)</td></tr><tr><td><strong>HTTPS</strong></td><td><code>logs.browser-intake-datadoghq.eu</code></td><td>443</td><td>Browser SDK (JSON)</td></tr><tr><td><strong>TCP+TLS</strong></td><td><code>agent-intake.logs.datadoghq.eu</code></td><td>443</td><td>Agent gửi logs (protobuf, TCP)</td></tr><tr><td><strong>TCP+TLS</strong></td><td><code>functions-intake.logs.datadoghq.eu</code></td><td>443</td><td>Azure/Cloud functions</td></tr><tr><td><strong>TCP+TLS</strong></td><td><code>lambda-intake.logs.datadoghq.eu</code></td><td>443</td><td>Lambda functions (TCP)</td></tr></tbody></table></div>
+<h3 id="us-site-vs-eu-site">US site vs EU site<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#us-site-vs-eu-site" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>US site (mặc định):
+  Agent endpoint: agent-http-intake.logs.datadoghq.com
+  Port: 443 (HTTPS)
+
+EU site:
+  Agent endpoint: agent-http-intake.logs.datadoghq.eu
+  Port: 443 (HTTPS)
+
+Config trong datadog.yaml:
+  site: datadoghq.com    ← US (default)
+  site: datadoghq.eu     ← EU
+</code></pre>
+<p><strong>★ Lưu ý</strong>: Tất cả endpoints đều dùng <strong>port 443</strong> — giống như metrics, không cần mở thêm port nào.</p>
+<blockquote>
+<p>📚 Tham khảo: <a href="https://docs.datadoghq.com/logs/log_collection/?tab=host#logging-endpoints" class="external external-link">Logging Endpoints<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</blockquote>
+<hr/>
+<h2 id="phần-b-apm-application-performance-monitoring">PHẦN B: APM (Application Performance Monitoring)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-b-apm-application-performance-monitoring" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<hr/>
+<h2 id="89-tại-sao-apm-tồn-tại--metrics-và-logs-còn-thiếu-gì">8.9 Tại Sao APM Tồn Tại — Metrics Và Logs Còn Thiếu Gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#89-tại-sao-apm-tồn-tại--metrics-và-logs-còn-thiếu-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>Scenario: API gateway p99 latency = 3s (quá chậm!)
+
+Với Metrics:
+  system.cpu.user{service:api-gateway} = 25%    → CPU OK
+  system.mem.usable{service:api-gateway} = 4GB  → Memory OK
+  → Không rõ vấn đề ở đâu
+
+Với Logs (api-gateway):
+  &quot;Request /api/checkout completed in 2987ms&quot; → Thấy chậm
+  → Nhưng 2987ms đi đâu? Internal compute? Gọi service khác? DB?
+
+Với APM:
+  [api-gateway: 3000ms]
+   └─[auth-service: 25ms]          → OK
+   └─[cart-service: 50ms]          → OK
+   └─[payment-service: 2900ms]     → ĐÂY LÀ VẤN ĐỀ!
+      └─[stripe-api call: 2850ms]  → External API timeout!
+</code></pre>
+<p>APM trả lời: <strong>Chính xác xem 2987ms đó tiêu vào đâu</strong>.</p>
+<hr/>
+<h2 id="810-distributed-tracing--cơ-chế-propagation">8.10 Distributed Tracing — Cơ Chế Propagation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#810-distributed-tracing--cơ-chế-propagation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="cách-trace-id-truyền-qua-services">Cách Trace ID truyền qua services<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-trace-id-truyền-qua-services" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>User Request → API Gateway
+────────────────────────────────────────────────────
+API Gateway nhận request, tạo:
+  trace_id = &quot;abc-123-xyz&quot;
+  span_id = &quot;span-001&quot; (root span)
+  
+API Gateway gọi Payment Service:
+  HTTP Header: X-Datadog-Trace-Id: abc-123-xyz
+               X-Datadog-Parent-Id: span-001
+               X-Datadog-Sampling-Priority: 1
+────────────────────────────────────────────────────
+Payment Service nhận request:
+  Đọc header: trace_id = &quot;abc-123-xyz&quot;, parent = &quot;span-001&quot;
+  Tạo span của mình: span_id = &quot;span-003&quot;, parent = &quot;span-001&quot;
+  
+Payment Service gọi Stripe API:
+  HTTP Header: X-Datadog-Trace-Id: abc-123-xyz
+               X-Datadog-Parent-Id: span-003
+────────────────────────────────────────────────────
+Stripe API: (thường không có Datadog, nhưng có timeout span)
+  Agent tạo span: &quot;stripe.api.call&quot; duration=2850ms
+</code></pre>
+<p><strong>Kết quả</strong>: Datadog backend thu thập tất cả spans có cùng trace_id → tái tạo cây phân cấp → vẽ flame graph.</p>
+<hr/>
+<h2 id="811-span--đơn-vị-cơ-bản-của-trace">8.11 Span — Đơn Vị Cơ Bản Của Trace<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#811-span--đơn-vị-cơ-bản-của-trace" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="mỗi-span-chứa-gì">Mỗi span chứa gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mỗi-span-chứa-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;trace_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;abc-123-xyz&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,       </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// ← Thuộc trace nào?</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;span_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;span-003&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,           </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// ← ID duy nhất của span này</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;parent_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;span-001&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,         </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// ← Span cha là ai? (null nếu root)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;payment-service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,    </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// ← Service nào thực hiện?</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;operation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;http.request&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,     </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// ← Loại operation?</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;POST /charge&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,      </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// ← Cụ thể operation gì?</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;start&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1710500000080</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,          </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// ← Bắt đầu khi nào (epoch ms)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;duration&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2900</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,                </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// ← Mất bao lâu (ms)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;error&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,                      </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// ← Có lỗi không? (0=no, 1=yes)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;meta&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {                        </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// ← Metadata tuỳ ý</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;http.status_code&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;200&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;http.url&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;https://api.stripe.com/v1/charges&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;peer.hostname&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;api.stripe.com&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<h3 id="root-span-vs-child-span">Root Span vs Child Span<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#root-span-vs-child-span" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Root Span: span_id=&quot;span-001&quot;, parent_id=null    ← Không có parent
+  └─ Child: parent_id=&quot;span-001&quot;
+      └─ Grandchild: parent_id=&quot;span-002&quot;
+
+Root span = điểm bắt đầu của request (thường là API endpoint)
+Tổng duration của trace ≈ duration của root span
+</code></pre>
+<hr/>
+<h2 id="812-flame-graph--đọc-và-hiểu">8.12 Flame Graph — Đọc và Hiểu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#812-flame-graph--đọc-và-hiểu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>Flame Graph của trace &quot;GET /checkout&quot;:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[api-gateway: GET /checkout                 3000ms]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[auth: 25ms][  payment-service: 2900ms       ][5ms]
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            [stripe API call:        2850ms  ]
+            [timeout overhead: 50ms          ]
+
+Đọc flame graph:
+  → Thanh rộng = nhiều thời gian → BỐT LỔ!
+  → stripe API call chiếm 95% tổng time → Đây là nguyên nhân
+  → auth service chỉ 25ms → hoàn toàn bình thường
+</code></pre>
+<p><strong>Lưu ý</strong>: Flame graph trong APM không phải CPU flame graph (profiling). Đây là <strong>trace flame graph</strong> — horizontal bars = timeline, không phải call stack.</p>
+<hr/>
+<h2 id="813-service-map--kiến-trúc-tự-khám-phá">8.13 Service Map — Kiến Trúc Tự Khám Phá<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#813-service-map--kiến-trúc-tự-khám-phá" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="cơ-chế-tạo-service-map">Cơ chế tạo Service Map<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cơ-chế-tạo-service-map" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Từ traces, Datadog extract relationships:
+
+Trace 1: api-gateway → payment-service → stripe-api
+Trace 2: api-gateway → auth-service → user-db
+Trace 3: api-gateway → cart-service → redis-cache
+
+Tổng hợp → Service Map (auto-generated!):
+
+    [api-gateway]
+         │
+    ┌────┴────┬────────────┐
+    │         │            │
+[auth-svc] [cart-svc] [payment-svc]
+    │         │            │
+[user-db] [redis]     [stripe-api]
+</code></pre>
+<p><strong>Edge annotations</strong>: Mỗi arrow có:</p>
+<ul>
+<li>Request rate (requests/second)</li>
+<li>Error rate (%)</li>
+<li>Latency (p50, p99)</li>
+</ul>
+<p>→ Nhìn vào thấy ngay service nào, edge nào đang có vấn đề.</p>
+<hr/>
+<h2 id="813a-trace-retention--ingestion-controls--kiểm-soát-chi-phí-apm">8.13a Trace Retention &amp; Ingestion Controls — Kiểm Soát Chi Phí APM<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#813a-trace-retention--ingestion-controls--kiểm-soát-chi-phí-apm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+<h3 id="vấn-đề-thu-thập-tất-cả-traces-rất-đắt">Vấn đề: Thu thập tất cả traces rất đắt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề-thu-thập-tất-cả-traces-rất-đắt" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>1 triệu requests/giờ × 5 spans/request = 5 triệu spans/giờ
+Lưu tất cả → rất tốn kém và không cần thiết
+</code></pre>
+<h3 id="hai-giai-đoạn-kiểm-soát">Hai giai đoạn kiểm soát<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hai-giai-đoạn-kiểm-soát" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>                    Ingestion                    Retention
+App → Tracer → Agent → Datadog Cloud ──→ ┌─────────────────────┐
+                                          │ Live (15 phút)      │
+                                          │ Retained (15 ngày)  │
+                                          └─────────────────────┘
+</code></pre>
+<p><strong>1. Ingestion Controls</strong> (quyết định traces nào GỬI về Datadog):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Mechanism</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Head-based sampling</strong></td><td>Tracer quyết định TẠI ĐẦU request: sample hay không. Config <code>DD_TRACE_SAMPLE_RATE=0.5</code> → giữ 50%</td></tr><tr><td><strong>Ingestion rules</strong></td><td>Trên Datadog UI: set tỉ lệ sample theo service/resource</td></tr><tr><td><strong>Agent-level sampling</strong></td><td>Agent có thể drop spans trước khi gửi (rare, khi overloaded)</td></tr></tbody></table></div>
+<p><strong>2. Retention Controls</strong> (quyết định traces nào GIỮ LẠI lâu):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Retention</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Live traces</strong></td><td>15 phút</td><td>Tất cả ingested spans, real-time search</td></tr><tr><td><strong>Retained traces</strong></td><td>15 ngày</td><td>Spans match retention filters (errors, high latency, specific tags)</td></tr></tbody></table></div>
+<h3 id="intelligent-retention">Intelligent Retention<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#intelligent-retention" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Datadog tự động giữ lại <strong>diverse traces</strong> ngay cả khi sample rate thấp:</p>
+<ul>
+<li><strong>Error traces</strong>: mọi trace có error span</li>
+<li><strong>Rare traces</strong>: endpoints ít traffic (ít nhất 1 trace/endpoint/interval)</li>
+<li><strong>High latency traces</strong>: top p95 latency</li>
+<li><strong>Manually retained</strong>: traces tagged <code>@_dd.rule_psr:1</code> (retention rules)</li>
+</ul>
+<h3 id="billing-impact">Billing Impact<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#billing-impact" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Metric</th><th>Ảnh hưởng</th></tr></thead><tbody><tr><td><strong>Ingested Spans</strong></td><td>Tính theo volume (GB) ingested/tháng</td></tr><tr><td><strong>Indexed Spans</strong></td><td>Spans retained quá 15 phút → tính phí thêm</td></tr></tbody></table></div>
+<p><strong>★ Exam tip</strong>: APM có 2 cấp kiểm soát: <strong>Ingestion</strong> (sampling rate, trước khi gửi) và <strong>Retention</strong> (filter, sau khi gửi). Intelligent Retention tự giữ errors + rare + high latency.</p>
+<hr/>
+<h2 id="814-connect-three-pillars--unified-view">8.14 Connect Three Pillars — Unified View<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#814-connect-three-pillars--unified-view" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="correlation-trong-thực-tế">Correlation trong thực tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#correlation-trong-thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>PHÁT HIỆN: Alert fires &quot;payment-service p99 latency > 2s&quot;
+    │
+    ↓
+INVESTIGATE với TRACES (APM):
+  Filter: service=payment-service, latency > 2s, last 30min
+  Thấy: 90% slow traces đều có span &quot;stripe.api.call&quot; > 2000ms
+    │
+    ↓
+ROOT CAUSE với LOGS:
+  Click &quot;See Logs&quot; từ trace → tự filter: service=payment-service, trace_id=abc-123
+  Log: &quot;Stripe API timeout after 2000ms, retrying (attempt 2/3)&quot;
+  Log: &quot;Circuit breaker OPEN: stripe-api-connection&quot;
+    │
+    ↓
+CONFIRM với METRICS:
+  Metric: stripe_api.timeout_rate{service:payment} → Tăng từ 0.1% → 45%!
+  External dependency issue xác nhận
+    │
+    ↓
+ACTION:
+  Bypass Stripe: dùng backup payment processor
+  Create incident ticket
+  Notify stakeholders
+</code></pre>
+<p><strong>UST (env/service/version tags) enables</strong> automatic linking giữa metrics → logs → traces.</p>
+<hr/>
+<h2 id="815-câu-hỏi-thường-gặp">8.15 Câu Hỏi Thường Gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#815-câu-hỏi-thường-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Q: Log lifecycle thứ tự?</strong><br/>
+→ <strong>Ingest → Process (Pipelines) → Index → Archive</strong></p>
+<p><strong>Q: Logging Without Limits cho phép gì?</strong><br/>
+→ Ingest 100% logs, chỉ index phần quan trọng → tiết kiệm chi phí mà không mất data</p>
+<p><strong>Q: Tại sao <code>logs_enabled: true</code> phải set explicitly?</strong><br/>
+→ Default disabled vì logs có thể chứa sensitive data — explicit opt-in</p>
+<p><strong>Q: Grok Parser syntax?</strong><br/>
+→ <code>%{MATCHER:ATTRIBUTE_NAME:FILTER}</code> — ví dụ <code>%{IP:client_ip}</code> <code>%{NUMBER:status:integer}</code>. Lưu ý: thành phần thứ 3 là <strong>FILTER</strong> (không phải TYPE)</p>
+<p><strong>Q: Service Remapper làm gì?</strong><br/>
+→ Map một attribute của log thành official “service” field → enable APM correlation</p>
+<p><strong>Q: Trace gồm nhiều gì?</strong><br/>
+→ <strong>Spans</strong> — mỗi span = 1 unit of work (API call, DB query, external call)</p>
+<p><strong>Q: APM Agent nhận traces qua protocol và port nào?</strong><br/>
+→ <strong>TCP port 8126</strong></p>
+<p><strong>Q: Flame graph trong APM?</strong><br/>
+→ Horizontal bars = spans theo thời gian. Rộng = nhiều thời gian = potential bottleneck</p>
+<p><strong>Q: Service Map generated từ đâu?</strong><br/>
+→ Tự động extracted từ traces (Datadog thấy service A gọi B → vẽ edge)</p>
+<p><strong>Q: Tại sao cần APM? Metrics + Logs không đủ?</strong><br/>
+→ APM cho thấy <strong>distributed flow</strong> — request đi qua service A → B → C → biết chính xác cái nào slow</p>
+<p><strong>Q: Events gửi qua những cách nào?</strong><br/>
+→ <strong>API</strong> (POST request), <strong>DogStatsD</strong> (<code>statsd.event()</code>), <strong>Custom Agent Check</strong> (<code>self.event()</code>), và <strong>Email</strong>. Hỗ trợ format JSON và Plain Text</p>
+<p><strong>Q: Logging endpoints dùng port nào?</strong><br/>
+→ Tất cả đều dùng <strong>port 443</strong> (HTTPS hoặc TCP+TLS). Config site US/EU trong <code>datadog.yaml</code></p>
+<p><strong>Q: Facet vs Attribute khác gì?</strong><br/>
+→ Attribute = trường dữ liệu có trong log. Facet = attribute được <strong>đăng ký</strong> để search/filter trong Log Explorer. Cần tạo Facet thủ công.</p>
+<p><strong>Q: Giảm log noise khi troubleshoot?</strong><br/>
+→ Dùng <strong>Log Patterns</strong> (tab Patterns trong Log Explorer) — tự động cluster logs giống nhau</p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-257" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#phần-8-logs--apm--tại-sao-và-cách-thức-hoạt-động" data-for="phần-8-logs--apm--tại-sao-và-cách-thức-hoạt-động">Phần 8: Logs &amp; APM — Tại Sao và Cách Thức Hoạt Động</a></li><li class="depth-1"><a href="#phần-a-log-management" data-for="phần-a-log-management">PHẦN A: LOG MANAGEMENT</a></li><li class="depth-1"><a href="#81-log-lifecycle--chuỗi-xử-lý-từ-đầu-đến-cuối" data-for="81-log-lifecycle--chuỗi-xử-lý-từ-đầu-đến-cuối">8.1 Log Lifecycle — Chuỗi Xử Lý Từ Đầu Đến Cuối</a></li><li class="depth-2"><a href="#tại-sao-cần-pipeline-phức-tạp" data-for="tại-sao-cần-pipeline-phức-tạp">Tại sao cần pipeline phức tạp?</a></li><li class="depth-2"><a href="#the-journey-of-a-log--toàn-bộ-hành-trình" data-for="the-journey-of-a-log--toàn-bộ-hành-trình">The Journey of a Log — Toàn Bộ Hành Trình</a></li><li class="depth-2"><a href="#bảng-tóm-tắt-các-bước" data-for="bảng-tóm-tắt-các-bước">Bảng tóm tắt các bước</a></li><li class="depth-2"><a href="#routing--chi-tiết-các-đường-đi" data-for="routing--chi-tiết-các-đường-đi">Routing — Chi tiết các đường đi</a></li><li class="depth-1"><a href="#82-logging-without-limits--tại-sao-đây-là-innovation-quan-trọng" data-for="82-logging-without-limits--tại-sao-đây-là-innovation-quan-trọng">8.2 Logging Without Limits™ — Tại Sao Đây Là Innovation Quan Trọng</a></li><li class="depth-2"><a href="#trước-khi-có-logging-without-limits" data-for="trước-khi-có-logging-without-limits">Trước khi có Logging Without Limits</a></li><li class="depth-2"><a href="#logging-without-limits--mô-hình-mới" data-for="logging-without-limits--mô-hình-mới">Logging Without Limits — Mô Hình Mới</a></li><li class="depth-1"><a href="#83-log-pipelines--cơ-chế-xử-lý" data-for="83-log-pipelines--cơ-chế-xử-lý">8.3 Log Pipelines — Cơ Chế Xử Lý</a></li><li class="depth-2"><a href="#pipeline-là-gì-trong-code" data-for="pipeline-là-gì-trong-code">Pipeline là gì trong code?</a></li><li class="depth-2"><a href="#các-processors-quan-trọng" data-for="các-processors-quan-trọng">Các Processors Quan Trọng</a></li><li class="depth-1"><a href="#84-log-collection-config--kích-hoạt-và-cấu-hình" data-for="84-log-collection-config--kích-hoạt-và-cấu-hình">8.4 Log Collection Config — Kích Hoạt và Cấu Hình</a></li><li class="depth-2"><a href="#bước-1-enable-log-collection-agent" data-for="bước-1-enable-log-collection-agent">Bước 1: Enable log collection (Agent)</a></li><li class="depth-2"><a href="#bước-2-config-log-source" data-for="bước-2-config-log-source">Bước 2: Config log source</a></li><li class="depth-1"><a href="#85-facets--tìm-kiếm-và-lọc-logs-hiệu-quả" data-for="85-facets--tìm-kiếm-và-lọc-logs-hiệu-quả">8.5 Facets — Tìm Kiếm Và Lọc Logs Hiệu Quả</a></li><li class="depth-2"><a href="#facet-là-gì" data-for="facet-là-gì">Facet là gì?</a></li><li class="depth-2"><a href="#2-loại-facets" data-for="2-loại-facets">2 loại Facets</a></li><li class="depth-2"><a href="#cách-tạo-facet" data-for="cách-tạo-facet">Cách tạo Facet</a></li><li class="depth-2"><a href="#facets-mặc-định-built-in" data-for="facets-mặc-định-built-in">Facets mặc định (built-in)</a></li><li class="depth-1"><a href="#86-log-patterns--tự-động-nhóm-logs-giống-nhau" data-for="86-log-patterns--tự-động-nhóm-logs-giống-nhau">8.6 Log Patterns — Tự Động Nhóm Logs Giống Nhau</a></li><li class="depth-2"><a href="#vấn-đề-log-noise" data-for="vấn-đề-log-noise">Vấn đề: Log noise</a></li><li class="depth-2"><a href="#giải-pháp-log-patterns" data-for="giải-pháp-log-patterns">Giải pháp: Log Patterns</a></li><li class="depth-2"><a href="#cách-sử-dụng" data-for="cách-sử-dụng">Cách sử dụng</a></li><li class="depth-2"><a href="#lợi-ích" data-for="lợi-ích">Lợi ích</a></li><li class="depth-1"><a href="#86a-index-management--exclusion-filters--kiểm-soát-chi-phí-logs" data-for="86a-index-management--exclusion-filters--kiểm-soát-chi-phí-logs">8.6a Index Management &amp; Exclusion Filters — Kiểm Soát Chi Phí Logs</a></li><li class="depth-2"><a href="#vấn-đề-không-phải-log-nào-cũng-cần-search" data-for="vấn-đề-không-phải-log-nào-cũng-cần-search">Vấn đề: Không phải log nào cũng cần search</a></li><li class="depth-2"><a href="#giải-pháp-multiple-indexes--exclusion-filters" data-for="giải-pháp-multiple-indexes--exclusion-filters">Giải pháp: Multiple Indexes + Exclusion Filters</a></li><li class="depth-2"><a href="#exclusion-filters" data-for="exclusion-filters">Exclusion Filters</a></li><li class="depth-2"><a href="#daily-quota" data-for="daily-quota">Daily Quota</a></li><li class="depth-1"><a href="#86b-log-archives--rehydration--lưu-trữ-dài-hạn" data-for="86b-log-archives--rehydration--lưu-trữ-dài-hạn">8.6b Log Archives &amp; Rehydration — Lưu Trữ Dài Hạn</a></li><li class="depth-2"><a href="#vấn-đề-index-chỉ-giữ-logs-3-30-ngày" data-for="vấn-đề-index-chỉ-giữ-logs-3-30-ngày">Vấn đề: Index chỉ giữ logs 3-30 ngày</a></li><li class="depth-2"><a href="#log-archives" data-for="log-archives">Log Archives</a></li><li class="depth-2"><a href="#archive-routing" data-for="archive-routing">Archive Routing</a></li><li class="depth-2"><a href="#rehydration--khôi-phục-logs-từ-archive" data-for="rehydration--khôi-phục-logs-từ-archive">Rehydration — Khôi Phục Logs Từ Archive</a></li><li class="depth-2"><a href="#tổng-hợp-logging-without-limits--3-phần" data-for="tổng-hợp-logging-without-limits--3-phần">Tổng hợp: Logging Without Limits™ = 3 phần</a></li><li class="depth-1"><a href="#87-submitting-events--gửi-sự-kiện-vào-datadog" data-for="87-submitting-events--gửi-sự-kiện-vào-datadog">8.7 Submitting Events — Gửi Sự Kiện Vào Datadog</a></li><li class="depth-2"><a href="#4-cách-gửi-events" data-for="4-cách-gửi-events">4 cách gửi Events</a></li><li class="depth-2"><a href="#format-hỗ-trợ-json-và-plain-text" data-for="format-hỗ-trợ-json-và-plain-text">Format hỗ trợ: JSON và Plain Text</a></li><li class="depth-2"><a href="#các-fields-của-event" data-for="các-fields-của-event">Các fields của Event</a></li><li class="depth-1"><a href="#88-submitting-logs--logging-endpoints" data-for="88-submitting-logs--logging-endpoints">8.8 Submitting Logs — Logging Endpoints</a></li><li class="depth-2"><a href="#bảng-endpoints-eu-site-ví-dụ" data-for="bảng-endpoints-eu-site-ví-dụ">Bảng Endpoints (EU site ví dụ)</a></li><li class="depth-2"><a href="#us-site-vs-eu-site" data-for="us-site-vs-eu-site">US site vs EU site</a></li><li class="depth-1"><a href="#phần-b-apm-application-performance-monitoring" data-for="phần-b-apm-application-performance-monitoring">PHẦN B: APM (Application Performance Monitoring)</a></li><li class="depth-1"><a href="#89-tại-sao-apm-tồn-tại--metrics-và-logs-còn-thiếu-gì" data-for="89-tại-sao-apm-tồn-tại--metrics-và-logs-còn-thiếu-gì">8.9 Tại Sao APM Tồn Tại — Metrics Và Logs Còn Thiếu Gì?</a></li><li class="depth-1"><a href="#810-distributed-tracing--cơ-chế-propagation" data-for="810-distributed-tracing--cơ-chế-propagation">8.10 Distributed Tracing — Cơ Chế Propagation</a></li><li class="depth-2"><a href="#cách-trace-id-truyền-qua-services" data-for="cách-trace-id-truyền-qua-services">Cách Trace ID truyền qua services</a></li><li class="depth-1"><a href="#811-span--đơn-vị-cơ-bản-của-trace" data-for="811-span--đơn-vị-cơ-bản-của-trace">8.11 Span — Đơn Vị Cơ Bản Của Trace</a></li><li class="depth-2"><a href="#mỗi-span-chứa-gì" data-for="mỗi-span-chứa-gì">Mỗi span chứa gì?</a></li><li class="depth-2"><a href="#root-span-vs-child-span" data-for="root-span-vs-child-span">Root Span vs Child Span</a></li><li class="depth-1"><a href="#812-flame-graph--đọc-và-hiểu" data-for="812-flame-graph--đọc-và-hiểu">8.12 Flame Graph — Đọc và Hiểu</a></li><li class="depth-1"><a href="#813-service-map--kiến-trúc-tự-khám-phá" data-for="813-service-map--kiến-trúc-tự-khám-phá">8.13 Service Map — Kiến Trúc Tự Khám Phá</a></li><li class="depth-2"><a href="#cơ-chế-tạo-service-map" data-for="cơ-chế-tạo-service-map">Cơ chế tạo Service Map</a></li><li class="depth-1"><a href="#813a-trace-retention--ingestion-controls--kiểm-soát-chi-phí-apm" data-for="813a-trace-retention--ingestion-controls--kiểm-soát-chi-phí-apm">8.13a Trace Retention &amp; Ingestion Controls — Kiểm Soát Chi Phí APM</a></li><li class="depth-2"><a href="#vấn-đề-thu-thập-tất-cả-traces-rất-đắt" data-for="vấn-đề-thu-thập-tất-cả-traces-rất-đắt">Vấn đề: Thu thập tất cả traces rất đắt</a></li><li class="depth-2"><a href="#hai-giai-đoạn-kiểm-soát" data-for="hai-giai-đoạn-kiểm-soát">Hai giai đoạn kiểm soát</a></li><li class="depth-2"><a href="#intelligent-retention" data-for="intelligent-retention">Intelligent Retention</a></li><li class="depth-2"><a href="#billing-impact" data-for="billing-impact">Billing Impact</a></li><li class="depth-1"><a href="#814-connect-three-pillars--unified-view" data-for="814-connect-three-pillars--unified-view">8.14 Connect Three Pillars — Unified View</a></li><li class="depth-2"><a href="#correlation-trong-thực-tế" data-for="correlation-trong-thực-tế">Correlation trong thực tế</a></li><li class="depth-1"><a href="#815-câu-hỏi-thường-gặp" data-for="815-câu-hỏi-thường-gặp">8.15 Câu Hỏi Thường Gặp</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/datadog/datadog_fundamentals_full/readme" class="internal">Datadog Fundamentals Certification — Bộ Tài Liệu Ôn Thi Đầy Đủ</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

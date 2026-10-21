@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>6.4. Configuration Workflows - Luồng Cấu Hình &amp; Resource Management</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="6.4. Configuration Workflows - Luồng Cấu Hình &amp; Resource Management"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="6.4. Configuration Workflows - Luồng Cấu Hình &amp; Resource Management"/><meta name="twitter:description" content="6.4."/><meta property="og:description" content="6.4."/><meta property="og:image:alt" content="6.4."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/06-configuration/04-config-workflows"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/06-configuration/04-config-workflows"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="6.4."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/k8s/06-configuration/04-config-workflows" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-148" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-148" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/">K8S</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/06-configuration/">06-configuration</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>6.4. Configuration Workflows - Luồng Cấu Hình &amp; Resource Management</a></div></nav><h1 class="article-title">6.4. Configuration Workflows - Luồng Cấu Hình &amp; Resource Management</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/k8s" class="internal internal-link tag-link">domain/k8s</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-09T17:00:00.000Z">10 thg 4, 2026</time><span>10 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="64-configuration-workflows---luồng-cấu-hình--resource-management">6.4. Configuration Workflows - Luồng Cấu Hình &amp; Resource Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#64-configuration-workflows---luồng-cấu-hình--resource-management" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>Chi tiết cách ConfigMap, Secret, và Resource Limits hoạt động end-to-end trong cluster</p>
+</blockquote>
+<hr/>
+<h2 id="-mục-tiêu-học">🎯 Mục Tiêu Học<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mục-tiêu-học" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau khi học xong phần này, bạn sẽ:</p>
+<ul>
+<li>✅ Trace được <strong>ConfigMap creation → Pod consumption</strong> flow</li>
+<li>✅ Hiểu sự khác biệt <strong>hot-reload (volume) vs static (env)</strong></li>
+<li>✅ Nắm rõ <strong>Secret encryption pipeline</strong> từ creation đến mount</li>
+<li>✅ Hiểu <strong>QoS class assignment</strong> và OOMKill decision</li>
+<li>✅ Trace <strong>LimitRange &amp; ResourceQuota</strong> admission flow</li>
+</ul>
+<hr/>
+<h2 id="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-quy-tắc-màu-sắc-diagram" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Quy tắc màu nhất quán </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>💙 <strong>Xanh dương</strong> <code>#3498db</code> — ConfigMap, configuration objects</li>
+<li>💚 <strong>Xanh lá</strong> <code>#27ae60</code> — Success, data delivered</li>
+<li>🧡 <strong>Cam</strong> <code>#f39c12</code> — Pending, processing, warning</li>
+<li>❤️ <strong>Đỏ</strong> <code>#e74c3c</code> — Error, OOMKill, denied</li>
+<li>💜 <strong>Tím</strong> <code>#9b59b6</code> — Secret (sensitive data)</li>
+<li>⬜ <strong>Xám</strong> <code>#95a5a6</code> — Infrastructure, unchanged</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-1-configmap--pod-consumption">🔄 Workflow 1: ConfigMap → Pod Consumption<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-1-configmap--pod-consumption" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Tạo ConfigMap và Pod sử dụng nó qua 2 phương thức</p>
+</blockquote>
+<h3 id="full-creation--consumption-flow">Full Creation &amp; Consumption Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#full-creation--consumption-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant U as 👤 User\n    participant API as 🔀 API Server\n    participant ETCD as 💾 etcd\n    participant KL as 🔧 kubelet\n    participant C as 📦 Container\n\n    U->>API: kubectl create configmap app-config&lt;br/>--from-literal=LOG_LEVEL=info&lt;br/>--from-file=nginx.conf\n\n    Note over API: Authn → Authz → Admission&lt;br/>→ Validate (≤1 MiB limit)\n    API->>ETCD: Store ConfigMap object\n    API-->>U: configmap/app-config created\n\n    U->>API: kubectl apply -f pod.yaml&lt;br/>(references app-config)\n\n    Note over API: Validate: ConfigMap exists?&lt;br/>→ Yes ✅\n\n    API->>ETCD: Store Pod object\n    Note over KL: 👁️ Watch: Pod assigned to me!\n\n    alt Environment Variable Method\n        KL->>API: Fetch ConfigMap data\n        API-->>KL: {LOG_LEVEL: \&quot;info\&quot;}\n        KL->>C: Set env: LOG_LEVEL=info&lt;br/>(at container start time)\n        Note over C: process.env.LOG_LEVEL = \&quot;info\&quot;&lt;br/>⚠️ FROZEN at start time!\n    end\n\n    alt Volume Mount Method\n        KL->>API: Fetch ConfigMap data\n        API-->>KL: {nginx.conf: \&quot;...content...\&quot;}\n        KL->>KL: Create tmpfs volume&lt;br/>Write files to volume\n        KL->>C: Mount volume at&lt;br/>/etc/nginx/nginx.conf\n        Note over C: File available!&lt;br/>✅ Can be updated later\n    end&quot;">sequenceDiagram
+    autonumber
+    participant U as 👤 User
+    participant API as 🔀 API Server
+    participant ETCD as 💾 etcd
+    participant KL as 🔧 kubelet
+    participant C as 📦 Container
+
+    U->>API: kubectl create configmap app-config&lt;br/>--from-literal=LOG_LEVEL=info&lt;br/>--from-file=nginx.conf
+
+    Note over API: Authn → Authz → Admission&lt;br/>→ Validate (≤1 MiB limit)
+    API->>ETCD: Store ConfigMap object
+    API-->>U: configmap/app-config created
+
+    U->>API: kubectl apply -f pod.yaml&lt;br/>(references app-config)
+
+    Note over API: Validate: ConfigMap exists?&lt;br/>→ Yes ✅
+
+    API->>ETCD: Store Pod object
+    Note over KL: 👁️ Watch: Pod assigned to me!
+
+    alt Environment Variable Method
+        KL->>API: Fetch ConfigMap data
+        API-->>KL: {LOG_LEVEL: &quot;info&quot;}
+        KL->>C: Set env: LOG_LEVEL=info&lt;br/>(at container start time)
+        Note over C: process.env.LOG_LEVEL = &quot;info&quot;&lt;br/>⚠️ FROZEN at start time!
+    end
+
+    alt Volume Mount Method
+        KL->>API: Fetch ConfigMap data
+        API-->>KL: {nginx.conf: &quot;...content...&quot;}
+        KL->>KL: Create tmpfs volume&lt;br/>Write files to volume
+        KL->>C: Mount volume at&lt;br/>/etc/nginx/nginx.conf
+        Note over C: File available!&lt;br/>✅ Can be updated later
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="env-vs-volume--side-by-side">Env vs Volume — Side by Side<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#env-vs-volume--side-by-side" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    CM[\&quot;📄 ConfigMap: app-config&lt;br/>LOG_LEVEL=info&lt;br/>MAX_CONN=100\&quot;] --> ENV_PATH &amp; VOL_PATH\n\n    subgraph \&quot;Environment Variable Path ⚠️\&quot;\n        ENV_PATH[\&quot;Pod spec:&lt;br/>envFrom: configMapRef\&quot;] --> ENV_START[\&quot;Container starts:&lt;br/>LOG_LEVEL=info&lt;br/>MAX_CONN=100\&quot;]\n        ENV_START --> ENV_UPDATE[\&quot;ConfigMap updated:&lt;br/>LOG_LEVEL=debug\&quot;]\n        ENV_UPDATE --> ENV_FROZEN[\&quot;❌ Container env&lt;br/>STILL LOG_LEVEL=info&lt;br/>&lt;i>Frozen at start!&lt;/i>\&quot;]\n        ENV_FROZEN --> ENV_FIX[\&quot;Must restart Pod&lt;br/>kubectl rollout restart\&quot;]\n    end\n\n    subgraph \&quot;Volume Mount Path ✅\&quot;\n        VOL_PATH[\&quot;Pod spec:&lt;br/>volumes: configMap\&quot;] --> VOL_MOUNT[\&quot;Container sees files:&lt;br/>/etc/config/LOG_LEVEL&lt;br/>/etc/config/MAX_CONN\&quot;]\n        VOL_MOUNT --> VOL_UPDATE[\&quot;ConfigMap updated:&lt;br/>LOG_LEVEL=debug\&quot;]\n        VOL_UPDATE --> VOL_SYNC[\&quot;kubelet syncs (~60-90s)&lt;br/>Update files on volume\&quot;]\n        VOL_SYNC --> VOL_LIVE[\&quot;✅ File content updated!&lt;br/>/etc/config/LOG_LEVEL = debug\&quot;]\n        VOL_LIVE --> VOL_APP{\&quot;App detects&lt;br/>file change?\&quot;}\n        VOL_APP -->|\&quot;inotify/watch\&quot;| VOL_AUTO[\&quot;✅ Auto reload\&quot;]\n        VOL_APP -->|\&quot;No detection\&quot;| VOL_RESTART[\&quot;Still need restart\&quot;]\n    end\n\n    style CM fill:#3498db,stroke:#2980b9,color:#fff\n    style ENV_FROZEN fill:#e74c3c,stroke:#c0392b,color:#fff\n    style VOL_LIVE fill:#27ae60,stroke:#1e8449,color:#fff\n    style VOL_AUTO fill:#27ae60,stroke:#1e8449,color:#fff&quot;">graph TD
+    CM[&quot;📄 ConfigMap: app-config&lt;br/>LOG_LEVEL=info&lt;br/>MAX_CONN=100&quot;] --> ENV_PATH &amp; VOL_PATH
+
+    subgraph &quot;Environment Variable Path ⚠️&quot;
+        ENV_PATH[&quot;Pod spec:&lt;br/>envFrom: configMapRef&quot;] --> ENV_START[&quot;Container starts:&lt;br/>LOG_LEVEL=info&lt;br/>MAX_CONN=100&quot;]
+        ENV_START --> ENV_UPDATE[&quot;ConfigMap updated:&lt;br/>LOG_LEVEL=debug&quot;]
+        ENV_UPDATE --> ENV_FROZEN[&quot;❌ Container env&lt;br/>STILL LOG_LEVEL=info&lt;br/>&lt;i>Frozen at start!&lt;/i>&quot;]
+        ENV_FROZEN --> ENV_FIX[&quot;Must restart Pod&lt;br/>kubectl rollout restart&quot;]
+    end
+
+    subgraph &quot;Volume Mount Path ✅&quot;
+        VOL_PATH[&quot;Pod spec:&lt;br/>volumes: configMap&quot;] --> VOL_MOUNT[&quot;Container sees files:&lt;br/>/etc/config/LOG_LEVEL&lt;br/>/etc/config/MAX_CONN&quot;]
+        VOL_MOUNT --> VOL_UPDATE[&quot;ConfigMap updated:&lt;br/>LOG_LEVEL=debug&quot;]
+        VOL_UPDATE --> VOL_SYNC[&quot;kubelet syncs (~60-90s)&lt;br/>Update files on volume&quot;]
+        VOL_SYNC --> VOL_LIVE[&quot;✅ File content updated!&lt;br/>/etc/config/LOG_LEVEL = debug&quot;]
+        VOL_LIVE --> VOL_APP{&quot;App detects&lt;br/>file change?&quot;}
+        VOL_APP -->|&quot;inotify/watch&quot;| VOL_AUTO[&quot;✅ Auto reload&quot;]
+        VOL_APP -->|&quot;No detection&quot;| VOL_RESTART[&quot;Still need restart&quot;]
+    end
+
+    style CM fill:#3498db,stroke:#2980b9,color:#fff
+    style ENV_FROZEN fill:#e74c3c,stroke:#c0392b,color:#fff
+    style VOL_LIVE fill:#27ae60,stroke:#1e8449,color:#fff
+    style VOL_AUTO fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>ConfigMap Update Propagation </p></div>
+                  
+                </div>
+<div class="callout-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Method</th><th style="text-align:center;">Auto-Update?</th><th style="text-align:center;">Delay</th><th style="text-align:center;">Cần App Support?</th></tr></thead><tbody><tr><td><strong>Env Variable</strong></td><td style="text-align:center;">❌ Không</td><td style="text-align:center;">Cần restart Pod</td><td style="text-align:center;">Không</td></tr><tr><td><strong>Volume Mount</strong></td><td style="text-align:center;">✅ Có</td><td style="text-align:center;">~60-120 giây</td><td style="text-align:center;">Có (file watch)</td></tr><tr><td><strong>Immutable ConfigMap</strong></td><td style="text-align:center;">❌ Không</td><td style="text-align:center;">N/A</td><td style="text-align:center;">Tạo CM mới, update Pod</td></tr></tbody></table></div>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-2-secret-lifecycle">🔄 Workflow 2: Secret Lifecycle<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-2-secret-lifecycle" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Database password từ creation → encryption → Pod consumption</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant U as 👤 User\n    participant API as 🔀 API Server\n    participant ENCRYPT as 🔐 Encryption&lt;br/>Provider\n    participant ETCD as 💾 etcd\n    participant KL as 🔧 kubelet\n    participant C as 📦 Container\n\n    U->>API: kubectl create secret generic db-creds&lt;br/>--from-literal=password=s3cret!\n    Note over U: ⚠️ Value gửi dạng plaintext qua HTTPS&lt;br/>Base64 encoded trong object\n\n    API->>API: Validate + Base64 encode&lt;br/>password → czNjcmV0IQ==\n\n    alt Encryption at Rest enabled\n        API->>ENCRYPT: Encrypt data before storing\n        Note over ENCRYPT: AES-CBC / AES-GCM / KMS\n        ENCRYPT-->>API: Encrypted payload\n    end\n\n    API->>ETCD: Store Secret (encrypted)\n    API-->>U: secret/db-creds created\n\n    Note over KL: Pod starts, references Secret\n\n    KL->>API: Fetch Secret data (HTTPS)\n    API->>ETCD: Read Secret\n    API->>ENCRYPT: Decrypt\n    ENCRYPT-->>API: Decrypted data\n    API-->>KL: {password: \&quot;czNjcmV0IQ==\&quot;}\n\n    alt Volume Mount\n        KL->>KL: Base64 decode → plaintext\n        KL->>KL: Write to tmpfs (memory-backed)\n        KL->>C: Mount at /etc/secrets/password\n        Note over C: cat /etc/secrets/password&lt;br/>→ \&quot;s3cret!\&quot;&lt;br/>&lt;br/>tmpfs = in-memory, NOT on disk!\n    end\n\n    alt Environment Variable\n        KL->>C: Set env: DB_PASSWORD=s3cret!\n        Note over C: process.env.DB_PASSWORD&lt;br/>→ \&quot;s3cret!\&quot;&lt;br/>&lt;br/>⚠️ Visible in 'kubectl describe'&lt;br/>⚠️ Visible in /proc/env\n    end&quot;">sequenceDiagram
+    autonumber
+    participant U as 👤 User
+    participant API as 🔀 API Server
+    participant ENCRYPT as 🔐 Encryption&lt;br/>Provider
+    participant ETCD as 💾 etcd
+    participant KL as 🔧 kubelet
+    participant C as 📦 Container
+
+    U->>API: kubectl create secret generic db-creds&lt;br/>--from-literal=password=s3cret!
+    Note over U: ⚠️ Value gửi dạng plaintext qua HTTPS&lt;br/>Base64 encoded trong object
+
+    API->>API: Validate + Base64 encode&lt;br/>password → czNjcmV0IQ==
+
+    alt Encryption at Rest enabled
+        API->>ENCRYPT: Encrypt data before storing
+        Note over ENCRYPT: AES-CBC / AES-GCM / KMS
+        ENCRYPT-->>API: Encrypted payload
+    end
+
+    API->>ETCD: Store Secret (encrypted)
+    API-->>U: secret/db-creds created
+
+    Note over KL: Pod starts, references Secret
+
+    KL->>API: Fetch Secret data (HTTPS)
+    API->>ETCD: Read Secret
+    API->>ENCRYPT: Decrypt
+    ENCRYPT-->>API: Decrypted data
+    API-->>KL: {password: &quot;czNjcmV0IQ==&quot;}
+
+    alt Volume Mount
+        KL->>KL: Base64 decode → plaintext
+        KL->>KL: Write to tmpfs (memory-backed)
+        KL->>C: Mount at /etc/secrets/password
+        Note over C: cat /etc/secrets/password&lt;br/>→ &quot;s3cret!&quot;&lt;br/>&lt;br/>tmpfs = in-memory, NOT on disk!
+    end
+
+    alt Environment Variable
+        KL->>C: Set env: DB_PASSWORD=s3cret!
+        Note over C: process.env.DB_PASSWORD&lt;br/>→ &quot;s3cret!&quot;&lt;br/>&lt;br/>⚠️ Visible in 'kubectl describe'&lt;br/>⚠️ Visible in /proc/env
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="secret-security-layers">Secret Security Layers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#secret-security-layers" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph \&quot;Layer 1: Transport\&quot;\n        HTTPS[\&quot;🔒 HTTPS (TLS)&lt;br/>kubectl ↔ API Server&lt;br/>API Server ↔ kubelet\&quot;]\n    end\n\n    subgraph \&quot;Layer 2: Authorization\&quot;\n        RBAC[\&quot;🛡️ RBAC Rules&lt;br/>Who can read Secrets?&lt;br/>Namespace-scoped access\&quot;]\n    end\n\n    subgraph \&quot;Layer 3: Encryption at Rest\&quot;\n        EAR[\&quot;🔐 EncryptionConfiguration&lt;br/>AES-CBC / AES-GCM / KMS&lt;br/>Data encrypted in etcd\&quot;]\n    end\n\n    subgraph \&quot;Layer 4: Runtime\&quot;\n        TMPFS[\&quot;💾 tmpfs Mount&lt;br/>Secret in memory only&lt;br/>Not written to disk\&quot;]\n        NS[\&quot;🔒 Linux Namespaces&lt;br/>Pod isolation&lt;br/>Only mounted Pod can see\&quot;]\n    end\n\n    HTTPS --> RBAC --> EAR --> TMPFS &amp; NS\n\n    style HTTPS fill:#3498db,stroke:#2980b9,color:#fff\n    style RBAC fill:#f39c12,stroke:#d68910,color:#fff\n    style EAR fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style TMPFS fill:#27ae60,stroke:#1e8449,color:#fff&quot;">graph TD
+    subgraph &quot;Layer 1: Transport&quot;
+        HTTPS[&quot;🔒 HTTPS (TLS)&lt;br/>kubectl ↔ API Server&lt;br/>API Server ↔ kubelet&quot;]
+    end
+
+    subgraph &quot;Layer 2: Authorization&quot;
+        RBAC[&quot;🛡️ RBAC Rules&lt;br/>Who can read Secrets?&lt;br/>Namespace-scoped access&quot;]
+    end
+
+    subgraph &quot;Layer 3: Encryption at Rest&quot;
+        EAR[&quot;🔐 EncryptionConfiguration&lt;br/>AES-CBC / AES-GCM / KMS&lt;br/>Data encrypted in etcd&quot;]
+    end
+
+    subgraph &quot;Layer 4: Runtime&quot;
+        TMPFS[&quot;💾 tmpfs Mount&lt;br/>Secret in memory only&lt;br/>Not written to disk&quot;]
+        NS[&quot;🔒 Linux Namespaces&lt;br/>Pod isolation&lt;br/>Only mounted Pod can see&quot;]
+    end
+
+    HTTPS --> RBAC --> EAR --> TMPFS &amp; NS
+
+    style HTTPS fill:#3498db,stroke:#2980b9,color:#fff
+    style RBAC fill:#f39c12,stroke:#d68910,color:#fff
+    style EAR fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style TMPFS fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Secret Pitfalls </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ol>
+<li><strong>Base64 ≠ Encryption!</strong> <code>echo czNjcmV0IQ== | base64 -d</code> → <code>s3cret!</code></li>
+<li>Env vars visible qua <code>kubectl describe pod</code> và <code>/proc/&lt;pid>/environ</code></li>
+<li>Default: etcd stores Secrets <strong>unencrypted</strong> — phải enable EncryptionConfiguration</li>
+<li>Anyone with etcd access = access ALL Secrets</li>
+</ol>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-3-resource-requestlimit--qos-classes">🔄 Workflow 3: Resource Request/Limit — QoS Classes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-3-resource-requestlimit--qos-classes" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Kubernetes quyết định QoS class cho Pod</p>
+</blockquote>
+<h3 id="qos-class-assignment-decision-tree">QoS Class Assignment Decision Tree<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#qos-class-assignment-decision-tree" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    POD[\&quot;📦 Pod Created\&quot;] --> CHECK{\&quot;Kiểm tra resources&lt;br/>của TẤT CẢ containers\&quot;}\n\n    CHECK --> Q1{\&quot;EVERY container có&lt;br/>requests = limits&lt;br/>cho cả CPU và Memory?\&quot;}\n\n    Q1 -->|\&quot;✅ Có\&quot;| GUARANTEED[\&quot;🟢 QoS: Guaranteed&lt;br/>&lt;i>Ưu tiên cao nhất&lt;/i>&lt;br/>&lt;i>OOMKill cuối cùng&lt;/i>\&quot;]\n\n    Q1 -->|\&quot;❌ Không\&quot;| Q2{\&quot;BẤT KỲ container nào&lt;br/>có requests hoặc limits&lt;br/>cho CPU hoặc Memory?\&quot;}\n\n    Q2 -->|\&quot;✅ Có\&quot;| BURSTABLE[\&quot;🟡 QoS: Burstable&lt;br/>&lt;i>Ưu tiên trung bình&lt;/i>&lt;br/>&lt;i>OOMKill dựa trên usage&lt;/i>\&quot;]\n\n    Q2 -->|\&quot;❌ Không có gì\&quot;| BESTEFFORT[\&quot;🔴 QoS: BestEffort&lt;br/>&lt;i>Ưu tiên thấp nhất&lt;/i>&lt;br/>&lt;i>OOMKill đầu tiên!&lt;/i>\&quot;]\n\n    style GUARANTEED fill:#27ae60,stroke:#1e8449,color:#fff\n    style BURSTABLE fill:#f39c12,stroke:#d68910,color:#fff\n    style BESTEFFORT fill:#e74c3c,stroke:#c0392b,color:#fff&quot;">flowchart TD
+    POD[&quot;📦 Pod Created&quot;] --> CHECK{&quot;Kiểm tra resources&lt;br/>của TẤT CẢ containers&quot;}
+
+    CHECK --> Q1{&quot;EVERY container có&lt;br/>requests = limits&lt;br/>cho cả CPU và Memory?&quot;}
+
+    Q1 -->|&quot;✅ Có&quot;| GUARANTEED[&quot;🟢 QoS: Guaranteed&lt;br/>&lt;i>Ưu tiên cao nhất&lt;/i>&lt;br/>&lt;i>OOMKill cuối cùng&lt;/i>&quot;]
+
+    Q1 -->|&quot;❌ Không&quot;| Q2{&quot;BẤT KỲ container nào&lt;br/>có requests hoặc limits&lt;br/>cho CPU hoặc Memory?&quot;}
+
+    Q2 -->|&quot;✅ Có&quot;| BURSTABLE[&quot;🟡 QoS: Burstable&lt;br/>&lt;i>Ưu tiên trung bình&lt;/i>&lt;br/>&lt;i>OOMKill dựa trên usage&lt;/i>&quot;]
+
+    Q2 -->|&quot;❌ Không có gì&quot;| BESTEFFORT[&quot;🔴 QoS: BestEffort&lt;br/>&lt;i>Ưu tiên thấp nhất&lt;/i>&lt;br/>&lt;i>OOMKill đầu tiên!&lt;/i>&quot;]
+
+    style GUARANTEED fill:#27ae60,stroke:#1e8449,color:#fff
+    style BURSTABLE fill:#f39c12,stroke:#d68910,color:#fff
+    style BESTEFFORT fill:#e74c3c,stroke:#c0392b,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="qos-examples">QoS Examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#qos-examples" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 🟢 Guaranteed — requests == limits cho mọi resource</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">resources</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  requests</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    cpu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">500m</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    memory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">256Mi</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  limits</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    cpu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">500m</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # == request</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    memory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">256Mi</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # == request</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># → Guaranteed: chỉ dùng đúng lượng đã khai báo</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 🟡 Burstable — có requests nhưng != limits</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">resources</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  requests</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    cpu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">100m</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    memory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">128Mi</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  limits</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    cpu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">500m</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # > request (burst allowed)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    memory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">512Mi</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # > request</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># → Burstable: có thể dùng thêm nếu Node có dư</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 🔴 BestEffort — KHÔNG có requests/limits</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># (không khai báo resources gì cả)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># → BestEffort: dùng thoải mái nhưng bị kill đầu tiên</span></span></code></pre></figure>
+<hr/>
+<h2 id="-workflow-4-oomkill-decision-flow">🔄 Workflow 4: OOMKill Decision Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-4-oomkill-decision-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Node hết memory — Kubernetes quyết định kill Pod nào?</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    PRESSURE[\&quot;⚠️ Node Memory Pressure!&lt;br/>Available &lt; eviction threshold&lt;br/>(default: 100Mi)\&quot;] --> KUBELET[\&quot;kubelet: Eviction Manager&lt;br/>activated\&quot;]\n\n    KUBELET --> SORT[\&quot;Sort Pods by&lt;br/>eviction priority\&quot;]\n\n    SORT --> PHASE1[\&quot;Phase 1: BestEffort Pods&lt;br/>(no requests/limits)&lt;br/>✂️ Kill first\&quot;]\n    PHASE1 --> ENOUGH1{\&quot;Memory&lt;br/>recovered?\&quot;}\n    ENOUGH1 -->|\&quot;✅ Yes\&quot;| STABLE[\&quot;✅ Node stable\&quot;]\n    ENOUGH1 -->|\&quot;❌ No\&quot;| PHASE2\n\n    PHASE2[\&quot;Phase 2: Burstable Pods&lt;br/>exceeding their requests&lt;br/>✂️ Kill by usage ratio\&quot;]\n    PHASE2 --> ENOUGH2{\&quot;Memory&lt;br/>recovered?\&quot;}\n    ENOUGH2 -->|\&quot;✅ Yes\&quot;| STABLE\n    ENOUGH2 -->|\&quot;❌ No\&quot;| PHASE3\n\n    PHASE3[\&quot;Phase 3: Guaranteed Pods&lt;br/>(only if system critical)&lt;br/>✂️ Last resort\&quot;]\n    PHASE3 --> STABLE\n\n    subgraph \&quot;Burstable Kill Order\&quot;\n        B_SORT[\&quot;Within Burstable class:&lt;br/>Sort by (usage - request) / request&lt;br/>= % over request&lt;br/>&lt;br/>Pod A: 400Mi used / 200Mi req = 100% over&lt;br/>Pod B: 300Mi used / 256Mi req = 17% over&lt;br/>&lt;br/>→ Kill Pod A first (highest over-request ratio)\&quot;]\n    end\n\n    style PRESSURE fill:#e74c3c,stroke:#c0392b,color:#fff\n    style PHASE1 fill:#e74c3c,stroke:#c0392b,color:#fff\n    style PHASE2 fill:#f39c12,stroke:#d68910,color:#fff\n    style PHASE3 fill:#27ae60,stroke:#1e8449,color:#fff\n    style STABLE fill:#27ae60,stroke:#1e8449,color:#fff&quot;">flowchart TD
+    PRESSURE[&quot;⚠️ Node Memory Pressure!&lt;br/>Available &lt; eviction threshold&lt;br/>(default: 100Mi)&quot;] --> KUBELET[&quot;kubelet: Eviction Manager&lt;br/>activated&quot;]
+
+    KUBELET --> SORT[&quot;Sort Pods by&lt;br/>eviction priority&quot;]
+
+    SORT --> PHASE1[&quot;Phase 1: BestEffort Pods&lt;br/>(no requests/limits)&lt;br/>✂️ Kill first&quot;]
+    PHASE1 --> ENOUGH1{&quot;Memory&lt;br/>recovered?&quot;}
+    ENOUGH1 -->|&quot;✅ Yes&quot;| STABLE[&quot;✅ Node stable&quot;]
+    ENOUGH1 -->|&quot;❌ No&quot;| PHASE2
+
+    PHASE2[&quot;Phase 2: Burstable Pods&lt;br/>exceeding their requests&lt;br/>✂️ Kill by usage ratio&quot;]
+    PHASE2 --> ENOUGH2{&quot;Memory&lt;br/>recovered?&quot;}
+    ENOUGH2 -->|&quot;✅ Yes&quot;| STABLE
+    ENOUGH2 -->|&quot;❌ No&quot;| PHASE3
+
+    PHASE3[&quot;Phase 3: Guaranteed Pods&lt;br/>(only if system critical)&lt;br/>✂️ Last resort&quot;]
+    PHASE3 --> STABLE
+
+    subgraph &quot;Burstable Kill Order&quot;
+        B_SORT[&quot;Within Burstable class:&lt;br/>Sort by (usage - request) / request&lt;br/>= % over request&lt;br/>&lt;br/>Pod A: 400Mi used / 200Mi req = 100% over&lt;br/>Pod B: 300Mi used / 256Mi req = 17% over&lt;br/>&lt;br/>→ Kill Pod A first (highest over-request ratio)&quot;]
+    end
+
+    style PRESSURE fill:#e74c3c,stroke:#c0392b,color:#fff
+    style PHASE1 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style PHASE2 fill:#f39c12,stroke:#d68910,color:#fff
+    style PHASE3 fill:#27ae60,stroke:#1e8449,color:#fff
+    style STABLE fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>OOMKill vs Eviction </p></div>
+                  
+                </div>
+<div class="callout-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th>OOMKill</th><th>Eviction</th></tr></thead><tbody><tr><td><strong>Who decides</strong></td><td>Linux Kernel (OOM Killer)</td><td>kubelet (Eviction Manager)</td></tr><tr><td><strong>When</strong></td><td>Container exceeds its <strong>memory limit</strong></td><td>Node nears <strong>memory pressure</strong> threshold</td></tr><tr><td><strong>Target</strong></td><td>Single container</td><td>Whole Pod</td></tr><tr><td><strong>Exit Code</strong></td><td>137 (128 + SIGKILL=9)</td><td>Pod rescheduled</td></tr><tr><td><strong>Container status</strong></td><td>Terminated: OOMKilled</td><td>Pod: Evicted</td></tr></tbody></table></div>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-5-limitrange--resourcequota-admission">🔄 Workflow 5: LimitRange &amp; ResourceQuota Admission<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-5-limitrange--resourcequota-admission" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Request đi qua admission pipeline với resource constraints</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant U as 👤 User\n    participant API as 🔀 API Server\n    participant LR as 📏 LimitRange&lt;br/>Admission\n    participant RQ as 📊 ResourceQuota&lt;br/>Admission\n    participant ETCD as 💾 etcd\n\n    U->>API: Create Pod (no resources specified)\n\n    Note over API: Authn → Authz → Pass ✅\n\n    rect rgb(255, 248, 220)\n        Note over LR: Mutating Admission Phase\n        API->>LR: Check LimitRange in namespace\n        Note over LR: LimitRange found:&lt;br/>default CPU request: 100m&lt;br/>default CPU limit: 500m&lt;br/>default Memory request: 128Mi&lt;br/>default Memory limit: 512Mi&lt;br/>max CPU: 2&lt;br/>max Memory: 4Gi\n\n        alt No resources specified\n            LR->>API: Inject defaults:&lt;br/>requests.cpu=100m&lt;br/>limits.cpu=500m&lt;br/>requests.memory=128Mi&lt;br/>limits.memory=512Mi\n        else Resources exceed max\n            LR->>API: ❌ REJECT: CPU limit 4 > max 2\n        end\n    end\n\n    rect rgb(220, 240, 255)\n        Note over RQ: Validating Admission Phase\n        API->>RQ: Check ResourceQuota in namespace\n        Note over RQ: Quota: CPU limit total ≤ 10&lt;br/>Used: 8.5 cores&lt;br/>This Pod: +0.5&lt;br/>After: 9.0 ≤ 10 ✅\n\n        alt Within quota\n            RQ->>API: ✅ ALLOW\n            RQ->>RQ: Update used: 8.5 → 9.0\n        else Exceeds quota\n            RQ->>API: ❌ REJECT:&lt;br/>exceeded quota: CPU limit\n        end\n    end\n\n    API->>ETCD: Store Pod (with injected defaults)\n    API-->>U: pod/app created&quot;">sequenceDiagram
+    autonumber
+    participant U as 👤 User
+    participant API as 🔀 API Server
+    participant LR as 📏 LimitRange&lt;br/>Admission
+    participant RQ as 📊 ResourceQuota&lt;br/>Admission
+    participant ETCD as 💾 etcd
+
+    U->>API: Create Pod (no resources specified)
+
+    Note over API: Authn → Authz → Pass ✅
+
+    rect rgb(255, 248, 220)
+        Note over LR: Mutating Admission Phase
+        API->>LR: Check LimitRange in namespace
+        Note over LR: LimitRange found:&lt;br/>default CPU request: 100m&lt;br/>default CPU limit: 500m&lt;br/>default Memory request: 128Mi&lt;br/>default Memory limit: 512Mi&lt;br/>max CPU: 2&lt;br/>max Memory: 4Gi
+
+        alt No resources specified
+            LR->>API: Inject defaults:&lt;br/>requests.cpu=100m&lt;br/>limits.cpu=500m&lt;br/>requests.memory=128Mi&lt;br/>limits.memory=512Mi
+        else Resources exceed max
+            LR->>API: ❌ REJECT: CPU limit 4 > max 2
+        end
+    end
+
+    rect rgb(220, 240, 255)
+        Note over RQ: Validating Admission Phase
+        API->>RQ: Check ResourceQuota in namespace
+        Note over RQ: Quota: CPU limit total ≤ 10&lt;br/>Used: 8.5 cores&lt;br/>This Pod: +0.5&lt;br/>After: 9.0 ≤ 10 ✅
+
+        alt Within quota
+            RQ->>API: ✅ ALLOW
+            RQ->>RQ: Update used: 8.5 → 9.0
+        else Exceeds quota
+            RQ->>API: ❌ REJECT:&lt;br/>exceeded quota: CPU limit
+        end
+    end
+
+    API->>ETCD: Store Pod (with injected defaults)
+    API-->>U: pod/app created
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="limitrange-vs-resourcequota">LimitRange vs ResourceQuota<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#limitrange-vs-resourcequota" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph \&quot;LimitRange (per-Pod/Container)\&quot;\n        LR[\&quot;📏 LimitRange&lt;br/>&lt;i>Namespace: production&lt;/i>\&quot;]\n        LR --> LR_DEF[\&quot;Default Values&lt;br/>requests.cpu: 100m&lt;br/>limits.cpu: 500m\&quot;]\n        LR --> LR_MIN[\&quot;Min Values&lt;br/>cpu: 50m&lt;br/>memory: 64Mi\&quot;]\n        LR --> LR_MAX[\&quot;Max Values&lt;br/>cpu: 2&lt;br/>memory: 4Gi\&quot;]\n        LR --> LR_RATIO[\&quot;Max Limit/Request Ratio&lt;br/>cpu: 10&lt;br/>memory: 4\&quot;]\n    end\n\n    subgraph \&quot;ResourceQuota (namespace total)\&quot;\n        RQ[\&quot;📊 ResourceQuota&lt;br/>&lt;i>Namespace: production&lt;/i>\&quot;]\n        RQ --> RQ_CPU[\&quot;CPU Total&lt;br/>requests.cpu: 20&lt;br/>limits.cpu: 40\&quot;]\n        RQ --> RQ_MEM[\&quot;Memory Total&lt;br/>requests.memory: 32Gi&lt;br/>limits.memory: 64Gi\&quot;]\n        RQ --> RQ_COUNT[\&quot;Object Count&lt;br/>pods: 100&lt;br/>services: 20&lt;br/>secrets: 50\&quot;]\n    end\n\n    style LR fill:#f39c12,stroke:#d68910,color:#fff\n    style RQ fill:#3498db,stroke:#2980b9,color:#fff&quot;">graph TD
+    subgraph &quot;LimitRange (per-Pod/Container)&quot;
+        LR[&quot;📏 LimitRange&lt;br/>&lt;i>Namespace: production&lt;/i>&quot;]
+        LR --> LR_DEF[&quot;Default Values&lt;br/>requests.cpu: 100m&lt;br/>limits.cpu: 500m&quot;]
+        LR --> LR_MIN[&quot;Min Values&lt;br/>cpu: 50m&lt;br/>memory: 64Mi&quot;]
+        LR --> LR_MAX[&quot;Max Values&lt;br/>cpu: 2&lt;br/>memory: 4Gi&quot;]
+        LR --> LR_RATIO[&quot;Max Limit/Request Ratio&lt;br/>cpu: 10&lt;br/>memory: 4&quot;]
+    end
+
+    subgraph &quot;ResourceQuota (namespace total)&quot;
+        RQ[&quot;📊 ResourceQuota&lt;br/>&lt;i>Namespace: production&lt;/i>&quot;]
+        RQ --> RQ_CPU[&quot;CPU Total&lt;br/>requests.cpu: 20&lt;br/>limits.cpu: 40&quot;]
+        RQ --> RQ_MEM[&quot;Memory Total&lt;br/>requests.memory: 32Gi&lt;br/>limits.memory: 64Gi&quot;]
+        RQ --> RQ_COUNT[&quot;Object Count&lt;br/>pods: 100&lt;br/>services: 20&lt;br/>secrets: 50&quot;]
+    end
+
+    style LR fill:#f39c12,stroke:#d68910,color:#fff
+    style RQ fill:#3498db,stroke:#2980b9,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>LimitRange vs ResourceQuota </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>LimitRange</strong>: Constraints trên <strong>từng Pod/Container</strong> (min, max, default)</li>
+<li><strong>ResourceQuota</strong>: Constraints trên <strong>tổng namespace</strong> (total CPU, memory, object count)</li>
+<li>Cả hai đều enforce qua <strong>Admission Controller</strong> — Pod bị reject nếu vi phạm!</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-tổng-hợp-configuration-objects-matrix">📊 Tổng Hợp: Configuration Objects Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tổng-hợp-configuration-objects-matrix" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Feature</th><th style="text-align:center;">ConfigMap</th><th style="text-align:center;">Secret</th><th style="text-align:center;">LimitRange</th><th style="text-align:center;">ResourceQuota</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>Scope</strong></td><td style="text-align:center;">Namespace</td><td style="text-align:center;">Namespace</td><td style="text-align:center;">Namespace</td><td style="text-align:center;">Namespace</td></tr><tr><td style="text-align:left;"><strong>Max size</strong></td><td style="text-align:center;">1 MiB</td><td style="text-align:center;">1 MiB</td><td style="text-align:center;">N/A</td><td style="text-align:center;">N/A</td></tr><tr><td style="text-align:left;"><strong>Encryption at rest</strong></td><td style="text-align:center;">❌</td><td style="text-align:center;">✅ (optional)</td><td style="text-align:center;">N/A</td><td style="text-align:center;">N/A</td></tr><tr><td style="text-align:left;"><strong>Mount as volume</strong></td><td style="text-align:center;">✅</td><td style="text-align:center;">✅ (tmpfs)</td><td style="text-align:center;">N/A</td><td style="text-align:center;">N/A</td></tr><tr><td style="text-align:left;"><strong>Use as env</strong></td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">N/A</td><td style="text-align:center;">N/A</td></tr><tr><td style="text-align:left;"><strong>Auto-update (volume)</strong></td><td style="text-align:center;">✅ (~60s)</td><td style="text-align:center;">✅ (~60s)</td><td style="text-align:center;">N/A</td><td style="text-align:center;">N/A</td></tr><tr><td style="text-align:left;"><strong>Auto-update (env)</strong></td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">N/A</td><td style="text-align:center;">N/A</td></tr><tr><td style="text-align:left;"><strong>Immutable option</strong></td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">N/A</td><td style="text-align:center;">N/A</td></tr><tr><td style="text-align:left;"><strong>Typical use</strong></td><td style="text-align:center;">App config</td><td style="text-align:center;">Credentials</td><td style="text-align:center;">Per-Pod limits</td><td style="text-align:center;">Namespace budget</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-troubleshooting-configuration">🔧 Troubleshooting Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-troubleshooting-configuration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="common-issues--solutions">Common Issues &amp; Solutions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-issues--solutions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Symptom</th><th style="text-align:left;">Likely Cause</th><th style="text-align:left;">Debug Command</th><th style="text-align:left;">Fix</th></tr></thead><tbody><tr><td style="text-align:left;">Pod stuck <code>CreateContainerConfigError</code></td><td style="text-align:left;">ConfigMap/Secret doesn’t exist</td><td style="text-align:left;"><code>kubectl describe pod &lt;name></code> → Events</td><td style="text-align:left;">Create missing ConfigMap/Secret first</td></tr><tr><td style="text-align:left;">App not seeing config change</td><td style="text-align:left;">Using env var (frozen at start)</td><td style="text-align:left;"><code>kubectl exec &lt;pod> -- env | grep KEY</code></td><td style="text-align:left;">Switch to volume mount or restart Pod</td></tr><tr><td style="text-align:left;">Pod <code>OOMKilled</code> (exit 137)</td><td style="text-align:left;">Memory limit too low</td><td style="text-align:left;"><code>kubectl describe pod &lt;name></code> → Last State</td><td style="text-align:left;">Increase <code>limits.memory</code></td></tr><tr><td style="text-align:left;">Pod <code>Pending</code> with quota error</td><td style="text-align:left;">Namespace ResourceQuota exhausted</td><td style="text-align:left;"><code>kubectl describe quota -n &lt;ns></code></td><td style="text-align:left;">Request quota increase or reduce usage</td></tr><tr><td style="text-align:left;">Secret data looks wrong</td><td style="text-align:left;">Forgot base64 encoding in YAML</td><td style="text-align:left;"><code>kubectl get secret &lt;name> -o jsonpath='{.data.key}' | base64 -d</code></td><td style="text-align:left;">Use <code>stringData</code> field (auto-encodes)</td></tr><tr><td style="text-align:left;">CPU throttling (slow app)</td><td style="text-align:left;">CPU limit too restrictive</td><td style="text-align:left;"><code>kubectl top pod &lt;name></code></td><td style="text-align:left;">Increase <code>limits.cpu</code> or remove CPU limit</td></tr></tbody></table></div>
+<h3 id="immutable-configmap-pattern">Immutable ConfigMap Pattern<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#immutable-configmap-pattern" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Instead of updating ConfigMap in-place,</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># create versioned ConfigMaps:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ConfigMap</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">app-config-v2</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Version in name!</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  labels</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    app</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">my-app</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    version</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">v2</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">immutable</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Cannot be modified after creation</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">data</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  LOG_LEVEL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;debug&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  MAX_CONN</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;200&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Then update Deployment to reference new version:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># spec.template.spec.volumes[].configMap.name: app-config-v2</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># → This triggers a rolling update automatically!</span></span></code></pre></figure>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Why Immutable? </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ol>
+<li><strong>Performance</strong>: kubelet stops watching → reduces API Server load</li>
+<li><strong>Safety</strong>: Prevents accidental changes to production config</li>
+<li><strong>Audit</strong>: Version history via ConfigMap names (v1, v2, v3…)</li>
+<li><strong>Rollback</strong>: Just point Deployment back to previous ConfigMap version</li>
+</ol>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-cross-references">📎 Cross-References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-cross-references" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Topic</th><th style="text-align:left;">Link</th></tr></thead><tbody><tr><td style="text-align:left;">Application workloads configuration</td><td style="text-align:left;"><a href="../../.././04-workloads/06-workload-workflows" class="internal internal-link alias" data-slug="04-workloads/06-workload-workflows">4.6. Workload Workflows</a></td></tr><tr><td style="text-align:left;">Secret access control (RBAC)</td><td style="text-align:left;"><a href="../../.././09-security/04-security-workflows" class="internal internal-link alias" data-slug="09-security/04-security-workflows">9.4. Security Workflows</a></td></tr><tr><td style="text-align:left;">Resource requests impact on scheduling</td><td style="text-align:left;"><a href="../../.././02-architecture/04-component-workflows" class="internal internal-link alias" data-slug="02-architecture/04-component-workflows">2.4. Component Workflows</a></td></tr><tr><td style="text-align:left;">HPA and resource metrics</td><td style="text-align:left;"><a href="../../.././08-high-availability/04-ha-workflows" class="internal internal-link alias" data-slug="08-high-availability/04-ha-workflows">8.4. HA Workflows</a></td></tr><tr><td style="text-align:left;">Storage for persistent config</td><td style="text-align:left;"><a href="../../.././07-storage/04-storage-workflows" class="internal internal-link alias" data-slug="07-storage/04-storage-workflows">7.4. Storage Workflows</a></td></tr></tbody></table></div>
+<hr/>
+<h2 id="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kiểm-tra-hiểu-biết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="câu-1-configmap-update">Câu 1: ConfigMap Update<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-1-configmap-update" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> Bạn update ConfigMap <code>app-config</code> (LOG_LEVEL: info → debug). Pod A dùng env var, Pod B dùng volume mount. Ai thấy thay đổi?</p>
+<details>
+<summary>Xem đáp án</summary>
+<ul>
+<li><strong>Pod A (env var)</strong>: ❌ Vẫn thấy <code>info</code> — env var frozen tại container start time
+<ul>
+<li>Fix: <code>kubectl rollout restart deployment/pod-a-deploy</code></li>
+</ul>
+</li>
+<li><strong>Pod B (volume mount)</strong>: ✅ Sau ~60-120s, file sẽ cập nhật thành <code>debug</code>
+<ul>
+<li>Nếu app watch file changes (inotify) → auto-reload</li>
+<li>Nếu không → cần restart app process</li>
+</ul>
+</li>
+</ul>
+</details>
+<h3 id="câu-2-qos-kill-order">Câu 2: QoS Kill Order<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-2-qos-kill-order" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> Node có 3 Pods. Memory pressure xảy ra. Pod nào bị kill trước?</p>
+<ul>
+<li>Pod A: Guaranteed (requests=limits=512Mi, using 500Mi)</li>
+<li>Pod B: Burstable (request=256Mi, limit=1Gi, using 800Mi)</li>
+<li>Pod C: BestEffort (no resources, using 300Mi)</li>
+</ul>
+<details>
+<summary>Xem đáp án</summary>
+<p>Kill order:</p>
+<ol>
+<li><strong>Pod C</strong> (BestEffort) — kill đầu tiên, ưu tiên thấp nhất</li>
+<li><strong>Pod B</strong> (Burstable) — đang dùng 800Mi / request 256Mi = 212% over request!</li>
+<li><strong>Pod A</strong> (Guaranteed) — kill cuối cùng, chỉ khi system critical</li>
+</ol>
+<blockquote>
+<p>Trong Burstable class, Pod dùng <strong>nhiều nhất so với request</strong> bị kill trước.</p>
+</blockquote>
+</details>
+<h3 id="câu-3-limitrange-default">Câu 3: LimitRange Default<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-3-limitrange-default" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> Namespace có LimitRange với default CPU limit = 500m. User tạo Pod KHÔNG specify resources. Chuyện gì xảy ra?</p>
+<details>
+<summary>Xem đáp án</summary>
+<p>LimitRange Admission Controller <strong>tự động inject</strong> defaults:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># User submits:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  containers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">app</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    image</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">nginx</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # No resources!</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># After LimitRange mutation:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  containers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">app</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    image</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">nginx</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    resources</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      requests</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        cpu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">100m</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # LimitRange default request</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        memory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">128Mi</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      limits</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        cpu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">500m</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # LimitRange default limit</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        memory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">512Mi</span></span></code></pre></figure>
+<p>→ Pod được tạo <strong>có resources</strong> dù user không specify!<br/>
+→ QoS class: Burstable (requests ≠ limits)</p>
+</details>
+<hr/>
+<h2 id="-tiếp-theo">🚀 Tiếp Theo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tiếp-theo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Bạn đã hiểu luồng configuration và resource management!</p>
+<p><strong>Next:</strong> <a href="../../.././07-storage/readme" class="internal internal-link alias" data-slug="07-storage/readme">Phần 7: Storage →</a></p>
+<hr/>
+<p><a href="../../../02---areas/k8s/06-configuration/03-resource-management" class="internal internal-link alias" data-slug="02---areas/k8s/06-configuration/03-resource-management">⬅️ 6.3. Resource Management</a> | <a href="../../.././readme" class="internal internal-link alias" data-slug="readme">🏠 Mục Lục Chính</a> | <a href="../../../readme" class="internal internal-link alias" data-slug="readme">📂 Phần 6: Configuration</a> | <a href="../../.././07-storage/readme" class="internal internal-link alias" data-slug="07-storage/readme">➡️ Phần 7: Storage</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-148" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#64-configuration-workflows---luồng-cấu-hình--resource-management" data-for="64-configuration-workflows---luồng-cấu-hình--resource-management">6.4. Configuration Workflows - Luồng Cấu Hình &amp; Resource Management</a></li><li class="depth-1"><a href="#-mục-tiêu-học" data-for="-mục-tiêu-học">🎯 Mục Tiêu Học</a></li><li class="depth-1"><a href="#-quy-tắc-màu-sắc-diagram" data-for="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram</a></li><li class="depth-1"><a href="#-workflow-1-configmap--pod-consumption" data-for="-workflow-1-configmap--pod-consumption">🔄 Workflow 1: ConfigMap → Pod Consumption</a></li><li class="depth-2"><a href="#full-creation--consumption-flow" data-for="full-creation--consumption-flow">Full Creation &amp; Consumption Flow</a></li><li class="depth-2"><a href="#env-vs-volume--side-by-side" data-for="env-vs-volume--side-by-side">Env vs Volume — Side by Side</a></li><li class="depth-1"><a href="#-workflow-2-secret-lifecycle" data-for="-workflow-2-secret-lifecycle">🔄 Workflow 2: Secret Lifecycle</a></li><li class="depth-2"><a href="#secret-security-layers" data-for="secret-security-layers">Secret Security Layers</a></li><li class="depth-1"><a href="#-workflow-3-resource-requestlimit--qos-classes" data-for="-workflow-3-resource-requestlimit--qos-classes">🔄 Workflow 3: Resource Request/Limit — QoS Classes</a></li><li class="depth-2"><a href="#qos-class-assignment-decision-tree" data-for="qos-class-assignment-decision-tree">QoS Class Assignment Decision Tree</a></li><li class="depth-2"><a href="#qos-examples" data-for="qos-examples">QoS Examples</a></li><li class="depth-1"><a href="#-workflow-4-oomkill-decision-flow" data-for="-workflow-4-oomkill-decision-flow">🔄 Workflow 4: OOMKill Decision Flow</a></li><li class="depth-1"><a href="#-workflow-5-limitrange--resourcequota-admission" data-for="-workflow-5-limitrange--resourcequota-admission">🔄 Workflow 5: LimitRange &amp; ResourceQuota Admission</a></li><li class="depth-2"><a href="#limitrange-vs-resourcequota" data-for="limitrange-vs-resourcequota">LimitRange vs ResourceQuota</a></li><li class="depth-1"><a href="#-tổng-hợp-configuration-objects-matrix" data-for="-tổng-hợp-configuration-objects-matrix">📊 Tổng Hợp: Configuration Objects Matrix</a></li><li class="depth-1"><a href="#-troubleshooting-configuration" data-for="-troubleshooting-configuration">🔧 Troubleshooting Configuration</a></li><li class="depth-2"><a href="#common-issues--solutions" data-for="common-issues--solutions">Common Issues &amp; Solutions</a></li><li class="depth-2"><a href="#immutable-configmap-pattern" data-for="immutable-configmap-pattern">Immutable ConfigMap Pattern</a></li><li class="depth-1"><a href="#-cross-references" data-for="-cross-references">📎 Cross-References</a></li><li class="depth-1"><a href="#-kiểm-tra-hiểu-biết" data-for="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết</a></li><li class="depth-2"><a href="#câu-1-configmap-update" data-for="câu-1-configmap-update">Câu 1: ConfigMap Update</a></li><li class="depth-2"><a href="#câu-2-qos-kill-order" data-for="câu-2-qos-kill-order">Câu 2: QoS Kill Order</a></li><li class="depth-2"><a href="#câu-3-limitrange-default" data-for="câu-3-limitrange-default">Câu 3: LimitRange Default</a></li><li class="depth-1"><a href="#-tiếp-theo" data-for="-tiếp-theo">🚀 Tiếp Theo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/k8s/06-configuration/readme" class="internal">Phần 6: Configuration - Quản Lý Cấu Hình</a></li><li><a href="../../../02---areas/k8s/readme" class="internal">Kubernetes Learning Guide - Hướng Dẫn Học Kubernetes Từ Đầu</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

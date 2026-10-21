@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>5.4. Networking Workflows - Luồng Traffic End-to-End</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="5.4. Networking Workflows - Luồng Traffic End-to-End"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="5.4. Networking Workflows - Luồng Traffic End-to-End"/><meta name="twitter:description" content="5.4."/><meta property="og:description" content="5.4."/><meta property="og:image:alt" content="5.4."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/05-networking/04-networking-workflows"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/05-networking/04-networking-workflows"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="5.4."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/k8s/05-networking/04-networking-workflows" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-143" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-143" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/">K8S</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/05-networking/">05-networking</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>5.4. Networking Workflows - Luồng Traffic End-to-End</a></div></nav><h1 class="article-title">5.4. Networking Workflows - Luồng Traffic End-to-End</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/k8s" class="internal internal-link tag-link">domain/k8s</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-09T17:00:00.000Z">10 thg 4, 2026</time><span>11 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="54-networking-workflows---luồng-traffic-end-to-end">5.4. Networking Workflows - Luồng Traffic End-to-End<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#54-networking-workflows---luồng-traffic-end-to-end" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>Chi tiết cách traffic di chuyển qua mọi tầng network trong Kubernetes</p>
+</blockquote>
+<hr/>
+<h2 id="-mục-tiêu-học">🎯 Mục Tiêu Học<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mục-tiêu-học" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau khi học xong phần này, bạn sẽ:</p>
+<ul>
+<li>✅ Trace được <strong>packet journey</strong> từ client đến Pod</li>
+<li>✅ Hiểu <strong>iptables/IPVS DNAT</strong> hoạt động ra sao</li>
+<li>✅ Phân biệt <strong>traffic flow</strong> giữa 4 Service types</li>
+<li>✅ Nắm rõ <strong>DNS resolution pipeline</strong> trong cluster</li>
+<li>✅ Hiểu <strong>Pod-to-Pod</strong> communication qua CNI</li>
+</ul>
+<hr/>
+<h2 id="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-quy-tắc-màu-sắc-diagram" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Quy tắc màu nhất quán </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>💙 <strong>Xanh dương</strong> <code>#3498db</code> — Service, Ingress (network entry point)</li>
+<li>💚 <strong>Xanh lá</strong> <code>#27ae60</code> — Pod healthy, traffic delivered</li>
+<li>🧡 <strong>Cam</strong> <code>#f39c12</code> — Load Balancer, routing decision</li>
+<li>❤️ <strong>Đỏ</strong> <code>#e74c3c</code> — Denied, dropped</li>
+<li>💜 <strong>Tím</strong> <code>#9b59b6</code> — DNS, advanced routing</li>
+<li>⬜ <strong>Xám</strong> <code>#95a5a6</code> — Infrastructure (Nodes, kernel)</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-1-clusterip-full-flow">🔄 Workflow 1: ClusterIP Full Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-1-clusterip-full-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Pod A (frontend) gọi Service B (backend) bên trong cluster</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant PodA as 🟢 Pod A&lt;br/>frontend&lt;br/>10.244.1.5\n    participant DNS as 🌐 CoreDNS&lt;br/>kube-system\n    participant KERN as 🐧 Kernel&lt;br/>iptables\n    participant KP as ⚙️ kube-proxy&lt;br/>(setup phase)\n    participant EP as Endpoints&lt;br/>Controller\n    participant PodB as 🟢 Pod B&lt;br/>backend&lt;br/>10.244.2.8\n\n    Note over KP,EP: 🔧 SETUP PHASE (trước khi traffic xảy ra)\n    EP->>EP: Watch Service + Pods&lt;br/>→ Create Endpoints object\n    KP->>KP: Watch Services + Endpoints&lt;br/>→ Create iptables rules\n\n    Note over PodA,PodB: 📡 REQUEST PHASE\n\n    PodA->>DNS: DNS query: \&quot;backend-svc\&quot;\n    Note over DNS: Search order:&lt;br/>1. backend-svc.default.svc.cluster.local&lt;br/>2. backend-svc.default.svc&lt;br/>3. backend-svc.default&lt;br/>4. backend-svc\n    DNS-->>PodA: A record: 10.96.50.100&lt;br/>(ClusterIP)\n\n    PodA->>KERN: TCP SYN to 10.96.50.100:80\n\n    Note over KERN: 🔀 iptables DNAT chains:&lt;br/>KUBE-SERVICES → KUBE-SVC-xxx&lt;br/>→ random KUBE-SEP-yyy&lt;br/>&lt;br/>10.96.50.100:80 →&lt;br/>10.244.2.8:8080 (Pod B)\n\n    KERN->>PodB: Packet dest rewritten&lt;br/>→ 10.244.2.8:8080\n\n    PodB-->>PodA: Response (SNAT reverse path)\n\n    Note over PodA: ✅ Got response!&lt;br/>Pod A sees it came from&lt;br/>10.96.50.100 (Service IP)&quot;">sequenceDiagram
+    autonumber
+    participant PodA as 🟢 Pod A&lt;br/>frontend&lt;br/>10.244.1.5
+    participant DNS as 🌐 CoreDNS&lt;br/>kube-system
+    participant KERN as 🐧 Kernel&lt;br/>iptables
+    participant KP as ⚙️ kube-proxy&lt;br/>(setup phase)
+    participant EP as Endpoints&lt;br/>Controller
+    participant PodB as 🟢 Pod B&lt;br/>backend&lt;br/>10.244.2.8
+
+    Note over KP,EP: 🔧 SETUP PHASE (trước khi traffic xảy ra)
+    EP->>EP: Watch Service + Pods&lt;br/>→ Create Endpoints object
+    KP->>KP: Watch Services + Endpoints&lt;br/>→ Create iptables rules
+
+    Note over PodA,PodB: 📡 REQUEST PHASE
+
+    PodA->>DNS: DNS query: &quot;backend-svc&quot;
+    Note over DNS: Search order:&lt;br/>1. backend-svc.default.svc.cluster.local&lt;br/>2. backend-svc.default.svc&lt;br/>3. backend-svc.default&lt;br/>4. backend-svc
+    DNS-->>PodA: A record: 10.96.50.100&lt;br/>(ClusterIP)
+
+    PodA->>KERN: TCP SYN to 10.96.50.100:80
+
+    Note over KERN: 🔀 iptables DNAT chains:&lt;br/>KUBE-SERVICES → KUBE-SVC-xxx&lt;br/>→ random KUBE-SEP-yyy&lt;br/>&lt;br/>10.96.50.100:80 →&lt;br/>10.244.2.8:8080 (Pod B)
+
+    KERN->>PodB: Packet dest rewritten&lt;br/>→ 10.244.2.8:8080
+
+    PodB-->>PodA: Response (SNAT reverse path)
+
+    Note over PodA: ✅ Got response!&lt;br/>Pod A sees it came from&lt;br/>10.96.50.100 (Service IP)
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="iptables-chain-detail">iptables Chain Detail<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#iptables-chain-detail" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    PKT[\&quot;📨 Packet arrives&lt;br/>dst: 10.96.50.100:80\&quot;] --> PREROUTING[\&quot;PREROUTING chain\&quot;]\n    PREROUTING --> KUBE_SVC[\&quot;KUBE-SERVICES chain&lt;br/>&lt;i>Match Service ClusterIP&lt;/i>\&quot;]\n\n    KUBE_SVC --> SVC_MATCH[\&quot;KUBE-SVC-XXXX&lt;br/>Service: backend-svc&lt;br/>ClusterIP: 10.96.50.100\&quot;]\n\n    SVC_MATCH --> PROB{\&quot;Random&lt;br/>probability\&quot;}\n    PROB -->|\&quot;33%\&quot;| SEP1[\&quot;KUBE-SEP-AAA&lt;br/>DNAT → 10.244.1.10:8080&lt;br/>(Pod 1)\&quot;]\n    PROB -->|\&quot;33%\&quot;| SEP2[\&quot;KUBE-SEP-BBB&lt;br/>DNAT → 10.244.2.8:8080&lt;br/>(Pod 2)\&quot;]\n    PROB -->|\&quot;34%\&quot;| SEP3[\&quot;KUBE-SEP-CCC&lt;br/>DNAT → 10.244.3.5:8080&lt;br/>(Pod 3)\&quot;]\n\n    SEP1 --> ROUTING[\&quot;Routing Decision&lt;br/>→ CNI forward\&quot;]\n    SEP2 --> ROUTING\n    SEP3 --> ROUTING\n\n    style PKT fill:#3498db,stroke:#2980b9,color:#fff\n    style SVC_MATCH fill:#f39c12,stroke:#d68910,color:#fff\n    style SEP1 fill:#27ae60,stroke:#1e8449,color:#fff\n    style SEP2 fill:#27ae60,stroke:#1e8449,color:#fff\n    style SEP3 fill:#27ae60,stroke:#1e8449,color:#fff&quot;">graph TD
+    PKT[&quot;📨 Packet arrives&lt;br/>dst: 10.96.50.100:80&quot;] --> PREROUTING[&quot;PREROUTING chain&quot;]
+    PREROUTING --> KUBE_SVC[&quot;KUBE-SERVICES chain&lt;br/>&lt;i>Match Service ClusterIP&lt;/i>&quot;]
+
+    KUBE_SVC --> SVC_MATCH[&quot;KUBE-SVC-XXXX&lt;br/>Service: backend-svc&lt;br/>ClusterIP: 10.96.50.100&quot;]
+
+    SVC_MATCH --> PROB{&quot;Random&lt;br/>probability&quot;}
+    PROB -->|&quot;33%&quot;| SEP1[&quot;KUBE-SEP-AAA&lt;br/>DNAT → 10.244.1.10:8080&lt;br/>(Pod 1)&quot;]
+    PROB -->|&quot;33%&quot;| SEP2[&quot;KUBE-SEP-BBB&lt;br/>DNAT → 10.244.2.8:8080&lt;br/>(Pod 2)&quot;]
+    PROB -->|&quot;34%&quot;| SEP3[&quot;KUBE-SEP-CCC&lt;br/>DNAT → 10.244.3.5:8080&lt;br/>(Pod 3)&quot;]
+
+    SEP1 --> ROUTING[&quot;Routing Decision&lt;br/>→ CNI forward&quot;]
+    SEP2 --> ROUTING
+    SEP3 --> ROUTING
+
+    style PKT fill:#3498db,stroke:#2980b9,color:#fff
+    style SVC_MATCH fill:#f39c12,stroke:#d68910,color:#fff
+    style SEP1 fill:#27ae60,stroke:#1e8449,color:#fff
+    style SEP2 fill:#27ae60,stroke:#1e8449,color:#fff
+    style SEP3 fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>ClusterIP chỉ là Virtual IP </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>ClusterIP <strong>không tồn tại trên bất kỳ interface nào</strong></li>
+<li>Nó chỉ là entry trong iptables → DNAT thành Pod IP thật</li>
+<li>Không thể <code>ping</code> ClusterIP (ICMP không qua iptables DNAT)</li>
+<li>Nhưng TCP/UDP connections hoạt động bình thường!</li>
+</ul>
+</div>
+</blockquote>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>kube-proxy Modes </p></div>
+                  
+                </div>
+<div class="callout-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Mode</th><th>Mechanism</th><th style="text-align:center;">Performance</th><th style="text-align:center;">Feature</th></tr></thead><tbody><tr><td><strong>iptables</strong> (default)</td><td>Kernel iptables rules</td><td style="text-align:center;">⭐⭐⭐</td><td style="text-align:center;">Random LB only</td></tr><tr><td><strong>IPVS</strong></td><td>Linux Virtual Server</td><td style="text-align:center;">⭐⭐⭐⭐⭐</td><td style="text-align:center;">rr, lc, wrr, sh, dh, sed</td></tr><tr><td><strong>nftables</strong> (K8s 1.29+)</td><td>nftables (successor of iptables)</td><td style="text-align:center;">⭐⭐⭐⭐</td><td style="text-align:center;">Modern replacement</td></tr></tbody></table></div>
+<p>Production large clusters (≥500 Services): Consider <strong>IPVS</strong> mode for better performance.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-2-nodeport-traffic-path">🔄 Workflow 2: NodePort Traffic Path<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-2-nodeport-traffic-path" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: External client → NodePort 30080 → Pod</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    CLIENT[\&quot;🌍 External Client&lt;br/>Browser / curl\&quot;] -->|\&quot;HTTP request&lt;br/>192.168.1.100:30080\&quot;| NODE1\n\n    subgraph \&quot;Cluster\&quot;\n        subgraph NODE1[\&quot;🖥️ Node 1 (192.168.1.100)\&quot;]\n            NP1[\&quot;NodePort :30080&lt;br/>kube-proxy listens\&quot;]\n        end\n\n        subgraph NODE2[\&quot;🖥️ Node 2 (192.168.1.101)\&quot;]\n            NP2[\&quot;NodePort :30080&lt;br/>kube-proxy listens\&quot;]\n        end\n\n        NP1 --> IPTABLES{\&quot;⚖️ iptables&lt;br/>DNAT + LB\&quot;}\n        NP2 --> IPTABLES2{\&quot;⚖️ iptables&lt;br/>DNAT + LB\&quot;}\n\n        IPTABLES -->|\&quot;random\&quot;| POD1[\&quot;🟢 Pod 1&lt;br/>10.244.1.5:8080&lt;br/>&lt;i>on Node 1&lt;/i>\&quot;]\n        IPTABLES -->|\&quot;random\&quot;| POD2[\&quot;🟢 Pod 2&lt;br/>10.244.2.8:8080&lt;br/>&lt;i>on Node 2&lt;/i>\&quot;]\n        IPTABLES2 -->|\&quot;random\&quot;| POD1\n        IPTABLES2 -->|\&quot;random\&quot;| POD2\n    end\n\n    style CLIENT fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style NP1 fill:#f39c12,stroke:#d68910,color:#fff\n    style NP2 fill:#f39c12,stroke:#d68910,color:#fff\n    style POD1 fill:#27ae60,stroke:#1e8449,color:#fff\n    style POD2 fill:#27ae60,stroke:#1e8449,color:#fff&quot;">graph LR
+    CLIENT[&quot;🌍 External Client&lt;br/>Browser / curl&quot;] -->|&quot;HTTP request&lt;br/>192.168.1.100:30080&quot;| NODE1
+
+    subgraph &quot;Cluster&quot;
+        subgraph NODE1[&quot;🖥️ Node 1 (192.168.1.100)&quot;]
+            NP1[&quot;NodePort :30080&lt;br/>kube-proxy listens&quot;]
+        end
+
+        subgraph NODE2[&quot;🖥️ Node 2 (192.168.1.101)&quot;]
+            NP2[&quot;NodePort :30080&lt;br/>kube-proxy listens&quot;]
+        end
+
+        NP1 --> IPTABLES{&quot;⚖️ iptables&lt;br/>DNAT + LB&quot;}
+        NP2 --> IPTABLES2{&quot;⚖️ iptables&lt;br/>DNAT + LB&quot;}
+
+        IPTABLES -->|&quot;random&quot;| POD1[&quot;🟢 Pod 1&lt;br/>10.244.1.5:8080&lt;br/>&lt;i>on Node 1&lt;/i>&quot;]
+        IPTABLES -->|&quot;random&quot;| POD2[&quot;🟢 Pod 2&lt;br/>10.244.2.8:8080&lt;br/>&lt;i>on Node 2&lt;/i>&quot;]
+        IPTABLES2 -->|&quot;random&quot;| POD1
+        IPTABLES2 -->|&quot;random&quot;| POD2
+    end
+
+    style CLIENT fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style NP1 fill:#f39c12,stroke:#d68910,color:#fff
+    style NP2 fill:#f39c12,stroke:#d68910,color:#fff
+    style POD1 fill:#27ae60,stroke:#1e8449,color:#fff
+    style POD2 fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>NodePort Cross-Node Routing </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Traffic đến Node 1 <strong>có thể route đến Pod trên Node 2</strong>!</p>
+<ul>
+<li>Packet: Client → Node 1:30080 → DNAT → Pod on Node 2</li>
+<li>Extra network hop + SNAT → source IP bị mất</li>
+<li>Fix: <code>externalTrafficPolicy: Local</code> (chỉ route đến Pods trên cùng Node)</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  externalTrafficPolicy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">Local</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Giữ source IP, giảm latency</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Nhưng: Nếu Node không có Pod → connection refused!</span></span></code></pre></figure>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-3-loadbalancer-complete-flow">🔄 Workflow 3: LoadBalancer Complete Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-3-loadbalancer-complete-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Internet → Cloud LB → Nodes → Pods</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant U as 🌍 Internet User\n    participant CLB as ☁️ Cloud Load&lt;br/>Balancer&lt;br/>35.x.x.x\n    participant N1 as 🖥️ Node 1&lt;br/>:31234\n    participant N2 as 🖥️ Node 2&lt;br/>:31234\n    participant N3 as 🖥️ Node 3&lt;br/>:31234\n    participant P as 🟢 Pod&lt;br/>10.244.x.x:8080\n\n    Note over CLB: SETUP PHASE:&lt;br/>Cloud Controller Manager&lt;br/>→ Provisions LB&lt;br/>→ Assigns External IP&lt;br/>→ Health checks Nodes\n\n    U->>CLB: GET https://myapp.com\n    Note over CLB: DNS: myapp.com → 35.x.x.x\n\n    CLB->>CLB: Health check:&lt;br/>Node 1 ✅ Node 2 ✅ Node 3 ❌\n    CLB->>N1: Forward to healthy Node&lt;br/>(round-robin)\n\n    Note over N1: NodePort :31234&lt;br/>→ iptables DNAT\n\n    N1->>P: Route to Pod&lt;br/>(same or different Node)\n    P-->>N1: Response\n    N1-->>CLB: Response\n    CLB-->>U: HTTP 200 OK\n\n    Note over U: ✅ User doesn't know&lt;br/>about Nodes or Pods!&quot;">sequenceDiagram
+    autonumber
+    participant U as 🌍 Internet User
+    participant CLB as ☁️ Cloud Load&lt;br/>Balancer&lt;br/>35.x.x.x
+    participant N1 as 🖥️ Node 1&lt;br/>:31234
+    participant N2 as 🖥️ Node 2&lt;br/>:31234
+    participant N3 as 🖥️ Node 3&lt;br/>:31234
+    participant P as 🟢 Pod&lt;br/>10.244.x.x:8080
+
+    Note over CLB: SETUP PHASE:&lt;br/>Cloud Controller Manager&lt;br/>→ Provisions LB&lt;br/>→ Assigns External IP&lt;br/>→ Health checks Nodes
+
+    U->>CLB: GET https://myapp.com
+    Note over CLB: DNS: myapp.com → 35.x.x.x
+
+    CLB->>CLB: Health check:&lt;br/>Node 1 ✅ Node 2 ✅ Node 3 ❌
+    CLB->>N1: Forward to healthy Node&lt;br/>(round-robin)
+
+    Note over N1: NodePort :31234&lt;br/>→ iptables DNAT
+
+    N1->>P: Route to Pod&lt;br/>(same or different Node)
+    P-->>N1: Response
+    N1-->>CLB: Response
+    CLB-->>U: HTTP 200 OK
+
+    Note over U: ✅ User doesn't know&lt;br/>about Nodes or Pods!
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="double-load-balancing-architecture">Double Load Balancing Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#double-load-balancing-architecture" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    INTERNET[\&quot;🌍 Internet\&quot;] --> LB[\&quot;☁️ Cloud Load Balancer&lt;br/>35.x.x.x:443&lt;br/>&lt;i>Layer 4 (TCP) or Layer 7 (HTTP)&lt;/i>\&quot;]\n\n    LB -->|\&quot;LB Decision&lt;br/>(round-robin)\&quot;| N1[\&quot;🖥️ Node 1&lt;br/>:31234\&quot;]\n    LB -->|\&quot;LB Decision\&quot;| N2[\&quot;🖥️ Node 2&lt;br/>:31234\&quot;]\n    LB -.->|\&quot;unhealthy\&quot;| N3[\&quot;🖥️ Node 3 ❌&lt;br/>:31234\&quot;]\n\n    N1 -->|\&quot;iptables&lt;br/>DNAT\&quot;| IPTABLES1{\&quot;⚖️ kube-proxy&lt;br/>LB\&quot;}\n    N2 -->|\&quot;iptables&lt;br/>DNAT\&quot;| IPTABLES2{\&quot;⚖️ kube-proxy&lt;br/>LB\&quot;}\n\n    IPTABLES1 --> P1[\&quot;🟢 Pod 1\&quot;] &amp; P2[\&quot;🟢 Pod 2\&quot;]\n    IPTABLES2 --> P1 &amp; P3[\&quot;🟢 Pod 3\&quot;]\n\n    style LB fill:#f39c12,stroke:#d68910,color:#fff\n    style N1 fill:#95a5a6,stroke:#7f8c8d,color:#fff\n    style N2 fill:#95a5a6,stroke:#7f8c8d,color:#fff\n    style N3 fill:#e74c3c,stroke:#c0392b,color:#fff\n    style P1 fill:#27ae60,stroke:#1e8449,color:#fff\n    style P2 fill:#27ae60,stroke:#1e8449,color:#fff\n    style P3 fill:#27ae60,stroke:#1e8449,color:#fff&quot;">graph TD
+    INTERNET[&quot;🌍 Internet&quot;] --> LB[&quot;☁️ Cloud Load Balancer&lt;br/>35.x.x.x:443&lt;br/>&lt;i>Layer 4 (TCP) or Layer 7 (HTTP)&lt;/i>&quot;]
+
+    LB -->|&quot;LB Decision&lt;br/>(round-robin)&quot;| N1[&quot;🖥️ Node 1&lt;br/>:31234&quot;]
+    LB -->|&quot;LB Decision&quot;| N2[&quot;🖥️ Node 2&lt;br/>:31234&quot;]
+    LB -.->|&quot;unhealthy&quot;| N3[&quot;🖥️ Node 3 ❌&lt;br/>:31234&quot;]
+
+    N1 -->|&quot;iptables&lt;br/>DNAT&quot;| IPTABLES1{&quot;⚖️ kube-proxy&lt;br/>LB&quot;}
+    N2 -->|&quot;iptables&lt;br/>DNAT&quot;| IPTABLES2{&quot;⚖️ kube-proxy&lt;br/>LB&quot;}
+
+    IPTABLES1 --> P1[&quot;🟢 Pod 1&quot;] &amp; P2[&quot;🟢 Pod 2&quot;]
+    IPTABLES2 --> P1 &amp; P3[&quot;🟢 Pod 3&quot;]
+
+    style LB fill:#f39c12,stroke:#d68910,color:#fff
+    style N1 fill:#95a5a6,stroke:#7f8c8d,color:#fff
+    style N2 fill:#95a5a6,stroke:#7f8c8d,color:#fff
+    style N3 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style P1 fill:#27ae60,stroke:#1e8449,color:#fff
+    style P2 fill:#27ae60,stroke:#1e8449,color:#fff
+    style P3 fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>LoadBalancer = NodePort + Cloud LB </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>LoadBalancer Service tự động tạo NodePort bên dưới:</p>
+<pre><code>Service type: LoadBalancer
+├── ClusterIP: 10.96.x.x (internal)
+├── NodePort: 31234 (on all Nodes)
+└── External IP: 35.x.x.x (cloud provisioned)
+</code></pre>
+<p>→ Mỗi tầng thêm 1 layer abstraction!</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-4-ingress-routing">🔄 Workflow 4: Ingress Routing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-4-ingress-routing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: 1 Ingress Controller route traffic cho nhiều Services</p>
+</blockquote>
+<h3 id="host-based--path-based-routing">Host-based + Path-based Routing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#host-based--path-based-routing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    CLIENT[\&quot;🌍 Client Request\&quot;] --> ING_CTRL\n\n    subgraph \&quot;Ingress Controller (NGINX/Traefik)\&quot;\n        ING_CTRL[\&quot;🔀 Ingress Controller Pod&lt;br/>NodePort/LoadBalancer&lt;br/>&lt;i>Reverse Proxy&lt;/i>\&quot;]\n\n        ING_CTRL --> RULES{\&quot;Match Ingress Rules\&quot;}\n\n        RULES -->|\&quot;Host: shop.example.com&lt;br/>Path: /api/*\&quot;| SVC_API\n        RULES -->|\&quot;Host: shop.example.com&lt;br/>Path: /static/*\&quot;| SVC_STATIC\n        RULES -->|\&quot;Host: blog.example.com&lt;br/>Path: /*\&quot;| SVC_BLOG\n        RULES -->|\&quot;No match\&quot;| DEFAULT[\&quot;Default Backend&lt;br/>404 Not Found\&quot;]\n    end\n\n    SVC_API[\&quot;🔀 Service: api-svc&lt;br/>ClusterIP:80\&quot;] --> API1[\&quot;🟢 api-pod-1\&quot;]\n    SVC_API --> API2[\&quot;🟢 api-pod-2\&quot;]\n\n    SVC_STATIC[\&quot;🔀 Service: static-svc&lt;br/>ClusterIP:80\&quot;] --> STATIC1[\&quot;🟢 static-pod-1\&quot;]\n\n    SVC_BLOG[\&quot;🔀 Service: blog-svc&lt;br/>ClusterIP:80\&quot;] --> BLOG1[\&quot;🟢 blog-pod-1\&quot;]\n    SVC_BLOG --> BLOG2[\&quot;🟢 blog-pod-2\&quot;]\n\n    style ING_CTRL fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style SVC_API fill:#3498db,stroke:#2980b9,color:#fff\n    style SVC_STATIC fill:#3498db,stroke:#2980b9,color:#fff\n    style SVC_BLOG fill:#3498db,stroke:#2980b9,color:#fff\n    style API1 fill:#27ae60,stroke:#1e8449,color:#fff\n    style API2 fill:#27ae60,stroke:#1e8449,color:#fff\n    style STATIC1 fill:#27ae60,stroke:#1e8449,color:#fff\n    style BLOG1 fill:#27ae60,stroke:#1e8449,color:#fff\n    style BLOG2 fill:#27ae60,stroke:#1e8449,color:#fff\n    style DEFAULT fill:#e74c3c,stroke:#c0392b,color:#fff&quot;">graph TD
+    CLIENT[&quot;🌍 Client Request&quot;] --> ING_CTRL
+
+    subgraph &quot;Ingress Controller (NGINX/Traefik)&quot;
+        ING_CTRL[&quot;🔀 Ingress Controller Pod&lt;br/>NodePort/LoadBalancer&lt;br/>&lt;i>Reverse Proxy&lt;/i>&quot;]
+
+        ING_CTRL --> RULES{&quot;Match Ingress Rules&quot;}
+
+        RULES -->|&quot;Host: shop.example.com&lt;br/>Path: /api/*&quot;| SVC_API
+        RULES -->|&quot;Host: shop.example.com&lt;br/>Path: /static/*&quot;| SVC_STATIC
+        RULES -->|&quot;Host: blog.example.com&lt;br/>Path: /*&quot;| SVC_BLOG
+        RULES -->|&quot;No match&quot;| DEFAULT[&quot;Default Backend&lt;br/>404 Not Found&quot;]
+    end
+
+    SVC_API[&quot;🔀 Service: api-svc&lt;br/>ClusterIP:80&quot;] --> API1[&quot;🟢 api-pod-1&quot;]
+    SVC_API --> API2[&quot;🟢 api-pod-2&quot;]
+
+    SVC_STATIC[&quot;🔀 Service: static-svc&lt;br/>ClusterIP:80&quot;] --> STATIC1[&quot;🟢 static-pod-1&quot;]
+
+    SVC_BLOG[&quot;🔀 Service: blog-svc&lt;br/>ClusterIP:80&quot;] --> BLOG1[&quot;🟢 blog-pod-1&quot;]
+    SVC_BLOG --> BLOG2[&quot;🟢 blog-pod-2&quot;]
+
+    style ING_CTRL fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style SVC_API fill:#3498db,stroke:#2980b9,color:#fff
+    style SVC_STATIC fill:#3498db,stroke:#2980b9,color:#fff
+    style SVC_BLOG fill:#3498db,stroke:#2980b9,color:#fff
+    style API1 fill:#27ae60,stroke:#1e8449,color:#fff
+    style API2 fill:#27ae60,stroke:#1e8449,color:#fff
+    style STATIC1 fill:#27ae60,stroke:#1e8449,color:#fff
+    style BLOG1 fill:#27ae60,stroke:#1e8449,color:#fff
+    style BLOG2 fill:#27ae60,stroke:#1e8449,color:#fff
+    style DEFAULT fill:#e74c3c,stroke:#c0392b,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="ingress-vs-loadbalancer-service">Ingress vs LoadBalancer Service<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ingress-vs-loadbalancer-service" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph \&quot;Without Ingress (1 LB per Service = $$$)\&quot;\n        LB1[\&quot;☁️ LB $15/mo&lt;br/>35.1.x.x\&quot;] --> S1[\&quot;Service A\&quot;]\n        LB2[\&quot;☁️ LB $15/mo&lt;br/>35.2.x.x\&quot;] --> S2[\&quot;Service B\&quot;]\n        LB3[\&quot;☁️ LB $15/mo&lt;br/>35.3.x.x\&quot;] --> S3[\&quot;Service C\&quot;]\n    end\n\n    subgraph \&quot;With Ingress (1 LB, multiple routes = $)\&quot;\n        LB_ONE[\&quot;☁️ LB $15/mo&lt;br/>35.0.x.x\&quot;] --> ING[\&quot;🔀 Ingress&lt;br/>Controller\&quot;]\n        ING -->|\&quot;/api\&quot;| SA[\&quot;Service A\&quot;]\n        ING -->|\&quot;/web\&quot;| SB[\&quot;Service B\&quot;]\n        ING -->|\&quot;/blog\&quot;| SC[\&quot;Service C\&quot;]\n    end\n\n    style LB1 fill:#e74c3c,stroke:#c0392b,color:#fff\n    style LB2 fill:#e74c3c,stroke:#c0392b,color:#fff\n    style LB3 fill:#e74c3c,stroke:#c0392b,color:#fff\n    style LB_ONE fill:#27ae60,stroke:#1e8449,color:#fff\n    style ING fill:#9b59b6,stroke:#8e44ad,color:#fff&quot;">graph LR
+    subgraph &quot;Without Ingress (1 LB per Service = $$$)&quot;
+        LB1[&quot;☁️ LB $15/mo&lt;br/>35.1.x.x&quot;] --> S1[&quot;Service A&quot;]
+        LB2[&quot;☁️ LB $15/mo&lt;br/>35.2.x.x&quot;] --> S2[&quot;Service B&quot;]
+        LB3[&quot;☁️ LB $15/mo&lt;br/>35.3.x.x&quot;] --> S3[&quot;Service C&quot;]
+    end
+
+    subgraph &quot;With Ingress (1 LB, multiple routes = $)&quot;
+        LB_ONE[&quot;☁️ LB $15/mo&lt;br/>35.0.x.x&quot;] --> ING[&quot;🔀 Ingress&lt;br/>Controller&quot;]
+        ING -->|&quot;/api&quot;| SA[&quot;Service A&quot;]
+        ING -->|&quot;/web&quot;| SB[&quot;Service B&quot;]
+        ING -->|&quot;/blog&quot;| SC[&quot;Service C&quot;]
+    end
+
+    style LB1 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style LB2 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style LB3 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style LB_ONE fill:#27ae60,stroke:#1e8449,color:#fff
+    style ING fill:#9b59b6,stroke:#8e44ad,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Ingress hoạt động ở Layer 7 (HTTP) </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>Hiểu <strong>Host header</strong>, <strong>URL path</strong>, <strong>HTTP methods</strong></li>
+<li>Có thể terminate <strong>TLS/SSL</strong></li>
+<li>Có thể rewrite URLs, add headers</li>
+<li>Cần <strong>Ingress Controller</strong> (NGINX, Traefik, HAProxy) chạy trong cluster</li>
+</ul>
+<p>Service (NodePort/LB) hoạt động ở Layer 4 (TCP/UDP) — không hiểu HTTP</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-5-pod-to-pod-communication">🔄 Workflow 5: Pod-to-Pod Communication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-5-pod-to-pod-communication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Pod trên Node 1 nói chuyện với Pod trên Node 2</p>
+</blockquote>
+<h3 id="same-node-vs-cross-node">Same Node vs Cross-Node<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#same-node-vs-cross-node" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph NODE1[\&quot;🖥️ Node 1\&quot;]\n        subgraph \&quot;Pod Network (veth pairs)\&quot;\n            PodA[\&quot;🟢 Pod A&lt;br/>10.244.1.5\&quot;]\n            PodB[\&quot;🟢 Pod B&lt;br/>10.244.1.8\&quot;]\n        end\n        BRIDGE1[\&quot;🌉 cbr0 / cni0&lt;br/>Linux Bridge&lt;br/>10.244.1.0/24\&quot;]\n        PodA -.->|\&quot;veth pair\&quot;| BRIDGE1\n        PodB -.->|\&quot;veth pair\&quot;| BRIDGE1\n    end\n\n    subgraph NODE2[\&quot;🖥️ Node 2\&quot;]\n        subgraph \&quot;Pod Network\&quot;\n            PodC[\&quot;🟢 Pod C&lt;br/>10.244.2.10\&quot;]\n        end\n        BRIDGE2[\&quot;🌉 cbr0 / cni0&lt;br/>Linux Bridge&lt;br/>10.244.2.0/24\&quot;]\n        PodC -.->|\&quot;veth pair\&quot;| BRIDGE2\n    end\n\n    BRIDGE1 &lt;-->|\&quot;VXLAN / Host routing&lt;br/>via CNI Plugin&lt;br/>(Calico, Flannel, Cilium)\&quot;| BRIDGE2\n\n    PodA -->|\&quot;Same Node:&lt;br/>Bridge forward&lt;br/>(fast!)\&quot;| PodB\n    PodA -->|\&quot;Cross-Node:&lt;br/>Encapsulate + Route&lt;br/>(extra hop)\&quot;| PodC\n\n    style PodA fill:#27ae60,stroke:#1e8449,color:#fff\n    style PodB fill:#27ae60,stroke:#1e8449,color:#fff\n    style PodC fill:#27ae60,stroke:#1e8449,color:#fff\n    style BRIDGE1 fill:#f39c12,stroke:#d68910,color:#fff\n    style BRIDGE2 fill:#f39c12,stroke:#d68910,color:#fff&quot;">graph TD
+    subgraph NODE1[&quot;🖥️ Node 1&quot;]
+        subgraph &quot;Pod Network (veth pairs)&quot;
+            PodA[&quot;🟢 Pod A&lt;br/>10.244.1.5&quot;]
+            PodB[&quot;🟢 Pod B&lt;br/>10.244.1.8&quot;]
+        end
+        BRIDGE1[&quot;🌉 cbr0 / cni0&lt;br/>Linux Bridge&lt;br/>10.244.1.0/24&quot;]
+        PodA -.->|&quot;veth pair&quot;| BRIDGE1
+        PodB -.->|&quot;veth pair&quot;| BRIDGE1
+    end
+
+    subgraph NODE2[&quot;🖥️ Node 2&quot;]
+        subgraph &quot;Pod Network&quot;
+            PodC[&quot;🟢 Pod C&lt;br/>10.244.2.10&quot;]
+        end
+        BRIDGE2[&quot;🌉 cbr0 / cni0&lt;br/>Linux Bridge&lt;br/>10.244.2.0/24&quot;]
+        PodC -.->|&quot;veth pair&quot;| BRIDGE2
+    end
+
+    BRIDGE1 &lt;-->|&quot;VXLAN / Host routing&lt;br/>via CNI Plugin&lt;br/>(Calico, Flannel, Cilium)&quot;| BRIDGE2
+
+    PodA -->|&quot;Same Node:&lt;br/>Bridge forward&lt;br/>(fast!)&quot;| PodB
+    PodA -->|&quot;Cross-Node:&lt;br/>Encapsulate + Route&lt;br/>(extra hop)&quot;| PodC
+
+    style PodA fill:#27ae60,stroke:#1e8449,color:#fff
+    style PodB fill:#27ae60,stroke:#1e8449,color:#fff
+    style PodC fill:#27ae60,stroke:#1e8449,color:#fff
+    style BRIDGE1 fill:#f39c12,stroke:#d68910,color:#fff
+    style BRIDGE2 fill:#f39c12,stroke:#d68910,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Kubernetes Network Model — 3 Rules </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ol>
+<li><strong>Every Pod gets its own IP</strong> — không share, không NAT giữa Pods</li>
+<li><strong>All Pods can communicate</strong> with each other without NAT</li>
+<li><strong>Node can communicate</strong> with all Pods without NAT</li>
+</ol>
+<p>→ CNI Plugin (Calico, Flannel, Cilium) implement these rules</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-6-dns-resolution-pipeline">🔄 Workflow 6: DNS Resolution Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-6-dns-resolution-pipeline" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Pod dùng short name <code>backend</code> → resolve đầy đủ</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant App as 📦 App trong Pod\n    participant Resolver as 📄 /etc/resolv.conf&lt;br/>trong Pod\n    participant CoreDNS as 🌐 CoreDNS&lt;br/>kube-system\n\n    App->>Resolver: Resolve \&quot;backend\&quot;\n\n    Note over Resolver: ndots: 5 (default)&lt;br/>\&quot;backend\&quot; has 0 dots (&lt; 5)&lt;br/>→ Try search domains first!\n\n    Resolver->>CoreDNS: backend.default.svc.cluster.local?\n    Note over CoreDNS: ✅ FOUND! Service \&quot;backend\&quot;&lt;br/>in namespace \&quot;default\&quot;\n    CoreDNS-->>App: A 10.96.50.100\n\n    Note over App: Nếu KHÔNG tìm thấy ở domain đầu tiên,&lt;br/>tiếp tục thử các search domains khác:\n\n    Resolver->>CoreDNS: backend.default.svc.cluster.local?\n    Note over CoreDNS: ❌ NOT FOUND (giả sử)\n    Resolver->>CoreDNS: backend.svc.cluster.local?\n    Note over CoreDNS: ❌ NOT FOUND\n    Resolver->>CoreDNS: backend.cluster.local?\n    Note over CoreDNS: ❌ NOT FOUND\n    Resolver->>CoreDNS: backend. (absolute, upstream DNS)\n    Note over CoreDNS: Forward to /etc/resolv.conf upstream\n    CoreDNS-->>App: ❌ NXDOMAIN&quot;">sequenceDiagram
+    autonumber
+    participant App as 📦 App trong Pod
+    participant Resolver as 📄 /etc/resolv.conf&lt;br/>trong Pod
+    participant CoreDNS as 🌐 CoreDNS&lt;br/>kube-system
+
+    App->>Resolver: Resolve &quot;backend&quot;
+
+    Note over Resolver: ndots: 5 (default)&lt;br/>&quot;backend&quot; has 0 dots (&lt; 5)&lt;br/>→ Try search domains first!
+
+    Resolver->>CoreDNS: backend.default.svc.cluster.local?
+    Note over CoreDNS: ✅ FOUND! Service &quot;backend&quot;&lt;br/>in namespace &quot;default&quot;
+    CoreDNS-->>App: A 10.96.50.100
+
+    Note over App: Nếu KHÔNG tìm thấy ở domain đầu tiên,&lt;br/>tiếp tục thử các search domains khác:
+
+    Resolver->>CoreDNS: backend.default.svc.cluster.local?
+    Note over CoreDNS: ❌ NOT FOUND (giả sử)
+    Resolver->>CoreDNS: backend.svc.cluster.local?
+    Note over CoreDNS: ❌ NOT FOUND
+    Resolver->>CoreDNS: backend.cluster.local?
+    Note over CoreDNS: ❌ NOT FOUND
+    Resolver->>CoreDNS: backend. (absolute, upstream DNS)
+    Note over CoreDNS: Forward to /etc/resolv.conf upstream
+    CoreDNS-->>App: ❌ NXDOMAIN
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="dns-search-domains">DNS Search Domains<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-search-domains" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    QUERY[\&quot;App: resolve 'backend'\&quot;] --> RESOLV[\&quot;📄 /etc/resolv.conf&lt;br/>nameserver 10.96.0.10&lt;br/>search default.svc.cluster.local&lt;br/>       svc.cluster.local&lt;br/>       cluster.local&lt;br/>options ndots:5\&quot;]\n\n    RESOLV --> Q1[\&quot;Try: backend.default.svc.cluster.local\&quot;] -->|\&quot;Found ✅\&quot;| DONE[\&quot;10.96.50.100\&quot;]\n    Q1 -->|\&quot;Not Found\&quot;| Q2[\&quot;Try: backend.svc.cluster.local\&quot;]\n    Q2 -->|\&quot;Not Found\&quot;| Q3[\&quot;Try: backend.cluster.local\&quot;]\n    Q3 -->|\&quot;Not Found\&quot;| Q4[\&quot;Try: backend. (absolute)\&quot;]\n    Q4 -->|\&quot;Not Found\&quot;| FAIL[\&quot;❌ NXDOMAIN\&quot;]\n\n    style QUERY fill:#3498db,stroke:#2980b9,color:#fff\n    style DONE fill:#27ae60,stroke:#1e8449,color:#fff\n    style FAIL fill:#e74c3c,stroke:#c0392b,color:#fff\n    style RESOLV fill:#9b59b6,stroke:#8e44ad,color:#fff&quot;">graph TD
+    QUERY[&quot;App: resolve 'backend'&quot;] --> RESOLV[&quot;📄 /etc/resolv.conf&lt;br/>nameserver 10.96.0.10&lt;br/>search default.svc.cluster.local&lt;br/>       svc.cluster.local&lt;br/>       cluster.local&lt;br/>options ndots:5&quot;]
+
+    RESOLV --> Q1[&quot;Try: backend.default.svc.cluster.local&quot;] -->|&quot;Found ✅&quot;| DONE[&quot;10.96.50.100&quot;]
+    Q1 -->|&quot;Not Found&quot;| Q2[&quot;Try: backend.svc.cluster.local&quot;]
+    Q2 -->|&quot;Not Found&quot;| Q3[&quot;Try: backend.cluster.local&quot;]
+    Q3 -->|&quot;Not Found&quot;| Q4[&quot;Try: backend. (absolute)&quot;]
+    Q4 -->|&quot;Not Found&quot;| FAIL[&quot;❌ NXDOMAIN&quot;]
+
+    style QUERY fill:#3498db,stroke:#2980b9,color:#fff
+    style DONE fill:#27ae60,stroke:#1e8449,color:#fff
+    style FAIL fill:#e74c3c,stroke:#c0392b,color:#fff
+    style RESOLV fill:#9b59b6,stroke:#8e44ad,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Performance Tip: Dùng FQDN </p></div>
+                  
+                </div>
+<div class="callout-content">
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ❌ Slow: &quot;backend&quot; → thử 4 search domains</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">curl http://backend</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ✅ Fast: FQDN → resolve ngay lần đầu</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">curl http://backend.default.svc.cluster.local</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ✅ Hoặc dùng trailing dot</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">curl http://backend.default.svc.cluster.local.</span></span></code></pre></figure>
+<p>Mỗi DNS lookup thừa = <strong>extra latency + load</strong> lên CoreDNS!</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-tổng-hợp-service-types-comparison">📊 Tổng Hợp: Service Types Comparison<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tổng-hợp-service-types-comparison" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Feature</th><th style="text-align:center;">ClusterIP</th><th style="text-align:center;">NodePort</th><th style="text-align:center;">LoadBalancer</th><th style="text-align:center;">ExternalName</th><th style="text-align:center;">Ingress</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>Access</strong></td><td style="text-align:center;">Internal only</td><td style="text-align:center;">External via Node</td><td style="text-align:center;">External via LB</td><td style="text-align:center;">DNS alias</td><td style="text-align:center;">External via LB</td></tr><tr><td style="text-align:left;"><strong>Layer</strong></td><td style="text-align:center;">L4 (TCP/UDP)</td><td style="text-align:center;">L4</td><td style="text-align:center;">L4</td><td style="text-align:center;">DNS (L3)</td><td style="text-align:center;"><strong>L7 (HTTP)</strong></td></tr><tr><td style="text-align:left;"><strong>External IP</strong></td><td style="text-align:center;">❌</td><td style="text-align:center;">Node IPs</td><td style="text-align:center;">Cloud LB IP</td><td style="text-align:center;">❌</td><td style="text-align:center;">LB IP</td></tr><tr><td style="text-align:left;"><strong>Port range</strong></td><td style="text-align:center;">Any</td><td style="text-align:center;">30000-32767</td><td style="text-align:center;">Any</td><td style="text-align:center;">N/A</td><td style="text-align:center;">80, 443</td></tr><tr><td style="text-align:left;"><strong>Cost</strong></td><td style="text-align:center;">Free</td><td style="text-align:center;">Free</td><td style="text-align:center;">~$15/mo per LB</td><td style="text-align:center;">Free</td><td style="text-align:center;">1 LB total</td></tr><tr><td style="text-align:left;"><strong>SSL termination</strong></td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">✅</td></tr><tr><td style="text-align:left;"><strong>Path routing</strong></td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">✅</td></tr><tr><td style="text-align:left;"><strong>Typical use</strong></td><td style="text-align:center;">Microservices</td><td style="text-align:center;">Dev/test</td><td style="text-align:center;">Prod (L4)</td><td style="text-align:center;">Legacy</td><td style="text-align:center;">Prod (HTTP)</td></tr></tbody></table></div>
+<h3 id="complete-traffic-flow-summary">Complete Traffic Flow Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#complete-traffic-flow-summary" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    EXT[\&quot;🌍 External&lt;br/>Traffic\&quot;] --> ING_OR_LB{\&quot;Entry Point?\&quot;}\n\n    ING_OR_LB -->|\&quot;HTTP/HTTPS\&quot;| INGRESS[\&quot;🔀 Ingress Controller&lt;br/>(L7 routing)\&quot;]\n    ING_OR_LB -->|\&quot;TCP/UDP\&quot;| LB[\&quot;☁️ LoadBalancer&lt;br/>(L4)\&quot;]\n    ING_OR_LB -->|\&quot;Direct Node\&quot;| NP[\&quot;NodePort&lt;br/>:3xxxx\&quot;]\n\n    INGRESS --> CIP[\&quot;ClusterIP Service\&quot;]\n    LB --> NP\n    NP --> CIP\n\n    CIP --> IPTABLES[\&quot;⚖️ iptables/IPVS&lt;br/>DNAT + LB\&quot;]\n    IPTABLES --> POD[\&quot;🟢 Pod\&quot;]\n\n    INT[\&quot;📦 Internal&lt;br/>Pod\&quot;] -->|\&quot;DNS lookup\&quot;| CIP\n\n    style INGRESS fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style LB fill:#f39c12,stroke:#d68910,color:#fff\n    style CIP fill:#3498db,stroke:#2980b9,color:#fff\n    style POD fill:#27ae60,stroke:#1e8449,color:#fff&quot;">graph LR
+    EXT[&quot;🌍 External&lt;br/>Traffic&quot;] --> ING_OR_LB{&quot;Entry Point?&quot;}
+
+    ING_OR_LB -->|&quot;HTTP/HTTPS&quot;| INGRESS[&quot;🔀 Ingress Controller&lt;br/>(L7 routing)&quot;]
+    ING_OR_LB -->|&quot;TCP/UDP&quot;| LB[&quot;☁️ LoadBalancer&lt;br/>(L4)&quot;]
+    ING_OR_LB -->|&quot;Direct Node&quot;| NP[&quot;NodePort&lt;br/>:3xxxx&quot;]
+
+    INGRESS --> CIP[&quot;ClusterIP Service&quot;]
+    LB --> NP
+    NP --> CIP
+
+    CIP --> IPTABLES[&quot;⚖️ iptables/IPVS&lt;br/>DNAT + LB&quot;]
+    IPTABLES --> POD[&quot;🟢 Pod&quot;]
+
+    INT[&quot;📦 Internal&lt;br/>Pod&quot;] -->|&quot;DNS lookup&quot;| CIP
+
+    style INGRESS fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style LB fill:#f39c12,stroke:#d68910,color:#fff
+    style CIP fill:#3498db,stroke:#2980b9,color:#fff
+    style POD fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="-troubleshooting-networking">🔧 Troubleshooting Networking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-troubleshooting-networking" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="common-issues--solutions">Common Issues &amp; Solutions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-issues--solutions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Symptom</th><th style="text-align:left;">Likely Cause</th><th style="text-align:left;">Debug Command</th><th style="text-align:left;">Fix</th></tr></thead><tbody><tr><td style="text-align:left;">Pod cannot resolve Service name</td><td style="text-align:left;">CoreDNS down or DNS misconfigured</td><td style="text-align:left;"><code>kubectl exec &lt;pod> -- nslookup &lt;svc></code></td><td style="text-align:left;">Check CoreDNS Pods in kube-system</td></tr><tr><td style="text-align:left;">Service has no Endpoints</td><td style="text-align:left;">Selector doesn’t match Pod labels</td><td style="text-align:left;"><code>kubectl get endpoints &lt;svc></code></td><td style="text-align:left;">Fix label selector match</td></tr><tr><td style="text-align:left;">NodePort connection refused</td><td style="text-align:left;">No Pod on Node + <code>externalTrafficPolicy: Local</code></td><td style="text-align:left;"><code>kubectl get pods -o wide</code></td><td style="text-align:left;">Change to <code>Cluster</code> or ensure Pods on every Node</td></tr><tr><td style="text-align:left;">Ingress 404 Not Found</td><td style="text-align:left;">Path/host rule mismatch</td><td style="text-align:left;"><code>kubectl describe ingress &lt;name></code></td><td style="text-align:left;">Check rules, pathType, ingressClassName</td></tr><tr><td style="text-align:left;">Ingress 502 Bad Gateway</td><td style="text-align:left;">Backend Pods not ready</td><td style="text-align:left;"><code>kubectl get endpoints &lt;backend-svc></code></td><td style="text-align:left;">Check readinessProbe, Pod status</td></tr><tr><td style="text-align:left;">NetworkPolicy blocking traffic</td><td style="text-align:left;">Forgot to allow DNS egress</td><td style="text-align:left;"><code>kubectl exec &lt;pod> -- nc -zv &lt;svc> &lt;port></code></td><td style="text-align:left;">Add egress rule for DNS (port 53 UDP)</td></tr><tr><td style="text-align:left;">Cross-namespace DNS fails</td><td style="text-align:left;">Missing namespace in DNS name</td><td style="text-align:left;"><code>kubectl exec &lt;pod> -- nslookup &lt;svc>.&lt;ns></code></td><td style="text-align:left;">Use <code>&lt;svc>.&lt;namespace></code> format</td></tr></tbody></table></div>
+<h3 id="quick-debug-flow">Quick Debug Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quick-debug-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 1. Check Service exists and has Endpoints</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> svc</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> endpoints</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 2. Check Pod connectivity</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> debug</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --image=busybox</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --rm</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> sh</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">  nslookup</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">service-nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">  wget</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -O-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> http://</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">service-nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">por</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">t</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 3. Check kube-proxy</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> logs</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> kube-system</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -l</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> k8s-app=kube-proxy</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">iptables-save</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">service-nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # On Node</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 4. Check NetworkPolicy</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> networkpolicy</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> describe</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> networkpolicy</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span></span></code></pre></figure>
+<hr/>
+<h2 id="-cross-references">📎 Cross-References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-cross-references" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Topic</th><th style="text-align:left;">Link</th></tr></thead><tbody><tr><td style="text-align:left;">Services &amp; Ingress deep dive</td><td style="text-align:left;"><a href="../../../02---areas/k8s/05-networking/01-services" class="internal internal-link alias" data-slug="02---areas/k8s/05-networking/01-services">5.1. Services</a>, <a href="../../../02---areas/k8s/05-networking/02-ingress" class="internal internal-link alias" data-slug="02---areas/k8s/05-networking/02-ingress">5.2. Ingress</a></td></tr><tr><td style="text-align:left;">CNI plugin details</td><td style="text-align:left;"><a href="../../../02---areas/k8s/05-networking/03-pod-networking" class="internal internal-link alias" data-slug="02---areas/k8s/05-networking/03-pod-networking">5.3. Pod Networking</a></td></tr><tr><td style="text-align:left;">NetworkPolicy in security context</td><td style="text-align:left;"><a href="../../.././09-security/04-security-workflows" class="internal internal-link alias" data-slug="09-security/04-security-workflows">9.4. Security Workflows</a></td></tr><tr><td style="text-align:left;">Component-level communication</td><td style="text-align:left;"><a href="../../.././02-architecture/04-component-workflows" class="internal internal-link alias" data-slug="02-architecture/04-component-workflows">2.4. Component Workflows</a></td></tr><tr><td style="text-align:left;">Service load balancing &amp; scaling</td><td style="text-align:left;"><a href="../../.././08-high-availability/04-ha-workflows" class="internal internal-link alias" data-slug="08-high-availability/04-ha-workflows">8.4. HA Workflows</a></td></tr></tbody></table></div>
+<hr/>
+<h2 id="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kiểm-tra-hiểu-biết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="câu-1-trace-the-packet">Câu 1: Trace the Packet<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-1-trace-the-packet" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> User truy cập <code>https://shop.example.com/api/products</code>. Cluster dùng Ingress Controller + ClusterIP Services. Trace packet journey.</p>
+<details>
+<summary>Xem đáp án</summary>
+<pre><code>1. DNS: shop.example.com → 35.x.x.x (Cloud LB IP)
+2. Client → Cloud LB (35.x.x.x:443)
+3. Cloud LB → Node (random):NodePort
+4. NodePort → kube-proxy → Ingress Controller Pod
+5. Ingress Controller:
+   - Match rule: Host=shop.example.com, Path=/api/*
+   - TLS termination (decrypt HTTPS)
+   - Forward to Service: api-svc:80
+6. api-svc (ClusterIP) → iptables DNAT
+7. iptables → random Pod IP (10.244.x.x:8080)
+8. Pod processes request → Response reverse path
+</code></pre>
+<p><strong>Tổng cộng: 7 hops!</strong> (Client → LB → Node → Ingress → Service → iptables → Pod)</p>
+</details>
+<h3 id="câu-2-dns-troubleshooting">Câu 2: DNS Troubleshooting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-2-dns-troubleshooting" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> Pod trong namespace <code>staging</code> không thể resolve <code>backend</code> (Service ở namespace <code>production</code>). Tại sao?</p>
+<details>
+<summary>Xem đáp án</summary>
+<p>Short name <code>backend</code> sẽ search theo thứ tự:</p>
+<ol>
+<li><code>backend.staging.svc.cluster.local</code> → ❌ (Service không có trong staging)</li>
+<li><code>backend.svc.cluster.local</code> → ❌</li>
+<li><code>backend.cluster.local</code> → ❌</li>
+<li><code>backend.</code> → ❌</li>
+</ol>
+<p><strong>Fix:</strong> Phải dùng full name bao gồm namespace:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">curl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> http://backend.production</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># hoặc FQDN</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">curl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> http://backend.production.svc.cluster.local</span></span></code></pre></figure>
+<blockquote>
+<p>Cross-namespace: <strong>PHẢI</strong> specify namespace trong DNS name!</p>
+</blockquote>
+</details>
+<h3 id="câu-3-externaltrafficpolicy">Câu 3: externalTrafficPolicy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-3-externaltrafficpolicy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> NodePort Service có <code>externalTrafficPolicy: Local</code>. Node 1 có 2 Pods, Node 2 có 0 Pods. Client gửi request đến Node 2. Chuyện gì xảy ra?</p>
+<details>
+<summary>Xem đáp án</summary>
+<p><strong>Connection refused / timeout!</strong></p>
+<p>Với <code>externalTrafficPolicy: Local</code>:</p>
+<ul>
+<li>Node 2 <strong>KHÔNG</strong> forward traffic đến Pods trên Node 1</li>
+<li>Vì không có Pod nào trên Node 2 → request dropped</li>
+<li>Health check của LB sẽ mark Node 2 là unhealthy</li>
+</ul>
+<p><strong>Giải pháp:</strong></p>
+<ol>
+<li>Dùng <code>externalTrafficPolicy: Cluster</code> (default) — nhưng mất source IP</li>
+<li>Đảm bảo mỗi Node có ít nhất 1 Pod (dùng DaemonSet hoặc pod topology spread)</li>
+<li>Dùng Cloud LB health check → tự skip Node không có Pods</li>
+</ol>
+</details>
+<hr/>
+<h2 id="-tiếp-theo">🚀 Tiếp Theo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tiếp-theo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Bạn đã hiểu traffic flow qua mọi tầng network!</p>
+<p><strong>Next:</strong> <a href="../../.././06-configuration/readme" class="internal internal-link alias" data-slug="06-configuration/readme">Phần 6: Configuration →</a></p>
+<hr/>
+<p><a href="../../../02---areas/k8s/05-networking/03-pod-networking" class="internal internal-link alias" data-slug="02---areas/k8s/05-networking/03-pod-networking">⬅️ 5.3. Pod Networking</a> | <a href="../../.././readme" class="internal internal-link alias" data-slug="readme">🏠 Mục Lục Chính</a> | <a href="../../../readme" class="internal internal-link alias" data-slug="readme">📂 Phần 5: Networking</a> | <a href="../../.././06-configuration/readme" class="internal internal-link alias" data-slug="06-configuration/readme">➡️ Phần 6: Configuration</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-143" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#54-networking-workflows---luồng-traffic-end-to-end" data-for="54-networking-workflows---luồng-traffic-end-to-end">5.4. Networking Workflows - Luồng Traffic End-to-End</a></li><li class="depth-1"><a href="#-mục-tiêu-học" data-for="-mục-tiêu-học">🎯 Mục Tiêu Học</a></li><li class="depth-1"><a href="#-quy-tắc-màu-sắc-diagram" data-for="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram</a></li><li class="depth-1"><a href="#-workflow-1-clusterip-full-flow" data-for="-workflow-1-clusterip-full-flow">🔄 Workflow 1: ClusterIP Full Flow</a></li><li class="depth-2"><a href="#iptables-chain-detail" data-for="iptables-chain-detail">iptables Chain Detail</a></li><li class="depth-1"><a href="#-workflow-2-nodeport-traffic-path" data-for="-workflow-2-nodeport-traffic-path">🔄 Workflow 2: NodePort Traffic Path</a></li><li class="depth-1"><a href="#-workflow-3-loadbalancer-complete-flow" data-for="-workflow-3-loadbalancer-complete-flow">🔄 Workflow 3: LoadBalancer Complete Flow</a></li><li class="depth-2"><a href="#double-load-balancing-architecture" data-for="double-load-balancing-architecture">Double Load Balancing Architecture</a></li><li class="depth-1"><a href="#-workflow-4-ingress-routing" data-for="-workflow-4-ingress-routing">🔄 Workflow 4: Ingress Routing</a></li><li class="depth-2"><a href="#host-based--path-based-routing" data-for="host-based--path-based-routing">Host-based + Path-based Routing</a></li><li class="depth-2"><a href="#ingress-vs-loadbalancer-service" data-for="ingress-vs-loadbalancer-service">Ingress vs LoadBalancer Service</a></li><li class="depth-1"><a href="#-workflow-5-pod-to-pod-communication" data-for="-workflow-5-pod-to-pod-communication">🔄 Workflow 5: Pod-to-Pod Communication</a></li><li class="depth-2"><a href="#same-node-vs-cross-node" data-for="same-node-vs-cross-node">Same Node vs Cross-Node</a></li><li class="depth-1"><a href="#-workflow-6-dns-resolution-pipeline" data-for="-workflow-6-dns-resolution-pipeline">🔄 Workflow 6: DNS Resolution Pipeline</a></li><li class="depth-2"><a href="#dns-search-domains" data-for="dns-search-domains">DNS Search Domains</a></li><li class="depth-1"><a href="#-tổng-hợp-service-types-comparison" data-for="-tổng-hợp-service-types-comparison">📊 Tổng Hợp: Service Types Comparison</a></li><li class="depth-2"><a href="#complete-traffic-flow-summary" data-for="complete-traffic-flow-summary">Complete Traffic Flow Summary</a></li><li class="depth-1"><a href="#-troubleshooting-networking" data-for="-troubleshooting-networking">🔧 Troubleshooting Networking</a></li><li class="depth-2"><a href="#common-issues--solutions" data-for="common-issues--solutions">Common Issues &amp; Solutions</a></li><li class="depth-2"><a href="#quick-debug-flow" data-for="quick-debug-flow">Quick Debug Flow</a></li><li class="depth-1"><a href="#-cross-references" data-for="-cross-references">📎 Cross-References</a></li><li class="depth-1"><a href="#-kiểm-tra-hiểu-biết" data-for="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết</a></li><li class="depth-2"><a href="#câu-1-trace-the-packet" data-for="câu-1-trace-the-packet">Câu 1: Trace the Packet</a></li><li class="depth-2"><a href="#câu-2-dns-troubleshooting" data-for="câu-2-dns-troubleshooting">Câu 2: DNS Troubleshooting</a></li><li class="depth-2"><a href="#câu-3-externaltrafficpolicy" data-for="câu-3-externaltrafficpolicy">Câu 3: externalTrafficPolicy</a></li><li class="depth-1"><a href="#-tiếp-theo" data-for="-tiếp-theo">🚀 Tiếp Theo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/k8s/05-networking/readme" class="internal">Phần 5: Networking - Kết Nối Ứng Dụng</a></li><li><a href="../../../02---areas/k8s/readme" class="internal">Kubernetes Learning Guide - Hướng Dẫn Học Kubernetes Từ Đầu</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

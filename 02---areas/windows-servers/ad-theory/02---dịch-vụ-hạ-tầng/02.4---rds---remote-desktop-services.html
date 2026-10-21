@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>02.4 - RDS - Remote Desktop Services</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="02.4 - RDS - Remote Desktop Services"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="02.4 - RDS - Remote Desktop Services"/><meta name="twitter:description" content="RDS - Remote Desktop Services Tóm tắt nhanh RDS cung cấp remote access đến desktops và applications — từ session-based (chia sẻ OS) đến VDI (mỗi user 1 VM riêng) 6 role services phối hợp: RDSH (host sessions), RDCB (điều phối), RDG (gateway HTTPS), RDWA (web portal), RDL (licensing), RDVH (VDI) Conn..."/><meta property="og:description" content="RDS - Remote Desktop Services Tóm tắt nhanh RDS cung cấp remote access đến desktops và applications — từ session-based (chia sẻ OS) đến VDI (mỗi user 1 VM riêng) 6 role services phối hợp: RDSH (host sessions), RDCB (điều phối), RDG (gateway HTTPS), RDWA (web portal), RDL (licensing), RDVH (VDI) Conn..."/><meta property="og:image:alt" content="RDS - Remote Desktop Services Tóm tắt nhanh RDS cung cấp remote access đến desktops và applications — từ session-based (chia sẻ OS) đến VDI (mỗi user 1 VM riêng) 6 role services phối hợp: RDSH (host sessions), RDCB (điều phối), RDG (gateway HTTPS), RDWA (web portal), RDL (licensing), RDVH (VDI) Conn..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="RDS - Remote Desktop Services Tóm tắt nhanh RDS cung cấp remote access đến desktops và applications — từ session-based (chia sẻ OS) đến VDI (mỗi user 1 VM riêng) 6 role services phối hợp: RDSH (host sessions), RDCB (điều phối), RDG (gateway HTTPS), RDWA (web portal), RDL (licensing), RDVH (VDI) Conn..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-477" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-477" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/">Windows Servers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/">AD Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/">02 - Dịch vụ hạ tầng</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>02.4 - RDS - Remote Desktop Services</a></div></nav><h1 class="article-title">02.4 - RDS - Remote Desktop Services</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/windows-server" class="internal internal-link tag-link">domain/windows-server</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">RDS</span><span class="note-properties-separator">, </span><span class="note-properties-text">Remote Desktop Services</span><span class="note-properties-separator">, </span><span class="note-properties-text">Terminal Services</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>20 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="rds---remote-desktop-services">RDS - Remote Desktop Services<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rds---remote-desktop-services" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tóm-tắt-nhanh">Tóm tắt nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>RDS cung cấp <strong>remote access</strong> đến desktops và applications — từ session-based (chia sẻ OS) đến VDI (mỗi user 1 VM riêng)</li>
+<li>6 role services phối hợp: <strong>RDSH</strong> (host sessions), <strong>RDCB</strong> (điều phối), <strong>RDG</strong> (gateway HTTPS), <strong>RDWA</strong> (web portal), <strong>RDL</strong> (licensing), <strong>RDVH</strong> (VDI)</li>
+<li>Connection flow: User → RD Web/Client → <strong>RD Gateway</strong> → <strong>RD Connection Broker</strong> → <strong>RD Session Host</strong> (hoặc RDVH)</li>
+<li>Licensing yêu cầu <strong>RDS CAL</strong> riêng biệt (Per User hoặc Per Device) — không bao gồm trong Windows Server license</li>
+<li><strong>RemoteApp</strong> cho phép publish individual applications, <strong>User Profile Disks/FSLogix</strong> quản lý profiles</li>
+<li><strong>Azure Virtual Desktop (AVD)</strong> là cloud equivalent nhưng không thay thế on-premises RDS</li>
+</ul>
+<h2 id="tổng-quan">Tổng quan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-quan" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>RDS (trước đây là <strong>Terminal Services</strong>, đổi tên từ Windows Server 2008 R2) cho phép:</p>
+<ul>
+<li>Nhiều user cùng truy cập remote vào 1 server (session-based) — <strong>tiết kiệm resource</strong></li>
+<li>Publish ứng dụng individual (<strong>RemoteApp</strong>) thay vì full desktop — user experience tốt hơn</li>
+<li>Cung cấp <strong>VDI</strong> (Virtual Desktop Infrastructure) — mỗi user có VM riêng cho isolation hoàn toàn</li>
+<li>Truy cập an toàn từ internet qua <strong>RD Gateway</strong> (HTTPS tunnel, không cần VPN)</li>
+<li>Tương tự như một toà nhà văn phòng chung: mỗi user thuê 1 phòng (session) trong toà nhà (RDSH), chia sẻ hạ tầng nhưng có không gian riêng</li>
+</ul>
+<hr/>
+<h2 id="kiến-trúc---các-thành-phần">Kiến trúc - Các thành phần<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kiến-trúc---các-thành-phần" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph External[\&quot;External Access\&quot;]\n        UserExt[\&quot;Remote User&lt;br/>Internet\&quot;]\n    end\n\n    subgraph DMZ[\&quot;DMZ / Edge\&quot;]\n        RDG[\&quot;RD Gateway&lt;br/>HTTPS Port 443&lt;br/>SSL Tunnel\&quot;]\n        RDWA[\&quot;RD Web Access&lt;br/>Web Portal\&quot;]\n    end\n\n    subgraph Internal[\&quot;Internal Network\&quot;]\n        RDCB[\&quot;RD Connection Broker&lt;br/>Load Balancing&lt;br/>Session Management\&quot;]\n        RDL[\&quot;RD Licensing&lt;br/>CAL Management\&quot;]\n\n        subgraph SessionFarm[\&quot;Session Host Farm\&quot;]\n            RDSH1[\&quot;RD Session Host 1\&quot;]\n            RDSH2[\&quot;RD Session Host 2\&quot;]\n            RDSH3[\&quot;RD Session Host 3\&quot;]\n        end\n\n        subgraph VDIPool[\&quot;VDI Pool\&quot;]\n            RDVH[\&quot;RD Virtualization Host&lt;br/>Hyper-V\&quot;]\n            VM1[\&quot;VM 1\&quot;]\n            VM2[\&quot;VM 2\&quot;]\n            VM3[\&quot;VM 3\&quot;]\n        end\n    end\n\n    UserExt -->|\&quot;HTTPS 443\&quot;| RDG\n    UserExt -->|\&quot;HTTPS 443\&quot;| RDWA\n    RDWA --> RDCB\n    RDG --> RDCB\n    RDCB --> RDSH1\n    RDCB --> RDSH2\n    RDCB --> RDSH3\n    RDCB --> RDVH\n    RDVH --> VM1\n    RDVH --> VM2\n    RDVH --> VM3\n    RDSH1 -.-> RDL\n    RDSH2 -.-> RDL\n    RDSH3 -.-> RDL&quot;">graph TD
+    subgraph External[&quot;External Access&quot;]
+        UserExt[&quot;Remote User&lt;br/>Internet&quot;]
+    end
+
+    subgraph DMZ[&quot;DMZ / Edge&quot;]
+        RDG[&quot;RD Gateway&lt;br/>HTTPS Port 443&lt;br/>SSL Tunnel&quot;]
+        RDWA[&quot;RD Web Access&lt;br/>Web Portal&quot;]
+    end
+
+    subgraph Internal[&quot;Internal Network&quot;]
+        RDCB[&quot;RD Connection Broker&lt;br/>Load Balancing&lt;br/>Session Management&quot;]
+        RDL[&quot;RD Licensing&lt;br/>CAL Management&quot;]
+
+        subgraph SessionFarm[&quot;Session Host Farm&quot;]
+            RDSH1[&quot;RD Session Host 1&quot;]
+            RDSH2[&quot;RD Session Host 2&quot;]
+            RDSH3[&quot;RD Session Host 3&quot;]
+        end
+
+        subgraph VDIPool[&quot;VDI Pool&quot;]
+            RDVH[&quot;RD Virtualization Host&lt;br/>Hyper-V&quot;]
+            VM1[&quot;VM 1&quot;]
+            VM2[&quot;VM 2&quot;]
+            VM3[&quot;VM 3&quot;]
+        end
+    end
+
+    UserExt -->|&quot;HTTPS 443&quot;| RDG
+    UserExt -->|&quot;HTTPS 443&quot;| RDWA
+    RDWA --> RDCB
+    RDG --> RDCB
+    RDCB --> RDSH1
+    RDCB --> RDSH2
+    RDCB --> RDSH3
+    RDCB --> RDVH
+    RDVH --> VM1
+    RDVH --> VM2
+    RDVH --> VM3
+    RDSH1 -.-> RDL
+    RDSH2 -.-> RDL
+    RDSH3 -.-> RDL
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="rd-session-host-rdsh">RD Session Host (RDSH)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rd-session-host-rdsh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Core component</strong> — nơi user sessions thực sự chạy</li>
+<li>Multi-session: nhiều user cùng logon vào 1 server, chia sẻ OS nhưng có session riêng biệt
+<ul>
+<li>Mỗi session có desktop riêng, clipboard riêng, application space riêng</li>
+<li>Sessions cách ly ở <strong>session boundary</strong> — không phải VM boundary</li>
+</ul>
+</li>
+<li>Chạy <strong>RemoteApp</strong> programs hoặc full desktop sessions</li>
+<li>Resources (CPU, RAM, disk) được chia sẻ giữa các sessions — sizing cực kỳ quan trọng</li>
+<li>Profile management: Roaming Profiles, User Profile Disks (UPD), hoặc FSLogix Profile Containers (modern)</li>
+<li>Khi install ứng dụng trên RDSH, phải dùng <strong>Install Mode</strong>: <code>change user /install</code> → install → <code>change user /execute</code>
+<ul>
+<li>Hoặc install qua Control Panel/SCCM (tự activate install mode)</li>
+</ul>
+</li>
+</ul>
+<h3 id="rd-connection-broker-rdcb">RD Connection Broker (RDCB)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rd-connection-broker-rdcb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Bộ não điều phối</strong> của RDS deployment — giống như bộ phận lễ tân phân bổ phòng họp</li>
+<li>Chức năng:
+<ul>
+<li><strong>Load balancing</strong> — phân phối new sessions đến RDSH ít tải nhất (weight-based)</li>
+<li><strong>Reconnection</strong> — khi user disconnect rồi reconnect → broker tìm session cũ trên đúng RDSH host</li>
+<li><strong>Collection management</strong> — quản lý Session Collections và Virtual Desktop Collections</li>
+</ul>
+</li>
+<li>Lưu trữ session state trong internal database (Windows Internal Database - WID) hoặc <strong>SQL Server</strong> (bắt buộc cho HA)</li>
+<li>Mọi connection đều đi qua RDCB — không connect trực tiếp đến RDSH
+<ul>
+<li>Ngoại trừ admin RDP session (mstsc /admin) — bypass RDCB</li>
+</ul>
+</li>
+</ul>
+<h3 id="rd-gateway-rdg">RD Gateway (RDG)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rd-gateway-rdg" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>HTTPS tunnel</strong> cho RDP traffic — thay thế việc mở port 3389 ra internet (rất nguy hiểm)</li>
+<li>Hoạt động:
+<ul>
+<li>Client kết nối HTTPS (port 443) đến RD Gateway</li>
+<li>RDG authenticate user (AD credentials, MFA nếu có)</li>
+<li>Kiểm tra <strong>Connection Authorization Policy (CAP)</strong> — ai được phép connect</li>
+<li>Kiểm tra <strong>Resource Authorization Policy (RAP)</strong> — user được phép truy cập resource nào</li>
+<li>Tunnel RDP traffic qua HTTPS đến internal RDSH/RDCB</li>
+</ul>
+</li>
+<li><strong>RPC over HTTPS</strong> (legacy) hoặc <strong>HTTP Transport</strong> (Windows Server 2012+, UDP support cho better performance)</li>
+<li>Yêu cầu: SSL certificate trusted bởi clients (thường dùng public CA cert cho external access)</li>
+<li>Tương tự: RDG là “cổng bảo vệ” của toà nhà — kiểm tra thẻ (CAP), xác nhận bạn được vào phòng nào (RAP), rồi đưa vào đúng phòng (tunnel đến RDSH)</li>
+</ul>
+<h4 id="cap-và-rap-chi-tiết">CAP và RAP chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cap-và-rap-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Policy</th><th>Kiểm tra gì</th><th>Điều kiện có thể set</th></tr></thead><tbody><tr><td><strong>CAP</strong> (Connection Authorization)</td><td>User có được phép connect qua Gateway?</td><td>AD group membership, smart card required, device authorization</td></tr><tr><td><strong>RAP</strong> (Resource Authorization)</td><td>User được phép truy cập resource nào bên trong?</td><td>AD group membership, allowed computer groups, specific RDSH names</td></tr></tbody></table></div>
+<ul>
+<li><strong>NAP integration</strong> (Network Access Protection) — RD Gateway có thể kiểm tra health state của client device (deprecated từ Windows Server 2016)</li>
+<li><strong>Device Authorization</strong> — yêu cầu client device thuộc AD group cụ thể hoặc có certificate</li>
+</ul>
+<h3 id="rd-web-access-rdwa">RD Web Access (RDWA)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rd-web-access-rdwa" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Web portal</strong> — user truy cập <code>https://rdweb.corp.com/RDWeb</code> để thấy danh sách RemoteApp và desktops</li>
+<li>Chức năng:
+<ul>
+<li>Liệt kê RemoteApp programs user được phép truy cập (theo AD group membership)</li>
+<li>Launch RemoteApp hoặc full desktop session</li>
+<li>Tích hợp RD Gateway settings vào .rdp file tải về</li>
+</ul>
+</li>
+<li>Có thể customise branding (logo, colors, thông báo)</li>
+<li>Từ Windows Server 2016+: <strong>RD Web Client</strong> — HTML5 client chạy trong browser, không cần cài MSTSC
+<ul>
+<li>Hỗ trợ: Edge, Chrome, Firefox, Safari</li>
+<li>Hạn chế: không hỗ trợ tất cả features (vd: không redirect USB devices, limited clipboard)</li>
+</ul>
+</li>
+</ul>
+<h3 id="rd-licensing-rdl">RD Licensing (RDL)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rd-licensing-rdl" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Quản lý <strong>RDS Client Access Licenses (CALs)</strong></li>
+<li>Mỗi user hoặc device kết nối đến RDSH <strong>phải</strong> có RDS CAL (ngoài Windows Server CAL)</li>
+<li>License server phải được <strong>activated</strong> với Microsoft Clearinghouse</li>
+<li>Nếu không có license server → grace period <strong>120 ngày</strong> → sau đó từ chối connections
+<ul>
+<li>Trừ admin RDP session trên console (session 0)</li>
+</ul>
+</li>
+</ul>
+<h3 id="rd-virtualization-host-rdvh">RD Virtualization Host (RDVH)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rd-virtualization-host-rdvh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Tích hợp <strong>Hyper-V</strong> để cung cấp VDI (Virtual Desktop Infrastructure)</li>
+<li>RDCB quản lý pool VM, gán VM cho user khi connect</li>
+<li>VM chạy full Windows desktop OS (Windows 10/11 Enterprise)</li>
+<li>Yêu cầu: <strong>VDA</strong> (Virtual Desktop Access) license cho VDI machines
+<ul>
+<li>VDA license included trong Microsoft 365 E3/E5 hoặc mua riêng</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="deployment-models">Deployment Models<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deployment-models" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="session-based-desktop">Session-based Desktop<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#session-based-desktop" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nhiều user chia sẻ <strong>cùng 1 server OS</strong> (RDSH)</li>
+<li>Mỗi user có session riêng, cách ly ở mức session (không phải VM)</li>
+<li><strong>Ưu điểm</strong>:
+<ul>
+<li>Tiết kiệm resource: 1 server phục vụ 20-50 users</li>
+<li>Quản lý tập trung: patching 1 server = affect tất cả users</li>
+<li>Cost-effective: không cần VDI infrastructure</li>
+</ul>
+</li>
+<li><strong>Nhược điểm</strong>:
+<ul>
+<li>App compatibility: không phải mọi app support multi-session</li>
+<li>Resource contention: 1 user chạy heavy app → ảnh hưởng users khác</li>
+<li>Limited customization: users không install apps riêng</li>
+</ul>
+</li>
+</ul>
+<h3 id="vdi---virtual-desktop-infrastructure">VDI - Virtual Desktop Infrastructure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vdi---virtual-desktop-infrastructure" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Mỗi user được gán <strong>1 VM</strong> riêng chạy desktop OS</li>
+<li><strong>Personal VDI</strong>: VM gán cố định cho 1 user — user có thể customize, install apps
+<ul>
+<li>VM persistent across sessions — data/settings giữ lại</li>
+</ul>
+</li>
+<li><strong>Pooled VDI</strong>: VM từ pool, user nhận VM bất kỳ khi login, VM reset về golden image sau khi logout
+<ul>
+<li>Non-persistent: changes mất sau logout</li>
+<li>Cần profile solution (FSLogix) để giữ user data</li>
+</ul>
+</li>
+<li><strong>Ưu điểm</strong>: full isolation, app compatibility tốt (mọi desktop app), user experience gần giống PC</li>
+<li><strong>Nhược điểm</strong>: tốn resource hơn nhiều (mỗi VM = 1 OS instance), quản lý phức tạp, licensing đắt hơn</li>
+</ul>
+<h3 id="remoteapp-vs-full-desktop">RemoteApp vs Full Desktop<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#remoteapp-vs-full-desktop" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    subgraph RemoteApp[\&quot;RemoteApp Mode\&quot;]\n        RA_Server[\&quot;RDSH Server&lt;br/>Runs app on server\&quot;]\n        RA_Client[\&quot;Client Desktop&lt;br/>App appears as local&lt;br/>Icon on taskbar\&quot;]\n        RA_Server --> RA_Client\n    end\n\n    subgraph FullDesktop[\&quot;Full Desktop Mode\&quot;]\n        FD_Server[\&quot;RDSH Server&lt;br/>Runs full desktop\&quot;]\n        FD_Client[\&quot;Client Desktop&lt;br/>Shows full remote desktop&lt;br/>in a single window\&quot;]\n        FD_Server --> FD_Client\n    end&quot;">flowchart LR
+    subgraph RemoteApp[&quot;RemoteApp Mode&quot;]
+        RA_Server[&quot;RDSH Server&lt;br/>Runs app on server&quot;]
+        RA_Client[&quot;Client Desktop&lt;br/>App appears as local&lt;br/>Icon on taskbar&quot;]
+        RA_Server --> RA_Client
+    end
+
+    subgraph FullDesktop[&quot;Full Desktop Mode&quot;]
+        FD_Server[&quot;RDSH Server&lt;br/>Runs full desktop&quot;]
+        FD_Client[&quot;Client Desktop&lt;br/>Shows full remote desktop&lt;br/>in a single window&quot;]
+        FD_Server --> FD_Client
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>RemoteApp</th><th>Full Desktop</th></tr></thead><tbody><tr><td><strong>User thấy gì</strong></td><td>Cửa sổ app riêng lẻ, như local app</td><td>Full desktop của RDSH server</td></tr><tr><td><strong>Taskbar integration</strong></td><td>Có — app xuất hiện trên taskbar client</td><td>Desktop trong 1 window</td></tr><tr><td><strong>User experience</strong></td><td>Seamless — khó phân biệt local vs remote</td><td>Rõ ràng là remote desktop</td></tr><tr><td><strong>Best for</strong></td><td>1-2 LOB apps, users quen local desktop</td><td>Users cần full desktop environment</td></tr><tr><td><strong>File access</strong></td><td>Redirect drives, clipboard</td><td>Full desktop access</td></tr><tr><td><strong>Training effort</strong></td><td>Minimal — giống local app</td><td>Users cần quen remote desktop</td></tr></tbody></table></div>
+<p><strong>Khi nào dùng RemoteApp</strong>:</p>
+<ul>
+<li>Ứng dụng LOB (line-of-business) mà users chỉ cần 1-2 apps cụ thể</li>
+<li>Legacy apps cần server-side resources (database connection, network proximity)</li>
+<li>Apps không thể install trên modern Windows (32-bit only, specific framework requirements)</li>
+</ul>
+<p><strong>Khi nào dùng Full Desktop</strong>:</p>
+<ul>
+<li>Users cần nhiều apps trên remote desktop</li>
+<li>Power users cần full environment access</li>
+<li>Help desk cần troubleshoot trong remote desktop context</li>
+</ul>
+<h3 id="so-sánh-session-collections-vs-virtual-desktop-collections">So sánh Session Collections vs Virtual Desktop Collections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh-session-collections-vs-virtual-desktop-collections" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>Session Collection</th><th>Virtual Desktop Collection</th></tr></thead><tbody><tr><td>Host</td><td>RDSH (server OS)</td><td>RDVH + VMs (desktop OS)</td></tr><tr><td>Isolation</td><td>Session-level</td><td>VM-level (full OS)</td></tr><tr><td>Resource usage</td><td>Thấp (20-50 users/server)</td><td>Cao (1 VM/user)</td></tr><tr><td>App compatibility</td><td>Multi-session aware apps</td><td>Mọi desktop app</td></tr><tr><td>Persistence</td><td>UPD / FSLogix</td><td>Personal = persistent, Pooled = non-persistent</td></tr><tr><td>Licensing</td><td>RDS CAL</td><td>RDS CAL + VDA</td></tr><tr><td>Cost</td><td>Thấp</td><td>Cao</td></tr><tr><td>Management</td><td>Đơn giản</td><td>Phức tạp (image management, VM lifecycle)</td></tr></tbody></table></div>
+<hr/>
+<h2 id="user-profile-management">User Profile Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#user-profile-management" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="vấn-đề">Vấn đề<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Profile management là **pain point <a href="../../../.././../../../tags/1" class="tag-link internal internal-link alias" data-slug="tags/1">1</a> trong RDS — profile corruption, bloat, slow logon là những vấn đề phổ biến nhất.</p>
+<ul>
+<li>Session-based: user logon vào bất kỳ RDSH → cần profile nhất quán</li>
+<li>Non-persistent VDI: VM reset sau logout → cần giữ user data ở nơi khác</li>
+<li>Profile size lớn → logon chậm (copy profile qua network)</li>
+</ul>
+<h3 id="so-sánh-profile-solutions">So sánh Profile Solutions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh-profile-solutions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    subgraph Solutions[\&quot;Profile Solutions\&quot;]\n        RP[\&quot;Roaming Profiles&lt;br/>LEGACY&lt;br/>Copies entire profile&lt;br/>over network\&quot;]\n        UPD[\&quot;User Profile Disks&lt;br/>RDS built-in&lt;br/>VHDX mount&lt;br/>for RDSH/VDI\&quot;]\n        FSL[\&quot;FSLogix Profile&lt;br/>Containers&lt;br/>MODERN&lt;br/>VHDx mount&lt;br/>for all scenarios\&quot;]\n    end\n\n    subgraph Comparison[\&quot;Comparison\&quot;]\n        RP -->|\&quot;Slow, bloated&lt;br/>not recommended\&quot;| Bad[\&quot;AVOID\&quot;]\n        UPD -->|\&quot;OK for RDS only&lt;br/>limited features\&quot;| OK[\&quot;ACCEPTABLE\&quot;]\n        FSL -->|\&quot;Fast, reliable&lt;br/>included with RDS CAL\&quot;| Best[\&quot;RECOMMENDED\&quot;]\n    end\n\n    style Bad fill:#e74c3c,stroke:#333,color:#fff\n    style OK fill:#f39c12,stroke:#333,color:#fff\n    style Best fill:#27ae60,stroke:#333,color:#fff&quot;">flowchart TD
+    subgraph Solutions[&quot;Profile Solutions&quot;]
+        RP[&quot;Roaming Profiles&lt;br/>LEGACY&lt;br/>Copies entire profile&lt;br/>over network&quot;]
+        UPD[&quot;User Profile Disks&lt;br/>RDS built-in&lt;br/>VHDX mount&lt;br/>for RDSH/VDI&quot;]
+        FSL[&quot;FSLogix Profile&lt;br/>Containers&lt;br/>MODERN&lt;br/>VHDx mount&lt;br/>for all scenarios&quot;]
+    end
+
+    subgraph Comparison[&quot;Comparison&quot;]
+        RP -->|&quot;Slow, bloated&lt;br/>not recommended&quot;| Bad[&quot;AVOID&quot;]
+        UPD -->|&quot;OK for RDS only&lt;br/>limited features&quot;| OK[&quot;ACCEPTABLE&quot;]
+        FSL -->|&quot;Fast, reliable&lt;br/>included with RDS CAL&quot;| Best[&quot;RECOMMENDED&quot;]
+    end
+
+    style Bad fill:#e74c3c,stroke:#333,color:#fff
+    style OK fill:#f39c12,stroke:#333,color:#fff
+    style Best fill:#27ae60,stroke:#333,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>Roaming Profiles</th><th>User Profile Disks (UPD)</th><th>FSLogix Profile Containers</th></tr></thead><tbody><tr><td><strong>Technology</strong></td><td>Copy profile files</td><td>VHDX disk mount</td><td>VHDx disk mount</td></tr><tr><td><strong>Logon speed</strong></td><td>Chậm (copy qua network)</td><td>Nhanh (mount disk)</td><td>Nhanh (mount disk)</td></tr><tr><td><strong>Profile bloat</strong></td><td>Nghiêm trọng</td><td>Ít hơn</td><td>Tốt nhất (Office container riêng)</td></tr><tr><td><strong>Scope</strong></td><td>Mọi RDP</td><td>Chỉ RDS collections</td><td>Mọi scenario (RDS, VDI, Citrix, AVD)</td></tr><tr><td><strong>Concurrent sessions</strong></td><td>Có (risk corruption)</td><td>Không</td><td>Có (read-write, read-only copies)</td></tr><tr><td><strong>Office 365 cache</strong></td><td>Problem (OST files, search index)</td><td>Problem</td><td>Solved (Office Container)</td></tr><tr><td><strong>Licensing</strong></td><td>Free</td><td>Free (built-in RDS)</td><td>Free với RDS CAL / Microsoft 365</td></tr><tr><td><strong>Recommendation</strong></td><td>AVOID</td><td>Acceptable</td><td><strong>Best choice</strong></td></tr></tbody></table></div>
+<h3 id="fslogix-chi-tiết">FSLogix chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fslogix-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Profile Container: mount VHDX chứa toàn bộ profile (<code>C:\Users\&lt;username></code>) tại logon</li>
+<li><strong>Office Container</strong>: VHDX riêng cho Office cache (Outlook OST, Teams cache, OneDrive) — tách khỏi profile chính
+<ul>
+<li>Tại sao tách: Office cache rất lớn (5-20 GB), change frequently, gây profile bloat</li>
+</ul>
+</li>
+<li>Storage: file share (SMB) hoặc Azure Files / Azure NetApp Files</li>
+<li><strong>Concurrent access</strong>: khi user có session trên nhiều RDSH → profile container Read-Write trên session đầu, Read-Only trên sessions sau</li>
+<li>Cloud Cache: replicate profile container đến nhiều storage locations → HA</li>
+</ul>
+<hr/>
+<h2 id="rds-licensing">RDS Licensing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rds-licensing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="per-user-cal-vs-per-device-cal">Per User CAL vs Per Device CAL<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#per-user-cal-vs-per-device-cal" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khía cạnh</th><th>Per User</th><th>Per Device</th></tr></thead><tbody><tr><td>License gán cho</td><td>User AD account</td><td>Device (máy client)</td></tr><tr><td>User dùng nhiều devices</td><td>1 CAL đủ</td><td>Cần 1 CAL mỗi device</td></tr><tr><td>Shared device (kiosk, lab)</td><td>Mỗi user cần CAL</td><td>1 CAL cho device, bất kỳ ai dùng</td></tr><tr><td>Tracking</td><td>AD user, temporary assignment (90 ngày)</td><td>MAC/device ID, permanent assignment</td></tr><tr><td>Overuse</td><td>Tự detect + report nhưng không block (enforcement mode)</td><td>Tự detect + report nhưng không block</td></tr><tr><td>External users</td><td>Cần External Connector license</td><td>Cần External Connector license</td></tr></tbody></table></div>
+<p><strong>Chọn Per User hay Per Device</strong>:</p>
+<ul>
+<li>Per User: khi users dùng nhiều devices (PC, laptop, phone, tablet)</li>
+<li>Per Device: khi 1 device dùng chung cho nhiều users (kiosk, call center, factory terminal)</li>
+<li><strong>Không được mix</strong> Per User và Per Device trên cùng 1 license server</li>
+</ul>
+<h3 id="license-server-discovery">License Server Discovery<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#license-server-discovery" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>RDSH tìm license server theo thứ tự:</p>
+<ol>
+<li><strong>Group Policy</strong> — chỉ định license server cụ thể (khuyến nghị, reliable nhất)</li>
+<li><strong>Active Directory</strong> — license server publish thông tin vào AD</li>
+<li><strong>Registry</strong> — cấu hình thủ công trên RDSH</li>
+</ol>
+<h3 id="grace-period">Grace Period<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#grace-period" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>120 ngày</strong> từ khi RDSH nhận connection đầu tiên mà không có license server</li>
+<li>Trong grace period: tất cả connections được phép, không cần CAL</li>
+<li>Sau 120 ngày: RDSH <strong>từ chối</strong> mọi connection (trừ admin RDP session trên console)</li>
+<li>Grace period <strong>không reset</strong> khi thêm license server — phải add server trước khi hết hạn</li>
+<li><strong>Grace period trap</strong>: nhiều tổ chức deploy RDS trong phase test, quên mua CAL. 120 ngày sau = tất cả users bị lock out.</li>
+</ul>
+<hr/>
+<h2 id="high-availability">High Availability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#high-availability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="rdcb-high-availability">RDCB High Availability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rdcb-high-availability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    LB[\&quot;Load Balancer / DNS RR&lt;br/>rds.corp.local\&quot;] --> RDCB1[\&quot;RDCB Node 1\&quot;]\n    LB --> RDCB2[\&quot;RDCB Node 2\&quot;]\n\n    RDCB1 --> SQL[\&quot;SQL Server&lt;br/>Shared Database&lt;br/>Session state, config\&quot;]\n    RDCB2 --> SQL\n\n    RDCB1 --> RDSH1[\&quot;RDSH Farm 1\&quot;]\n    RDCB1 --> RDSH2[\&quot;RDSH Farm 2\&quot;]\n    RDCB2 --> RDSH1\n    RDCB2 --> RDSH2&quot;">graph TD
+    LB[&quot;Load Balancer / DNS RR&lt;br/>rds.corp.local&quot;] --> RDCB1[&quot;RDCB Node 1&quot;]
+    LB --> RDCB2[&quot;RDCB Node 2&quot;]
+
+    RDCB1 --> SQL[&quot;SQL Server&lt;br/>Shared Database&lt;br/>Session state, config&quot;]
+    RDCB2 --> SQL
+
+    RDCB1 --> RDSH1[&quot;RDSH Farm 1&quot;]
+    RDCB1 --> RDSH2[&quot;RDSH Farm 2&quot;]
+    RDCB2 --> RDSH1
+    RDCB2 --> RDSH2
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>Yêu cầu</strong>: SQL Server (full, không phải WID) + DNS round-robin hoặc load balancer</li>
+<li>Active-Active: nhiều RDCB nodes cùng hoạt động, cùng đọc/ghi SQL database</li>
+<li>Shared SQL database lưu: session state, collection config, published RemoteApps</li>
+<li>DNS round-robin hoặc hardware/software load balancer phân phối client connections đến các RDCB nodes</li>
+<li>Nếu 1 RDCB node down → node khác tiếp tục điều phối — users không bị ảnh hưởng (existing sessions maintained)</li>
+</ul>
+<h3 id="rdsh-farm---nhiều-hosts-trong-collection">RDSH Farm - Nhiều hosts trong Collection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rdsh-farm---nhiều-hosts-trong-collection" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    RDCB[\&quot;RD Connection Broker&lt;br/>HA - SQL Backend\&quot;]\n\n    subgraph Collection[\&quot;Session Collection: Finance Apps\&quot;]\n        RDSH1[\&quot;RDSH-01&lt;br/>Sessions: 15/50\&quot;]\n        RDSH2[\&quot;RDSH-02&lt;br/>Sessions: 12/50\&quot;]\n        RDSH3[\&quot;RDSH-03&lt;br/>Sessions: 18/50\&quot;]\n    end\n\n    LB[\&quot;Load Balancer / DNS RR\&quot;]\n\n    Client1[\&quot;User A\&quot;] --> LB\n    Client2[\&quot;User B\&quot;] --> LB\n    Client3[\&quot;User C\&quot;] --> LB\n\n    LB --> RDCB\n    RDCB -->|\&quot;Least loaded\&quot;| RDSH1\n    RDCB -->|\&quot;Reconnection\&quot;| RDSH2\n    RDCB -->|\&quot;New session\&quot;| RDSH3\n\n    RDSH1 -.->|\&quot;Session state\&quot;| RDCB\n    RDSH2 -.->|\&quot;Session state\&quot;| RDCB\n    RDSH3 -.->|\&quot;Session state\&quot;| RDCB&quot;">graph TD
+    RDCB[&quot;RD Connection Broker&lt;br/>HA - SQL Backend&quot;]
+
+    subgraph Collection[&quot;Session Collection: Finance Apps&quot;]
+        RDSH1[&quot;RDSH-01&lt;br/>Sessions: 15/50&quot;]
+        RDSH2[&quot;RDSH-02&lt;br/>Sessions: 12/50&quot;]
+        RDSH3[&quot;RDSH-03&lt;br/>Sessions: 18/50&quot;]
+    end
+
+    LB[&quot;Load Balancer / DNS RR&quot;]
+
+    Client1[&quot;User A&quot;] --> LB
+    Client2[&quot;User B&quot;] --> LB
+    Client3[&quot;User C&quot;] --> LB
+
+    LB --> RDCB
+    RDCB -->|&quot;Least loaded&quot;| RDSH1
+    RDCB -->|&quot;Reconnection&quot;| RDSH2
+    RDCB -->|&quot;New session&quot;| RDSH3
+
+    RDSH1 -.->|&quot;Session state&quot;| RDCB
+    RDSH2 -.->|&quot;Session state&quot;| RDCB
+    RDSH3 -.->|&quot;Session state&quot;| RDCB
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>RDCB dùng <strong>drain mode</strong> khi cần maintenance: stop sending new sessions đến host đó, existing sessions tiếp tục cho đến khi users logoff
+<ul>
+<li><code>Set-RDSessionHost -SessionHost rdsh01.corp.local -NewConnectionAllowed No</code></li>
+</ul>
+</li>
+<li><strong>Weight</strong> và <strong>session limit</strong> configurable per host
+<ul>
+<li>Weight: relative loading factor (host mạnh hơn = weight cao hơn = nhận nhiều sessions hơn)</li>
+<li>Session limit: hard cap số sessions tối đa per host</li>
+</ul>
+</li>
+</ul>
+<h3 id="rd-gateway-farm">RD Gateway Farm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rd-gateway-farm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nhiều RDG servers đặt sau <strong>NLB</strong> (Network Load Balancer) hoặc hardware load balancer</li>
+<li>Tất cả RDG servers phải có cùng certificate, cùng CAP/RAP policies</li>
+<li>Session affinity không bắt buộc (RDG stateless sau khi tunnel established)</li>
+<li>Certificate SAN phải include farm DNS name (vd: <code>rdg.corp.local</code>)</li>
+</ul>
+<hr/>
+<h2 id="connection-flow">Connection Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#connection-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant User as \&quot;Remote User\&quot;\n    participant RDWA as \&quot;RD Web Access\&quot;\n    participant RDG as \&quot;RD Gateway\&quot;\n    participant RDCB as \&quot;RD Connection Broker\&quot;\n    participant RDSH as \&quot;RD Session Host\&quot;\n    participant RDL as \&quot;RD Licensing\&quot;\n\n    User->>RDWA: 1. Browse web portal&lt;br/>HTTPS login\n    RDWA->>RDCB: 2. Query available&lt;br/>RemoteApp/Desktops for user\n    RDCB-->>RDWA: 3. Return list\n    RDWA-->>User: 4. Display available resources\n\n    User->>RDWA: 5. Click RemoteApp/Desktop\n    RDWA-->>User: 6. Download .rdp file&lt;br/>containing RDG settings\n\n    User->>RDG: 7. Connect HTTPS 443\n    RDG->>RDG: 8. Check CAP&lt;br/>User allowed to connect?\n    RDG->>RDG: 9. Check RAP&lt;br/>User allowed to access resource?\n\n    RDG->>RDCB: 10. Forward connection request\n    RDCB->>RDCB: 11. Check existing session&lt;br/>or assign new host\n\n    RDCB-->>RDG: 12. Redirect to RDSH-02\n    RDG->>RDSH: 13. Tunnel RDP session\n\n    RDSH->>RDL: 14. Request CAL validation\n    RDL-->>RDSH: 15. CAL granted\n\n    RDSH-->>User: 16. Session established&lt;br/>via RDG tunnel&quot;">sequenceDiagram
+    participant User as &quot;Remote User&quot;
+    participant RDWA as &quot;RD Web Access&quot;
+    participant RDG as &quot;RD Gateway&quot;
+    participant RDCB as &quot;RD Connection Broker&quot;
+    participant RDSH as &quot;RD Session Host&quot;
+    participant RDL as &quot;RD Licensing&quot;
+
+    User->>RDWA: 1. Browse web portal&lt;br/>HTTPS login
+    RDWA->>RDCB: 2. Query available&lt;br/>RemoteApp/Desktops for user
+    RDCB-->>RDWA: 3. Return list
+    RDWA-->>User: 4. Display available resources
+
+    User->>RDWA: 5. Click RemoteApp/Desktop
+    RDWA-->>User: 6. Download .rdp file&lt;br/>containing RDG settings
+
+    User->>RDG: 7. Connect HTTPS 443
+    RDG->>RDG: 8. Check CAP&lt;br/>User allowed to connect?
+    RDG->>RDG: 9. Check RAP&lt;br/>User allowed to access resource?
+
+    RDG->>RDCB: 10. Forward connection request
+    RDCB->>RDCB: 11. Check existing session&lt;br/>or assign new host
+
+    RDCB-->>RDG: 12. Redirect to RDSH-02
+    RDG->>RDSH: 13. Tunnel RDP session
+
+    RDSH->>RDL: 14. Request CAL validation
+    RDL-->>RDSH: 15. CAL granted
+
+    RDSH-->>User: 16. Session established&lt;br/>via RDG tunnel
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Lưu ý quan trọng trong flow</strong>:</p>
+<ul>
+<li>User <strong>không bao giờ</strong> connect trực tiếp đến RDSH — luôn qua RDCB (và RDG nếu external)</li>
+<li>RD Gateway <strong>terminate</strong> HTTPS, inspect CAP/RAP, rồi <strong>re-establish</strong> RDP connection internal</li>
+<li>RDCB quyết định user đi đến host nào — dựa trên existing session (reconnection) hoặc load (new session)</li>
+<li>License check xảy ra khi session established — không phải khi connect</li>
+</ul>
+<hr/>
+<h2 id="rds-capacity-planning">RDS Capacity Planning<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rds-capacity-planning" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="sizing-rdsh">Sizing RDSH<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sizing-rdsh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>User type</th><th>vCPU per user</th><th>RAM per user</th><th>Disk IOPS per user</th></tr></thead><tbody><tr><td><strong>Light</strong> (Office, email, web)</td><td>0.15-0.25 cores</td><td>1-2 GB</td><td>5-10</td></tr><tr><td><strong>Medium</strong> (Office + LOB apps)</td><td>0.25-0.5 cores</td><td>2-3 GB</td><td>10-20</td></tr><tr><td><strong>Heavy</strong> (CAD, development)</td><td>0.5-1 core</td><td>3-4 GB</td><td>20-50</td></tr></tbody></table></div>
+<p><strong>Ví dụ sizing</strong>:</p>
+<ul>
+<li>Server 8 vCPU, 64 GB RAM</li>
+<li>Light users: 32-50 users (bottleneck: RAM)</li>
+<li>Medium users: 16-24 users (bottleneck: CPU hoặc RAM)</li>
+<li>Heavy users: 8-12 users (bottleneck: CPU)</li>
+<li>Luôn để headroom: <strong>không dùng quá 80%</strong> peak capacity</li>
+</ul>
+<h3 id="network-requirements">Network Requirements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#network-requirements" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Component</th><th>Bandwidth per user</th><th>Protocol</th></tr></thead><tbody><tr><td>RDP session (typical)</td><td>100-200 Kbps</td><td>RDP</td></tr><tr><td>RDP session (video/CAD)</td><td>500 Kbps - 2 Mbps</td><td>RDP</td></tr><tr><td>Profile load (FSLogix)</td><td>Burst at logon</td><td>SMB</td></tr><tr><td>Printing</td><td>Variable</td><td>RDP printer redirect</td></tr><tr><td>USB redirection</td><td>Variable</td><td>RDP</td></tr></tbody></table></div>
+<p><strong>Latency targets</strong>:</p>
+<ul>
+<li><strong>&lt; 100ms</strong> RTT: tốt — user experience mượt</li>
+<li><strong>100-150ms</strong> RTT: acceptable — noticeable lag khi typing</li>
+<li><strong>> 150ms</strong> RTT: poor — cần RDP Shortpath, UDP transport</li>
+<li><strong>RDP Shortpath</strong>: direct UDP connection bypassing RDG → giảm latency đáng kể (Windows Server 2019+)</li>
+</ul>
+<hr/>
+<h2 id="certificates-trong-rds">Certificates trong RDS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#certificates-trong-rds" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Certificates cần thiết cho nhiều component:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Component</th><th>Mục đích</th><th>Loại certificate</th><th>Bắt buộc?</th></tr></thead><tbody><tr><td><strong>RD Gateway</strong></td><td>SSL/TLS cho HTTPS tunnel</td><td>Server Authentication — <strong>public CA</strong> nếu external</td><td>Có</td></tr><tr><td><strong>RD Web Access</strong></td><td>HTTPS cho web portal</td><td>Server Authentication</td><td>Có</td></tr><tr><td><strong>RD Connection Broker</strong></td><td>SSO — sign RDP files</td><td>Server Authentication</td><td>Cho SSO</td></tr><tr><td><strong>RD Session Host</strong></td><td>NLA server authentication</td><td>Server Authentication</td><td>Recommended</td></tr></tbody></table></div>
+<ul>
+<li>Certificates nên dùng <strong>SAN</strong> (Subject Alternative Name) hoặc <strong>wildcard</strong> nếu nhiều servers dùng cùng DNS name</li>
+<li>SSO: khi cấu hình đúng certificates, user chỉ cần nhập credentials <strong>1 lần</strong> tại RD Web/Gateway → không bị hỏi lại tại RDSH</li>
+<li>Tích hợp <a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki">02.2 - AD CS - Certificate Services và PKI</a> — dùng Enterprise CA auto-enroll certificates cho RDSH servers (internal), public CA cho RDG (external access)</li>
+</ul>
+<hr/>
+<h2 id="printing-trong-rds">Printing trong RDS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#printing-trong-rds" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="vấn-đề-1">Vấn đề<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề-1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>User in từ remote session → print ra printer tại local desk</li>
+<li>RDSH server cần printer driver → driver mismatch, driver conflict, driver crash</li>
+<li>Nhiều users = nhiều printers = driver management nightmare</li>
+</ul>
+<h3 id="easy-print-mặc-định-recommended">Easy Print (mặc định, recommended)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#easy-print-mặc-định-recommended" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Easy Print</strong> = RDP printer redirection không cần install driver trên RDSH</li>
+<li>Client redirect local printer qua RDP session</li>
+<li>RDSH dùng <strong>Easy Print driver</strong> (XPS-based) → render tại client side</li>
+<li><strong>Ưu điểm</strong>: không cần install printer driver trên RDSH, giảm conflict</li>
+<li><strong>Nhược điểm</strong>: một số printer-specific features không available, chất lượng in phụ thuộc XPS rendering</li>
+</ul>
+<h3 id="printer-redirection-options">Printer Redirection Options<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#printer-redirection-options" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Method</th><th>Mô tả</th><th>Khi nào dùng</th></tr></thead><tbody><tr><td><strong>Easy Print (default)</strong></td><td>Client redirect, XPS driver trên server</td><td>Mặc định, phù hợp hầu hết trường hợp</td></tr><tr><td><strong>Server-side driver</strong></td><td>Install driver thật trên RDSH</td><td>Khi cần printer-specific features</td></tr><tr><td><strong>Disable redirect</strong></td><td>Tắt printer redirect hoàn toàn</td><td>Security requirement, thin client</td></tr></tbody></table></div>
+<h3 id="gpo-cho-printing">GPO cho Printing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gpo-cho-printing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><code>Use Remote Desktop Easy Print printer driver first</code> — ưu tiên Easy Print</li>
+<li><code>Do not allow client printer redirection</code> — tắt redirect</li>
+<li><code>Redirect only the default client printer</code> — chỉ redirect default printer (giảm clutter)</li>
+<li><code>Use printer redirection</code> — enable/disable specific redirections</li>
+</ul>
+<hr/>
+<h2 id="rds-security-hardening">RDS Security Hardening<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rds-security-hardening" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="network-level-authentication-nla">Network Level Authentication (NLA)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#network-level-authentication-nla" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>NLA yêu cầu authentication <strong>trước khi</strong> establish full RDP session</li>
+<li>Không có NLA: client connect → server allocate resources → rồi mới authenticate → DDoS risk</li>
+<li>Có NLA: client authenticate (CredSSP) → nếu thành công → mới establish session</li>
+<li><strong>Luôn enable NLA</strong> — mặc định từ Windows Server 2012</li>
+</ul>
+<h3 id="tls-configuration">TLS Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tls-configuration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>RDP session mặc định encrypt bằng RDP security layer — <strong>yếu</strong>, nên upgrade</li>
+<li><strong>TLS</strong> (SSL) encryption: mạnh hơn, yêu cầu certificate trên RDSH</li>
+<li>GPO: <code>Set client connection encryption level</code> = High + <code>Require use of specific security layer</code> = SSL</li>
+<li>Minimum TLS version: <strong>TLS 1.2</strong> — disable TLS 1.0/1.1</li>
+</ul>
+<h3 id="mfa-integration">MFA Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mfa-integration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    User[\&quot;User\&quot;] --> RDG[\&quot;RD Gateway\&quot;]\n    RDG --> NPS[\&quot;NPS Server&lt;br/>RADIUS\&quot;]\n    NPS --> MFA[\&quot;Azure MFA Extension&lt;br/>or 3rd-party\&quot;]\n    MFA -->|\&quot;Approve\&quot;| NPS\n    NPS -->|\&quot;Access-Accept\&quot;| RDG\n    RDG --> RDCB[\&quot;Connection Broker\&quot;]\n\n    style MFA fill:#1a5276,stroke:#333,color:#fff&quot;">flowchart LR
+    User[&quot;User&quot;] --> RDG[&quot;RD Gateway&quot;]
+    RDG --> NPS[&quot;NPS Server&lt;br/>RADIUS&quot;]
+    NPS --> MFA[&quot;Azure MFA Extension&lt;br/>or 3rd-party&quot;]
+    MFA -->|&quot;Approve&quot;| NPS
+    NPS -->|&quot;Access-Accept&quot;| RDG
+    RDG --> RDCB[&quot;Connection Broker&quot;]
+
+    style MFA fill:#1a5276,stroke:#333,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>RD Gateway + NPS + Azure MFA Extension</strong>: phổ biến nhất
+<ul>
+<li>RDG dùng RADIUS (NPS) cho authentication</li>
+<li>NPS extension gọi Azure MFA → user nhận push notification hoặc nhập code</li>
+</ul>
+</li>
+<li><strong>Third-party MFA</strong>: Duo Security, RSA SecurID — integrate qua NPS hoặc custom auth</li>
+<li><strong>Windows Hello for Business</strong>: certificate-based, passwordless — tương lai của RDS authentication</li>
+</ul>
+<h3 id="restricted-admin-mode-và-remote-credential-guard">Restricted Admin Mode và Remote Credential Guard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#restricted-admin-mode-và-remote-credential-guard" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Restricted Admin</strong>: admin connect mà không gửi credentials đến RDSH → chống credential theft
+<ul>
+<li><code>mstsc /restrictedAdmin</code></li>
+<li>Hạn chế: không access network resources từ RDSH (double-hop bị block)</li>
+</ul>
+</li>
+<li><strong>Remote Credential Guard</strong> (Windows 10/Server 2016+): credentials stay trên client device, redirect Kerberos requests
+<ul>
+<li>Tốt hơn Restricted Admin: vẫn access network resources</li>
+<li><code>mstsc /remoteGuard</code></li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="multipoint-services">MultiPoint Services<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#multipoint-services" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tổng-quan-1">Tổng quan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-quan-1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>MultiPoint Services</strong> = nhiều users chia sẻ 1 physical computer qua <strong>USB hubs</strong> (zero clients, monitors connected directly)</li>
+<li>Khác với RDSH: MultiPoint kết nối trực tiếp qua USB/video, không qua network RDP</li>
+<li>Use case: classroom, library, small office — nơi cần nhiều workstations nhưng budget thấp</li>
+<li>Mỗi station: 1 monitor + 1 keyboard + 1 mouse connected qua USB hub</li>
+<li>OS: Windows Server with MultiPoint Services role</li>
+</ul>
+<h3 id="so-sánh-với-rdsh">So sánh với RDSH<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh-với-rdsh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>MultiPoint Services</th><th>RDSH</th></tr></thead><tbody><tr><td>Connection</td><td>USB direct / LAN-based</td><td>Network RDP</td></tr><tr><td>Stations</td><td>Connected trực tiếp vào host</td><td>Separate client machines</td></tr><tr><td>Scale</td><td>10-20 stations per host</td><td>Hàng trăm users across farm</td></tr><tr><td>Use case</td><td>Education, small office</td><td>Enterprise</td></tr><tr><td>Hardware</td><td>USB hubs, thin clients</td><td>Existing PCs, thin clients</td></tr><tr><td>HA</td><td>Single point of failure</td><td>Farm-based HA</td></tr></tbody></table></div>
+<hr/>
+<h2 id="on-premises-rds-vs-azure-virtual-desktop-avd">On-premises RDS vs Azure Virtual Desktop (AVD)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#on-premises-rds-vs-azure-virtual-desktop-avd" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="so-sánh">So sánh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>On-premises RDS</th><th>Azure Virtual Desktop (AVD)</th></tr></thead><tbody><tr><td><strong>Infrastructure</strong></td><td>Self-managed servers</td><td>Azure-managed VMs</td></tr><tr><td><strong>Scaling</strong></td><td>Manual (buy/provision servers)</td><td>Auto-scale (pay per use)</td></tr><tr><td><strong>Windows 10/11 multi-session</strong></td><td>Không</td><td>Có (unique to AVD)</td></tr><tr><td><strong>Management plane</strong></td><td>RDCB, RDWA, RDG — self-managed</td><td>Azure Portal — Microsoft-managed</td></tr><tr><td><strong>Licensing</strong></td><td>RDS CAL + Server license</td><td>Microsoft 365 / per-user entitlement</td></tr><tr><td><strong>FSLogix</strong></td><td>Có (free with RDS CAL)</td><td>Có (included)</td></tr><tr><td><strong>MFA</strong></td><td>NPS + Azure MFA Extension</td><td>Azure AD Conditional Access (native)</td></tr><tr><td><strong>Latency</strong></td><td>LAN speed</td><td>Depends on Azure region proximity</td></tr><tr><td><strong>Data residency</strong></td><td>On-premises (full control)</td><td>Azure region (compliance consideration)</td></tr><tr><td><strong>Cost model</strong></td><td>CapEx (servers) + OpEx (power, admin)</td><td>OpEx only (pay-as-you-go)</td></tr><tr><td><strong>Hybrid</strong></td><td>N/A</td><td>Có — connect to on-prem resources</td></tr></tbody></table></div>
+<h3 id="khi-nào-dùng-cái-nào">Khi nào dùng cái nào<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-nào-dùng-cái-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Chọn On-premises RDS khi</strong>:</p>
+<ul>
+<li>Data phải ở on-premises (compliance, regulation)</li>
+<li>Existing infrastructure đã có, đã paid off</li>
+<li>Low latency required (LAN apps, real-time systems)</li>
+<li>Predictable load — không cần auto-scale</li>
+<li>Internet connectivity unreliable</li>
+</ul>
+<p><strong>Chọn AVD khi</strong>:</p>
+<ul>
+<li>Cloud-first strategy</li>
+<li>Need Windows 10/11 multi-session (cost savings)</li>
+<li>Variable load — cần scale up/down</li>
+<li>Remote workforce distributed globally</li>
+<li>Want Microsoft-managed infrastructure</li>
+<li>Rapid deployment needed</li>
+</ul>
+<p><strong>Hybrid approach</strong>: RDS on-prem cho core apps, AVD cho burst capacity hoặc remote workers</p>
+<hr/>
+<h2 id="câu-hỏi-thường-gặp">Câu hỏi thường gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-thường-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Q: RDS CAL khác Windows Server CAL?</strong><br/>
+A: Hoàn toàn khác. Windows Server CAL cho phép access Windows Server services (file share, print, AD). RDS CAL là CAL <strong>riêng biệt</strong>, bắt buộc thêm khi dùng RDSH/VDI. Cần cả 2: Windows Server CAL + RDS CAL.</p>
+<p><strong>Q: FSLogix có miễn phí không?</strong><br/>
+A: Có, nếu bạn có RDS CAL, Microsoft 365 E3/E5, hoặc Windows Enterprise license. Không cần mua riêng. Tải từ Microsoft website.</p>
+<p><strong>Q: Có thể dùng RDS mà không có RD Gateway không?</strong><br/>
+A: Có, cho internal access (LAN). Nhưng cho external access, RD Gateway là <strong>must-have</strong> — không bao giờ expose port 3389 ra internet.</p>
+<p><strong>Q: Roaming Profiles có còn dùng được không?</strong><br/>
+A: Technically có, nhưng <strong>strongly discouraged</strong>. Roaming Profiles copy toàn bộ profile qua network mỗi logon/logoff → chậm, bloat, corruption risk. FSLogix Profile Containers tốt hơn mọi mặt.</p>
+<p><strong>Q: RDSH có chạy được trên Windows Server Core không?</strong><br/>
+A: Có từ Windows Server 2019+. Nhưng management phức tạp hơn (no GUI). Phù hợp cho large-scale deployments nơi servers managed qua PowerShell/SCCM.</p>
+<p><strong>Q: Có thể dùng RDS trên Azure IaaS VMs?</strong><br/>
+A: Có, nhưng đó là “lift-and-shift” RDS lên Azure, khác với AVD. Bạn vẫn cần self-manage tất cả RDS components. Cân nhắc AVD nếu đã quyết định lên cloud.</p>
+<hr/>
+<h2 id="lưu-ý-quan-trọng">Lưu ý quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>CAUTION</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Grace period trap</strong> — nhiều tổ chức deploy RDS rồi quên mua CAL. 120 ngày sau = tất cả users bị lock out. Luôn plan licensing từ đầu, activate license server ngay khi deploy.</p>
+</div>
+</blockquote>
+<ul>
+<li><strong>Sizing RDSH</strong> — rule of thumb: 4-6 light users hoặc 2-3 heavy users per vCPU core. RAM: 2-4 GB base OS + 1-2 GB per session. Luôn <strong>load test</strong> trước production</li>
+<li><strong>User Profile management</strong> — profile corruption hoặc bloat là vấn đề #1 trong RDS. FSLogix Profile Containers (miễn phí với RDS CAL) là giải pháp hiện đại, thay thế Roaming Profiles và UPD</li>
+<li><strong>Printer redirection</strong> — Easy Print driver (mặc định) giảm vấn đề driver mismatch. Tránh cài printer driver trên RDSH trừ khi thực sự cần</li>
+<li><strong>Security</strong>:
+<ul>
+<li>Luôn enable <strong>NLA</strong> (Network Level Authentication)</li>
+<li>RD Gateway nên đặt trong <strong>DMZ</strong>, không exposed trực tiếp</li>
+<li>Cân nhắc <strong>MFA</strong> cho RD Gateway (Azure MFA NPS extension hoặc third-party)</li>
+<li>Restrict admin RDP: dùng Restricted Admin mode hoặc Remote Credential Guard</li>
+<li>Minimum <strong>TLS 1.2</strong> cho tất cả RDS components</li>
+</ul>
+</li>
+<li><strong>Windows Server 2025</strong> — RDS vẫn là technology chính cho on-premises remote desktop. AVD là cloud complement, không replacement</li>
+</ul>
+<hr/>
+<h2 id="mối-quan-hệ-với-các-thành-phần-khác">Mối quan hệ với các thành phần khác<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mối-quan-hệ-với-các-thành-phần-khác" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>AD DS</strong> — RDS yêu cầu AD cho user authentication, GPO-based configuration, FSLogix storage permissions → xem <a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services">02.1 - AD DS - Active Directory Domain Services</a></li>
+<li><strong>AD CS</strong> — certificates cho RDG HTTPS, RDWA HTTPS, RDCB SSO, NLA → xem <a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki">02.2 - AD CS - Certificate Services và PKI</a></li>
+<li><strong>DHCP</strong> — VDI VMs cần DHCP cho IP assignment → xem <a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.3---dhcp---kiến-trúc-và-nguyên-lý" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.3---dhcp---kiến-trúc-và-nguyên-lý">02.3 - DHCP - Kiến trúc và nguyên lý</a></li>
+<li><strong>DNS</strong> — RDS farm DNS round-robin, RDG external DNS → xem <a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory">01.7 - DNS trong Active Directory</a></li>
+<li><strong>Migration</strong> RDS trong dự án nâng cấp → xem <a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration">04.4 - DHCP và RDS Migration</a></li>
+</ul>
+<hr/>
+<h2 id="liên-kết">Liên kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#liên-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services">02.1 - AD DS - Active Directory Domain Services</a> — RDS yêu cầu AD cho user authentication và GPO-based configuration</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki">02.2 - AD CS - Certificate Services và PKI</a> — certificates cho RDG, RDWA, SSO</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.3---dhcp---kiến-trúc-và-nguyên-lý" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.3---dhcp---kiến-trúc-và-nguyên-lý">02.3 - DHCP - Kiến trúc và nguyên lý</a> — DHCP cho VDI VMs</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration">04.4 - DHCP và RDS Migration</a> — migration RDS trong dự án nâng cấp</li>
+<li><a href="../../../../moc---windows-server-ad-2025" class="internal internal-link alias" data-slug="moc---windows-server-ad-2025">MOC - Windows Server AD 2025</a></li>
+</ul>
+<h2 id="tham-khảo">Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/welcome-to-rds" class="external external-link">Remote Desktop Services Overview - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/desktop-hosting-logical-architecture" class="external external-link">RDS Architecture - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/rds-roles#remote-desktop-gateway" class="external external-link">RD Gateway - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/rds-client-access-license" class="external external-link">RDS Licensing - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/rds-plan-high-availability" class="external external-link">RDS High Availability - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/fslogix/overview-what-is-fslogix" class="external external-link">FSLogix Documentation - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/virtual-desktop/overview" class="external external-link">Azure Virtual Desktop - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-427" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#rds---remote-desktop-services" data-for="rds---remote-desktop-services">RDS - Remote Desktop Services</a></li><li class="depth-1"><a href="#tóm-tắt-nhanh" data-for="tóm-tắt-nhanh">Tóm tắt nhanh</a></li><li class="depth-1"><a href="#tổng-quan" data-for="tổng-quan">Tổng quan</a></li><li class="depth-1"><a href="#kiến-trúc---các-thành-phần" data-for="kiến-trúc---các-thành-phần">Kiến trúc - Các thành phần</a></li><li class="depth-2"><a href="#rd-session-host-rdsh" data-for="rd-session-host-rdsh">RD Session Host (RDSH)</a></li><li class="depth-2"><a href="#rd-connection-broker-rdcb" data-for="rd-connection-broker-rdcb">RD Connection Broker (RDCB)</a></li><li class="depth-2"><a href="#rd-gateway-rdg" data-for="rd-gateway-rdg">RD Gateway (RDG)</a></li><li class="depth-2"><a href="#rd-web-access-rdwa" data-for="rd-web-access-rdwa">RD Web Access (RDWA)</a></li><li class="depth-2"><a href="#rd-licensing-rdl" data-for="rd-licensing-rdl">RD Licensing (RDL)</a></li><li class="depth-2"><a href="#rd-virtualization-host-rdvh" data-for="rd-virtualization-host-rdvh">RD Virtualization Host (RDVH)</a></li><li class="depth-1"><a href="#deployment-models" data-for="deployment-models">Deployment Models</a></li><li class="depth-2"><a href="#session-based-desktop" data-for="session-based-desktop">Session-based Desktop</a></li><li class="depth-2"><a href="#vdi---virtual-desktop-infrastructure" data-for="vdi---virtual-desktop-infrastructure">VDI - Virtual Desktop Infrastructure</a></li><li class="depth-2"><a href="#remoteapp-vs-full-desktop" data-for="remoteapp-vs-full-desktop">RemoteApp vs Full Desktop</a></li><li class="depth-2"><a href="#so-sánh-session-collections-vs-virtual-desktop-collections" data-for="so-sánh-session-collections-vs-virtual-desktop-collections">So sánh Session Collections vs Virtual Desktop Collections</a></li><li class="depth-1"><a href="#user-profile-management" data-for="user-profile-management">User Profile Management</a></li><li class="depth-2"><a href="#vấn-đề" data-for="vấn-đề">Vấn đề</a></li><li class="depth-2"><a href="#so-sánh-profile-solutions" data-for="so-sánh-profile-solutions">So sánh Profile Solutions</a></li><li class="depth-2"><a href="#fslogix-chi-tiết" data-for="fslogix-chi-tiết">FSLogix chi tiết</a></li><li class="depth-1"><a href="#rds-licensing" data-for="rds-licensing">RDS Licensing</a></li><li class="depth-2"><a href="#per-user-cal-vs-per-device-cal" data-for="per-user-cal-vs-per-device-cal">Per User CAL vs Per Device CAL</a></li><li class="depth-2"><a href="#license-server-discovery" data-for="license-server-discovery">License Server Discovery</a></li><li class="depth-2"><a href="#grace-period" data-for="grace-period">Grace Period</a></li><li class="depth-1"><a href="#high-availability" data-for="high-availability">High Availability</a></li><li class="depth-2"><a href="#rdcb-high-availability" data-for="rdcb-high-availability">RDCB High Availability</a></li><li class="depth-2"><a href="#rdsh-farm---nhiều-hosts-trong-collection" data-for="rdsh-farm---nhiều-hosts-trong-collection">RDSH Farm - Nhiều hosts trong Collection</a></li><li class="depth-2"><a href="#rd-gateway-farm" data-for="rd-gateway-farm">RD Gateway Farm</a></li><li class="depth-1"><a href="#connection-flow" data-for="connection-flow">Connection Flow</a></li><li class="depth-1"><a href="#rds-capacity-planning" data-for="rds-capacity-planning">RDS Capacity Planning</a></li><li class="depth-2"><a href="#sizing-rdsh" data-for="sizing-rdsh">Sizing RDSH</a></li><li class="depth-2"><a href="#network-requirements" data-for="network-requirements">Network Requirements</a></li><li class="depth-1"><a href="#certificates-trong-rds" data-for="certificates-trong-rds">Certificates trong RDS</a></li><li class="depth-1"><a href="#printing-trong-rds" data-for="printing-trong-rds">Printing trong RDS</a></li><li class="depth-2"><a href="#vấn-đề-1" data-for="vấn-đề-1">Vấn đề</a></li><li class="depth-2"><a href="#easy-print-mặc-định-recommended" data-for="easy-print-mặc-định-recommended">Easy Print (mặc định, recommended)</a></li><li class="depth-2"><a href="#printer-redirection-options" data-for="printer-redirection-options">Printer Redirection Options</a></li><li class="depth-2"><a href="#gpo-cho-printing" data-for="gpo-cho-printing">GPO cho Printing</a></li><li class="depth-1"><a href="#rds-security-hardening" data-for="rds-security-hardening">RDS Security Hardening</a></li><li class="depth-2"><a href="#network-level-authentication-nla" data-for="network-level-authentication-nla">Network Level Authentication (NLA)</a></li><li class="depth-2"><a href="#tls-configuration" data-for="tls-configuration">TLS Configuration</a></li><li class="depth-2"><a href="#mfa-integration" data-for="mfa-integration">MFA Integration</a></li><li class="depth-2"><a href="#restricted-admin-mode-và-remote-credential-guard" data-for="restricted-admin-mode-và-remote-credential-guard">Restricted Admin Mode và Remote Credential Guard</a></li><li class="depth-1"><a href="#multipoint-services" data-for="multipoint-services">MultiPoint Services</a></li><li class="depth-2"><a href="#tổng-quan-1" data-for="tổng-quan-1">Tổng quan</a></li><li class="depth-2"><a href="#so-sánh-với-rdsh" data-for="so-sánh-với-rdsh">So sánh với RDSH</a></li><li class="depth-1"><a href="#on-premises-rds-vs-azure-virtual-desktop-avd" data-for="on-premises-rds-vs-azure-virtual-desktop-avd">On-premises RDS vs Azure Virtual Desktop (AVD)</a></li><li class="depth-2"><a href="#so-sánh" data-for="so-sánh">So sánh</a></li><li class="depth-2"><a href="#khi-nào-dùng-cái-nào" data-for="khi-nào-dùng-cái-nào">Khi nào dùng cái nào</a></li><li class="depth-1"><a href="#câu-hỏi-thường-gặp" data-for="câu-hỏi-thường-gặp">Câu hỏi thường gặp</a></li><li class="depth-1"><a href="#lưu-ý-quan-trọng" data-for="lưu-ý-quan-trọng">Lưu ý quan trọng</a></li><li class="depth-1"><a href="#mối-quan-hệ-với-các-thành-phần-khác" data-for="mối-quan-hệ-với-các-thành-phần-khác">Mối quan hệ với các thành phần khác</a></li><li class="depth-1"><a href="#liên-kết" data-for="liên-kết">Liên kết</a></li><li class="depth-1"><a href="#tham-khảo" data-for="tham-khảo">Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki" class="internal">02.2 - AD CS - Certificate Services và PKI</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.3---dhcp---kiến-trúc-và-nguyên-lý" class="internal">02.3 - DHCP - Kiến trúc và nguyên lý</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal">04.4 - DHCP và RDS Migration</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal">04.5 - Kiểm thử toàn diện</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

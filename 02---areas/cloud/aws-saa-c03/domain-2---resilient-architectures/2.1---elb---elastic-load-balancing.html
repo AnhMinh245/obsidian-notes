@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>ELB - Elastic Load Balancing</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="ELB - Elastic Load Balancing"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="ELB - Elastic Load Balancing"/><meta name="twitter:description" content="Elastic Load Balancing (ELB) Elastic Load Balancing (ELB) tự động phân phối incoming application traffic (lưu lượng truy cập) trên nhiều targets, chẳng hạn như Amazon EC2 instances, containers, IP addresses, Lambda functions, và virtual appliances."/><meta property="og:description" content="Elastic Load Balancing (ELB) Elastic Load Balancing (ELB) tự động phân phối incoming application traffic (lưu lượng truy cập) trên nhiều targets, chẳng hạn như Amazon EC2 instances, containers, IP addresses, Lambda functions, và virtual appliances."/><meta property="og:image:alt" content="Elastic Load Balancing (ELB) Elastic Load Balancing (ELB) tự động phân phối incoming application traffic (lưu lượng truy cập) trên nhiều targets, chẳng hạn như Amazon EC2 instances, containers, IP addresses, Lambda functions, và virtual appliances."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.1---elb---elastic-load-balancing"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.1---elb---elastic-load-balancing"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Elastic Load Balancing (ELB) Elastic Load Balancing (ELB) tự động phân phối incoming application traffic (lưu lượng truy cập) trên nhiều targets, chẳng hạn như Amazon EC2 instances, containers, IP addresses, Lambda functions, và virtual appliances."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.1---elb---elastic-load-balancing" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-29" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-29" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/aws-saa-c03/">AWS SAA-C03</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/">Domain 2 - Resilient Architectures</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>ELB - Elastic Load Balancing</a></div></nav><h1 class="article-title">ELB - Elastic Load Balancing</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/draft" class="internal internal-link tag-link">status/draft</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">ELB</span><span class="note-properties-separator">, </span><span class="note-properties-text">Application Load Balancer</span><span class="note-properties-separator">, </span><span class="note-properties-text">ALB</span><span class="note-properties-separator">, </span><span class="note-properties-text">Network Load Balancer</span><span class="note-properties-separator">, </span><span class="note-properties-text">NLB</span><span class="note-properties-separator">, </span><span class="note-properties-text">Gateway Load Balancer</span><span class="note-properties-separator">, </span><span class="note-properties-text">GLB</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-12T17:00:00.000Z">13 thg 6, 2026</time><span>11 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="elastic-load-balancing-elb">Elastic Load Balancing (ELB)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#elastic-load-balancing-elb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>Elastic Load Balancing (ELB) tự động phân phối incoming application traffic (lưu lượng truy cập) trên nhiều targets, chẳng hạn như Amazon EC2 instances, containers, IP addresses, Lambda functions, và virtual appliances. Nó hỗ trợ phân phối traffic trên một hoặc nhiều Availability Zones (AZs) để đảm bảo <a href="../../../../02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.3---high-availability---multi-az,-multi-region" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.3---high-availability---multi-az,-multi-region">2.3 - High Availability - Multi-AZ, Multi-Region</a>.</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Important</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>ELB là một managed service của AWS. AWS đảm bảo tính khả dụng, bảo mật và mở rộng của chính Load Balancer, bạn không cần lo về việc quản lý EC2 instance chạy ELB.</p>
+</div>
+</blockquote>
+<h2 id="1-các-loại-load-balancers">1. Các Loại Load Balancers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-các-loại-load-balancers" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>AWS hiện cung cấp 4 loại Load Balancer. Trong đó, Classic Load Balancer đã lỗi thời và không nên dùng cho ứng dụng mới.</p>
+<h3 id="11-application-load-balancer-alb">1.1 Application Load Balancer (ALB)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-application-load-balancer-alb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>ALB hoạt động ở <strong>Layer 7</strong> (Application Layer) của mô hình OSI.</p>
+<ul>
+<li><strong>Protocols</strong>: Hỗ trợ HTTP, HTTPS, WebSocket, HTTP/2.</li>
+<li><strong>Routing Rules</strong>: Cực kỳ mạnh mẽ. Hỗ trợ định tuyến dựa trên:
+<ul>
+<li><strong>Path-based routing</strong>: <code>example.com/images/*</code> trỏ đến Target Group A, <code>example.com/api/*</code> trỏ đến Target Group B.</li>
+<li><strong>Host-based routing</strong>: <code>api.example.com</code> trỏ đến Target Group A, <code>web.example.com</code> trỏ đến Target Group B.</li>
+<li><strong>Query string / Headers routing</strong>: Dựa trên HTTP headers hoặc query parameters (ví dụ: <code>?version=v1</code>).</li>
+</ul>
+</li>
+<li><strong>Target Groups</strong>: Có thể là EC2 instances, IP addresses (kể cả on-premise), ECS containers, và Lambda functions.</li>
+<li><strong>Authentication</strong>: Tích hợp trực tiếp với Amazon Cognito hoặc OIDC (OpenID Connect) provider để xác thực người dùng trước khi route traffic tới backend.</li>
+<li><strong>Fixed Response &amp; Redirect</strong>: Có thể trả về mã lỗi HTTP trực tiếp (ví dụ 404) hoặc chuyển hướng (ví dụ: HTTP sang HTTPS) ở level ALB.</li>
+</ul>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Under the Hood: HTTP Headers trong ALB </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Khi một ALB định tuyến traffic tới target, nó sẽ đóng gói thông tin client ban đầu vào các HTTP headers đặc biệt vì backend EC2 chỉ thấy IP của ALB:</p>
+<ul>
+<li><strong><code>X-Forwarded-For</code></strong>: IP address thực sự của client.</li>
+<li><strong><code>X-Forwarded-Proto</code></strong>: Protocol mà client dùng (HTTP hay HTTPS).</li>
+<li><strong><code>X-Forwarded-Port</code></strong>: Port client kết nối tới ALB.</li>
+</ul>
+</div>
+</blockquote>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Exam Tip </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nếu câu hỏi đề cập đến “HTTP/HTTPS”, “path routing”, “host routing”, “microservices”, “containers (ECS)”, “Lambda”, hãy chọn <strong>ALB</strong>.</p>
+</div>
+</blockquote>
+<h3 id="12-network-load-balancer-nlb">1.2 Network Load Balancer (NLB)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-network-load-balancer-nlb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>NLB hoạt động ở <strong>Layer 4</strong> (Transport Layer).</p>
+<ul>
+<li><strong>Protocols</strong>: Hỗ trợ TCP, UDP, TLS.</li>
+<li><strong>Hiệu năng</strong>: Ultra-low latency (độ trễ cực thấp) và khả năng xử lý hàng triệu requests mỗi giây. Phù hợp cho extreme performance.</li>
+<li><strong>Static IP</strong>: NLB cấp cho bạn <strong>một Static IP address trên mỗi AZ</strong>. Nó cũng hỗ trợ gán <strong>Elastic IP</strong> (ALB không làm được điều này).</li>
+<li><strong>Preserve Source IP</strong>: Nếu target được chỉ định bằng instance ID, NLB bảo toàn IP nguồn của client. Nếu target là IP address, IP nguồn bị thay đổi trừ khi dùng Proxy Protocol.</li>
+<li><strong>AWS PrivateLink</strong>: Tích hợp chặt chẽ với VPC Endpoint Services (PrivateLink).</li>
+</ul>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Under the Hood: Cách NLB hoạt động </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Khác với ALB hoạt động như một reverse proxy hoàn chỉnh, NLB sử dụng một cơ chế phân phối traffic ở mức network driver. Nó forward các TCP session thay vì ngắt kết nối. Do đó, độ trễ thường &lt;100ms so với ~400ms của ALB. Khi một target fails, NLB mất thời gian lâu hơn một chút (so với ALB) để phát hiện và route lại traffic (vì nó không phân tích sâu ở L7).</p>
+</div>
+</blockquote>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Exam Tip </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nếu đề bài yêu cầu “TCP/UDP”, “ultra-low latency”, “static IP”, “Elastic IP”, hoặc “PrivateLink”, hãy chọn <strong>NLB</strong>.</p>
+</div>
+</blockquote>
+<h3 id="13-gateway-load-balancer-glb">1.3 Gateway Load Balancer (GLB)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-gateway-load-balancer-glb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>GLB hoạt động ở <strong>Layer 3</strong> (Network Layer).</p>
+<ul>
+<li><strong>Giao thức</strong>: Sử dụng <strong>GENEVE protocol</strong> (Generic Network Virtualization Encapsulation) trên cổng UDP 6081.</li>
+<li><strong>Use Case</strong>: Dùng để triển khai, mở rộng và quản lý các <strong>third-party virtual appliances</strong> như firewalls (Tường lửa), Intrusion Detection and Prevention Systems (IDS/IPS), và Deep Packet Inspection (DPI) systems.</li>
+<li>Nó hoạt động như một transparent network gateway (nghĩa là source và destination không nhận ra sự tồn tại của GLB) và load balancer.</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Exam Tip </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Keyword cho GLB: “third-party appliance”, “firewall”, “IDS/IPS”, “transparent inspection”.</p>
+</div>
+</blockquote>
+<h3 id="14-classic-load-balancer-clb---legacy">1.4 Classic Load Balancer (CLB) - Legacy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-classic-load-balancer-clb---legacy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Hoạt động ở L4 và L7.</li>
+<li>Hiện được coi là Legacy (Cũ). AWS khuyên dùng ALB/NLB cho các kiến trúc mới.</li>
+<li>Không hỗ trợ Server Name Indication (SNI) cho nhiều SSL certificates trên một IP.</li>
+</ul>
+<hr/>
+<h2 id="2-so-sánh-alb-vs-nlb-vs-glb-vs-clb">2. So Sánh ALB vs NLB vs GLB vs CLB<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-so-sánh-alb-vs-nlb-vs-glb-vs-clb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tính năng</th><th>ALB (Layer 7)</th><th>NLB (Layer 4)</th><th>GLB (Layer 3)</th><th>CLB (Legacy)</th></tr></thead><tbody><tr><td><strong>OSI Layer</strong></td><td>7 (Application)</td><td>4 (Transport)</td><td>3 (Network)</td><td>4 / 7</td></tr><tr><td><strong>Giao thức</strong></td><td>HTTP, HTTPS, gRPC</td><td>TCP, UDP, TLS</td><td>IP, GENEVE</td><td>TCP, HTTP, HTTPS</td></tr><tr><td><strong>Static / Elastic IP</strong></td><td>Không (Dynamic IP)</td><td>CÓ (1 Static IP / AZ)</td><td>CÓ</td><td>Không</td></tr><tr><td><strong>Routing nâng cao</strong></td><td>Path, Host, Header</td><td>Không</td><td>Không</td><td>Rất hạn chế</td></tr><tr><td><strong>Target Types</strong></td><td>Instance, IP, Lambda</td><td>Instance, IP, ALB</td><td>Instance, IP</td><td>EC2 Classic/VPC</td></tr><tr><td><strong>Cross-Zone</strong></td><td>Luôn BẬT (Bật ở LB level)</td><td>Mặc định TẮT</td><td>Mặc định TẮT</td><td>Mặc định TẮT</td></tr><tr><td><strong>SSL Termination</strong></td><td>Có</td><td>Có</td><td>Không</td><td>Có</td></tr></tbody></table></div>
+<hr/>
+<h2 id="3-các-tính-năng-quan-trọng-cần-biết">3. Các Tính Năng Quan Trọng Cần Biết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-các-tính-năng-quan-trọng-cần-biết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="cross-zone-load-balancing">Cross-Zone Load Balancing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cross-zone-load-balancing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Khi BẬT, Load Balancer sẽ phân phối traffic <strong>đều</strong> qua tất cả các registered targets trong <strong>tất cả các AZs</strong> đã được kích hoạt.</li>
+<li>Khi TẮT, traffic được chia đều cho các AZs trước, sau đó trong mỗi AZ traffic mới chia đều cho các targets. Điều này có thể dẫn đến việc mất cân bằng tải giữa các instances nếu số lượng instances trong các AZ không đồng đều.</li>
+<li><strong>ALB</strong>: Cross-zone load balancing luôn được <strong>kích hoạt ở cấp độ load balancer</strong> (không thể tắt) và bạn KHÔNG bị tính phí transfer data liên vùng cho chức năng này.</li>
+<li><strong>NLB / GLB</strong>: Bị <strong>vô hiệu hóa mặc định</strong>. Bạn có thể bật lên, nhưng sẽ bị <strong>tính phí</strong> inter-AZ data transfer.</li>
+</ul>
+<h3 id="health-checks">Health Checks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#health-checks" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>ELB sử dụng Health Checks để kiểm tra xem một target có thể xử lý request hay không.</p>
+<ul>
+<li>Nếu target fail health check (Unhealthy Threshold), ELB ngừng gửi traffic đến target đó.</li>
+<li>Nếu target pass health check trở lại (Healthy Threshold), ELB sẽ tiếp tục gửi traffic.</li>
+<li>Cấu hình bao gồm: Protocol, Port, Path, Timeout, Interval, và Thresholds.</li>
+</ul>
+<h3 id="connection-draining-deregistration-delay">Connection Draining (Deregistration Delay)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#connection-draining-deregistration-delay" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Thời gian (từ 1 đến 3600 giây, mặc định là 300s) mà ELB chờ đợi để hoàn thành các kết nối “in-flight” (đang xử lý) đến một target trước khi nó hoàn toàn deregister target đó (hoặc khi target báo unhealthy).</li>
+<li>Rất quan trọng khi phối hợp với <a href="../../../../02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.2---auto-scaling" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.2---auto-scaling">2.2 - Auto Scaling</a> để tránh ngắt đột ngột request của người dùng khi scale-in.</li>
+</ul>
+<h3 id="ssltls-termination">SSL/TLS Termination<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ssltls-termination" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Load Balancer có thể giải mã SSL/TLS traffic, do đó EC2 instances backend không cần tốn CPU để làm việc này (gọi là SSL Offloading).</li>
+<li>Tích hợp với <strong>AWS Certificate Manager (ACM)</strong> để quản lý chứng chỉ dễ dàng.</li>
+<li><strong>SNI (Server Name Indication)</strong>: Cho phép ALB/NLB host nhiều SSL certificates cho các domain khác nhau trên cùng một Load Balancer.</li>
+</ul>
+<h3 id="access-logs">Access Logs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#access-logs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>ELB hỗ trợ ghi nhận toàn bộ access logs (Ai truy cập, thời gian, IP, HTTP status, thời gian phản hồi) và lưu trữ trực tiếp vào <strong>Amazon S3</strong>.</li>
+<li>Mặc định là TẮT. Dữ liệu logs được mã hóa (SSE-S3).</li>
+<li>Không mất thêm phí cho chức năng ghi log, chỉ trả phí lưu trữ S3.</li>
+</ul>
+<h3 id="sticky-sessions-session-affinity">Sticky Sessions (Session Affinity)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sticky-sessions-session-affinity" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Đảm bảo rằng các requests từ <strong>cùng một client</strong> luôn được định tuyến đến <strong>cùng một backend target</strong>.</li>
+<li>Sử dụng cookie để tracking.</li>
+<li>Dùng cho ALB và CLB. Có 2 loại:
+<ul>
+<li><strong>Duration-based cookies</strong>: ELB tự tạo cookie với tên <code>AWSALB</code>, có thời hạn tự định.</li>
+<li><strong>Application-based cookies</strong>: Backend application tự tạo cookie (ví dụ session id), ELB sẽ dựa vào đó. Custom cookie name không được là <code>AWSALB</code>, <code>AWSALBAPP</code>, hay <code>AWSALBTG</code> (đây là các tên dành riêng cho AWS).</li>
+</ul>
+</li>
+</ul>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Lỗi phổ biến </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Khi dùng Sticky Sessions, traffic có thể bị phân phối không đều giữa các backend instances (vì một user có thể gửi nhiều request hơn những người khác). Thường dùng cho các ứng dụng legacy dạng stateful. Với cloud-native, nên để ứng dụng stateless và lưu session vào ElastiCache.</p>
+</div>
+</blockquote>
+<h3 id="pre-warming--alb-scaling">Pre-warming &amp; ALB Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pre-warming--alb-scaling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>ELB có thể tự động scale theo traffic. Quá trình scale của ALB thực chất là AWS tự động spin up thêm các LB nodes ẩn bên dưới và <strong>cập nhật bản ghi DNS</strong> của ALB để chứa nhiều IP address hơn.</p>
+<ul>
+<li>Tuy nhiên, nếu bạn dự kiến có một <strong>sự đột biến traffic khổng lồ và đột ngột</strong> (flash crowd, ví dụ mở bán Flash Sale TV trong 1 phút), tốc độ auto-scale (cập nhật DNS) của ELB có thể không kịp (vì DNS caching tại máy client).</li>
+<li>Trong trường hợp này, bạn phải <strong>liên hệ AWS Support</strong> để họ thực hiện “Pre-warm” (khởi động trước) Load Balancer của bạn đến mức công suất mong muốn.</li>
+</ul>
+<hr/>
+<h2 id="4-limits-quotas--constraints">4. Limits, Quotas &amp; Constraints<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-limits-quotas--constraints" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Resource</th><th>Default Quota (Limit)</th><th>Điều chỉnh được?</th></tr></thead><tbody><tr><td>Load Balancers per Region</td><td>50 (ALB/NLB/GLB)</td><td>Yes</td></tr><tr><td>Target Groups per Region</td><td>3000</td><td>Yes</td></tr><tr><td>Targets per Target Group</td><td>1000</td><td>Yes</td></tr><tr><td>Rules per ALB Listener</td><td>100 (không tính default)</td><td>Yes</td></tr><tr><td>Certificates per ALB/NLB</td><td>25 (qua SNI)</td><td>Yes</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>DNS Name thay vì IP </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Bạn KHÔNG BAO GIỜ được hardcode IP của ALB vào ứng dụng client, vì IP của ALB có thể thay đổi bất cứ lúc nào do cơ chế scaling của AWS. <strong>Luôn luôn sử dụng DNS name (A Record Alias trong Route 53) của Load Balancer.</strong></p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="5-troubleshooting--common-errors">5. Troubleshooting &amp; Common Errors<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-troubleshooting--common-errors" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Đối với ALB, các HTTP Status Codes là dấu hiệu rõ ràng nhất để biết lỗi đang nằm ở đâu. Nếu lỗi là 5xx, nó có thể đến từ ALB hoặc từ backend EC2:</p>
+<ol>
+<li><strong>HTTP 502 (Bad Gateway)</strong>:
+<ul>
+<li>ALB không thể parse response từ backend (response bị malformed).</li>
+<li>Backend EC2 đóng kết nối (TCP RST) đột ngột.</li>
+</ul>
+</li>
+<li><strong>HTTP 503 (Service Unavailable)</strong>:
+<ul>
+<li><strong>Target Group rỗng</strong> (không có target nào registered).</li>
+<li><strong>Tất cả target đều Unhealthy</strong> (ALB không có chỗ để route).</li>
+</ul>
+</li>
+<li><strong>HTTP 504 (Gateway Timeout)</strong>:
+<ul>
+<li>Backend application <strong>không phản hồi</strong> kịp trong thời gian timeout định sẵn của ALB (Idle Timeout, mặc định 60s).</li>
+<li><strong>Cách fix</strong>: Tăng Idle Timeout trên ALB hoặc tối ưu code ở backend, hoặc kiểm tra Security Group có block traffic từ ALB tới EC2 hay không.</li>
+</ul>
+</li>
+<li><strong>EC2 Instances Status <code>Out of Service</code></strong>:
+<ul>
+<li>Thường do Health Check failed (sai path, EC2 CPU 100%, hoặc Security Group EC2 không cho phép IP của ALB vào port tương ứng).</li>
+</ul>
+</li>
+</ol>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Security Group cho ALB và EC2 </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Best practice: Security Group của EC2 backend <strong>chỉ cho phép Inbound traffic từ Security Group ID của ALB</strong>. Tuyệt đối không allow <code>0.0.0.0/0</code> trên EC2 web tier.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="6-cli--json-policy-snippets">6. CLI &amp; JSON Policy Snippets<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-cli--json-policy-snippets" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Lệnh tạo một Application Load Balancer:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> elbv2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> create-load-balancer</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">    --name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> my-alb</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">    --subnets</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> subnet-12345678</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> subnet-87654321</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">    --security-groups</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> sg-0123456789abcdef0</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">    --scheme</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> internet-facing</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">    --type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> application</span></span></code></pre></figure>
+<p><strong>Lệnh đăng ký EC2 instance vào một Target Group:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> elbv2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> register-targets</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">    --target-group-arn</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> arn:aws:elasticloadbalancing:region:123456789012:targetgroup/my-targets/12345</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">    --targets</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> Id=i-0abcdef1234567890</span></span></code></pre></figure>
+<hr/>
+<h2 id="7-case-studies--architectures-thực-tế">7. Case Studies / Architectures thực tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-case-studies--architectures-thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="case-study-1-alb-routing-for-microservices-với-aws-fargate">Case Study 1: ALB Routing for Microservices với AWS Fargate<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#case-study-1-alb-routing-for-microservices-với-aws-fargate" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Một công ty thương mại điện tử muốn phân tách monolithic app thành 2 microservices: Users API và Orders API. Cả hai chạy trên ECS Fargate. Họ dùng duy nhất 1 ALB để định tuyến thay vì tạo nhiều LB (tiết kiệm chi phí).</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    classDef client fill:#f9f,stroke:#333,stroke-width:2px;\n    classDef alb fill:#ff9900,stroke:#333,stroke-width:2px;\n    classDef target fill:#3b48cc,stroke:#fff,stroke-width:2px;\n    classDef ecs fill:#d5e8d4,stroke:#82b366,stroke-width:2px;\n\n    User((Client)):::client -->|HTTPS /api/users| ALB[Application Load Balancer]:::alb\n    User -->|HTTPS /api/orders| ALB\n    \n    ALB -->|Path: /api/users| Rule1{Listener Rule}\n    ALB -->|Path: /api/orders| Rule2{Listener Rule}\n    \n    Rule1 --> TG_USERS[Target Group: Users]:::target\n    Rule2 --> TG_ORDERS[Target Group: Orders]:::target\n    \n    TG_USERS -.-> ECS_U[ECS Tasks: Users]:::ecs\n    TG_ORDERS -.-> ECS_O[ECS Tasks: Orders]:::ecs&quot;">flowchart TD
+    classDef client fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef alb fill:#ff9900,stroke:#333,stroke-width:2px;
+    classDef target fill:#3b48cc,stroke:#fff,stroke-width:2px;
+    classDef ecs fill:#d5e8d4,stroke:#82b366,stroke-width:2px;
+
+    User((Client)):::client -->|HTTPS /api/users| ALB[Application Load Balancer]:::alb
+    User -->|HTTPS /api/orders| ALB
+    
+    ALB -->|Path: /api/users| Rule1{Listener Rule}
+    ALB -->|Path: /api/orders| Rule2{Listener Rule}
+    
+    Rule1 --> TG_USERS[Target Group: Users]:::target
+    Rule2 --> TG_ORDERS[Target Group: Orders]:::target
+    
+    TG_USERS -.-> ECS_U[ECS Tasks: Users]:::ecs
+    TG_ORDERS -.-> ECS_O[ECS Tasks: Orders]:::ecs
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><em>Luồng xử lý: ALB phân tích HTTP request path. Nhờ đó, 1 ALB có thể phục vụ nhiều microservices, giảm chi phí tĩnh cho LB.</em></p>
+<h3 id="case-study-2-fixed-ip-cho-alb-kết-hợp-nlb-và-alb">Case Study 2: Fixed IP cho ALB (Kết hợp NLB và ALB)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#case-study-2-fixed-ip-cho-alb-kết-hợp-nlb-và-alb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Vấn đề: Một đối tác (Partner) yêu cầu công ty bạn phải cung cấp một dải IP cố định (Static IP) để họ đưa vào whitelist tường lửa của họ. Nhưng công ty bạn lại cần sử dụng ALB vì ứng dụng web cần Host-based routing và WAF (Web Application Firewall). ALB không hỗ trợ Static IP.<br/>
+Giải pháp: Đặt một NLB (có Elastic IPs) ở phía trước, và đặt ALB làm Target của NLB đó.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    classDef external fill:#f9f,stroke:#333,stroke-width:2px;\n    classDef nlb fill:#8c4bf6,stroke:#333,stroke-width:2px;\n    classDef alb fill:#ff9900,stroke:#333,stroke-width:2px;\n    classDef tg fill:#3b48cc,stroke:#fff,stroke-width:2px;\n\n    Partner((Partner Network)):::external -->|TCP Port 443\\nTo Static EIP| NLB[NLB\\nwith Elastic IP]:::nlb\n    NLB -->|Target Group: ALB| ALB[Application Load Balancer]:::alb\n    ALB -->|Target Group: EC2| EC2[EC2 ASG]:::tg&quot;">flowchart LR
+    classDef external fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef nlb fill:#8c4bf6,stroke:#333,stroke-width:2px;
+    classDef alb fill:#ff9900,stroke:#333,stroke-width:2px;
+    classDef tg fill:#3b48cc,stroke:#fff,stroke-width:2px;
+
+    Partner((Partner Network)):::external -->|TCP Port 443\nTo Static EIP| NLB[NLB\nwith Elastic IP]:::nlb
+    NLB -->|Target Group: ALB| ALB[Application Load Balancer]:::alb
+    ALB -->|Target Group: EC2| EC2[EC2 ASG]:::tg
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><em>Kiến trúc này kết hợp được điểm mạnh của cả hai: Static IP của NLB và Layer 7 Routing / WAF integration của ALB.</em></p>
+<hr/>
+<h2 id="8-tóm-tắt">8. Tóm tắt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-tóm-tắt" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><strong>ALB (Layer 7)</strong>: HTTP/HTTPS, Path/Host routing, tích hợp tốt với microservices, Lambda, ECS. Cân bằng tải linh hoạt. Dùng Security Groups. IP động.</li>
+<li><strong>NLB (Layer 4)</strong>: TCP/UDP, Ultra-low latency, Static IP (Elastic IP), triệu request/s. Không có Security Group ở cấp LB (phải gắn ở EC2). Hiệu suất tối đa.</li>
+<li><strong>GLB (Layer 3)</strong>: Phân phối traffic tới các Virtual Appliances (Firewall, IPS) của bên thứ 3.</li>
+<li><strong>Troubleshooting</strong>: Lỗi 504 Gateway Timeout -> do EC2 phản hồi chậm; Lỗi 503 -> Target group rỗng/unhealthy.</li>
+<li>Nhớ kỹ các tính năng: Cross-zone (giúp cân bằng tốt hơn), Health Check (loại bỏ server lỗi), Connection Draining (thoát an toàn), Sticky Sessions (giữ session).</li>
+</ol>
+<p>Xem tiếp bài <a href="../../../../02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.2---auto-scaling" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.2---auto-scaling">2.2 - Auto Scaling</a> để biết cách kết hợp ELB với khả năng co giãn tự động của AWS.</p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-29" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#elastic-load-balancing-elb" data-for="elastic-load-balancing-elb">Elastic Load Balancing (ELB)</a></li><li class="depth-1"><a href="#1-các-loại-load-balancers" data-for="1-các-loại-load-balancers">1. Các Loại Load Balancers</a></li><li class="depth-2"><a href="#11-application-load-balancer-alb" data-for="11-application-load-balancer-alb">1.1 Application Load Balancer (ALB)</a></li><li class="depth-2"><a href="#12-network-load-balancer-nlb" data-for="12-network-load-balancer-nlb">1.2 Network Load Balancer (NLB)</a></li><li class="depth-2"><a href="#13-gateway-load-balancer-glb" data-for="13-gateway-load-balancer-glb">1.3 Gateway Load Balancer (GLB)</a></li><li class="depth-2"><a href="#14-classic-load-balancer-clb---legacy" data-for="14-classic-load-balancer-clb---legacy">1.4 Classic Load Balancer (CLB) - Legacy</a></li><li class="depth-1"><a href="#2-so-sánh-alb-vs-nlb-vs-glb-vs-clb" data-for="2-so-sánh-alb-vs-nlb-vs-glb-vs-clb">2. So Sánh ALB vs NLB vs GLB vs CLB</a></li><li class="depth-1"><a href="#3-các-tính-năng-quan-trọng-cần-biết" data-for="3-các-tính-năng-quan-trọng-cần-biết">3. Các Tính Năng Quan Trọng Cần Biết</a></li><li class="depth-2"><a href="#cross-zone-load-balancing" data-for="cross-zone-load-balancing">Cross-Zone Load Balancing</a></li><li class="depth-2"><a href="#health-checks" data-for="health-checks">Health Checks</a></li><li class="depth-2"><a href="#connection-draining-deregistration-delay" data-for="connection-draining-deregistration-delay">Connection Draining (Deregistration Delay)</a></li><li class="depth-2"><a href="#ssltls-termination" data-for="ssltls-termination">SSL/TLS Termination</a></li><li class="depth-2"><a href="#access-logs" data-for="access-logs">Access Logs</a></li><li class="depth-2"><a href="#sticky-sessions-session-affinity" data-for="sticky-sessions-session-affinity">Sticky Sessions (Session Affinity)</a></li><li class="depth-2"><a href="#pre-warming--alb-scaling" data-for="pre-warming--alb-scaling">Pre-warming &amp; ALB Scaling</a></li><li class="depth-1"><a href="#4-limits-quotas--constraints" data-for="4-limits-quotas--constraints">4. Limits, Quotas &amp; Constraints</a></li><li class="depth-1"><a href="#5-troubleshooting--common-errors" data-for="5-troubleshooting--common-errors">5. Troubleshooting &amp; Common Errors</a></li><li class="depth-1"><a href="#6-cli--json-policy-snippets" data-for="6-cli--json-policy-snippets">6. CLI &amp; JSON Policy Snippets</a></li><li class="depth-1"><a href="#7-case-studies--architectures-thực-tế" data-for="7-case-studies--architectures-thực-tế">7. Case Studies / Architectures thực tế</a></li><li class="depth-2"><a href="#case-study-1-alb-routing-for-microservices-với-aws-fargate" data-for="case-study-1-alb-routing-for-microservices-với-aws-fargate">Case Study 1: ALB Routing for Microservices với AWS Fargate</a></li><li class="depth-2"><a href="#case-study-2-fixed-ip-cho-alb-kết-hợp-nlb-và-alb" data-for="case-study-2-fixed-ip-cho-alb-kết-hợp-nlb-và-alb">Case Study 2: Fixed IP cho ALB (Kết hợp NLB và ALB)</a></li><li class="depth-1"><a href="#8-tóm-tắt" data-for="8-tóm-tắt">8. Tóm tắt</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.2---auto-scaling" class="internal">Auto Scaling</a></li><li><a href="../../../../02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.3---high-availability---multi-az,-multi-region" class="internal">High Availability - Multi-AZ, Multi-Region</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

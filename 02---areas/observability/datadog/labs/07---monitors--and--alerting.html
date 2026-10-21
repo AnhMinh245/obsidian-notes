@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Lab 07 — Monitors &amp; Alerting</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Lab 07 — Monitors &amp; Alerting"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Lab 07 — Monitors &amp; Alerting"/><meta name="twitter:description" content="Lab 07 — Monitors &amp; Alerting ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 06 hoàn thành, Storedog chạy trên Minikube 🔗 Source: DataDog/storedog 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu Datadog Monitor types (Metric, APM, Log, Composite, Anomaly, Forecast) Tạo Metric Monitor: alert khi CPU > thr..."/><meta property="og:description" content="Lab 07 — Monitors &amp; Alerting ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 06 hoàn thành, Storedog chạy trên Minikube 🔗 Source: DataDog/storedog 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu Datadog Monitor types (Metric, APM, Log, Composite, Anomaly, Forecast) Tạo Metric Monitor: alert khi CPU > thr..."/><meta property="og:image:alt" content="Lab 07 — Monitors &amp; Alerting ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 06 hoàn thành, Storedog chạy trên Minikube 🔗 Source: DataDog/storedog 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu Datadog Monitor types (Metric, APM, Log, Composite, Anomaly, Forecast) Tạo Metric Monitor: alert khi CPU > thr..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/labs/07---monitors--and--alerting"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/labs/07---monitors--and--alerting"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Lab 07 — Monitors &amp; Alerting ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 06 hoàn thành, Storedog chạy trên Minikube 🔗 Source: DataDog/storedog 🎯 Mục Tiêu Sau lab này, bạn sẽ: Hiểu Datadog Monitor types (Metric, APM, Log, Composite, Anomaly, Forecast) Tạo Metric Monitor: alert khi CPU > thr..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/datadog/labs/07---monitors--and--alerting" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-298" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-298" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/">Datadog</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/labs/">Labs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Lab 07 — Monitors &amp; Alerting</a></div></nav><h1 class="article-title">Lab 07 — Monitors &amp; Alerting</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/datadog" class="internal internal-link tag-link">domain/datadog</a><span class="note-properties-separator">, </span><a href="../../../../tags/labs" class="internal internal-link tag-link">labs</a><span class="note-properties-separator">, </span><a href="../../../../tags/monitors" class="internal internal-link tag-link">monitors</a><span class="note-properties-separator">, </span><a href="../../../../tags/alerting" class="internal internal-link tag-link">alerting</a><span class="note-properties-separator">, </span><a href="../../../../tags/notifications" class="internal internal-link tag-link">notifications</a><span class="note-properties-separator">, </span><a href="../../../../tags/kubernetes" class="internal internal-link tag-link">kubernetes</a><span class="note-properties-separator">, </span><a href="../../../../tags/hands-on" class="internal internal-link tag-link">hands-on</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-11T17:00:00.000Z">12 thg 6, 2026</time><span>10 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="lab-07--monitors--alerting">Lab 07 — Monitors &amp; Alerting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lab-07--monitors--alerting" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>⏱️ <strong>Thời gian</strong>: ~45 phút<br/>
+📋 <strong>Prerequisites</strong>: <a href="../../../../02---areas/observability/datadog/labs/06---dashboards--and--visualization" class="internal internal-link alias" data-slug="02---areas/observability/datadog/labs/06---dashboards--and--visualization">Lab 06</a> hoàn thành, Storedog chạy trên Minikube<br/>
+🔗 <strong>Source</strong>: <a href="https://github.com/DataDog/storedog" class="external external-link">DataDog/storedog<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</blockquote>
+<hr/>
+<h2 id="-mục-tiêu">🎯 Mục Tiêu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mục-tiêu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau lab này, bạn sẽ:</p>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Hiểu Datadog Monitor types (Metric, APM, Log, Composite, Anomaly, Forecast)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Tạo Metric Monitor: alert khi CPU > threshold</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Tạo APM Monitor: alert khi error rate > threshold</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Tạo K8s-specific monitors: Pod restart, Deployment replicas</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Cấu hình Notification message với template variables</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Sử dụng Monitor Status page và Downtime scheduling</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> So sánh: Datadog Monitors (rule-based) vs Davis AI (automatic)</li>
+</ul>
+<hr/>
+<h2 id="-kiến-thức-nền">📚 Kiến Thức Nền<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kiến-thức-nền" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="fundamentals">Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="../../../../02---areas/observability/fundamentals/07---alerting--and--incident-management" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/07---alerting--and--incident-management">Ch.07 — Alerting &amp; Incident Management</a><br/>
+→ Alert types, thresholds, notification routing, alert fatigue</li>
+</ul>
+<h3 id="cách-học-lab-này">Cách học lab này<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-học-lab-này" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Một alert tốt luôn có 5 thành phần: signal, scope, window, threshold, và routing </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>Lab này sẽ hữu ích hơn nhiều nếu bạn tự hỏi vì sao mình chọn metric đó, vì sao là 5 phút chứ không phải 1 phút hoặc 15 phút, và ai mới là người nên nhận notification đó.</li>
+<li>Monitor trigger không đồng nghĩa incident đã được hiểu. Datadog monitors cho bạn biết “có điều bất thường cần chú ý”; phần điều tra root cause vẫn cần quay lại dashboards, logs, traces, và infra context.</li>
+<li>Nếu thấy alert quá ồn hoặc quá im lặng, nguyên nhân thường không nằm ở message template mà ở scope, grouping, no-data behavior, hoặc threshold design ngay từ đầu.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="1-monitor-types--concept">1. Monitor Types — Concept<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-monitor-types--concept" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Type</th><th>Trigger</th><th>Use case</th></tr></thead><tbody><tr><td><strong>Metric Monitor</strong></td><td>Metric crosses threshold</td><td>CPU > 80%, memory usage</td></tr><tr><td><strong>APM Monitor</strong></td><td>APM metric (error rate, latency)</td><td>Service degradation</td></tr><tr><td><strong>Log Monitor</strong></td><td>Log count/pattern matches</td><td>Error log spike</td></tr><tr><td><strong>Composite Monitor</strong></td><td>Combine multiple monitors</td><td>”CPU > 80% AND disk > 90%“</td></tr><tr><td><strong>Anomaly Monitor</strong></td><td>Metric deviates from learned baseline</td><td>Unusual traffic pattern</td></tr><tr><td><strong>Forecast Monitor</strong></td><td>Predicted future value crosses threshold</td><td>Disk full in 3 days</td></tr><tr><td><strong>Outlier Monitor</strong></td><td>Host deviates from peers</td><td>1 node in cluster behaving differently</td></tr><tr><td><strong>Process Monitor</strong></td><td>Process up/down</td><td>Critical daemon stopped</td></tr></tbody></table></div>
+<h3 id="11-anomaly-detection--algorithms">1.1. Anomaly Detection — Algorithms<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-anomaly-detection--algorithms" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Anomaly Monitor sử dụng 3 algorithms, mỗi loại phù hợp use case khác nhau:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Algorithm</th><th>Kỹ thuật</th><th>Đặc điểm</th><th>Use case</th></tr></thead><tbody><tr><td><strong>Basic</strong></td><td>Lagging rolling quantile</td><td>Không giả định seasonality, phản ứng chậm</td><td>Metric không có pattern tuần/ngày</td></tr><tr><td><strong>Agile</strong></td><td>SARIMA (Seasonal ARIMA)</td><td>Adapts nhanh khi level shift</td><td>Metric có seasonality + cần phát hiện thay đổi nhanh</td></tr><tr><td><strong>Robust</strong></td><td>Seasonal-trend decomposition</td><td>Conservative, bỏ qua anomalies gần đây khi tính baseline</td><td>Metric ổn định, ít false positives</td></tr></tbody></table></div>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Agile và Robust cần ~3 tuần historical data </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Cả hai algorithm cần tối thiểu khoảng 3 tuần dữ liệu lịch sử để học weekly seasonality. Với metric mới, chỉ Basic hoạt động ngay.</p>
+</div>
+</blockquote>
+<h3 id="12-forecast-monitor--algorithms">1.2. Forecast Monitor — Algorithms<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-forecast-monitor--algorithms" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Algorithm</th><th>Kỹ thuật</th><th>Use case</th></tr></thead><tbody><tr><td><strong>Linear</strong></td><td>OLS regression (Ordinary Least Squares)</td><td>Metric tăng đều (disk usage, data growth)</td></tr><tr><td><strong>Seasonal</strong></td><td>Holt-Winters exponential smoothing</td><td>Metric có weekly/daily patterns (traffic)</td></tr></tbody></table></div>
+<h3 id="13-monitor-states">1.3. Monitor States<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-monitor-states" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌──────────────────────────────────────────────────┐
+│              Monitor State Machine               │
+│                                                  │
+│   OK ──→ Warn ──→ Alert                          │
+│    ↑       │        │                            │
+│    └───────┴────────┘  (recovery)                │
+│                                                  │
+│   No Data   (Agent stopped / metric missing)     │
+│   Unknown   (service checks only)                │
+│   Skipped   (evaluation status, NOT a state)     │
+└──────────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>OK</strong> / <strong>Warn</strong> / <strong>Alert</strong> / <strong>No Data</strong>: monitor states thực sự</li>
+<li><strong>Unknown</strong>: chỉ xuất hiện với service check monitors</li>
+<li><strong>Skipped</strong>: trạng thái evaluation (monitor bị skip do downtime hoặc dependency), không phải state</li>
+</ul>
+<blockquote>
+<p>🔗 <strong>Fundamentals</strong>: <a href="../../../../02---areas/observability/fundamentals/07---alerting--and--incident-management#8-static-vs-dynamic-thresholds" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/07---alerting--and--incident-management">Ch.07 — Static vs Dynamic Thresholds</a>. Metric Monitor = static threshold. Anomaly Monitor = dynamic (Datadog tự learn baseline).</p>
+</blockquote>
+<hr/>
+<h2 id="2-tạo-metric-monitor--cpu-alert">2. Tạo Metric Monitor — CPU Alert<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-tạo-metric-monitor--cpu-alert" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-tạo-monitor">2.1. Tạo Monitor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-tạo-monitor" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Vào <strong>Monitors</strong> → <strong>New Monitor</strong> → <strong>Metric</strong></li>
+<li>Cấu hình:</li>
+</ol>
+<p><strong>Step 1 — Choose detection method:</strong></p>
+<ul>
+<li>✅ Threshold Alert</li>
+</ul>
+<p><strong>Step 2 — Define the metric:</strong></p>
+<pre><code>avg(last_5m):avg:system.cpu.user{*} > 80
+</code></pre>
+<ul>
+<li>Metric: <code>system.cpu.user</code></li>
+<li>Scope: <code>{*}</code> (all hosts — trong K8s, Minikube node)</li>
+<li>Function: <code>avg:</code> averaged over sources</li>
+<li>Evaluation window: <code>last_5m</code> (5 phút)</li>
+</ul>
+<p><strong>Step 3 — Set alert conditions:</strong></p>
+<ul>
+<li><strong>Alert threshold</strong>: > <code>80</code> (CPU > 80% → ALERT)</li>
+<li><strong>Warning threshold</strong>: > <code>60</code> (CPU > 60% → WARNING)</li>
+<li><strong>Recovery</strong>: &lt; <code>70</code> (alert auto-resolves when CPU &lt; 70%)</li>
+</ul>
+<p><strong>Step 4 — Notify your team:</strong></p>
+<pre><code>## CPU Alert on {{host.name}}
+
+CPU usage is {{#is_alert}}**CRITICAL** at {{value}}%{{/is_alert}}
+{{#is_warning}}elevated at {{value}}%{{/is_warning}}
+{{#is_recovery}}recovered to {{value}}%{{/is_recovery}}
+
+**Host**: {{host.name}}
+**Last Value**: {{value}}%
+
+@yourname@email.com
+</code></pre>
+<ol start="3">
+<li>Click <strong>Create</strong></li>
+</ol>
+<h3 id="22-hiểu-template-variables">2.2. Hiểu template variables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-hiểu-template-variables" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Variable</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><code>{{host.name}}</code></td><td>Hostname triggering alert</td></tr><tr><td><code>{{value}}</code></td><td>Current metric value</td></tr><tr><td><code>{{#is_alert}}...{{/is_alert}}</code></td><td>Conditional: chỉ hiện khi ALERT state</td></tr><tr><td><code>{{#is_warning}}...{{/is_warning}}</code></td><td>Conditional: chỉ hiện khi WARNING state</td></tr><tr><td><code>{{#is_recovery}}...{{/is_recovery}}</code></td><td>Conditional: chỉ hiện khi RECOVERY</td></tr><tr><td><code>@email</code></td><td>Notification recipient</td></tr></tbody></table></div>
+<hr/>
+<h2 id="3-tạo-apm-monitor--error-rate-alert">3. Tạo APM Monitor — Error Rate Alert<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-tạo-apm-monitor--error-rate-alert" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-tạo-monitor">3.1. Tạo Monitor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-tạo-monitor" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Monitors</strong> → <strong>New Monitor</strong> → <strong>APM</strong></li>
+<li>Cấu hình:</li>
+</ol>
+<p><strong>Service</strong>: <code>store-discounts</code><br/>
+<strong>Type</strong>: Error Rate<br/>
+<strong>Condition</strong>: Error rate > <code>5%</code> over <code>last_10m</code><br/>
+<strong>Warning</strong>: > <code>2%</code></p>
+<p><strong>Notification:</strong></p>
+<pre><code>## Error Rate Alert — {{service.name}}
+
+Error rate on **{{service.name}}** is at {{value}}%
+
+This may indicate:
+- Database connection issues (PostgreSQL Pod healthy?)
+- Application bugs in discounts service
+- Upstream dependency failures
+
+**Service**: {{service.name}}
+**Environment**: {{env.name}}
+
+@yourname@email.com
+</code></pre>
+<ol start="3">
+<li>Click <strong>Create</strong></li>
+</ol>
+<h3 id="32-tại-sao-apm-monitor-riêng">3.2. Tại sao APM Monitor riêng?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-tại-sao-apm-monitor-riêng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>APM Monitor hiểu <strong>service context</strong>:</p>
+<ul>
+<li>Tự tính error rate từ traces (không cần manual metric)</li>
+<li>Có thể alert theo <code>service</code>, <code>resource</code> (endpoint), <code>env</code></li>
+<li>So sánh: Metric Monitor generic → APM Monitor service-aware</li>
+</ul>
+<hr/>
+<h2 id="4-k8s-specific-monitors">4. K8s-Specific Monitors<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-k8s-specific-monitors" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Trong Kubernetes, có những failure modes đặc trưng mà Docker Compose không có. Phần này tạo monitors cho các tín hiệu K8s quan trọng nhất.</p>
+<h3 id="41-pod-restart-monitor-crashloopbackoff-detection">4.1. Pod Restart Monitor (CrashLoopBackOff Detection)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-pod-restart-monitor-crashloopbackoff-detection" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Monitors</strong> → <strong>New Monitor</strong> → <strong>Metric</strong></li>
+<li>Cấu hình:</li>
+</ol>
+<pre><code>change(avg(last_5m),last_5m):avg:kubernetes.containers.restarts{kube_namespace:storedog} by {pod_name} > 3
+</code></pre>
+<ul>
+<li>Metric: <code>kubernetes.containers.restarts</code></li>
+<li>Detection: <strong>Change Alert</strong> (delta trong 5 phút)</li>
+<li>Scope: <code>kube_namespace:storedog</code></li>
+<li>Group by: <code>pod_name</code> → mỗi pod alert riêng</li>
+<li>Threshold: > 3 restarts trong 5 phút</li>
+</ul>
+<p><strong>Notification:</strong></p>
+<pre><code>## Pod Restart Alert — {{pod_name.name}}
+
+Pod **{{pod_name.name}}** has restarted {{value}} times in 5 minutes.
+
+Likely causes:
+- CrashLoopBackOff (OOMKilled, app crash)
+- Liveness probe failure
+- Missing ConfigMap/Secret
+
+**Debug:**
+```kubectl describe pod {{pod_name.name}} -n storedog```
+```kubectl logs {{pod_name.name}} -n storedog --previous```
+
+@yourname@email.com
+</code></pre>
+<h3 id="42-deployment-replica-monitor">4.2. Deployment Replica Monitor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-deployment-replica-monitor" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Monitors</strong> → <strong>New Monitor</strong> → <strong>Metric</strong></li>
+<li>Cấu hình:</li>
+</ol>
+<pre><code>avg(last_5m):avg:kubernetes.deployment.replicas_available{kube_namespace:storedog} by {kube_deployment} &lt; 1
+</code></pre>
+<ul>
+<li>Metric: <code>kubernetes.deployment.replicas_available</code></li>
+<li>Scope: <code>kube_namespace:storedog</code></li>
+<li>Group by: <code>kube_deployment</code></li>
+<li>Alert: &lt; 1 (không còn replica available)</li>
+<li>Warning: &lt; 2 (nếu desired > 1)</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>K8s monitors = early warning trước khi user thấy downtime </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Pod restart monitor bắt CrashLoopBackOff. Replica monitor bắt Deployment unhealthy. Kết hợp cả hai với APM error rate monitor → coverage rộng hơn nhiều so với chỉ dùng infrastructure metrics.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="5-monitor-status-page">5. Monitor Status Page<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-monitor-status-page" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-xem-monitor-status">5.1. Xem monitor status<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-xem-monitor-status" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Vào <strong>Monitors</strong> → <strong>Manage Monitors</strong></li>
+<li>Bạn sẽ thấy danh sách monitors + current status</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Status</th><th>Color</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>OK</strong></td><td>🟢 Green</td><td>Metric within normal range</td></tr><tr><td><strong>Warn</strong></td><td>🟡 Yellow</td><td>Warning threshold crossed</td></tr><tr><td><strong>Alert</strong></td><td>🔴 Red</td><td>Alert threshold crossed</td></tr><tr><td><strong>No Data</strong></td><td>⚪ Gray</td><td>No data received</td></tr></tbody></table></div>
+<h3 id="52-monitor-history">5.2. Monitor history<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-monitor-history" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Click vào 1 monitor</li>
+<li>Xem <strong>Status &amp; History</strong> tab:
+<ul>
+<li>Timeline: state transitions over time</li>
+<li>Events: khi nào trigger, khi nào recover</li>
+<li>Group-by: nếu monitor scoped by tag (vd <code>pod_name</code>), xem mỗi group riêng</li>
+</ul>
+</li>
+</ol>
+<h3 id="53-no-data-is-a-problem-too">5.3. “No Data” is a problem too!<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-no-data-is-a-problem-too" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Đừng ignore &quot;No Data&quot; status </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Trong K8s context, “No Data” thường nghĩa: Agent DaemonSet pod bị evict, node NotReady, hoặc Cluster Agent mất kết nối. Configure <strong>Notify on No Data</strong> trong monitor settings — đặc biệt quan trọng cho K8s monitors vì pod lifecycle thay đổi liên tục.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="6-downtime--scheduled-maintenance">6. Downtime — Scheduled Maintenance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-downtime--scheduled-maintenance" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-concept">6.1. Concept<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-concept" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Downtime = “tôi biết service sẽ down, đừng alert”</p>
+<p>Ví dụ trong K8s:</p>
+<ul>
+<li>Rolling update Deployment (pods restart có chủ đích)</li>
+<li>Node drain cho maintenance</li>
+<li>Cluster upgrade (Minikube stop/start)</li>
+</ul>
+<h3 id="62-schedule-downtime">6.2. Schedule Downtime<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-schedule-downtime" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Vào <strong>Monitors</strong> → <strong>Manage Downtime</strong> → <strong>Schedule Downtime</strong></li>
+<li>Cấu hình:
+<ul>
+<li><strong>Scope</strong>: Chọn monitors hoặc tags (<code>kube_namespace:storedog</code>)</li>
+<li><strong>Start/End</strong>: Thời gian downtime</li>
+<li><strong>Message</strong>: “Planned rolling update for discounts service”</li>
+<li><strong>Recurring</strong>: Hàng tuần? Hàng tháng?</li>
+</ul>
+</li>
+<li>Click <strong>Schedule</strong></li>
+</ol>
+<p>Downtime vs Mute:</p>
+<ul>
+<li><strong>Downtime</strong> = scheduled, có thời gian kết thúc</li>
+<li><strong>Mute</strong> = manual silence, phải tự unmute</li>
+</ul>
+<hr/>
+<h2 id="7-so-sánh-datadog-monitors-vs-davis-ai">7. So Sánh: Datadog Monitors vs Davis AI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-so-sánh-datadog-monitors-vs-davis-ai" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>Datadog Monitors</th><th>Dynatrace Davis AI</th></tr></thead><tbody><tr><td><strong>Setup</strong></td><td>Manual: bạn tạo mỗi monitor</td><td>Zero-config: Davis tự monitor</td></tr><tr><td><strong>Detection</strong></td><td>Rule-based (threshold/anomaly)</td><td>Baseline + topology-aware</td></tr><tr><td><strong>Correlation</strong></td><td>Composite Monitors, Watchdog gợi ý; nhưng không “1 problem” tự động như Davis</td><td>Tự correlate → 1 problem</td></tr><tr><td><strong>Root cause</strong></td><td>Chủ yếu bạn phân tích; Watchdog/related signals gợi ý</td><td>Davis tự xác định qua Smartscape</td></tr><tr><td><strong>Flexibility</strong></td><td>✅ Rất flexible — custom conditions</td><td>❌ Ít tuỳ chỉnh — Davis decides</td></tr><tr><td><strong>Transparency</strong></td><td>✅ Bạn biết exactly rule gì</td><td>⚠️ “Black box” — trust Davis</td></tr><tr><td><strong>Custom rules</strong></td><td>✅ Bất kỳ metric/condition</td><td>❌ Limited custom alerting</td></tr><tr><td><strong>Alert storm</strong></td><td>⚠️ Possible — nhiều monitors = nhiều alerts</td><td>✅ Davis tự gộp</td></tr><tr><td><strong>K8s awareness</strong></td><td>Tag-based (<code>kube_*</code>) + K8s integration</td><td>Topology-based (process → pod → node)</td></tr></tbody></table></div>
+<p>Practical advice:</p>
+<ul>
+<li><strong>Start with Datadog monitors</strong> → bạn hiểu rõ hệ thống trước</li>
+<li><strong>Davis AI tốt hơn</strong> cho large-scale → nhưng kém transparent</li>
+<li>Production nên dùng <strong>cả hai</strong>: platform-specific (Davis) + custom rules (monitors)</li>
+</ul>
+<blockquote>
+<p>🔗 <strong>Fundamentals</strong>: <a href="../../../../02---areas/observability/fundamentals/09---aiops--and--advanced-patterns#4-correlation-engine--nhóm-alerts-liên-quan" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/09---aiops--and--advanced-patterns">Ch.09 — Alert Correlation</a>. Trọng tâm của lab này là <strong>Monitors</strong>. Datadog có Watchdog, Event Management và Incident workflows, nhưng chúng không thay thế hoàn toàn mô hình auto-problem correlation kiểu Davis.</p>
+</blockquote>
+<hr/>
+<h2 id="8-test-monitor--trigger-alert-thật">8. Test Monitor — Trigger Alert Thật<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-test-monitor--trigger-alert-thật" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Bài tập thực hành </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Thử trigger CPU monitor bạn vừa tạo bằng stress test bên trong pod.</p>
+</div>
+</blockquote>
+<h3 id="option-a-stress-cpu-từ-bên-trong-pod-khuyến-nghị">Option A: Stress CPU từ bên trong Pod (khuyến nghị)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-a-stress-cpu-từ-bên-trong-pod-khuyến-nghị" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Tìm tên pod discounts</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> storedog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -l</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> app=discounts</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Chạy stress test bên trong pod (4 CPU loops, 60 giây)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">discounts-po</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">d</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> storedog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -c</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> 'for i in $(seq 1 4); do (while true; do :; done) &amp; done; sleep 60; kill $(jobs -p)'</span></span></code></pre></figure>
+<p>Giải thích command:</p>
+<ul>
+<li><code>for i in $(seq 1 4)</code> → tạo 4 background processes</li>
+<li><code>while true; do :; done</code> → infinite CPU loop (<code>:</code> = no-op command)</li>
+<li><code>sleep 60</code> → chờ 60 giây</li>
+<li><code>kill $(jobs -p)</code> → kill tất cả background jobs</li>
+</ul>
+<h3 id="option-b-stress-trên-minikube-node">Option B: Stress trên Minikube node<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-b-stress-trên-minikube-node" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># SSH vào Minikube node</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">minikube</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ssh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Stress test (nếu có stress-ng)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">stress-ng</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --cpu</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 2</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --timeout</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> 120s</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Hoặc dùng shell loops</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> $(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">seq</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 4</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">); </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">do</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (while true; </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">do</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function"> :</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; done) &amp; </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">done</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">sleep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 120</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">kill</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> $(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">jobs</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span></code></pre></figure>
+<h3 id="verify">Verify<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#verify" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Chờ ~5 phút (evaluation window <code>last_5m</code>)</li>
+<li>Vào <strong>Monitors → Manage Monitors</strong> → xem CPU monitor chuyển trạng thái</li>
+<li>Check email notification (nếu đã cấu hình <code>@email</code>)</li>
+<li>Sau stress kết thúc → monitor tự <strong>Recovery</strong></li>
+<li>Xem <strong>Monitor History</strong> → timeline hiện state transitions</li>
+</ol>
+<hr/>
+<h2 id="️-troubleshooting">⚠️ Troubleshooting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#️-troubleshooting" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="monitor-shows-no-data">Monitor shows “No Data”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#monitor-shows-no-data" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Verify Agent DaemonSet đang chạy</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -l</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> app=datadog-agent</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Check Agent status</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> $(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -l</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> app=datadog-agent</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> jsonpath='{.items[0].metadata.name}'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">-n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> head</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -30</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Verify Cluster Agent (nếu dùng)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -l</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> app=datadog-cluster-agent</span></span></code></pre></figure>
+<h3 id="k8s-metrics-không-xuất-hiện">K8s metrics không xuất hiện<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#k8s-metrics-không-xuất-hiện" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Verify kubelet check chạy OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> $(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -l</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> app=datadog-agent</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> jsonpath='{.items[0].metadata.name}'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">-n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A10</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;kubelet&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Check kubernetes_state check</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> $(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -l</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> app=datadog-agent</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> jsonpath='{.items[0].metadata.name}'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">-n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A10</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;kubernetes_state&quot;</span></span></code></pre></figure>
+<h3 id="alert-triggered-nhưng-không-nhận-notification">Alert triggered nhưng không nhận notification<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#alert-triggered-nhưng-không-nhận-notification" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Check email (including spam folder)</li>
+<li>Verify <code>@email</code> đúng trong notification message</li>
+<li>Check <strong>Monitor Status</strong> → Events tab → verify event sent</li>
+<li>Verify Datadog account email settings: <strong>Organization Settings</strong> → <strong>Notifications</strong></li>
+</ul>
+<h3 id="pod-restart-monitor-false-positives">Pod restart monitor false positives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pod-restart-monitor-false-positives" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Rolling updates tạo restarts hợp lệ → dùng Downtime trước khi deploy</li>
+<li>Adjust threshold: > 3 restarts trong 5 phút đủ để lọc noise từ single restart</li>
+</ul>
+<hr/>
+<h2 id="-kết-nối-fundamentals">🔗 Kết Nối Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kết-nối-fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept (Fundamentals)</th><th>Datadog Implementation</th></tr></thead><tbody><tr><td><strong>Static Threshold</strong> (Ch.07)</td><td>Metric Monitor: <code>> 80%</code></td></tr><tr><td><strong>Dynamic Baseline</strong> (Ch.07)</td><td>Anomaly Monitor: Basic / Agile (SARIMA) / Robust</td></tr><tr><td><strong>Forecast</strong> (Ch.07)</td><td>Forecast Monitor: Linear (OLS) / Seasonal (Holt-Winters)</td></tr><tr><td><strong>Alert Routing</strong> (Ch.07)</td><td><code>@email</code>, <code>@slack-channel</code>, <code>@pagerduty</code></td></tr><tr><td><strong>Notification Templates</strong> (Ch.07)</td><td><code>{{host.name}}</code>, <code>{{value}}</code>, conditional blocks</td></tr><tr><td><strong>Maintenance Windows</strong> (Ch.07)</td><td>Downtime scheduling (K8s: scope by <code>kube_namespace</code>)</td></tr><tr><td><strong>Composite Alerts</strong> (Ch.07)</td><td>Composite Monitor: combine conditions</td></tr><tr><td><strong>K8s Health Signals</strong> (Ch.08)</td><td>Pod restart monitor, Deployment replica monitor</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-verify-checklist">✅ Verify Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-verify-checklist" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Metric Monitor (CPU) tạo thành công</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> APM Monitor (Error Rate) tạo thành công</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> K8s Monitor (Pod Restart hoặc Deployment Replicas) tạo thành công</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Monitor Status page hiện tất cả monitors</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Notification message có template variables</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Stress test trigger alert thành công (từ bên trong pod)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> (Optional) Downtime scheduled cho <code>kube_namespace:storedog</code></li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Hiểu trade-off Datadog Monitors vs Davis AI</li>
+</ul>
+<hr/>
+<p><strong>Bước tiếp theo:</strong> <a href="../../../../02---areas/observability/datadog/labs/08---slos--and--database-monitoring" class="internal internal-link alias" data-slug="02---areas/observability/datadog/labs/08---slos--and--database-monitoring">08 - SLOs &amp; Database Monitoring</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-248" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#lab-07--monitors--alerting" data-for="lab-07--monitors--alerting">Lab 07 — Monitors &amp; Alerting</a></li><li class="depth-1"><a href="#-mục-tiêu" data-for="-mục-tiêu">🎯 Mục Tiêu</a></li><li class="depth-1"><a href="#-kiến-thức-nền" data-for="-kiến-thức-nền">📚 Kiến Thức Nền</a></li><li class="depth-2"><a href="#fundamentals" data-for="fundamentals">Fundamentals</a></li><li class="depth-2"><a href="#cách-học-lab-này" data-for="cách-học-lab-này">Cách học lab này</a></li><li class="depth-1"><a href="#1-monitor-types--concept" data-for="1-monitor-types--concept">1. Monitor Types — Concept</a></li><li class="depth-2"><a href="#11-anomaly-detection--algorithms" data-for="11-anomaly-detection--algorithms">1.1. Anomaly Detection — Algorithms</a></li><li class="depth-2"><a href="#12-forecast-monitor--algorithms" data-for="12-forecast-monitor--algorithms">1.2. Forecast Monitor — Algorithms</a></li><li class="depth-2"><a href="#13-monitor-states" data-for="13-monitor-states">1.3. Monitor States</a></li><li class="depth-1"><a href="#2-tạo-metric-monitor--cpu-alert" data-for="2-tạo-metric-monitor--cpu-alert">2. Tạo Metric Monitor — CPU Alert</a></li><li class="depth-2"><a href="#21-tạo-monitor" data-for="21-tạo-monitor">2.1. Tạo Monitor</a></li><li class="depth-2"><a href="#22-hiểu-template-variables" data-for="22-hiểu-template-variables">2.2. Hiểu template variables</a></li><li class="depth-1"><a href="#3-tạo-apm-monitor--error-rate-alert" data-for="3-tạo-apm-monitor--error-rate-alert">3. Tạo APM Monitor — Error Rate Alert</a></li><li class="depth-2"><a href="#31-tạo-monitor" data-for="31-tạo-monitor">3.1. Tạo Monitor</a></li><li class="depth-2"><a href="#32-tại-sao-apm-monitor-riêng" data-for="32-tại-sao-apm-monitor-riêng">3.2. Tại sao APM Monitor riêng?</a></li><li class="depth-1"><a href="#4-k8s-specific-monitors" data-for="4-k8s-specific-monitors">4. K8s-Specific Monitors</a></li><li class="depth-2"><a href="#41-pod-restart-monitor-crashloopbackoff-detection" data-for="41-pod-restart-monitor-crashloopbackoff-detection">4.1. Pod Restart Monitor (CrashLoopBackOff Detection)</a></li><li class="depth-2"><a href="#42-deployment-replica-monitor" data-for="42-deployment-replica-monitor">4.2. Deployment Replica Monitor</a></li><li class="depth-1"><a href="#5-monitor-status-page" data-for="5-monitor-status-page">5. Monitor Status Page</a></li><li class="depth-2"><a href="#51-xem-monitor-status" data-for="51-xem-monitor-status">5.1. Xem monitor status</a></li><li class="depth-2"><a href="#52-monitor-history" data-for="52-monitor-history">5.2. Monitor history</a></li><li class="depth-2"><a href="#53-no-data-is-a-problem-too" data-for="53-no-data-is-a-problem-too">5.3. “No Data” is a problem too!</a></li><li class="depth-1"><a href="#6-downtime--scheduled-maintenance" data-for="6-downtime--scheduled-maintenance">6. Downtime — Scheduled Maintenance</a></li><li class="depth-2"><a href="#61-concept" data-for="61-concept">6.1. Concept</a></li><li class="depth-2"><a href="#62-schedule-downtime" data-for="62-schedule-downtime">6.2. Schedule Downtime</a></li><li class="depth-1"><a href="#7-so-sánh-datadog-monitors-vs-davis-ai" data-for="7-so-sánh-datadog-monitors-vs-davis-ai">7. So Sánh: Datadog Monitors vs Davis AI</a></li><li class="depth-1"><a href="#8-test-monitor--trigger-alert-thật" data-for="8-test-monitor--trigger-alert-thật">8. Test Monitor — Trigger Alert Thật</a></li><li class="depth-2"><a href="#option-a-stress-cpu-từ-bên-trong-pod-khuyến-nghị" data-for="option-a-stress-cpu-từ-bên-trong-pod-khuyến-nghị">Option A: Stress CPU từ bên trong Pod (khuyến nghị)</a></li><li class="depth-2"><a href="#option-b-stress-trên-minikube-node" data-for="option-b-stress-trên-minikube-node">Option B: Stress trên Minikube node</a></li><li class="depth-2"><a href="#verify" data-for="verify">Verify</a></li><li class="depth-1"><a href="#️-troubleshooting" data-for="️-troubleshooting">⚠️ Troubleshooting</a></li><li class="depth-2"><a href="#monitor-shows-no-data" data-for="monitor-shows-no-data">Monitor shows “No Data”</a></li><li class="depth-2"><a href="#k8s-metrics-không-xuất-hiện" data-for="k8s-metrics-không-xuất-hiện">K8s metrics không xuất hiện</a></li><li class="depth-2"><a href="#alert-triggered-nhưng-không-nhận-notification" data-for="alert-triggered-nhưng-không-nhận-notification">Alert triggered nhưng không nhận notification</a></li><li class="depth-2"><a href="#pod-restart-monitor-false-positives" data-for="pod-restart-monitor-false-positives">Pod restart monitor false positives</a></li><li class="depth-1"><a href="#-kết-nối-fundamentals" data-for="-kết-nối-fundamentals">🔗 Kết Nối Fundamentals</a></li><li class="depth-1"><a href="#-verify-checklist" data-for="-verify-checklist">✅ Verify Checklist</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/datadog/labs/06---dashboards--and--visualization" class="internal">Lab 06 — Dashboards &amp; Visualization</a></li><li><a href="../../../../02---areas/observability/datadog/labs/08---slos--and--database-monitoring" class="internal">Lab 08 — SLOs &amp; Database Monitoring (Kubernetes)</a></li><li><a href="../../../../02---areas/observability/labs/00---lab-overview--and--roadmap" class="internal">Observability Platform Labs — Tổng Quan &amp; Lộ Trình</a></li><li><a href="../../../../02---areas/observability/labs/platform-comparison-—-datadog-vs-dynatrace" class="internal">Datadog vs Dynatrace — So Sánh Chi Tiết</a></li><li><a href="../../../../02---areas/observability/labs/real-world-incident-scenarios" class="internal">Real-World Incident Scenarios</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>KVM Architecture</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="KVM Architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="KVM Architecture"/><meta name="twitter:description" content="01 · KVM Architecture ← 🐧 KVM MOC Prerequisite Đọc ../theory/01 - Fundamentals và ../theory/02 - Hypervisor Architecture trước để nắm khái niệm ảo hoá và phân loại hypervisor."/><meta property="og:description" content="01 · KVM Architecture ← 🐧 KVM MOC Prerequisite Đọc ../theory/01 - Fundamentals và ../theory/02 - Hypervisor Architecture trước để nắm khái niệm ảo hoá và phân loại hypervisor."/><meta property="og:image:alt" content="01 · KVM Architecture ← 🐧 KVM MOC Prerequisite Đọc ../theory/01 - Fundamentals và ../theory/02 - Hypervisor Architecture trước để nắm khái niệm ảo hoá và phân loại hypervisor."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/virtualization/kvm/01---kvm-architecture"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/virtualization/kvm/01---kvm-architecture"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="01 · KVM Architecture ← 🐧 KVM MOC Prerequisite Đọc ../theory/01 - Fundamentals và ../theory/02 - Hypervisor Architecture trước để nắm khái niệm ảo hoá và phân loại hypervisor."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/virtualization/kvm/01---kvm-architecture" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-452" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-452" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/virtualization/">Virtualization</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/virtualization/kvm/">kvm</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>KVM Architecture</a></div></nav><h1 class="article-title">KVM Architecture</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/devops" class="internal internal-link tag-link">domain/devops</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Kiến trúc KVM</span><span class="note-properties-separator">, </span><span class="note-properties-text">KVM internals</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-26T17:00:00.000Z">27 thg 4, 2026</time><span>12 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="01--kvm-architecture">01 · KVM Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#01--kvm-architecture" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>← <a href="../../../kvm-moc" class="internal internal-link alias" data-slug="kvm-moc">🐧 KVM MOC</a></p>
+<hr/>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>Prerequisite</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Đọc <a href="../../.././theory/01---fundamentals" class="internal internal-link alias" data-slug="theory/01---fundamentals">../theory/01 - Fundamentals</a> và <a href="../../.././theory/02---hypervisor-architecture" class="internal internal-link alias" data-slug="theory/02---hypervisor-architecture">../theory/02 - Hypervisor Architecture</a> trước để nắm khái niệm ảo hoá và phân loại hypervisor.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="1-kvm-trong-linux-kernel">1. KVM trong Linux Kernel<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-kvm-trong-linux-kernel" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-kvm-không-phải-một-hypervisor-độc-lập">1.1. KVM không phải một hypervisor độc lập<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-kvm-không-phải-một-hypervisor-độc-lập" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>KVM <strong>không phải</strong> một phần mềm chạy riêng biệt như ESXi. Thay vào đó, KVM là một <strong>kernel module</strong> biến Linux kernel thành hypervisor.</p>
+<p><strong>Phân loại:</strong> KVM thường được gọi là <strong>Type 1 (bare-metal)</strong> vì guest code chạy trực tiếp trên hardware qua VMX non-root mode. Tuy nhiên, KVM khác Type 1 truyền thống (ESXi) ở chỗ nó tái sử dụng Linux kernel thay vì viết kernel riêng. Một số tài liệu gọi đây là <strong>“hybrid Type 1”</strong>:</p>
+<pre><code>Trước khi load KVM module:
+  Linux kernel = OS bình thường (scheduler, memory manager, drivers)
+
+Sau khi load KVM module:
+  Linux kernel = OS + Hypervisor
+  ┌────────────────────────────────────────────────┐
+  │ Linux kernel + kvm.ko                          │
+  │   └── Mọi subsystem Linux (CFS scheduler,     │
+  │       memory manager, network stack, drivers)  │
+  │       đều PHỤC VỤ cho cả host processes        │
+  │       VÀ VM workloads                          │
+  └────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Lợi thế kiến trúc này:</strong></p>
+<ul>
+<li>KVM <strong>tái sử dụng</strong> toàn bộ Linux subsystems thay vì viết lại từ đầu</li>
+<li>Linux CFS scheduler → vCPU scheduling</li>
+<li>Linux memory manager → guest memory management (EPT/KSM/hugepages)</li>
+<li>Linux network stack → VM networking (bridge, OVS)</li>
+<li>Linux device drivers → hardware support rộng nhất (hàng nghìn drivers)</li>
+<li>Linux cgroups → resource limits per VM</li>
+<li>Linux SELinux/sVirt → VM security isolation</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>Đây là lý do KVM &quot;thắng&quot; trong cloud</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>KVM leverage toàn bộ 30+ năm phát triển của Linux kernel. VMware phải tự viết VMkernel, Xen phải tự viết Dom0 drivers. KVM “miễn phí” nhận tất cả cải tiến kernel mỗi bản release.</p>
+</div>
+</blockquote>
+<h3 id="12-kernel-modules">1.2. Kernel Modules<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-kernel-modules" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>KVM gồm 2 (hoặc 3) kernel modules:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Module chính (generic KVM framework)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kvm.ko</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Module CPU-specific (chọn 1 tuỳ CPU)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kvm-intel.ko</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Intel VT-x (VMX)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kvm-amd.ko</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # AMD-V (SVM)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Kiểm tra trên Fedora</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lsmod</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> kvm</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># kvm_intel     380928  12</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># kvm          1282048   1 kvm_intel</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># irqbypass      16384   1 kvm</span></span></code></pre></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Module</th><th>Vai trò</th></tr></thead><tbody><tr><td><code>kvm.ko</code></td><td>Framework chung: tạo <code>/dev/kvm</code>, quản lý VM structures, memory regions</td></tr><tr><td><code>kvm-intel.ko</code></td><td>Intel-specific: VMXON/VMXOFF, VMCS management, EPT, APICv</td></tr><tr><td><code>kvm-amd.ko</code></td><td>AMD-specific: SVM enable, Nested Page Tables, AVIC</td></tr></tbody></table></div>
+<h3 id="13-devkvm--cổng-vào-hypervisor">1.3. <code>/dev/kvm</code> — Cổng vào hypervisor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-devkvm--cổng-vào-hypervisor" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi KVM module được load, nó tạo character device <code>/dev/kvm</code>. Mọi tương tác với hypervisor đều qua <code>ioctl()</code> calls trên file descriptor này:</p>
+<pre><code>/dev/kvm
+  │
+  ├── ioctl(KVM_CREATE_VM)          → tạo VM mới, trả fd
+  │     └── VM fd
+  │         ├── ioctl(KVM_CREATE_VCPU)    → tạo vCPU, trả fd
+  │         │     └── vCPU fd
+  │         │         ├── ioctl(KVM_RUN)        → chạy vCPU
+  │         │         ├── ioctl(KVM_GET_REGS)   → đọc registers
+  │         │         └── ioctl(KVM_SET_REGS)   → set registers
+  │         │
+  │         ├── ioctl(KVM_SET_USER_MEMORY_REGION) → map RAM
+  │         ├── ioctl(KVM_CREATE_IRQCHIP)         → tạo virtual APIC
+  │         └── ioctl(KVM_SET_TSS_ADDR)           → set TSS
+  │
+  └── ioctl(KVM_GET_API_VERSION)    → version API
+  └── ioctl(KVM_CHECK_EXTENSION)    → kiểm tra features
+</code></pre>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>QEMU là &quot;client&quot; của /dev/kvm</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>QEMU process mở <code>/dev/kvm</code>, gọi các ioctl() để tạo VM, set memory, chạy vCPU. KVM kernel module xử lý tất cả hardware virtualization. Đây là <strong>phân công rõ ràng</strong>: kernel lo CPU/memory (performance-critical), QEMU lo device emulation (flexibility).</p>
+</div>
+</blockquote>
+<hr/>
+<p>Sau khi hiểu KVM module chỉ lo CPU/memory virtualization, câu hỏi tiếp theo là: <strong>ai lo phần device emulation?</strong> → Đó là QEMU.</p>
+<h2 id="2-kvm--qemu-kiến-trúc-chi-tiết">2. KVM + QEMU: Kiến trúc chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-kvm--qemu-kiến-trúc-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-tổng-quan-stack">2.1. Tổng quan stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-tổng-quan-stack" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                        USER SPACE                           │
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │                    QEMU Process                      │   │
+│  │                   (1 process = 1 VM)                 │   │
+│  │                                                      │   │
+│  │  Main Thread ─── event loop, device emulation        │   │
+│  │                                                      │   │
+│  │  vCPU Thread 0 ── ioctl(KVM_RUN) → chạy guest code  │   │
+│  │  vCPU Thread 1 ── ioctl(KVM_RUN) → chạy guest code  │   │
+│  │  vCPU Thread N ── ioctl(KVM_RUN) → chạy guest code  │   │
+│  │                                                      │   │
+│  │  I/O Thread ───── async disk I/O (aio/io_uring)      │   │
+│  │  VNC/SPICE ────── remote display protocol            │   │
+│  │                                                      │   │
+│  │  ┌──────────────────────────────────────────────┐    │   │
+│  │  │           Emulated Devices                   │    │   │
+│  │  │  PCI bus, IDE/AHCI, e1000, VGA, USB, Serial  │    │   │
+│  │  │  virtio-blk, virtio-net, virtio-balloon...   │    │   │
+│  │  └──────────────────────────────────────────────┘    │   │
+│  └──────────────────┬──────────────────────────────────┘   │
+│                     │ ioctl(/dev/kvm)                       │
+├─────────────────────┼──────────────────────────────────────┤
+│                     │         KERNEL SPACE                  │
+│                     ↓                                       │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │                   KVM Module                         │   │
+│  │                                                      │   │
+│  │  VM Management ──── VMCS/VMCB per vCPU               │   │
+│  │  Memory ─────────── EPT/NPT page tables              │   │
+│  │  Interrupts ─────── Virtual APIC, interrupt injection │   │
+│  │  vCPU execution ─── VMLAUNCH/VMRESUME                │   │
+│  │  VM Exit handling ── decode exit reason, dispatch     │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              Linux Kernel Subsystems                 │   │
+│  │  CFS Scheduler ─── schedule vCPU threads             │   │
+│  │  Memory Manager ── hugetlbfs, KSM, NUMA              │   │
+│  │  Network Stack ─── bridge, tc, netfilter             │   │
+│  │  Block Layer ───── I/O scheduler, device drivers     │   │
+│  │  cgroups ─────────  resource limits per QEMU process │   │
+│  │  SELinux/sVirt ─── mandatory access control          │   │
+│  └──────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────┤
+│                        HARDWARE                             │
+│  CPU (VT-x/AMD-V, EPT/NPT, APICv/AVIC, VPID)              │
+│  RAM · NVMe/SAS · NIC · GPU · IOMMU (VT-d/AMD-Vi)          │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="22-qemu-process--1-vm">2.2. QEMU Process = 1 VM<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-qemu-process--1-vm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi VM là <strong>một QEMU process</strong> trên host:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Xem QEMU processes (mỗi dòng = 1 VM)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">ps</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> aux</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> qemu-system</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># qemu  12345  ... qemu-system-x86_64 -name guest=myvm ...</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># qemu  12567  ... qemu-system-x86_64 -name guest=webserver ...</span></span></code></pre></figure>
+<p><strong>Thread model bên trong QEMU process:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thread</th><th>Vai trò</th><th>Số lượng</th></tr></thead><tbody><tr><td><strong>Main thread</strong></td><td>Event loop, device emulation, management</td><td>1</td></tr><tr><td><strong>vCPU threads</strong></td><td>Mỗi thread chạy 1 vCPU (ioctl KVM_RUN)</td><td>= số vCPU</td></tr><tr><td><strong>I/O worker threads</strong></td><td>Async disk I/O</td><td>Configurable</td></tr><tr><td><strong>VNC/SPICE</strong></td><td>Remote display</td><td>1 (nếu enabled)</td></tr></tbody></table></div>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Xem threads của 1 QEMU process</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">ps</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -T</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -p</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> $(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">pgrep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -f</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;guest=myvm&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> head</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -20</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># PID    SPID  ... CMD</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 12345  12345 ... qemu-system-x86_64 (main)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 12345  12346 ... CPU 0/KVM</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 12345  12347 ... CPU 1/KVM</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 12345  12348 ... worker</span></span></code></pre></figure>
+<h3 id="23-vm-memory-model">2.3. VM Memory Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-vm-memory-model" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>QEMU allocate RAM cho VM bằng <code>mmap()</code>, sau đó đăng ký vùng nhớ này với KVM:</p>
+<pre><code>QEMU process address space:
+┌────────────────────────────────────────────┐
+│  QEMU code + data                         │
+├────────────────────────────────────────────┤
+│  Guest RAM (mmap'd region)                │
+│  ┌──────────────────────────────────────┐  │
+│  │  0x0000_0000 - 0x0FFF_FFFF          │  │ ← 256MB below VGA hole
+│  │  0x1000_0000 - 0xBFFF_FFFF          │  │ ← rest of guest RAM
+│  │  ...                                 │  │
+│  └──────────────────────────────────────┘  │
+│                                            │
+│  MMIO regions (device registers)           │
+│  ROM regions (BIOS, Option ROMs)           │
+└────────────────────────────────────────────┘
+
+KVM EPT maps: Guest Physical Address → Host Virtual Address → Host Physical Address
+                                        (QEMU mmap region)
+</code></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>Host coi VM RAM như process memory</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Vì VM RAM là <code>mmap()</code> trong QEMU process, Linux có thể:</p>
+<ul>
+<li><strong>KSM</strong>: scan và merge identical pages giữa các QEMU processes</li>
+<li><strong>Swap</strong>: swap VM pages ra disk nếu host thiếu RAM</li>
+<li><strong>NUMA</strong>: pin VM memory vào đúng NUMA node</li>
+<li><strong>Hugepages</strong>: dùng 2MB/1GB pages cho VM RAM</li>
+<li><strong>cgroups</strong>: limit memory per QEMU process</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="3-vcpu-execution-loop">3. vCPU Execution Loop<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-vcpu-execution-loop" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-kvm_run-loop">3.1. KVM_RUN Loop<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-kvm_run-loop" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Đây là <strong>trung tâm hoạt động</strong> của KVM — mỗi vCPU thread chạy loop này liên tục:</p>
+<pre><code>vCPU Thread trong QEMU:
+┌─────────────────────────────────────────┐
+│                                         │
+│  while (true) {                         │
+│    // 1. Chuẩn bị (inject interrupts)   │
+│    prepare_vcpu();                      │
+│                                         │
+│    // 2. Chạy guest code trên CPU thật  │
+│    ioctl(vcpu_fd, KVM_RUN);  ◄──────── Blocking call
+│    //   → KVM kernel:                   │
+│    //     VMLAUNCH / VMRESUME           │
+│    //     Guest code chạy native        │
+│    //     ... cho đến khi VM Exit       │
+│    //     Return về userspace           │
+│                                         │
+│    // 3. Xử lý lý do VM Exit           │
+│    switch (run->exit_reason) {          │
+│      case KVM_EXIT_IO:                  │
+│        handle_io();      // I/O port    │
+│      case KVM_EXIT_MMIO:                │
+│        handle_mmio();    // MMIO access │
+│      case KVM_EXIT_HLT:                 │
+│        handle_halt();    // CPU idle    │
+│      case KVM_EXIT_SHUTDOWN:            │
+│        handle_shutdown();               │
+│      case KVM_EXIT_INTERNAL_ERROR:      │
+│        handle_error();                  │
+│    }                                    │
+│  }                                      │
+└─────────────────────────────────────────┘
+</code></pre>
+<h3 id="32-vm-exit-reasons-phổ-biến">3.2. VM Exit Reasons (phổ biến)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-vm-exit-reasons-phổ-biến" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Exit Reason</th><th>Khi nào xảy ra</th><th>Xử lý bởi</th></tr></thead><tbody><tr><td><code>KVM_EXIT_IO</code></td><td>Guest truy cập I/O port (in/out)</td><td>QEMU emulate device</td></tr><tr><td><code>KVM_EXIT_MMIO</code></td><td>Guest truy cập MMIO region</td><td>QEMU emulate device</td></tr><tr><td><code>KVM_EXIT_HLT</code></td><td>Guest CPU idle (HLT instruction)</td><td>QEMU block thread (tiết kiệm host CPU)</td></tr><tr><td><code>KVM_EXIT_IRQ_WINDOW_OPEN</code></td><td>Cơ hội inject interrupt</td><td>KVM inject pending interrupt</td></tr><tr><td><code>KVM_EXIT_SHUTDOWN</code></td><td>Guest shutdown/reset</td><td>QEMU cleanup</td></tr><tr><td><code>KVM_EXIT_FAIL_ENTRY</code></td><td>VM entry failed (config lỗi)</td><td>QEMU báo lỗi</td></tr><tr><td>(handled in kernel)</td><td>EPT violation, APIC access, MSR access</td><td>KVM kernel xử lý, không về QEMU</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>Đa số VM Exit được xử lý TRONG kernel</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>EPT violations, APIC virtualization, interrupt injection — KVM xử lý trong kernel và VMRESUME ngay lập tức. Chỉ I/O emulation phức tạp mới return về QEMU userspace. Đây là lý do KVM nhanh.</p>
+</div>
+</blockquote>
+<h3 id="33-flow-diagram-tổng-hợp">3.3. Flow diagram tổng hợp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-flow-diagram-tổng-hợp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>                 QEMU (userspace)              KVM (kernel)              Hardware
+                      │                            │                        │
+                      │                            │                        │
+  ioctl(KVM_RUN) ────►│                            │                        │
+                      │  syscall ─────────────────►│                        │
+                      │                            │  VMLAUNCH ────────────►│
+                      │                            │                        │
+                      │                            │     Guest code         │
+                      │                            │     chạy native        │
+                      │                            │     trên CPU           │
+                      │                            │         ...            │
+                      │                            │                        │
+                      │                            │  ◄──── VM Exit ────────│
+                      │                            │                        │
+                      │                            │  KVM xử lý?            │
+                      │                            │  ├── Yes (EPT, APIC)   │
+                      │                            │  │   → VMRESUME ──────►│
+                      │                            │  │     (guest tiếp tục) │
+                      │                            │  │                      │
+                      │                            │  └── No (I/O)           │
+                      │  ◄── return ───────────────│                        │
+                      │                            │                        │
+  handle_io/mmio()    │                            │                        │
+  (emulate device)    │                            │                        │
+                      │                            │                        │
+  ioctl(KVM_RUN) ────►│  (loop tiếp tục)           │                        │
+</code></pre>
+<hr/>
+<h2 id="4-memory-architecture-trong-kvm">4. Memory Architecture trong KVM<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-memory-architecture-trong-kvm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-memory-slots">4.1. Memory Slots<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-memory-slots" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>KVM chia guest memory thành <strong>memory slots</strong> — mỗi slot map một vùng Guest Physical Address (GPA) sang Host Virtual Address (HVA):</p>
+<pre><code>Guest Physical Address Space:
+  0x0000_0000 ┬─────── Slot 0: RAM below ~3.25GB (lowmem)
+              │        HVA = QEMU mmap region A
+  0x000A_0000 │        (VGA memory, 640KB-1MB — legacy hole)
+  0xC000_0000 ┤
+              │        PCI MMIO hole (~3GB-4GB, device MMIO/ROM)
+              │        (Không map RAM ở đây)
+  0xFFFF_FFFF ┤
+  0x1_0000_0000 ┬───── Slot 1: RAM above 4GB (highmem)
+                │      HVA = QEMU mmap region B
+  0x2_0000_0000 ┘      (tuỳ tổng RAM size)
+</code></pre>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// QEMU đăng ký memory slot với KVM</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">struct</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> kvm_userspace_memory_region region </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .slot </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .guest_phys_addr </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> 0x</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .memory_size </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 3.5</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> *</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1024</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> *</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1024</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> *</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1024</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  // 3.5GB</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .userspace_addr </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">uint64_t</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)mmap_ptr,</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       // QEMU mmap</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">ioctl</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(vm_fd, KVM_SET_USER_MEMORY_REGION, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&amp;</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">region</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span></code></pre></figure>
+<h3 id="42-address-translation-chain">4.2. Address Translation Chain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-address-translation-chain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Guest Virtual Address (GVA)
+       │ Guest Page Table (guest OS quản lý)
+       ↓
+Guest Physical Address (GPA)
+       │ EPT / NPT (KVM quản lý)
+       ↓
+Host Virtual Address (HVA)
+       │ Host Page Table (Linux kernel quản lý)
+       ↓
+Host Physical Address (HPA)
+       = Physical RAM
+</code></pre>
+<p>Chi tiết cơ chế EPT xem <a href="../../.././theory/04---memory-virtualization#3-hardware-assisted-ept--npt" class="internal internal-link alias" data-slug="theory/04---memory-virtualization">../theory/04 - Memory Virtualization > 3. Hardware-Assisted: EPT / NPT</a>.</p>
+<hr/>
+<p>Ngoài CPU và memory, VM cũng cần nhận <strong>interrupts</strong> (timer tick, disk I/O complete, network packet). KVM xử lý việc này bằng virtual interrupt controller.</p>
+<h2 id="5-interrupt-delivery">5. Interrupt Delivery<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-interrupt-delivery" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-virtual-interrupt-controller">5.1. Virtual Interrupt Controller<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-virtual-interrupt-controller" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>KVM emulate <strong>full interrupt controller stack</strong> trong kernel:</p>
+<pre><code>Guest perspective:
+  Device → PIC/IOAPIC → LAPIC → CPU interrupt
+
+KVM implementation:
+  ┌──────────────────────────────────────┐
+  │  KVM kernel module                   │
+  │  ┌────────────────────────────────┐  │
+  │  │  Virtual PIC (i8259)          │  │  ← legacy
+  │  │  Virtual IOAPIC               │  │  ← modern
+  │  │  Virtual LAPIC (per vCPU)     │  │
+  │  └────────────┬─────────────────┘  │
+  │               │                     │
+  │  APICv/AVIC: hardware-accelerated   │
+  │  interrupt delivery (nếu CPU hỗ trợ)│
+  └──────────────────────────────────────┘
+</code></pre>
+<h3 id="52-apicv-intel--avic-amd">5.2. APICv (Intel) / AVIC (AMD)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-apicv-intel--avic-amd" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hardware-assisted APIC virtualization — giảm VM Exit cho interrupt operations:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Không APICv</th><th>Có APICv</th></tr></thead><tbody><tr><td>Guest đọc APIC register → VM Exit</td><td>Guest đọc APIC register → virtual APIC page (no exit)</td></tr><tr><td>EOI (End of Interrupt) → VM Exit</td><td>EOI → hardware handles (no exit)</td></tr><tr><td>IPI delivery → VM Exit + emulate</td><td>IPI → Posted Interrupt (no exit)</td></tr><tr><td>~10,000 VM Exits/sec cho interrupt</td><td>~100 VM Exits/sec cho interrupt</td></tr></tbody></table></div>
+<hr/>
+<p>Với kiến trúc vCPU loop, memory isolation, và interrupt delivery đã rõ, phần cuối cùng quan trọng là: <strong>làm sao bảo đảm các VM không ảnh hưởng lẫn nhau?</strong></p>
+<h2 id="6-kvm-security-model">6. KVM Security Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-kvm-security-model" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-svirt-selinux-virtualization">6.1. sVirt (SELinux Virtualization)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-svirt-selinux-virtualization" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Trên Fedora/RHEL, mỗi QEMU process chạy với <strong>SELinux context riêng biệt</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Xem SELinux context của QEMU process</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">ps</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -eZ</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> qemu</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># system_u:system_r:svirt_t:s0:c123,c456  qemu-system-x86_64 ...</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># system_u:system_r:svirt_t:s0:c789,c012  qemu-system-x86_64 ...</span></span></code></pre></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Unique category</strong></td><td>Mỗi VM nhận MCS category riêng (c123,c456)</td></tr><tr><td><strong>File labeling</strong></td><td>VM disk files được label khớp với VM category</td></tr><tr><td><strong>Cross-VM isolation</strong></td><td>VM A không thể đọc disk/memory của VM B (SELinux block)</td></tr><tr><td><strong>Auto-labeling</strong></td><td>libvirt tự gán label khi start VM</td></tr></tbody></table></div>
+<h3 id="62-các-lớp-isolation">6.2. Các lớp isolation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-các-lớp-isolation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌───────────────────────────────────────────────────────┐
+│  Layer 1: Hardware (VT-x VMX root/non-root)           │
+│  → Guest code chạy trong VMX non-root, không escape   │
+├───────────────────────────────────────────────────────┤
+│  Layer 2: EPT (Extended Page Tables)                  │
+│  → VM chỉ truy cập memory đã được map cho nó          │
+├───────────────────────────────────────────────────────┤
+│  Layer 3: QEMU process isolation (Linux DAC)          │
+│  → QEMU chạy dưới user 'qemu', limited permissions    │
+├───────────────────────────────────────────────────────┤
+│  Layer 4: SELinux/sVirt (MAC)                         │
+│  → Mỗi VM có SELinux category riêng                   │
+├───────────────────────────────────────────────────────┤
+│  Layer 5: cgroups                                     │
+│  → Limit CPU, memory, I/O per VM                      │
+├───────────────────────────────────────────────────────┤
+│  Layer 6: seccomp (QEMU sandbox)                      │
+│  → QEMU chỉ được gọi whitelist syscalls               │
+└───────────────────────────────────────────────────────┘
+</code></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p> <strong>KVM security mạnh hơn nhiều người nghĩ</strong></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>So với container (chỉ có namespaces + cgroups + seccomp), KVM có thêm hardware isolation (VMX) + EPT + sVirt. Đây là lý do cloud providers dùng VM isolation giữa tenants thay vì container.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="7-so-sánh-kvm-vs-esxi-internals">7. So sánh KVM vs ESXi internals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-so-sánh-kvm-vs-esxi-internals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>KVM</th><th>VMware ESXi</th></tr></thead><tbody><tr><td><strong>Kernel</strong></td><td>Linux kernel (general-purpose + kvm.ko)</td><td>VMkernel (purpose-built)</td></tr><tr><td><strong>Scheduler</strong></td><td>Linux CFS (fair share)</td><td>Custom scheduler (shares/limits/reservations)</td></tr><tr><td><strong>Memory</strong></td><td>Linux mm + KSM + hugepages</td><td>VMkernel mm + TPS + compression</td></tr><tr><td><strong>Drivers</strong></td><td>Linux drivers (hàng nghìn)</td><td>VMware HCL (hàng trăm)</td></tr><tr><td><strong>Device emulation</strong></td><td>QEMU (userspace)</td><td>VMX (in VMkernel)</td></tr><tr><td><strong>API</strong></td><td>libvirt (open), /dev/kvm (ioctl)</td><td>vSphere API (SOAP/REST)</td></tr><tr><td><strong>Storage</strong></td><td>Any Linux fs/block</td><td>VMFS (proprietary)</td></tr><tr><td><strong>Security</strong></td><td>SELinux + seccomp + cgroups</td><td>VMkernel sandboxing</td></tr><tr><td><strong>License</strong></td><td>GPL (free)</td><td>Commercial</td></tr></tbody></table></div>
+<hr/>
+<h2 id="xem-thêm">Xem thêm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#xem-thêm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../02---areas/virtualization/kvm/02---libvirt-và-qemu" class="internal internal-link alias" data-slug="02---areas/virtualization/kvm/02---libvirt-và-qemu">02 - libvirt và QEMU</a> — libvirt daemon, XML domain definition</li>
+<li><a href="../../../02---areas/virtualization/kvm/03---cài-đặt-và-cấu-hình" class="internal internal-link alias" data-slug="02---areas/virtualization/kvm/03---cài-đặt-và-cấu-hình">03 - Cài đặt và Cấu hình</a> — Setup KVM trên Fedora</li>
+<li><a href="../../.././theory/03---cpu-virtualization" class="internal internal-link alias" data-slug="theory/03---cpu-virtualization">../theory/03 - CPU Virtualization</a> — VT-x, VMCS, vCPU scheduling chi tiết</li>
+<li><a href="../../.././theory/04---memory-virtualization" class="internal internal-link alias" data-slug="theory/04---memory-virtualization">../theory/04 - Memory Virtualization</a> — EPT, shadow page tables, ballooning</li>
+<li><a href="../../.././theory/07---io-and-device-virtualization" class="internal internal-link alias" data-slug="theory/07---io-and-device-virtualization">../theory/07 - IO and Device Virtualization</a> — virtio, passthrough, IOMMU</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-402" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#01--kvm-architecture" data-for="01--kvm-architecture">01 · KVM Architecture</a></li><li class="depth-1"><a href="#1-kvm-trong-linux-kernel" data-for="1-kvm-trong-linux-kernel">1. KVM trong Linux Kernel</a></li><li class="depth-2"><a href="#11-kvm-không-phải-một-hypervisor-độc-lập" data-for="11-kvm-không-phải-một-hypervisor-độc-lập">1.1. KVM không phải một hypervisor độc lập</a></li><li class="depth-2"><a href="#12-kernel-modules" data-for="12-kernel-modules">1.2. Kernel Modules</a></li><li class="depth-2"><a href="#13-devkvm--cổng-vào-hypervisor" data-for="13-devkvm--cổng-vào-hypervisor">1.3. /dev/kvm — Cổng vào hypervisor</a></li><li class="depth-1"><a href="#2-kvm--qemu-kiến-trúc-chi-tiết" data-for="2-kvm--qemu-kiến-trúc-chi-tiết">2. KVM + QEMU: Kiến trúc chi tiết</a></li><li class="depth-2"><a href="#21-tổng-quan-stack" data-for="21-tổng-quan-stack">2.1. Tổng quan stack</a></li><li class="depth-2"><a href="#22-qemu-process--1-vm" data-for="22-qemu-process--1-vm">2.2. QEMU Process = 1 VM</a></li><li class="depth-2"><a href="#23-vm-memory-model" data-for="23-vm-memory-model">2.3. VM Memory Model</a></li><li class="depth-1"><a href="#3-vcpu-execution-loop" data-for="3-vcpu-execution-loop">3. vCPU Execution Loop</a></li><li class="depth-2"><a href="#31-kvm_run-loop" data-for="31-kvm_run-loop">3.1. KVM_RUN Loop</a></li><li class="depth-2"><a href="#32-vm-exit-reasons-phổ-biến" data-for="32-vm-exit-reasons-phổ-biến">3.2. VM Exit Reasons (phổ biến)</a></li><li class="depth-2"><a href="#33-flow-diagram-tổng-hợp" data-for="33-flow-diagram-tổng-hợp">3.3. Flow diagram tổng hợp</a></li><li class="depth-1"><a href="#4-memory-architecture-trong-kvm" data-for="4-memory-architecture-trong-kvm">4. Memory Architecture trong KVM</a></li><li class="depth-2"><a href="#41-memory-slots" data-for="41-memory-slots">4.1. Memory Slots</a></li><li class="depth-2"><a href="#42-address-translation-chain" data-for="42-address-translation-chain">4.2. Address Translation Chain</a></li><li class="depth-1"><a href="#5-interrupt-delivery" data-for="5-interrupt-delivery">5. Interrupt Delivery</a></li><li class="depth-2"><a href="#51-virtual-interrupt-controller" data-for="51-virtual-interrupt-controller">5.1. Virtual Interrupt Controller</a></li><li class="depth-2"><a href="#52-apicv-intel--avic-amd" data-for="52-apicv-intel--avic-amd">5.2. APICv (Intel) / AVIC (AMD)</a></li><li class="depth-1"><a href="#6-kvm-security-model" data-for="6-kvm-security-model">6. KVM Security Model</a></li><li class="depth-2"><a href="#61-svirt-selinux-virtualization" data-for="61-svirt-selinux-virtualization">6.1. sVirt (SELinux Virtualization)</a></li><li class="depth-2"><a href="#62-các-lớp-isolation" data-for="62-các-lớp-isolation">6.2. Các lớp isolation</a></li><li class="depth-1"><a href="#7-so-sánh-kvm-vs-esxi-internals" data-for="7-so-sánh-kvm-vs-esxi-internals">7. So sánh KVM vs ESXi internals</a></li><li class="depth-1"><a href="#xem-thêm" data-for="xem-thêm">Xem thêm</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/virtualization/kvm/02---libvirt-và-qemu" class="internal">libvirt và QEMU</a></li><li><a href="../../../02---areas/virtualization/kvm/03---cài-đặt-và-cấu-hình" class="internal">Cài đặt và Cấu hình KVM</a></li><li><a href="../../../02---areas/virtualization/kvm/08---production-operations" class="internal">Production Operations</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

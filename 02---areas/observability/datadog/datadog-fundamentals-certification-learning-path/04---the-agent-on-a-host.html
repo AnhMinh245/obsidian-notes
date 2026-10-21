@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>The Agent on a Host</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="The Agent on a Host"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="The Agent on a Host"/><meta name="twitter:description" content="Tổng quan về Datadog Agent Datadog Agent là phần mềm mã nguồn mở chạy trên host, có nhiệm vụ lắng nghe và thu thập events, logs, metrics rồi gửi về Datadog để xử lý và hiển thị."/><meta property="og:description" content="Tổng quan về Datadog Agent Datadog Agent là phần mềm mã nguồn mở chạy trên host, có nhiệm vụ lắng nghe và thu thập events, logs, metrics rồi gửi về Datadog để xử lý và hiển thị."/><meta property="og:image:alt" content="Tổng quan về Datadog Agent Datadog Agent là phần mềm mã nguồn mở chạy trên host, có nhiệm vụ lắng nghe và thu thập events, logs, metrics rồi gửi về Datadog để xử lý và hiển thị."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/datadog-fundamentals-certification-learning-path/04---the-agent-on-a-host"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/datadog-fundamentals-certification-learning-path/04---the-agent-on-a-host"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Tổng quan về Datadog Agent Datadog Agent là phần mềm mã nguồn mở chạy trên host, có nhiệm vụ lắng nghe và thu thập events, logs, metrics rồi gửi về Datadog để xử lý và hiển thị."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/datadog/datadog-fundamentals-certification-learning-path/04---the-agent-on-a-host" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-277" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-277" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/">Datadog</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/datadog-fundamentals-certification-learning-path/">Datadog Fundamentals Certification Learning Path</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>The Agent on a Host</a></div></nav><h1 class="article-title">The Agent on a Host</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/progress/done" class="internal internal-link tag-link">progress/done</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/datadog" class="internal internal-link tag-link">domain/datadog</a><span class="note-properties-separator">, </span><a href="../../../../tags/tech" class="internal internal-link tag-link">tech</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-09-11T17:00:00.000Z">12 thg 9, 2026</time><span>14 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="tổng-quan-về-datadog-agent">Tổng quan về Datadog Agent<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-quan-về-datadog-agent" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>Datadog Agent là phần mềm mã nguồn mở chạy trên host, có nhiệm vụ <strong>lắng nghe và thu thập events, logs, metrics</strong> rồi gửi về Datadog để xử lý và hiển thị.</p>
+<p>Agent có thể cài đặt trên nhiều môi trường khác nhau — xem chi tiết tại <a href="https://docs.datadoghq.com/agent/" class="external external-link">Datadog Agent documentation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+<h2 id="các-thành-phần-của-agent">Các thành phần của Agent<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-thành-phần-của-agent" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thành phần</th><th>Chức năng</th></tr></thead><tbody><tr><td><strong>Collector</strong></td><td>Chạy các checks và thu thập metrics</td></tr><tr><td><strong>Forwarder</strong></td><td>Gửi dữ liệu (payloads) về Datadog</td></tr><tr><td><strong>APM Agent</strong></td><td>Thu thập application traces</td></tr><tr><td><strong>Process Agent</strong></td><td>Thu thập thông tin live processes</td></tr></tbody></table></div>
+<p>Agent đi kèm nhiều integrations và có thể tự động chạy checks trên các dịch vụ phổ biến như Nginx, PostgreSQL, Redis. Tất cả đều được cấu hình qua các file YAML.</p>
+<h2 id="cấu-hình-agent">Cấu hình Agent<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-hình-agent" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Agent có thể được cấu hình bằng 3 phương thức, <strong>sắp xếp theo thứ tự ưu tiên từ cao đến thấp</strong>:</p>
+<ol>
+<li><strong>Remote Configuration</strong> — ghi đè tất cả</li>
+<li><strong>Environment variables</strong> — ghi đè file YAML</li>
+<li><strong>File <code>datadog.yaml</code></strong> — cấu hình cơ bản</li>
+</ol>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>IMPORTANT</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Phương thức có ưu tiên cao hơn sẽ <strong>ghi đè</strong> phương thức thấp hơn. Ví dụ: nếu đặt biến môi trường <code>DD_ENV=production</code>, nó sẽ ghi đè giá trị <code>env</code> trong <code>datadog.yaml</code>.</p>
+</div>
+</blockquote>
+<p>Chi tiết file cấu hình xem tại <a href="https://docs.datadoghq.com/agent/configuration/agent-configuration-files/" class="external external-link">Agent Configuration Files<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+<h2 id="remote-configuration">Remote Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#remote-configuration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Remote Configuration cho phép <strong>cấu hình và thay đổi hành vi</strong> của Agent từ xa thông qua Datadog UI, không cần SSH vào server.</p>
+<p>Khi bật, Agent sẽ định kỳ poll Datadog site để kiểm tra có thay đổi cấu hình nào cần áp dụng không.</p>
+<p>Xem thêm: <a href="https://docs.datadoghq.com/agent/remote_config/" class="external external-link">Remote Configuration docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+<hr/>
+<h1 id="lab-cài-đặt-agent-trên-host">Lab: Cài đặt Agent trên Host<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lab-cài-đặt-agent-trên-host" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="khám-phá-storedog">Khám phá Storedog<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khám-phá-storedog" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Storedog là ứng dụng ecommerce demo, gồm nhiều dịch vụ:</p>
+<p><strong>Chạy trong Docker containers:</strong></p>
+<ul>
+<li>Nginx web server</li>
+<li>NextJS frontend</li>
+<li>Ruby on Rails backend + worker</li>
+<li>Python Flask microservice (discount codes)</li>
+<li>Python Flask microservice (advertisements)</li>
+</ul>
+<p><strong>Cài trực tiếp trên host:</strong></p>
+<ul>
+<li>Redis cache</li>
+<li>PostgreSQL database</li>
+</ul>
+<p><img src="../../../../attachments/the-agent-on-a-host/img_0.png" alt="image_1773817223039_0"/></p>
+<h2 id="cài-đặt-agent">Cài đặt Agent<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cài-đặt-agent" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p>Đăng nhập <a href="https://app.datadoghq.com/" class="external external-link">Datadog<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> bằng tài khoản training.</p>
+</li>
+<li>
+<p>Vào <strong>Integrations > Install Agents</strong> → chọn <strong>Linux</strong>.<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321084440.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p>Click <strong>Select API Key</strong> → chọn API key → click <strong>Use API Key</strong>.<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321084517.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p>Copy lệnh cài đặt Agent:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321084628.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p>Paste vào terminal và chạy. Khi hoàn tất sẽ thấy thông báo:</p>
+</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Your Datadog Agent is running and functioning properly.</span></span>
+<span data-line><span>  It will continue to run in the background and submit metrics to Datadog.</span></span>
+<span data-line><span>  If you ever want to stop the Datadog Agent, run:</span></span>
+<span data-line> </span>
+<span data-line><span>       systemctl stop datadog-agent</span></span>
+<span data-line> </span>
+<span data-line><span>  And to run it again run:</span></span>
+<span data-line> </span>
+<span data-line><span>       systemctl start datadog-agent</span></span>
+<span data-line> </span>
+<span data-line><span>  Consider adding dd-agent to the docker group to enable the docker support, run:</span></span>
+<span data-line> </span>
+<span data-line><span>      sudo usermod -a -G docker dd-agent</span></span></code></pre></figure>
+<hr/>
+<h2 id="các-lệnh-agent-quan-trọng">Các lệnh Agent quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-lệnh-agent-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="lệnh-status--kiểm-tra-trạng-thái-agent">Lệnh <code>status</code> — Kiểm tra trạng thái Agent<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lệnh-status--kiểm-tra-trạng-thái-agent" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hiển thị trạng thái Agent, các checks đang chạy, logs đang thu thập…</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>datadog-agent status</span></span></code></pre></figure>
+<p><strong>Các phần quan trọng trong output:</strong></p>
+<p><strong>1. Forwarder</strong> — Process gửi dữ liệu về Datadog:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>   Forwarder</span></span>
+<span data-line><span>=========</span></span>
+<span data-line> </span>
+<span data-line><span>  Transactions</span></span>
+<span data-line><span>  ============</span></span>
+<span data-line><span>    Cluster: 0</span></span>
+<span data-line><span>    ClusterRole: 0</span></span>
+<span data-line><span>    ClusterRoleBinding: 0</span></span>
+<span data-line><span>    CronJob: 0</span></span>
+<span data-line><span>    CustomResource: 0</span></span>
+<span data-line><span>    CustomResourceDefinition: 0</span></span>
+<span data-line><span>    DaemonSet: 0</span></span>
+<span data-line><span>    Deployment: 0</span></span>
+<span data-line><span>    Dropped: 0</span></span>
+<span data-line><span>    ECSTask: 0</span></span>
+<span data-line><span>    EndpointSlice: 0</span></span>
+<span data-line><span>    HighPriorityQueueFull: 0</span></span>
+<span data-line><span>    HorizontalPodAutoscaler: 0</span></span>
+<span data-line><span>    Ingress: 0</span></span>
+<span data-line><span>    Job: 0</span></span>
+<span data-line><span>    KubeletConfiguration: 0</span></span>
+<span data-line><span>    LimitRange: 0</span></span>
+<span data-line><span>    Namespace: 0</span></span>
+<span data-line><span>    NetworkPolicy: 0</span></span>
+<span data-line><span>    Node: 0</span></span>
+<span data-line><span>    OrchestratorManifest: 0</span></span>
+<span data-line><span>    PersistentVolume: 0</span></span>
+<span data-line><span>    PersistentVolumeClaim: 0</span></span>
+<span data-line><span>    Pod: 0</span></span>
+<span data-line><span>    PodDisruptionBudget: 0</span></span>
+<span data-line><span>    ReplicaSet: 0</span></span>
+<span data-line><span>    Requeued: 0</span></span>
+<span data-line><span>    Retried: 0</span></span>
+<span data-line><span>    RetryQueueSize: 0</span></span>
+<span data-line><span>    Role: 0</span></span>
+<span data-line><span>    RoleBinding: 0</span></span>
+<span data-line><span>    Service: 0</span></span>
+<span data-line><span>    ServiceAccount: 0</span></span>
+<span data-line><span>    StatefulSet: 0</span></span>
+<span data-line><span>    StorageClass: 0</span></span>
+<span data-line><span>    VerticalPodAutoscaler: 0</span></span></code></pre></figure>
+<p><strong>2. Transaction Successes</strong> — Số giao dịch thành công với Datadog API:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>    Transaction Successes</span></span>
+<span data-line><span>  =====================</span></span>
+<span data-line><span>    Total number: 35</span></span>
+<span data-line><span>    Successes By Endpoint:</span></span>
+<span data-line><span>      check_run_v1: 11</span></span>
+<span data-line><span>      intake: 4</span></span>
+<span data-line><span>      metadata_v1: 7</span></span>
+<span data-line><span>      process_discovery: 2</span></span>
+<span data-line><span>      series_v2: 11</span></span>
+<span data-line> </span>
+<span data-line><span>  On-disk storage</span></span>
+<span data-line><span>  ===============</span></span>
+<span data-line><span>    On-disk storage is disabled. Configure `forwarder_storage_max_size_in_bytes` to enable it.</span></span>
+<span data-line> </span>
+<span data-line><span>  API Keys status</span></span>
+<span data-line><span>  ===============</span></span>
+<span data-line><span>    API key ending with 58fc3: API Key valid</span></span></code></pre></figure>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>TIP</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nếu chưa thấy Transaction Successes, chạy lại <code>status</code> sau vài phút — Agent cần thời gian để bắt đầu giao tiếp với Datadog.</p>
+</div>
+</blockquote>
+<p><strong>3. API Keys status</strong> — Xác nhận API key đang sử dụng. So sánh với API key trong tài khoản Datadog để đảm bảo gửi dữ liệu đúng account.</p>
+<h3 id="lệnh-config--xem-cấu-hình-resolved">Lệnh <code>config</code> — Xem cấu hình resolved<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lệnh-config--xem-cấu-hình-resolved" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hiển thị <strong>tất cả giá trị cấu hình</strong> đã resolve (bao gồm default values và values từ environment variables).</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>datadog-agent config</span></span></code></pre></figure>
+<p>Output mẫu:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>api_key: '***************************58fc3'</span></span>
+<span data-line><span>app_key: '***********************************9a4fc'</span></span>
+<span data-line><span>env: agent-host-lab</span></span>
+<span data-line><span>fleet_policies_dir: /etc/datadog-agent/managed/datadog-agent/stable</span></span>
+<span data-line><span>hostname: agent-host</span></span>
+<span data-line><span>proxy:</span></span>
+<span data-line><span>  http: &quot;&quot;</span></span>
+<span data-line><span>  https: &quot;&quot;</span></span>
+<span data-line><span>  no_proxy:</span></span>
+<span data-line><span>    - 169.254.169.254</span></span>
+<span data-line><span>    - 100.100.100.200</span></span>
+<span data-line><span>site: datadoghq.com</span></span>
+<span data-line><span>tags:</span></span>
+<span data-line><span>  - env:agent-host-lab</span></span></code></pre></figure>
+<p>Hầu hết parameters được document trong <a href="https://github.com/DataDog/datadog-agent/blob/main/pkg/config/config_template.yaml" class="external external-link">configuration template trên GitHub<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+<p><strong>Kiểm tra environment tag:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>datadog-agent config | grep ^env</span></span>
+<span data-line><span># Output: env: agent-host-lab</span></span></code></pre></figure>
+<p>Giá trị này đến từ biến môi trường <code>DD_ENV</code>, được Agent installer tự động ghi vào cấu hình:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>env | grep DD_ENV</span></span></code></pre></figure>
+<hr/>
+<h2 id="cấu-hình-live-processes">Cấu hình Live Processes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-hình-live-processes" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>NOTE</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Agent tự động chạy nhiều system checks (cpu, disk, io, load, memory…) mà không cần cấu hình.<br/>
+Nhưng một số tính năng cần <strong>bật thủ công</strong>, trong đó có <strong>Live Processes</strong>.</p>
+</div>
+</blockquote>
+<h3 id="file-cấu-hình-agent">File cấu hình Agent<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#file-cấu-hình-agent" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Trên Linux, các file cấu hình Agent nằm tại <code>/etc/datadog-agent/</code> — được tạo tự động khi cài Agent.</p>
+<h3 id="bật-live-processes">Bật Live Processes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bật-live-processes" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Live Processes cho phép xem <strong>real-time</strong> tất cả processes đang chạy trên infrastructure.</p>
+<ol>
+<li>
+<p>Mở <code>datadog.yaml</code> trong IDE.<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321091321.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p>API key đã được cấu hình sẵn từ lệnh cài đặt.</p>
+</blockquote>
+</li>
+<li>
+<p>Tìm đến <strong>Process Collection Configuration</strong>.</p>
+<blockquote>
+<p>Dùng Ctrl/Cmd+F để search.<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321091412.png" alt width="auto" height="auto"/></p>
+</blockquote>
+</li>
+<li>
+<p>Tìm dòng <code># process_config:</code>.</p>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>NOTE</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Các file cấu hình Datadog có comment rất chi tiết. Nếu parameter bị comment (<code>#</code>), giá trị default sẽ được sử dụng.</p>
+</div>
+</blockquote>
+</li>
+<li>
+<p>Uncomment <code>process_config:</code> (xóa <code>#</code> và space thừa).</p>
+</li>
+<li>
+<p>Uncomment <code>process_collection</code> và đổi <code>enabled: false</code> → <code>enabled: true</code>.</p>
+</li>
+<li>
+<p>Kết quả nên trông như sau:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321091820.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p><strong>Restart Agent</strong> để áp dụng thay đổi:</p>
+</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>systemctl restart datadog-agent</span></span></code></pre></figure>
+<ol start="8">
+<li>Xác nhận bằng lệnh <code>status</code>, tìm phần <strong>Process Agent > Collector</strong>:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>datadog-agent status</span></span></code></pre></figure>
+<p>Phần <strong>Collector</strong> nên trông thế này:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>  =========</span></span>
+<span data-line><span>  Collector</span></span>
+<span data-line><span>  =========</span></span>
+<span data-line><span>    Last collection time: 2026-03-21 02:25:48</span></span>
+<span data-line><span>    Docker socket: /var/run/docker.sock</span></span>
+<span data-line><span>    Number of processes: 155</span></span>
+<span data-line><span>    Number of containers: 0</span></span>
+<span data-line><span>    Process Queue length: 0</span></span>
+<span data-line><span>    RTProcess Queue length: 0</span></span>
+<span data-line><span>    Connections Queue length: 0</span></span>
+<span data-line><span>    Event Queue length: 0</span></span>
+<span data-line><span>    Process Bytes enqueued: 0</span></span>
+<span data-line><span>    RTProcess Bytes enqueued: 0</span></span>
+<span data-line><span>    Connections Bytes enqueued: 0</span></span>
+<span data-line><span>    Event Bytes enqueued: 0</span></span>
+<span data-line><span>    Drop Check Payloads: []</span></span>
+<span data-line><span>    Number of submission errors: 0</span></span></code></pre></figure>
+<blockquote>
+<p><strong>Number of processes</strong> phải > 0.</p>
+</blockquote>
+<ol start="9">
+<li>Nếu có vấn đề, kiểm tra cấu hình resolved:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>datadog-agent config | grep process_collection -A1</span></span>
+<span data-line><span># Output:</span></span>
+<span data-line><span># process_collection:</span></span>
+<span data-line><span>#    enabled: true</span></span></code></pre></figure>
+<hr/>
+<h2 id="cấu-hình-logging-và-docker">Cấu hình Logging và Docker<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-hình-logging-và-docker" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="bật-log-collection">Bật Log Collection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bật-log-collection" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>IMPORTANT</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Agent <strong>không thu thập logs mặc định</strong>. Phải bật thủ công.</p>
+</div>
+</blockquote>
+<ol>
+<li>
+<p>Mở <code>datadog.yaml</code>, tìm <strong>Log Collection Configuration</strong>.</p>
+</li>
+<li>
+<p>Uncomment <code>logs_enabled: false</code> → đổi thành <code>logs_enabled: true</code>.</p>
+</li>
+<li>
+<p>Uncomment <code>logs_config</code>.</p>
+</li>
+<li>
+<p>Uncomment <code>container_collect_all</code> → đổi thành <code>true</code> (để thu thập logs từ tất cả Docker containers).</p>
+</li>
+<li>
+<p>Kết quả nên trông như:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321094501.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p>Restart Agent:</p>
+</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>systemctl restart datadog-agent</span></span></code></pre></figure>
+<ol start="7">
+<li>Kiểm tra trạng thái:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>datadog-agent status</span></span></code></pre></figure>
+<blockquote>
+<p>Nếu gặp lỗi, kiểm tra lại indentation trong <code>datadog.yaml</code>.</p>
+</blockquote>
+<ol start="8">
+<li>Tìm phần <strong>Logs Agent</strong> trong output:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>==========</span></span>
+<span data-line><span>Logs Agent</span></span>
+<span data-line><span>==========</span></span>
+<span data-line> </span>
+<span data-line><span>    Reliable: Sending compressed logs in HTTPS to agent-http-intake.logs.datadoghq.com. on port 443 (API Key: ***************************58fc3)</span></span>
+<span data-line><span>    BytesSent: 0</span></span>
+<span data-line><span>    EncodedBytesSent: 34</span></span>
+<span data-line><span>    LogsProcessed: 0</span></span>
+<span data-line><span>    LogsSent: 0</span></span>
+<span data-line><span>    LogsTruncated: 0</span></span>
+<span data-line><span>    RetryCount: 0</span></span>
+<span data-line><span>    RetryTimeSpent: 0s</span></span>
+<span data-line><span>    CoreAgentProcessOpenFiles: 23</span></span>
+<span data-line><span>    OSFileLimit: 524287</span></span></code></pre></figure>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>TIP</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Tìm nhanh bằng lệnh: <code>datadog-agent status | grep -B1 -A12 &quot;Logs Agent&quot;</code></p>
+</div>
+</blockquote>
+<h3 id="cấu-hình-docker-logs">Cấu hình Docker Logs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-hình-docker-logs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><code>BytesSent: 0</code> vì Agent chưa có quyền đọc Docker socket. Agent chạy dưới user <code>dd-agent</code>, cần thêm vào group <code>docker</code>:</p>
+<ol>
+<li>Thêm user vào group:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>usermod -a -G docker dd-agent</span></span></code></pre></figure>
+<ol start="2">
+<li>Restart Agent:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>systemctl restart datadog-agent</span></span></code></pre></figure>
+<ol start="3">
+<li>Chạy <code>status</code> lại — giờ <code>BytesSent</code> sẽ có giá trị, và containers sẽ xuất hiện trong phần <strong>Integrations</strong>:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>docker</span></span>
+<span data-line><span>------</span></span>
+<span data-line><span>    - Type: docker</span></span>
+<span data-line><span>      Service: discounts-service</span></span>
+<span data-line><span>      Source: python</span></span>
+<span data-line><span>      Status: OK</span></span>
+<span data-line><span>        The log file tailer could not be made, falling back to socket</span></span>
+<span data-line><span>      Inputs:</span></span>
+<span data-line><span>        3f132ff8e4514c7927d415aa1d93ef853f447eb3463cd4bb60aa046c4bceee5b</span></span>
+<span data-line><span>      Bytes Read: 5293640</span></span>
+<span data-line><span>      Pipeline Latency:</span></span>
+<span data-line><span>        Average Latency: 49.353029ms</span></span>
+<span data-line><span>        24h Average Latency: 49.353029ms</span></span>
+<span data-line><span>        Peak Latency: 1.009953529s</span></span>
+<span data-line><span>        24h Peak Latency: 1.009953529s</span></span>
+<span data-line><span>      Processing Rules: No rules applied</span></span></code></pre></figure>
+<h3 id="cấu-hình-apm-traces">Cấu hình APM Traces<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-hình-apm-traces" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Agent mặc định chỉ nhận traces từ localhost. Containers chạy trên network riêng → cần bật <code>apm_non_local_traffic</code>.</p>
+<ol>
+<li>
+<p>Mở <code>datadog.yaml</code>, tìm và uncomment <code>apm_config:</code>.<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321100939.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p>Khác với <code>logs_config</code>, <code>enabled</code> mặc định là <code>true</code> → không cần đổi.</p>
+</blockquote>
+</li>
+<li>
+<p>Uncomment <code>apm_non_local_traffic</code> → đặt thành <code>true</code>.<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321101355.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p>Restart Agent:</p>
+</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>systemctl restart datadog-agent</span></span></code></pre></figure>
+<ol start="4">
+<li>Xác nhận Agent đang nhận traces:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>datadog-agent status</span></span></code></pre></figure>
+<p>Phần <strong>APM Agent</strong> sẽ hiện các traces từ Ruby và Python:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>=========</span></span>
+<span data-line><span>APM Agent</span></span>
+<span data-line><span>=========</span></span>
+<span data-line> </span>
+<span data-line><span>  Status: Running</span></span>
+<span data-line><span>  Pid: 20811</span></span>
+<span data-line><span>  Uptime: 135 seconds</span></span>
+<span data-line><span>  Mem alloc: 20,269,632 bytes</span></span>
+<span data-line><span>  Hostname: agent-host</span></span>
+<span data-line><span>  Receiver: 0.0.0.0:8126</span></span>
+<span data-line><span>  Endpoints:</span></span>
+<span data-line><span>    https://trace.agent.datadoghq.com.</span></span>
+<span data-line> </span>
+<span data-line><span>  Receiver (previous minute)</span></span>
+<span data-line><span>  ==========================</span></span>
+<span data-line><span>    From ruby 3.0.3 (ruby-x86_64-linux), client 1.4.1</span></span>
+<span data-line><span>      Traces received: 200 (205,881 bytes)</span></span>
+<span data-line><span>      Spans received: 442</span></span>
+<span data-line> </span>
+<span data-line><span>    From ruby 3.0.3 (ruby-x86_64-linux), client 1.4.1</span></span>
+<span data-line><span>      Traces received: 15 (1,242,394 bytes)</span></span>
+<span data-line><span>      Spans received: 2521</span></span>
+<span data-line> </span>
+<span data-line><span>    From python 3.9.6 (CPython), client 1.7.2</span></span>
+<span data-line><span>      Traces received: 1 (1,487 bytes)</span></span>
+<span data-line><span>      Spans received: 13</span></span>
+<span data-line> </span>
+<span data-line> </span>
+<span data-line> </span>
+<span data-line><span>    Priority sampling rate for 'service:flask,env:agent-host-lab': 100.0%</span></span>
+<span data-line><span>    Priority sampling rate for 'service:store-backend,env:agent-host-lab': 100.0%</span></span>
+<span data-line><span>    Priority sampling rate for 'service:store-worker,env:agent-host-lab': 100.0%</span></span>
+<span data-line> </span>
+<span data-line><span>  Writer (previous minute)</span></span>
+<span data-line><span>  ========================</span></span>
+<span data-line><span>    Traces: 0 payloads, 0 traces, 0 events, 0 bytes</span></span>
+<span data-line><span>    Stats: 0 payloads, 0 stats buckets, 0 bytes</span></span></code></pre></figure>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>TIP</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Tìm nhanh: <code>datadog-agent status | grep -B1 -A25 &quot;APM Agent&quot;</code></p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="cấu-hình-checks-integrations">Cấu hình Checks (Integrations)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-hình-checks-integrations" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tổng-quan-về-agent-checks">Tổng quan về Agent Checks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-quan-về-agent-checks" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Agent đi kèm hàng chục <strong>integrations</strong> (gọi là “checks”) — là các Python script thu thập metrics, events, logs từ host và dịch vụ.</p>
+<p><strong>Checks tự động:</strong> cpu, disk, memory, uptime…<br/>
+<strong>Checks cần cấu hình:</strong> Redis, PostgreSQL, Nginx…</p>
+<p>Mỗi check có file cấu hình trong thư mục con của <code>datadog-agent/conf.d/</code>.</p>
+<p>Xem danh sách checks đang chạy:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>datadog-agent configcheck</span></span></code></pre></figure>
+<p>Output mẫu cho <strong>disk check</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>=== disk check ===</span></span>
+<span data-line><span>Configuration provider: file</span></span>
+<span data-line><span>Configuration source: file:/etc/datadog-agent/conf.d/disk.d/conf.yaml.default</span></span>
+<span data-line><span>Config for instance ID: disk:67cc0574430a16ba</span></span>
+<span data-line><span>use_mount: false</span></span>
+<span data-line><span>~</span></span>
+<span data-line><span>===</span></span></code></pre></figure>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>NOTE</p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>File <code>.default</code> = core checks, chạy tự động.</li>
+<li>File <code>.example</code> = template cần rename thành <code>conf.yaml</code> để kích hoạt.</li>
+<li><strong>Luôn phải restart Agent</strong> sau khi thay đổi file cấu hình check.</li>
+</ul>
+</div>
+</blockquote>
+<p>Tất cả checks đều có tài liệu tại <a href="https://docs.datadoghq.com/integrations" class="external external-link">Integrations documentation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>. Nếu cần check tùy chỉnh, xem <a href="https://docs.datadoghq.com/developers/custom_checks/write_agent_check/" class="external external-link">Writing a Custom Agent Check<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+<h3 id="cấu-hình-redis-check">Cấu hình Redis Check<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-hình-redis-check" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p>Tìm tài liệu Redis trên <a href="https://docs.datadoghq.com/integrations" class="external external-link">Integrations docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321105924.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p>Click <strong>Redis</strong> card — xem <strong>Overview</strong>, <strong>Setup</strong>, và <strong>Data Collected</strong>.</p>
+</li>
+<li>
+<p>Mở <code>datadog-agent/conf.d/redisdb.d/</code>.<br/>
+Có 2 file: <code>auto-conf.yaml</code> (cho autodiscovery, bỏ qua) và <code>conf.yaml.example</code>.</p>
+</li>
+<li>
+<p><strong>Rename</strong> <code>conf.yaml.example</code> → <code>conf.yaml</code> để kích hoạt check.<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321111556.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p>Mở <code>conf.yaml</code> và cấu hình:</p>
+</li>
+<li>
+<p>Dưới <code>init_config:</code>, uncomment <code>service:</code> → đặt giá trị <code>redis</code>.</p>
+</li>
+<li>
+<p>Uncomment <code>password:</code> → đặt giá trị:</p>
+</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>0x660x6F0x6F0x620x610x72</span></span></code></pre></figure>
+<ol start="8">
+<li>
+<p>Cuộn xuống cuối file, uncomment toàn bộ phần <code>logs:</code>.</p>
+</li>
+<li>
+<p>Đặt <code>path</code>:</p>
+</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>/var/log/redis/redis-server.log</span></span></code></pre></figure>
+<ol start="10">
+<li>
+<p>Đặt <code>service</code> thành <code>redis</code>.</p>
+</li>
+<li>
+<p>Kết quả nên trông như:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321113907.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p>Thêm user <code>dd-agent</code> vào group <code>adm</code> (vì Redis logs chỉ cho phép <code>redis</code> user và <code>adm</code> group đọc):</p>
+</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>usermod -a -G adm dd-agent</span></span></code></pre></figure>
+<ol start="13">
+<li>Restart Agent:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>systemctl restart datadog-agent</span></span></code></pre></figure>
+<ol start="14">
+<li>Kiểm tra phần <strong>Checks</strong> trong <code>status</code> output — redisdb check phải hiện <strong>[OK]</strong>:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>    redisdb (8.5.0)</span></span>
+<span data-line><span>    ---------------</span></span>
+<span data-line><span>      Instance ID: redisdb:da51d23ebfec1153 [OK]</span></span>
+<span data-line><span>      Configuration Source: file:/etc/datadog-agent/conf.d/redisdb.d/conf.yaml[0]</span></span>
+<span data-line><span>      Total Runs: 1</span></span>
+<span data-line><span>      Metric Samples: Last Run: 100, Total: 100</span></span>
+<span data-line><span>      Events: Last Run: 0, Total: 0</span></span>
+<span data-line><span>      Service Checks: Last Run: 1, Total: 1</span></span>
+<span data-line><span>      Average Execution Time : 345ms</span></span>
+<span data-line><span>      Last Execution Date : 2026-03-21 04:40:39.042 UTC (1774068039042)</span></span>
+<span data-line><span>      Last Successful Execution Date : 2026-03-21 04:40:39 UTC (1774068039000)</span></span>
+<span data-line><span>      metadata:</span></span>
+<span data-line><span>        config.source: /etc/datadog-agent/conf.d/redisdb.d/conf.yaml[0]</span></span>
+<span data-line><span>        version.major: 6</span></span>
+<span data-line><span>        version.minor: 0</span></span>
+<span data-line><span>        version.patch: 16</span></span>
+<span data-line><span>        version.raw: 6.0.16</span></span>
+<span data-line><span>        version.scheme: semver</span></span></code></pre></figure>
+<ol start="15">
+<li>Kiểm tra phần <strong>Logs Agent</strong> — redisdb logs phải hiện:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>  redisdb</span></span>
+<span data-line><span>  -------</span></span>
+<span data-line><span>    - Type: file</span></span>
+<span data-line><span>      Path: /var/log/redis/redis-server.log</span></span>
+<span data-line><span>      Service: redis</span></span>
+<span data-line><span>      Source: redis</span></span>
+<span data-line><span>      Status: OK</span></span>
+<span data-line><span>      Inputs:</span></span>
+<span data-line><span>        /var/log/redis/redis-server.log</span></span>
+<span data-line><span>      Bytes Read: 0</span></span>
+<span data-line><span>      Pipeline Latency:</span></span>
+<span data-line><span>        Average Latency: 0s</span></span>
+<span data-line><span>        24h Average Latency: 0s</span></span>
+<span data-line><span>        Peak Latency: 0s</span></span>
+<span data-line><span>        24h Peak Latency: 0s</span></span>
+<span data-line><span>      Processing Rules: No rules applied</span></span></code></pre></figure>
+<h3 id="cấu-hình-postgresql-check">Cấu hình PostgreSQL Check<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-hình-postgresql-check" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p>Mở <code>datadog-agent/conf.d/postgres.d/</code>.</p>
+</li>
+<li>
+<p>Rename <code>conf.yaml.example</code> → <code>conf.yaml</code>.</p>
+</li>
+<li>
+<p>Tìm <code>instances:</code> array. Cấu hình <code>host</code>, <code>username</code>, <code>password</code>.</p>
+</li>
+<li>
+<p>Đặt <code>username: datadog</code> và <code>password: datadog</code>:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321114914.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p>Đảm bảo <code>host</code>, <code>username</code>, <code>password</code> thẳng hàng với nhau.</p>
+</blockquote>
+</li>
+<li>
+<p>Cuộn xuống <strong>## Log Section</strong>.</p>
+</li>
+<li>
+<p>Uncomment tất cả dòng trong block <code>logs</code>.</p>
+</li>
+<li>
+<p>Đặt <code>path</code>:</p>
+</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>/var/log/postgresql/postgresql-14-main.log</span></span></code></pre></figure>
+<ol start="8">
+<li>
+<p>Đặt <code>service</code> thành <code>database</code> (sẽ thêm tag <code>service:database</code> vào log entries).<br/>
+Kết quả:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321115413.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p>Thêm <code>dd-agent</code> vào group <code>postgres</code>:</p>
+</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>usermod -a -G postgres dd-agent</span></span></code></pre></figure>
+<ol start="10">
+<li>Restart Agent:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>systemctl restart datadog-agent</span></span></code></pre></figure>
+<ol start="11">
+<li>Kiểm tra:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>datadog-agent status</span></span></code></pre></figure>
+<ol start="12">
+<li>Phần <strong>Running Checks</strong> — postgres phải hiện <strong>[OK]</strong>:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>    postgres (23.4.0)</span></span>
+<span data-line><span>    -----------------</span></span>
+<span data-line><span>      Instance ID: postgres:a6c8633603d3c492 [OK]</span></span>
+<span data-line><span>      Configuration Source: file:/etc/datadog-agent/conf.d/postgres.d/conf.yaml[0]</span></span>
+<span data-line><span>      Total Runs: 10</span></span>
+<span data-line><span>      Metric Samples: Last Run: 189, Total: 1,890</span></span>
+<span data-line><span>      Events: Last Run: 0, Total: 0</span></span>
+<span data-line><span>      Database Monitoring Metadata Samples: Last Run: 1, Total: 1</span></span>
+<span data-line><span>      Service Checks: Last Run: 1, Total: 10</span></span>
+<span data-line><span>      Average Execution Time : 84ms</span></span>
+<span data-line><span>      Last Execution Date : 2026-03-21 04:57:39.234 UTC (1774069059234)</span></span>
+<span data-line><span>      Last Successful Execution Date : 2026-03-21 04:57:39 UTC (1774069059000)</span></span>
+<span data-line><span>      metadata:</span></span>
+<span data-line><span>        config.source: /etc/datadog-agent/conf.d/postgres.d/conf.yaml[0]</span></span>
+<span data-line><span>        resolved_hostname: agent-host</span></span>
+<span data-line><span>        version.major: 14</span></span>
+<span data-line><span>        version.minor: 12</span></span>
+<span data-line><span>        version.patch: 0</span></span>
+<span data-line><span>        version.raw: 14.12 (Ubuntu 14.12-0ubuntu0.22.04.1)</span></span>
+<span data-line><span>        version.scheme: semver</span></span></code></pre></figure>
+<blockquote>
+<p>Nếu chưa thấy, chờ 1 phút rồi chạy lại <code>status</code>.</p>
+</blockquote>
+<ol start="13">
+<li>Phần <strong>Logs Agent</strong> — postgres logs:</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>  postgres</span></span>
+<span data-line><span>  --------</span></span>
+<span data-line><span>    - Type: file</span></span>
+<span data-line><span>      Path: /var/log/postgresql/postgresql-14-main.log</span></span>
+<span data-line><span>      Service: database</span></span>
+<span data-line><span>      Source: postgresql</span></span>
+<span data-line><span>      Status: OK</span></span>
+<span data-line><span>      Inputs:</span></span>
+<span data-line><span>        /var/log/postgresql/postgresql-14-main.log</span></span>
+<span data-line><span>      Bytes Read: 0</span></span>
+<span data-line><span>      Lines Combined: 0</span></span>
+<span data-line><span>      MultiLine matches: 0</span></span>
+<span data-line><span>      Pipeline Latency:</span></span>
+<span data-line><span>        Average Latency: 0s</span></span>
+<span data-line><span>        24h Average Latency: 0s</span></span>
+<span data-line><span>        Peak Latency: 0s</span></span>
+<span data-line><span>        24h Peak Latency: 0s</span></span>
+<span data-line><span>      Processing Rules: No rules applied</span></span></code></pre></figure>
+<hr/>
+<h2 id="khám-phá-datadog-ui">Khám phá Datadog UI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khám-phá-datadog-ui" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="đăng-nhập">Đăng nhập<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#đăng-nhập" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Đăng nhập <a href="https://app.datadoghq.com/" class="external external-link">Datadog<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> bằng tài khoản trial. Hiển thị credentials bằng lệnh <code>creds</code> trong terminal.</p>
+<h3 id="bật-log-management">Bật Log Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bật-log-management" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote>
+<p>Nếu đã bật trước đó, bỏ qua bước này.</p>
+</blockquote>
+<ol>
+<li>
+<p>Vào <strong><a href="https://app.datadoghq.com/logs" class="external external-link">Logs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></strong>.</p>
+</li>
+<li>
+<p>Nếu thấy trang “Discover Datadog Log Management”:<br/>
+a. Click <strong>Get Started</strong>.<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321120332.png" alt width="auto" height="auto"/><br/>
+b. Click <strong>Get Started</strong> lần nữa.<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321120356.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p>Logs Explorer sẽ hiển thị logs từ Storedog:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321120510.png" alt width="auto" height="auto"/></p>
+</li>
+</ol>
+<h3 id="infrastructure">Infrastructure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#infrastructure" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p>Vào <strong><a href="https://app.datadoghq.com/infrastructure" class="external external-link">Infrastructure<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></strong> → thấy <code>agent-host</code>.</p>
+</li>
+<li>
+<p>Click <code>agent-host</code> → mở host details panel.</p>
+</li>
+<li>
+<p>Tab <strong>Host Info</strong> hiển thị thông tin chi tiết về host:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321120744.png" alt width="auto" height="auto"/></p>
+</li>
+<li>
+<p>Tab <strong>Processes</strong> — hiển thị Live Processes đã cấu hình.</p>
+</li>
+<li>
+<p>Vào <strong><a href="https://app.datadoghq.com/containers" class="external external-link">Infrastructure > Containers<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></strong> — thấy tất cả containers nhờ đã cấu hình Docker.</p>
+</li>
+<li>
+<p>Click container <code>lab-advertisements-1</code> → xem metadata trong <strong>ALL TAGS</strong>.</p>
+</li>
+<li>
+<p>Tìm tag <code>env:agent-host-lab</code> — tag này được gắn vào <strong>tất cả</strong> events, metrics, logs:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321121116.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p>Nếu có nhiều environments, tag này giúp lọc và query dữ liệu theo môi trường.</p>
+</blockquote>
+</li>
+<li>
+<p>Tab <strong>Logs</strong> — xem logs của container:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321121320.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p>Nếu không thấy logs, đổi timespan → <code>Past 15 Minutes</code>:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321121352.png" alt width="auto" height="auto"/></p>
+</blockquote>
+</li>
+</ol>
+<h3 id="logs-explorer">Logs Explorer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#logs-explorer" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol start="9">
+<li>
+<p>Vào <strong><a href="https://app.datadoghq.com/logs" class="external external-link">Logs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></strong> để xem tất cả Storedog logs.</p>
+</li>
+<li>
+<p>Trong facets panel bên trái, expand <strong>Service</strong> → chọn <code>discounts-service</code>:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321121507.png" alt width="598" height="auto"/></p>
+<blockquote>
+<p>Thấy logs từ Storedog nhờ đã bật <code>container_collect_all</code>.</p>
+</blockquote>
+</li>
+<li>
+<p>Click vào 1 log entry — ngoài nội dung log, Agent còn thu thập metadata: <strong>CONTAINER NAME</strong>, <strong>DOCKER IMAGE</strong>, <strong>SERVICE</strong>, <strong>SOURCE</strong>:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321121655.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p>Datadog tự động parse tag <code>source</code> và map tới sources đã biết (Python, Ruby, Nginx, Redis…). Xem lại file <code>conf.yaml</code> của PostgreSQL và Redis sẽ thấy parameter <code>source</code>.</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="apm-traces">APM Traces<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#apm-traces" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol start="12">
+<li>Vào <strong><a href="https://app.datadoghq.com/apm/traces" class="external external-link">APM > Traces > Explorer<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></strong> để xem traces:<br/>
+<img src="../../../.././../../../attachments/pasted-image-20260321122006.png" alt width="auto" height="auto"/></li>
+</ol>
+<h3 id="dashboards">Dashboards<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dashboards" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Vào <strong><a href="https://app.datadoghq.com/dash" class="external external-link">Dashboards<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></strong> — Datadog cung cấp dashboards dựng sẵn cho mỗi integration:</p>
+<ul>
+<li><a href="https://app.datadoghq.com/screen/integration/52/docker-overview" class="external external-link">Docker - Overview<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://app.datadoghq.com/dash/integration/21/nginx-overview" class="external external-link">NGINX - Overview<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://app.datadoghq.com/dash/integration/20/nginx-metrics" class="external external-link">NGINX - Metrics<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://app.datadoghq.com/dash/integration/235/postgres-overview" class="external external-link">Postgres - Overview<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://app.datadoghq.com/dash/integration/17/postgres-metrics" class="external external-link">Postgres - Metrics<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://app.datadoghq.com/dash/integration/15/redis-overview" class="external external-link">Redis - Overview<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<hr/>
+<h1 id="thông-tin-cấu-hình-bổ-sung">Thông tin cấu hình bổ sung<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#thông-tin-cấu-hình-bổ-sung" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h3 id="deployment-tools">Deployment tools<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deployment-tools" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Có thể cài Agent qua: Ansible, Chef, Puppet, Saltstack.<br/>
+Xem thêm: <a href="https://docs.datadoghq.com/agent/basic_agent_usage/?tab=configuration_management" class="external external-link">Basic Agent Usage - Configuration management<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+<h3 id="canonical-và-alias-hostnames">Canonical và Alias Hostnames<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#canonical-và-alias-hostnames" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Một host có thể có nhiều tên. Datadog tự động chọn <strong>canonical hostname</strong> cho tag <code>host</code> và liệt kê các tên còn lại là <strong>aliases</strong>.</p>
+<p>Ví dụ:</p>
+<ul>
+<li><strong>Canonical:</strong> <code>IIS-Demo-Test-2</code> (custom)</li>
+<li><strong>Alias 1:</strong> <code>i-0ce73f1a905c8ddee</code> (AWS instance ID)</li>
+<li><strong>Alias 2:</strong> <code>ip-172-31-56-89.ec2.internal</code> (EC2 internal hostname)</li>
+</ul>
+<p><img src="https://learning-assets.datadoghq.com/agent-host/lms/assets/hostname_aliases_customname.png" alt="Example of a host with a custom hostname and two hostnames listed as aliases."/></p>
+<p>Xem thêm: <a href="https://docs.datadoghq.com/agent/faq/how-datadog-agent-determines-the-hostname/?tab=agentv6v7" class="external external-link">How does Datadog determine the Agent hostname?<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<h3 id="network-traffic">Network Traffic<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#network-traffic" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Tất cả traffic outbound từ host qua <strong>TCP hoặc UDP</strong>.</li>
+<li>Traffic <strong>luôn</strong> được Agent khởi tạo → Datadog <strong>không bao giờ</strong> tạo session ngược lại Agent.</li>
+</ul>
+<p><strong>Firewall rules:</strong></p>
+<ul>
+<li>Chỉ cho phép Agent truy cập từ ứng dụng/nguồn tin cậy.</li>
+<li>Xem danh sách domains cần whitelist: <a href="https://docs.datadoghq.com/agent/configuration/network/#destinations" class="external external-link">Network Traffic - Destinations<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</li>
+</ul>
+<p><strong>Ports:</strong></p>
+<ul>
+<li>Xem danh sách ports tại <a href="https://docs.datadoghq.com/agent/configuration/network/#open-ports" class="external external-link">Network Traffic - Open Ports<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</li>
+<li>Nếu port mặc định bị trùng, thay đổi trong section Advanced Configuration của <code>datadog.yaml</code>.</li>
+</ul>
+<hr/>
+<h1 id="xử-lý-sự-cố-troubleshooting">Xử lý sự cố (Troubleshooting)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#xử-lý-sự-cố-troubleshooting" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h3 id="log-level-của-agent">Log Level của Agent<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#log-level-của-agent" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Đặt log level qua parameter <code>log_level</code> trong <code>datadog.yaml</code>:</p>
+<p><img src="https://learning-assets.datadoghq.com/agent-host/lms/assets/log_level_datadogyaml.png" alt="The code block for setting the log_level in the datadog.yaml file."/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Option</th><th style="text-align:center;">Critical</th><th style="text-align:center;">Error</th><th style="text-align:center;">Warn</th><th style="text-align:center;">Info</th><th style="text-align:center;">Debug</th><th style="text-align:center;">Trace</th></tr></thead><tbody><tr><td><code>'OFF'</code></td><td style="text-align:center;"></td><td style="text-align:center;"></td><td style="text-align:center;"></td><td style="text-align:center;"></td><td style="text-align:center;"></td><td style="text-align:center;"></td></tr><tr><td><code>'CRITICAL'</code></td><td style="text-align:center;">✅</td><td style="text-align:center;"></td><td style="text-align:center;"></td><td style="text-align:center;"></td><td style="text-align:center;"></td><td style="text-align:center;"></td></tr><tr><td><code>'ERROR'</code></td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;"></td><td style="text-align:center;"></td><td style="text-align:center;"></td><td style="text-align:center;"></td></tr><tr><td><code>'WARN'</code></td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;"></td><td style="text-align:center;"></td><td style="text-align:center;"></td></tr><tr><td><code>'INFO'</code></td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;"></td><td style="text-align:center;"></td></tr><tr><td><code>'DEBUG'</code></td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;"></td></tr><tr><td><code>'TRACE'</code></td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td></tr></tbody></table></div>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>WARNING</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Mặc định là <code>INFO</code>. Chỉ bật <code>DEBUG</code> khi troubleshoot vì nó tăng số lượng indexed logs đáng kể. Nhớ đặt lại <code>INFO</code> khi xong.</p>
+</div>
+</blockquote>
+<h3 id="gửi-flare-cho-datadog-support">Gửi “Flare” cho Datadog Support<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gửi-flare-cho-datadog-support" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Flare gom tất cả file cấu hình và logs vào 1 archive, <strong>tự động xóa thông tin nhạy cảm</strong> (passwords, API keys, proxy credentials, SNMP community strings).</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>datadog-agent flare &lt;CASE_ID></span></span></code></pre></figure>
+<ul>
+<li>Nếu đã có case ID → nhập case ID + email.</li>
+<li>Nếu chưa có → nhập email đăng nhập Datadog → tạo support case mới.</li>
+</ul>
+<p>Agent là mã nguồn mở, có thể <a href="https://github.com/DataDog/datadog-agent/tree/main/pkg/flare" class="external external-link">xem code xử lý flare<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>. Flare sẽ hỏi xác nhận trước khi upload.</p>
+<p>Xem thêm: <a href="https://docs.datadoghq.com/agent/troubleshooting/send_a_flare/?tab=agent#send-a-flare-using-the-flare-command" class="external external-link">Flare commands<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+<hr/>
+<h1 id="tổng-kết">Tổng kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>Trong khóa học này, bạn đã học:</p>
+<ul>
+<li>✅ <strong>Cài đặt Agent</strong> trên host</li>
+<li>✅ <strong>Cấu hình Agent</strong> qua <code>datadog.yaml</code> (Live Processes, Logging, Docker, APM)</li>
+<li>✅ <strong>Sử dụng CLI commands</strong>: <code>status</code>, <code>config</code>, <code>configcheck</code></li>
+<li>✅ <strong>Bật Integration checks</strong>: Redis, PostgreSQL</li>
+<li>✅ <strong>Khám phá Datadog UI</strong>: Infrastructure, Logs, APM Traces, Dashboards</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>TIP</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Quy trình cấu hình check mới:</strong></p>
+<ol>
+<li>Tìm docs integration trên <a href="https://docs.datadoghq.com/integrations/" class="external external-link">Integrations page<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Vào <code>conf.d/&lt;check>.d/</code> → rename <code>conf.yaml.example</code> → <code>conf.yaml</code></li>
+<li>Cấu hình connection (host, username, password…)</li>
+<li>Cấu hình logs section (path, service, source)</li>
+<li>Thêm user <code>dd-agent</code> vào group cần thiết</li>
+<li>Restart Agent: <code>systemctl restart datadog-agent</code></li>
+<li>Verify: <code>datadog-agent status</code></li>
+</ol>
+</div>
+</blockquote>
+<h2 id="tài-liệu-tham-khảo">Tài liệu tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tài-liệu-tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.datadoghq.com/courses/agent-on-docker" class="external external-link">Agent on Docker course<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.datadoghq.com/integrations/" class="external external-link">Integrations docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.datadoghq.com/agent/guide/agent-commands/" class="external external-link">Agent commands docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.datadoghq.com/developers/custom_checks/" class="external external-link">Writing custom checks<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.datadoghq.com/logs/" class="external external-link">Logs docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.datadoghq.com/metrics/" class="external external-link">Metrics docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.datadoghq.com/dashboards/" class="external external-link">Dashboards docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://github.com/DataDog/datadog-agent" class="external external-link">Agent GitHub repository<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.datadoghq.com/blog/" class="external external-link">Datadog Blog<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> | <a href="https://www.youtube.com/datadoghq" class="external external-link">YouTube<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-227" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#tổng-quan-về-datadog-agent" data-for="tổng-quan-về-datadog-agent">Tổng quan về Datadog Agent</a></li><li class="depth-1"><a href="#các-thành-phần-của-agent" data-for="các-thành-phần-của-agent">Các thành phần của Agent</a></li><li class="depth-1"><a href="#cấu-hình-agent" data-for="cấu-hình-agent">Cấu hình Agent</a></li><li class="depth-1"><a href="#remote-configuration" data-for="remote-configuration">Remote Configuration</a></li><li class="depth-0"><a href="#lab-cài-đặt-agent-trên-host" data-for="lab-cài-đặt-agent-trên-host">Lab: Cài đặt Agent trên Host</a></li><li class="depth-1"><a href="#khám-phá-storedog" data-for="khám-phá-storedog">Khám phá Storedog</a></li><li class="depth-1"><a href="#cài-đặt-agent" data-for="cài-đặt-agent">Cài đặt Agent</a></li><li class="depth-1"><a href="#các-lệnh-agent-quan-trọng" data-for="các-lệnh-agent-quan-trọng">Các lệnh Agent quan trọng</a></li><li class="depth-2"><a href="#lệnh-status--kiểm-tra-trạng-thái-agent" data-for="lệnh-status--kiểm-tra-trạng-thái-agent">Lệnh status — Kiểm tra trạng thái Agent</a></li><li class="depth-2"><a href="#lệnh-config--xem-cấu-hình-resolved" data-for="lệnh-config--xem-cấu-hình-resolved">Lệnh config — Xem cấu hình resolved</a></li><li class="depth-1"><a href="#cấu-hình-live-processes" data-for="cấu-hình-live-processes">Cấu hình Live Processes</a></li><li class="depth-2"><a href="#file-cấu-hình-agent" data-for="file-cấu-hình-agent">File cấu hình Agent</a></li><li class="depth-2"><a href="#bật-live-processes" data-for="bật-live-processes">Bật Live Processes</a></li><li class="depth-1"><a href="#cấu-hình-logging-và-docker" data-for="cấu-hình-logging-và-docker">Cấu hình Logging và Docker</a></li><li class="depth-2"><a href="#bật-log-collection" data-for="bật-log-collection">Bật Log Collection</a></li><li class="depth-2"><a href="#cấu-hình-docker-logs" data-for="cấu-hình-docker-logs">Cấu hình Docker Logs</a></li><li class="depth-2"><a href="#cấu-hình-apm-traces" data-for="cấu-hình-apm-traces">Cấu hình APM Traces</a></li><li class="depth-1"><a href="#cấu-hình-checks-integrations" data-for="cấu-hình-checks-integrations">Cấu hình Checks (Integrations)</a></li><li class="depth-2"><a href="#tổng-quan-về-agent-checks" data-for="tổng-quan-về-agent-checks">Tổng quan về Agent Checks</a></li><li class="depth-2"><a href="#cấu-hình-redis-check" data-for="cấu-hình-redis-check">Cấu hình Redis Check</a></li><li class="depth-2"><a href="#cấu-hình-postgresql-check" data-for="cấu-hình-postgresql-check">Cấu hình PostgreSQL Check</a></li><li class="depth-1"><a href="#khám-phá-datadog-ui" data-for="khám-phá-datadog-ui">Khám phá Datadog UI</a></li><li class="depth-2"><a href="#đăng-nhập" data-for="đăng-nhập">Đăng nhập</a></li><li class="depth-2"><a href="#bật-log-management" data-for="bật-log-management">Bật Log Management</a></li><li class="depth-2"><a href="#infrastructure" data-for="infrastructure">Infrastructure</a></li><li class="depth-2"><a href="#logs-explorer" data-for="logs-explorer">Logs Explorer</a></li><li class="depth-2"><a href="#apm-traces" data-for="apm-traces">APM Traces</a></li><li class="depth-2"><a href="#dashboards" data-for="dashboards">Dashboards</a></li><li class="depth-0"><a href="#thông-tin-cấu-hình-bổ-sung" data-for="thông-tin-cấu-hình-bổ-sung">Thông tin cấu hình bổ sung</a></li><li class="depth-2"><a href="#deployment-tools" data-for="deployment-tools">Deployment tools</a></li><li class="depth-2"><a href="#canonical-và-alias-hostnames" data-for="canonical-và-alias-hostnames">Canonical và Alias Hostnames</a></li><li class="depth-2"><a href="#network-traffic" data-for="network-traffic">Network Traffic</a></li><li class="depth-0"><a href="#xử-lý-sự-cố-troubleshooting" data-for="xử-lý-sự-cố-troubleshooting">Xử lý sự cố (Troubleshooting)</a></li><li class="depth-2"><a href="#log-level-của-agent" data-for="log-level-của-agent">Log Level của Agent</a></li><li class="depth-2"><a href="#gửi-flare-cho-datadog-support" data-for="gửi-flare-cho-datadog-support">Gửi “Flare” cho Datadog Support</a></li><li class="depth-0"><a href="#tổng-kết" data-for="tổng-kết">Tổng kết</a></li><li class="depth-1"><a href="#tài-liệu-tham-khảo" data-for="tài-liệu-tham-khảo">Tài liệu tham khảo</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

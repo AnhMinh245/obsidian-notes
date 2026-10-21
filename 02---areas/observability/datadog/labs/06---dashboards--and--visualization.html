@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Lab 06 — Dashboards &amp; Visualization</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Lab 06 — Dashboards &amp; Visualization"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Lab 06 — Dashboards &amp; Visualization"/><meta name="twitter:description" content="Lab 06 — Dashboards &amp; Visualization ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 05 hoàn thành, Storedog đang chạy trên Minikube 🔗 Source: DataDog/storedog 🎯 Mục Tiêu Sau lab này, bạn sẽ: Khám phá OOTB dashboards (Kubernetes, Docker, PostgreSQL) Hiểu Dashboard type hiện tại (unified) và khác b..."/><meta property="og:description" content="Lab 06 — Dashboards &amp; Visualization ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 05 hoàn thành, Storedog đang chạy trên Minikube 🔗 Source: DataDog/storedog 🎯 Mục Tiêu Sau lab này, bạn sẽ: Khám phá OOTB dashboards (Kubernetes, Docker, PostgreSQL) Hiểu Dashboard type hiện tại (unified) và khác b..."/><meta property="og:image:alt" content="Lab 06 — Dashboards &amp; Visualization ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 05 hoàn thành, Storedog đang chạy trên Minikube 🔗 Source: DataDog/storedog 🎯 Mục Tiêu Sau lab này, bạn sẽ: Khám phá OOTB dashboards (Kubernetes, Docker, PostgreSQL) Hiểu Dashboard type hiện tại (unified) và khác b..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/labs/06---dashboards--and--visualization"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/labs/06---dashboards--and--visualization"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Lab 06 — Dashboards &amp; Visualization ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 05 hoàn thành, Storedog đang chạy trên Minikube 🔗 Source: DataDog/storedog 🎯 Mục Tiêu Sau lab này, bạn sẽ: Khám phá OOTB dashboards (Kubernetes, Docker, PostgreSQL) Hiểu Dashboard type hiện tại (unified) và khác b..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/datadog/labs/06---dashboards--and--visualization" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-297" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-297" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/">Datadog</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/labs/">Labs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Lab 06 — Dashboards &amp; Visualization</a></div></nav><h1 class="article-title">Lab 06 — Dashboards &amp; Visualization</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/datadog" class="internal internal-link tag-link">domain/datadog</a><span class="note-properties-separator">, </span><a href="../../../../tags/labs" class="internal internal-link tag-link">labs</a><span class="note-properties-separator">, </span><a href="../../../../tags/dashboards" class="internal internal-link tag-link">dashboards</a><span class="note-properties-separator">, </span><a href="../../../../tags/visualization" class="internal internal-link tag-link">visualization</a><span class="note-properties-separator">, </span><a href="../../../../tags/widgets" class="internal internal-link tag-link">widgets</a><span class="note-properties-separator">, </span><a href="../../../../tags/kubernetes" class="internal internal-link tag-link">kubernetes</a><span class="note-properties-separator">, </span><a href="../../../../tags/hands-on" class="internal internal-link tag-link">hands-on</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-11T17:00:00.000Z">12 thg 6, 2026</time><span>8 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="lab-06--dashboards--visualization">Lab 06 — Dashboards &amp; Visualization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lab-06--dashboards--visualization" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>⏱️ <strong>Thời gian</strong>: ~45 phút<br/>
+📋 <strong>Prerequisites</strong>: <a href="../../../../02---areas/observability/datadog/labs/05---custom-metrics--and--dogstatsd" class="internal internal-link alias" data-slug="02---areas/observability/datadog/labs/05---custom-metrics--and--dogstatsd">Lab 05</a> hoàn thành, Storedog đang chạy trên Minikube<br/>
+🔗 <strong>Source</strong>: <a href="https://github.com/DataDog/storedog" class="external external-link">DataDog/storedog<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</blockquote>
+<hr/>
+<h2 id="-mục-tiêu">🎯 Mục Tiêu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mục-tiêu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau lab này, bạn sẽ:</p>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Khám phá OOTB dashboards (Kubernetes, Docker, PostgreSQL)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Hiểu Dashboard type hiện tại (unified) và khác biệt với Timeboard/Screenboard cũ</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Tạo custom dashboard cho Storedog trên K8s với nhiều widget types</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Sử dụng Template Variables (service, env, kube_namespace, kube_deployment)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Export/Import dashboard JSON (hữu ích cho account rotation)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Thực hành Metric Query với kubernetes.* metrics</li>
+</ul>
+<hr/>
+<h2 id="-kiến-thức-nền">📚 Kiến Thức Nền<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kiến-thức-nền" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="fundamentals">Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="../../../../02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics">Ch.03 — Metrics &amp; Visualization</a><br/>
+→ Dashboard design, chart types, USE/RED visualization</li>
+</ul>
+<h3 id="cách-học-lab-này">Cách học lab này<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-học-lab-này" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Dashboard tốt là dashboard trả lời được một câu hỏi vận hành </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>Đừng gom càng nhiều widget càng tốt. Mỗi dashboard nên phục vụ một mục đích rõ ràng: cluster health, service performance, hay release triage.</li>
+<li>Học từ OOTB dashboards trước — chúng cho bạn biết Datadog nghĩ một integration nên được quan sát theo góc nào. Sau đó hãy chỉnh lại cho đúng bài toán Storedog trên K8s của riêng bạn.</li>
+<li>Nếu một widget trông “lạ”, hãy kiểm tra lại time range, rollup, split-by, và template variables trước khi nghi metric sai. Phần lớn lỗi đọc dashboard đến từ query semantics hơn là thiếu dữ liệu.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="1-dashboard-types--unified-model">1. Dashboard Types — Unified Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-dashboard-types--unified-model" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-lịch-sử-timeboard-vs-screenboard">1.1. Lịch sử: Timeboard vs Screenboard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-lịch-sử-timeboard-vs-screenboard" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Exam Tip — Khái niệm cũ nhưng thi vẫn có thể hỏi </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Trước ~2020, Datadog có <strong>2 loại dashboard riêng biệt</strong>:</p>
+<ul>
+<li><strong>Timeboard</strong>: tất cả widgets share cùng time range, tốt cho investigation (đồng bộ thời gian khi debug)</li>
+<li><strong>Screenboard</strong>: widgets independent, tốt cho status boards (hiển thị trên TV/monitor)</li>
+</ul>
+<p>Từ ~2020, Datadog <strong>hợp nhất</strong> (unified) thành <strong>một loại Dashboard duy nhất</strong>. Khi tạo mới, bạn chọn <strong>layout</strong>:</p>
+<ul>
+<li><strong>Grid-based</strong> (ordered) = hành vi như Timeboard cũ — widgets xếp lưới, đồng bộ time</li>
+<li><strong>Free-form</strong> (automatic) = hành vi như Screenboard cũ — kéo thả tự do</li>
+</ul>
+<p>Trong UI hiện tại bạn chỉ thấy “New Dashboard” → chọn layout. Nhưng exam có thể dùng thuật ngữ Timeboard/Screenboard.</p>
+</div>
+</blockquote>
+<h3 id="12-so-sánh-nhanh">1.2. So sánh nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-so-sánh-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thuộc tính</th><th>Grid-based (≈ Timeboard)</th><th>Free-form (≈ Screenboard)</th></tr></thead><tbody><tr><td>Time range</td><td>Đồng bộ tất cả widgets</td><td>Mỗi widget riêng</td></tr><tr><td>Layout</td><td>Lưới cố định, auto-flow</td><td>Kéo thả pixel tự do</td></tr><tr><td>Use case</td><td>Investigation, debugging</td><td>Status board, TV display</td></tr><tr><td>Template Variables</td><td>Có</td><td>Có</td></tr><tr><td>Sharing</td><td>URL / JSON</td><td>URL / JSON</td></tr></tbody></table></div>
+<hr/>
+<h2 id="2-ootb-dashboards--out-of-the-box">2. OOTB Dashboards — Out Of The Box<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-ootb-dashboards--out-of-the-box" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-xem-danh-sách">2.1. Xem danh sách<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-xem-danh-sách" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Vào <strong>Dashboards</strong> → <strong>Dashboard List</strong></li>
+<li>Tìm dashboards tự tạo bởi integrations:
+<ul>
+<li><strong>Kubernetes Overview</strong> — cluster-level view (nodes, pods, containers)</li>
+<li><strong>Kubernetes Pods</strong> — pod status, restarts, resource usage</li>
+<li><strong>Kubernetes Containers</strong> — container CPU, memory, network</li>
+<li><strong>Docker</strong> — container overview (Minikube dùng containerd, nhưng Docker metrics vẫn có thể hiện nếu Docker integration enabled)</li>
+<li><strong>PostgreSQL</strong> — database performance</li>
+<li><strong>Host</strong> — system metrics overview</li>
+</ul>
+</li>
+</ol>
+<h3 id="22-khám-phá-kubernetes-overview-dashboard">2.2. Khám phá Kubernetes Overview dashboard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-khám-phá-kubernetes-overview-dashboard" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Click <strong>Kubernetes Overview</strong> dashboard</li>
+<li>Quan sát:
+<ul>
+<li>Pod count by namespace, node</li>
+<li>Container states (running, waiting, terminated)</li>
+<li>CPU/Memory requests vs limits vs actual usage</li>
+<li>DaemonSet/Deployment/ReplicaSet status</li>
+</ul>
+</li>
+</ol>
+<h3 id="23-khám-phá-kubernetes-pods-dashboard">2.3. Khám phá Kubernetes Pods dashboard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-khám-phá-kubernetes-pods-dashboard" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Click <strong>Kubernetes Pods</strong> dashboard</li>
+<li>Quan sát:
+<ul>
+<li>Pods running per namespace</li>
+<li>Pod restart count (high restarts = CrashLoopBackOff hoặc OOMKilled)</li>
+<li>Resource usage per pod</li>
+</ul>
+</li>
+</ol>
+<h3 id="24-khám-phá-postgresql-dashboard">2.4. Khám phá PostgreSQL dashboard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-khám-phá-postgresql-dashboard" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Click <strong>PostgreSQL Overview</strong> (nếu Postgres integration enabled)</li>
+<li>Quan sát:
+<ul>
+<li>Active connections</li>
+<li>Query throughput (tuples fetched/inserted/updated)</li>
+<li>Buffer hit rate</li>
+<li>Lock waits</li>
+</ul>
+</li>
+</ol>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>OOTB dashboards = starting point </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Chúng cho bạn visibility ngay lập tức. Custom dashboards (bước tiếp) cho bạn <strong>business-specific</strong> views phù hợp với Storedog trên K8s.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="3-tạo-custom-dashboard">3. Tạo Custom Dashboard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-tạo-custom-dashboard" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-tạo-mới">3.1. Tạo mới<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-tạo-mới" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Dashboards</strong> → <strong>New Dashboard</strong></li>
+<li>Đặt tên: <code>Storedog K8s Overview</code></li>
+<li>Chọn layout: <strong>Grid-based</strong> (đồng bộ time range, tốt cho investigation)</li>
+</ol>
+<h3 id="32-layout-đề-xuất">3.2. Layout đề xuất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-layout-đề-xuất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌────────────────────────────────────────────────────────┐
+│  📊 Storedog K8s Overview Dashboard                    │
+├─────────────┬──────────────┬───────────────────────────┤
+│             │              │                           │
+│  Running    │  Error Rate  │  Avg Latency              │
+│  Pods       │  (Query %)   │  (Query ms)               │
+│  (Query     │              │                           │
+│  Value)     │              │                           │
+├─────────────┴──────────────┴───────────────────────────┤
+│                                                        │
+│  Request Rate by Service (Timeseries)                  │
+│                                                        │
+├──────────────────────────┬─────────────────────────────┤
+│                          │                             │
+│  Pod CPU &amp; Memory        │  Top Errors (Log Stream)    │
+│  (Timeseries)            │                             │
+│                          │                             │
+├──────────────────────────┼─────────────────────────────┤
+│                          │                             │
+│  Pod CPU by Deployment   │  Slowest Endpoints          │
+│  (Top List)              │  (Top List)                 │
+│                          │                             │
+└──────────────────────────┴─────────────────────────────┘
+</code></pre>
+<hr/>
+<h2 id="4-widget-by-widget-guide">4. Widget-by-Widget Guide<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-widget-by-widget-guide" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-widget-running-pods-query-value">4.1. Widget: Running Pods (Query Value)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-widget-running-pods-query-value" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Click <strong>+ Add Widget</strong> → <strong>Query Value</strong></li>
+<li>Metric: <code>kubernetes.pods.running{kube_namespace:storedog}</code></li>
+<li>Display: Show as raw number</li>
+<li>Title: <code>Running Pods (Storedog)</code></li>
+</ol>
+<h3 id="42-widget-error-rate-query-value">4.2. Widget: Error Rate (Query Value)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-widget-error-rate-query-value" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>+ Add Widget</strong> → <strong>Query Value</strong></li>
+<li>Formula:
+<ul>
+<li><strong>a</strong>: <code>trace.flask.request.errors{service:store-discounts}.as_count()</code></li>
+<li><strong>b</strong>: <code>trace.flask.request.hits{service:store-discounts}.as_count()</code></li>
+<li>Formula: <code>a / b * 100</code></li>
+</ul>
+</li>
+<li>Conditional formatting: Green &lt; 1%, Yellow &lt; 5%, Red ≥ 5%</li>
+<li>Title: <code>Error Rate %</code></li>
+</ol>
+<h3 id="43-widget-request-rate-by-service-timeseries">4.3. Widget: Request Rate by Service (Timeseries)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-widget-request-rate-by-service-timeseries" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>+ Add Widget</strong> → <strong>Timeseries</strong></li>
+<li>Ưu tiên dùng <strong>APM data source</strong> / request measure và <strong>group by <code>service</code></strong></li>
+<li>Display: Line chart</li>
+<li>Title: <code>Request Rate by Service</code></li>
+</ol>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Tránh dùng một metric kiểu <code>trace.flask.request.hits{*}</code> để đại diện cho toàn bộ Storedog</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Prefix <code>trace.&lt;integration>.request.*</code> phụ thuộc framework. Query đó chỉ phản ánh Flask entry spans, không phải Rails/Java/Next.js services.</p>
+</div>
+</blockquote>
+<h3 id="44-widget-pod-cpu--memory-timeseries">4.4. Widget: Pod CPU &amp; Memory (Timeseries)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#44-widget-pod-cpu--memory-timeseries" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>+ Add Widget</strong> → <strong>Timeseries</strong></li>
+<li>Metric 1: <code>kubernetes.cpu.usage.total{kube_namespace:storedog}</code> by <code>pod_name</code> (line, blue)</li>
+<li>Metric 2: <code>kubernetes.memory.usage{kube_namespace:storedog}</code> by <code>pod_name</code> (line, green)</li>
+<li>Title: <code>Pod Resources (Storedog)</code></li>
+</ol>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>kubernetes.* vs system.* vs docker.* </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><code>kubernetes.cpu.usage.total</code> — CPU usage theo pod/container, từ Kubelet metrics</li>
+<li><code>system.cpu.user</code> — CPU usage ở host level (Minikube node)</li>
+<li><code>docker.cpu.usage</code> — CPU per container qua Docker/containerd runtime</li>
+</ul>
+<p>Trong K8s lab, ưu tiên <code>kubernetes.*</code> vì chúng gắn sẵn K8s tags (pod_name, kube_namespace, kube_deployment).</p>
+</div>
+</blockquote>
+<h3 id="45-widget-top-errors-log-stream">4.5. Widget: Top Errors (Log Stream)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#45-widget-top-errors-log-stream" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>+ Add Widget</strong> → <strong>Log Stream</strong></li>
+<li>Query: <code>status:error kube_namespace:storedog</code></li>
+<li>Columns: timestamp, service, pod_name, message</li>
+<li>Title: <code>Recent Errors (Storedog)</code></li>
+</ol>
+<h3 id="46-widget-slowest-endpoints-top-list">4.6. Widget: Slowest Endpoints (Top List)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#46-widget-slowest-endpoints-top-list" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>+ Add Widget</strong> → <strong>Top List</strong></li>
+<li>Metric: <code>trace.flask.request.duration{service:store-discounts}</code> → <strong>top by <code>resource_name</code></strong></li>
+<li>Limit: Top 5</li>
+<li>Title: <code>Slowest Discount Endpoints</code></li>
+</ol>
+<h3 id="47-widget-pod-cpu-by-deployment-top-list">4.7. Widget: Pod CPU by Deployment (Top List)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#47-widget-pod-cpu-by-deployment-top-list" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>+ Add Widget</strong> → <strong>Top List</strong></li>
+<li>Metric: <code>kubernetes.cpu.usage.total{kube_namespace:storedog}</code> → <strong>top by <code>kube_deployment</code></strong></li>
+<li>Limit: Top 10</li>
+<li>Title: <code>CPU Usage by Deployment</code></li>
+</ol>
+<hr/>
+<h2 id="5-template-variables">5. Template Variables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-template-variables" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-thêm-template-variables">5.1. Thêm template variables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-thêm-template-variables" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Dashboard settings (gear icon) → <strong>Template Variables</strong></li>
+<li>Click <strong>Add Variable</strong>:</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Name</th><th>Tag group</th><th>Default</th><th>Dùng cho</th></tr></thead><tbody><tr><td><code>service</code></td><td><code>service</code></td><td><code>*</code></td><td>Filter by service (store-frontend, store-discounts…)</td></tr><tr><td><code>env</code></td><td><code>env</code></td><td><code>*</code></td><td>Filter by environment</td></tr><tr><td><code>kube_namespace</code></td><td><code>kube_namespace</code></td><td><code>storedog</code></td><td>Filter by K8s namespace</td></tr><tr><td><code>kube_deployment</code></td><td><code>kube_deployment</code></td><td><code>*</code></td><td>Filter by K8s deployment</td></tr></tbody></table></div>
+<h3 id="52-áp-dụng-vào-widgets">5.2. Áp dụng vào widgets<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-áp-dụng-vào-widgets" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Edit widget → thay filter tags bằng template variable syntax <code>$variable</code></li>
+<li>Ví dụ:
+<pre><code>kubernetes.cpu.usage.total{kube_namespace:$kube_namespace, kube_deployment:$kube_deployment}
+</code></pre>
+<pre><code>trace.flask.request.hits{service:$service, env:$env}.as_rate()
+</code></pre>
+</li>
+<li>Dashboard sẽ có dropdowns ở đầu trang: chọn giá trị → tất cả widgets filter đồng bộ</li>
+</ol>
+<h3 id="53-template-variables--dashboard-cho-cả-team">5.3. Template Variables = dashboard cho cả team<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-template-variables--dashboard-cho-cả-team" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>1 dashboard, nhiều views:</p>
+<ul>
+<li><strong>Dev</strong> chọn <code>service:store-discounts</code> → thấy chỉ discounts service</li>
+<li><strong>QA</strong> chọn <code>env:staging</code> → thấy staging metrics</li>
+<li><strong>Ops</strong> chọn <code>kube_namespace:storedog</code> + <code>kube_deployment:*</code> → thấy toàn bộ namespace</li>
+<li><strong>SRE</strong> chọn <code>kube_deployment:store-frontend</code> → focus vào frontend pods</li>
+</ul>
+<hr/>
+<h2 id="6-dashboard-exportimport">6. Dashboard Export/Import<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-dashboard-exportimport" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-export">6.1. Export<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-export" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Dashboard page → gear icon → <strong>Export dashboard JSON</strong></li>
+<li>Save file (ví dụ: <code>storedog-k8s-dashboard.json</code>)</li>
+</ol>
+<h3 id="62-import-khi-rotate-account">6.2. Import (khi rotate account)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-import-khi-rotate-account" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Trên account mới → <strong>Dashboards</strong> → <strong>Import dashboard JSON</strong></li>
+<li>Upload file → dashboard restored</li>
+</ol>
+<h3 id="63-account-rotation-workflow">6.3. Account rotation workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#63-account-rotation-workflow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>1. Trial sắp hết → Export dashboard JSON
+2. Tạo trial mới
+3. Import dashboard JSON → dashboard structure giữ nguyên
+4. Data cũ KHÔNG chuyển sang account mới, nhưng layout + queries có sẵn
+</code></pre>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Dashboard JSON mang theo gì? </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>Widget definitions (type, query, title, formatting)</li>
+<li>Template variable definitions</li>
+<li>Layout positions</li>
+</ul>
+<p>KHÔNG mang theo: historical metric data, log data, APM traces. Những thứ đó thuộc về account/org gốc.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="7-metric-query-practice">7. Metric Query Practice<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-metric-query-practice" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Tự viết trước, rồi mới xem đáp án </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Mở Metrics Explorer và thử viết query cho mỗi câu hỏi.</p>
+</div>
+</blockquote>
+<h3 id="exercise-1-cpu-usage-trung-bình-group-by-pod">Exercise 1: CPU usage trung bình, group by pod<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exercise-1-cpu-usage-trung-bình-group-by-pod" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<details>
+<summary>Đáp án</summary>
+<pre><code>avg:kubernetes.cpu.usage.total{kube_namespace:storedog} by {pod_name}
+</code></pre>
+</details>
+<h3 id="exercise-2-error-rate--cho-store-discounts-service">Exercise 2: Error rate (%) cho store-discounts service<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exercise-2-error-rate--cho-store-discounts-service" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<details>
+<summary>Đáp án</summary>
+<pre><code>a = sum:trace.flask.request.errors{service:store-discounts}.as_count()
+b = sum:trace.flask.request.hits{service:store-discounts}.as_count()
+formula: a / b * 100
+</code></pre>
+</details>
+<h3 id="exercise-3-top-5-deployments-theo-memory-usage">Exercise 3: Top 5 deployments theo memory usage<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exercise-3-top-5-deployments-theo-memory-usage" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<details>
+<summary>Đáp án</summary>
+<pre><code>top(avg:kubernetes.memory.usage{kube_namespace:storedog} by {kube_deployment}, 5)
+</code></pre>
+</details>
+<h3 id="exercise-4-network-bytes-received-chỉ-storedog-namespace">Exercise 4: Network bytes received, chỉ storedog namespace<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exercise-4-network-bytes-received-chỉ-storedog-namespace" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<details>
+<summary>Đáp án</summary>
+<pre><code>avg:kubernetes.network.rx_bytes{kube_namespace:storedog} by {pod_name}
+</code></pre>
+</details>
+<h3 id="exercise-5-số-pods-đang-chạy-group-by-deployment">Exercise 5: Số pods đang chạy, group by deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exercise-5-số-pods-đang-chạy-group-by-deployment" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<details>
+<summary>Đáp án</summary>
+<pre><code>sum:kubernetes.pods.running{kube_namespace:storedog} by {kube_deployment}
+</code></pre>
+</details>
+<hr/>
+<h2 id="️-troubleshooting">⚠️ Troubleshooting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#️-troubleshooting" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="widget-shows-no-data">Widget shows “No data”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#widget-shows-no-data" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Kiểm tra metric name — dùng autocomplete trong widget editor</li>
+<li>Kiểm tra time range — đổi sang “Last 1 hour”</li>
+<li>Kiểm tra tag filters — <code>$service</code> hoặc <code>$kube_namespace</code> có giá trị?</li>
+<li>Verify Agent đang collect K8s metrics:</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">agent-po</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">d</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A10</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Kubernetes&quot;</span></span></code></pre></figure>
+<h3 id="log-stream-widget-trống">Log Stream widget trống<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#log-stream-widget-trống" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Logs phải đang được collected (<code>datadog.logs.enabled=true</code> trong Helm values)</li>
+<li>Check query syntax — thử bỏ filters để xem có log nào không</li>
+</ul>
+<h3 id="kubernetes-metrics-không-có">Kubernetes metrics không có<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kubernetes-metrics-không-có" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Verify Kubelet check đang chạy</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">agent-po</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">d</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A5</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;kubelet&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Verify kubernetes_state check (Cluster Agent)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> exec</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -it</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">cluster-agent-po</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">d</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> datadog</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> status</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A5</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;kubernetes_state&quot;</span></span></code></pre></figure>
+<ul>
+<li>Kubelet port 10250 (HTTPS) phải accessible từ Agent pod</li>
+<li>Nếu dùng Minikube, <code>minikube status</code> phải show <code>kubelet: Running</code></li>
+</ul>
+<h3 id="template-variable-dropdown-trống">Template Variable dropdown trống<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#template-variable-dropdown-trống" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Variable tag group phải khớp với tag thực tế trên metrics</li>
+<li>Verify tags tồn tại: <strong>Metrics</strong> → <strong>Summary</strong> → click metric → xem Tags section</li>
+<li><code>kube_namespace</code>, <code>kube_deployment</code> chỉ có nếu K8s integration hoạt động</li>
+</ul>
+<hr/>
+<h2 id="-kết-nối-fundamentals">🔗 Kết Nối Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kết-nối-fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept (Fundamentals)</th><th>Datadog Implementation</th></tr></thead><tbody><tr><td><strong>Dashboard Design</strong> (Ch.03)</td><td>Custom dashboard với RED + K8s infrastructure widgets</td></tr><tr><td><strong>Chart Types</strong> (Ch.03)</td><td>Timeseries, Query Value, Top List, Log Stream</td></tr><tr><td><strong>Template Variables</strong> (Ch.03)</td><td>Dynamic filtering — service, env, kube_namespace, kube_deployment</td></tr><tr><td><strong>RED Visualization</strong> (Ch.03)</td><td>Widgets: Request rate, Error %, Latency</td></tr><tr><td><strong>USE Method</strong> (Ch.03)</td><td>K8s widgets: CPU usage, Memory usage, Pod count</td></tr><tr><td><strong>Dashboard Types</strong> (unified)</td><td>Grid-based ≈ Timeboard, Free-form ≈ Screenboard (exam-relevant)</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-verify-checklist">✅ Verify Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-verify-checklist" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> OOTB dashboards visible (Kubernetes Overview, Kubernetes Pods, PostgreSQL)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Hiểu Dashboard unified model (Grid-based vs Free-form)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Custom dashboard tạo với ≥ 5 widgets dùng kubernetes.* metrics</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Template Variables (service, env, kube_namespace, kube_deployment) hoạt động</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Dashboard exported as JSON</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Widgets hiện data realtime từ Storedog trên Minikube</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Metric query exercises hoàn thành</li>
+</ul>
+<hr/>
+<p><strong>Bước tiếp theo:</strong> <a href="../../../../02---areas/observability/datadog/labs/07---monitors--and--alerting" class="internal internal-link alias" data-slug="02---areas/observability/datadog/labs/07---monitors--and--alerting">07 - Monitors &amp; Alerting</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-247" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#lab-06--dashboards--visualization" data-for="lab-06--dashboards--visualization">Lab 06 — Dashboards &amp; Visualization</a></li><li class="depth-1"><a href="#-mục-tiêu" data-for="-mục-tiêu">🎯 Mục Tiêu</a></li><li class="depth-1"><a href="#-kiến-thức-nền" data-for="-kiến-thức-nền">📚 Kiến Thức Nền</a></li><li class="depth-2"><a href="#fundamentals" data-for="fundamentals">Fundamentals</a></li><li class="depth-2"><a href="#cách-học-lab-này" data-for="cách-học-lab-này">Cách học lab này</a></li><li class="depth-1"><a href="#1-dashboard-types--unified-model" data-for="1-dashboard-types--unified-model">1. Dashboard Types — Unified Model</a></li><li class="depth-2"><a href="#11-lịch-sử-timeboard-vs-screenboard" data-for="11-lịch-sử-timeboard-vs-screenboard">1.1. Lịch sử: Timeboard vs Screenboard</a></li><li class="depth-2"><a href="#12-so-sánh-nhanh" data-for="12-so-sánh-nhanh">1.2. So sánh nhanh</a></li><li class="depth-1"><a href="#2-ootb-dashboards--out-of-the-box" data-for="2-ootb-dashboards--out-of-the-box">2. OOTB Dashboards — Out Of The Box</a></li><li class="depth-2"><a href="#21-xem-danh-sách" data-for="21-xem-danh-sách">2.1. Xem danh sách</a></li><li class="depth-2"><a href="#22-khám-phá-kubernetes-overview-dashboard" data-for="22-khám-phá-kubernetes-overview-dashboard">2.2. Khám phá Kubernetes Overview dashboard</a></li><li class="depth-2"><a href="#23-khám-phá-kubernetes-pods-dashboard" data-for="23-khám-phá-kubernetes-pods-dashboard">2.3. Khám phá Kubernetes Pods dashboard</a></li><li class="depth-2"><a href="#24-khám-phá-postgresql-dashboard" data-for="24-khám-phá-postgresql-dashboard">2.4. Khám phá PostgreSQL dashboard</a></li><li class="depth-1"><a href="#3-tạo-custom-dashboard" data-for="3-tạo-custom-dashboard">3. Tạo Custom Dashboard</a></li><li class="depth-2"><a href="#31-tạo-mới" data-for="31-tạo-mới">3.1. Tạo mới</a></li><li class="depth-2"><a href="#32-layout-đề-xuất" data-for="32-layout-đề-xuất">3.2. Layout đề xuất</a></li><li class="depth-1"><a href="#4-widget-by-widget-guide" data-for="4-widget-by-widget-guide">4. Widget-by-Widget Guide</a></li><li class="depth-2"><a href="#41-widget-running-pods-query-value" data-for="41-widget-running-pods-query-value">4.1. Widget: Running Pods (Query Value)</a></li><li class="depth-2"><a href="#42-widget-error-rate-query-value" data-for="42-widget-error-rate-query-value">4.2. Widget: Error Rate (Query Value)</a></li><li class="depth-2"><a href="#43-widget-request-rate-by-service-timeseries" data-for="43-widget-request-rate-by-service-timeseries">4.3. Widget: Request Rate by Service (Timeseries)</a></li><li class="depth-2"><a href="#44-widget-pod-cpu--memory-timeseries" data-for="44-widget-pod-cpu--memory-timeseries">4.4. Widget: Pod CPU &amp; Memory (Timeseries)</a></li><li class="depth-2"><a href="#45-widget-top-errors-log-stream" data-for="45-widget-top-errors-log-stream">4.5. Widget: Top Errors (Log Stream)</a></li><li class="depth-2"><a href="#46-widget-slowest-endpoints-top-list" data-for="46-widget-slowest-endpoints-top-list">4.6. Widget: Slowest Endpoints (Top List)</a></li><li class="depth-2"><a href="#47-widget-pod-cpu-by-deployment-top-list" data-for="47-widget-pod-cpu-by-deployment-top-list">4.7. Widget: Pod CPU by Deployment (Top List)</a></li><li class="depth-1"><a href="#5-template-variables" data-for="5-template-variables">5. Template Variables</a></li><li class="depth-2"><a href="#51-thêm-template-variables" data-for="51-thêm-template-variables">5.1. Thêm template variables</a></li><li class="depth-2"><a href="#52-áp-dụng-vào-widgets" data-for="52-áp-dụng-vào-widgets">5.2. Áp dụng vào widgets</a></li><li class="depth-2"><a href="#53-template-variables--dashboard-cho-cả-team" data-for="53-template-variables--dashboard-cho-cả-team">5.3. Template Variables = dashboard cho cả team</a></li><li class="depth-1"><a href="#6-dashboard-exportimport" data-for="6-dashboard-exportimport">6. Dashboard Export/Import</a></li><li class="depth-2"><a href="#61-export" data-for="61-export">6.1. Export</a></li><li class="depth-2"><a href="#62-import-khi-rotate-account" data-for="62-import-khi-rotate-account">6.2. Import (khi rotate account)</a></li><li class="depth-2"><a href="#63-account-rotation-workflow" data-for="63-account-rotation-workflow">6.3. Account rotation workflow</a></li><li class="depth-1"><a href="#7-metric-query-practice" data-for="7-metric-query-practice">7. Metric Query Practice</a></li><li class="depth-2"><a href="#exercise-1-cpu-usage-trung-bình-group-by-pod" data-for="exercise-1-cpu-usage-trung-bình-group-by-pod">Exercise 1: CPU usage trung bình, group by pod</a></li><li class="depth-2"><a href="#exercise-2-error-rate--cho-store-discounts-service" data-for="exercise-2-error-rate--cho-store-discounts-service">Exercise 2: Error rate (%) cho store-discounts service</a></li><li class="depth-2"><a href="#exercise-3-top-5-deployments-theo-memory-usage" data-for="exercise-3-top-5-deployments-theo-memory-usage">Exercise 3: Top 5 deployments theo memory usage</a></li><li class="depth-2"><a href="#exercise-4-network-bytes-received-chỉ-storedog-namespace" data-for="exercise-4-network-bytes-received-chỉ-storedog-namespace">Exercise 4: Network bytes received, chỉ storedog namespace</a></li><li class="depth-2"><a href="#exercise-5-số-pods-đang-chạy-group-by-deployment" data-for="exercise-5-số-pods-đang-chạy-group-by-deployment">Exercise 5: Số pods đang chạy, group by deployment</a></li><li class="depth-1"><a href="#️-troubleshooting" data-for="️-troubleshooting">⚠️ Troubleshooting</a></li><li class="depth-2"><a href="#widget-shows-no-data" data-for="widget-shows-no-data">Widget shows “No data”</a></li><li class="depth-2"><a href="#log-stream-widget-trống" data-for="log-stream-widget-trống">Log Stream widget trống</a></li><li class="depth-2"><a href="#kubernetes-metrics-không-có" data-for="kubernetes-metrics-không-có">Kubernetes metrics không có</a></li><li class="depth-2"><a href="#template-variable-dropdown-trống" data-for="template-variable-dropdown-trống">Template Variable dropdown trống</a></li><li class="depth-1"><a href="#-kết-nối-fundamentals" data-for="-kết-nối-fundamentals">🔗 Kết Nối Fundamentals</a></li><li class="depth-1"><a href="#-verify-checklist" data-for="-verify-checklist">✅ Verify Checklist</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/datadog/labs/01---infrastructure-monitoring--and--host-map" class="internal">Lab 01 — Infrastructure Monitoring &amp; Host Map</a></li><li><a href="../../../../02---areas/observability/datadog/labs/05---custom-metrics--and--dogstatsd" class="internal">Lab 05 — Custom Metrics &amp; DogStatsD</a></li><li><a href="../../../../02---areas/observability/datadog/labs/07---monitors--and--alerting" class="internal">Lab 07 — Monitors &amp; Alerting</a></li><li><a href="../../../../02---areas/observability/labs/00---lab-overview--and--roadmap" class="internal">Observability Platform Labs — Tổng Quan &amp; Lộ Trình</a></li><li><a href="../../../../02---areas/observability/labs/platform-comparison-—-datadog-vs-dynatrace" class="internal">Datadog vs Dynatrace — So Sánh Chi Tiết</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>12.1 – S3 Buckets &amp; Objects</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="12.1 – S3 Buckets &amp; Objects"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="12.1 – S3 Buckets &amp; Objects"/><meta name="twitter:description" content="← 12."/><meta property="og:description" content="← 12."/><meta property="og:image:alt" content="← 12."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.1---s3-buckets--and--objects"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.1---s3-buckets--and--objects"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="← 12."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.1---s3-buckets--and--objects" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-71" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-71" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/">12 - Amazon S3 Introduction</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>12.1 – S3 Buckets &amp; Objects</a></div></nav><h1 class="article-title">12.1 – S3 Buckets &amp; Objects</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">S3 Buckets Objects</span><span class="note-properties-separator">, </span><span class="note-properties-text">S3 Fundamentals</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-09-12T17:00:00.000Z">13 thg 9, 2026</time><span>5 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.0---s3-introduction-index" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.0---s3-introduction-index">← 12. Amazon S3 Introduction</a></p>
+<h1 id="121--s3-buckets--objects">12.1 – S3 Buckets &amp; Objects<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#121--s3-buckets--objects" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> Đây là bài nền tảng của cả 3 section S3 (12/13/14) — nắm chắc khái niệm Bucket/Object/Key ở đây trước khi sang Storage Classes (<a href="../../../.././13---advanced-amazon-s3/13.0---advanced-s3-index" class="internal internal-link alias" data-slug="13---advanced-amazon-s3/13.0---advanced-s3-index">Section 13</a>) hay Encryption (<a href="../../../.././14---amazon-s3-security/14.0---s3-security-index" class="internal internal-link alias" data-slug="14---amazon-s3-security/14.0---s3-security-index">Section 14</a>). Đối chiếu thêm ở <a href="../../../../02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.1---storage-solutions---s3,-ebs,-efs,-fsx" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.1---storage-solutions---s3,-ebs,-efs,-fsx">3.1 - Storage Solutions - S3, EBS, EFS, FSx</a>.</p>
+</blockquote>
+<h2 id="s3-là-gì">S3 là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#s3-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Amazon S3</strong> là dịch vụ <strong>object storage</strong> của AWS — lưu trữ file dưới dạng đối tượng (objects), dung lượng gần như vô hạn, <strong>độ bền 99.999999999% (11 số 9)</strong>.</p>
+<h2 id="các-use-case-thực-tế">Các Use Case thực tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-use-case-thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Use Case</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Backup &amp; Storage</strong></td><td>Backup file, DB, app — 11 số 9 durability</td></tr><tr><td><strong>Disaster Recovery</strong></td><td>Cross-Region Replication — phục hồi khi region fail</td></tr><tr><td><strong>Archive</strong></td><td>S3 Glacier — lưu dài hạn giá cực rẻ</td></tr><tr><td><strong>Hybrid Cloud Storage</strong></td><td>Kết nối on-prem qua S3 Storage Gateway</td></tr><tr><td><strong>Application Hosting</strong></td><td>Ứng dụng lưu ảnh, video, logs trực tiếp vào S3</td></tr><tr><td><strong>Data Lakes &amp; Analytics</strong></td><td>Nơi chứa dữ liệu thô cho Athena, Glue, EMR</td></tr><tr><td><strong>Static Website</strong></td><td>S3 + CloudFront = website tĩnh giá rẻ, uptime cao</td></tr><tr><td><strong>Software Delivery</strong></td><td>Package, game assets, firmware phân phối qua CloudFront</td></tr></tbody></table></div>
+<hr/>
+<h2 id="buckets--khái-niệm-và-quy-tắc-đặt-tên">Buckets — Khái niệm và Quy tắc đặt tên<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#buckets--khái-niệm-và-quy-tắc-đặt-tên" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Bucket</strong> là “thư mục gốc” để chứa objects.</p>
+<p><img src="../../../.././../../../attachments/pasted-image-20260913004357.png" alt width="auto" height="auto"/></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    Account[\&quot;AWS Account\&quot;] --> BucketA[\&quot;Bucket: my-app-data&lt;br/>(us-east-1)\&quot;]\n    Account --> BucketB[\&quot;Bucket: my-backups&lt;br/>(ap-southeast-1)\&quot;]\n    BucketA --> Obj1[\&quot;Object: images/photo.jpg\&quot;]\n    BucketA --> Obj2[\&quot;Object: logs/2026-07-19.log\&quot;]&quot;">graph TD
+    Account[&quot;AWS Account&quot;] --> BucketA[&quot;Bucket: my-app-data&lt;br/>(us-east-1)&quot;]
+    Account --> BucketB[&quot;Bucket: my-backups&lt;br/>(ap-southeast-1)&quot;]
+    BucketA --> Obj1[&quot;Object: images/photo.jpg&quot;]
+    BucketA --> Obj2[&quot;Object: logs/2026-07-19.log&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Đặc điểm bucket:</strong></p>
+<ul>
+<li>Mỗi bucket thuộc <strong>một region cụ thể</strong> — S3 trông như global service nhưng bucket luôn được tạo trong 1 region.</li>
+<li>Tên bucket phải <strong>toàn cầu duy nhất</strong> — không chỉ trong account của bạn mà trên toàn bộ AWS thế giới.</li>
+</ul>
+<h3 id="2-kiểu-namespace--hay-bị-nhầm">2 kiểu Namespace — hay bị nhầm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-kiểu-namespace--hay-bị-nhầm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Slide gốc phân biệt rõ 2 khái niệm namespace, dễ gây hiểu lầm nếu bỏ qua:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Namespace</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>Shared Global Namespace</strong></td><td>Tên bucket phải <strong>unique trên toàn AWS</strong> — across mọi region, mọi account</td></tr><tr><td><strong>Account Regional Namespace</strong></td><td>Cho phép <strong>tái sử dụng cùng 1 tên bucket ở các region khác nhau</strong>, miễn là cùng account</td></tr></tbody></table></div>
+<p>→ Nói cách khác: bạn KHÔNG thể tạo 2 bucket tên <code>my-data</code> ở 2 account khác nhau (dù khác region), nhưng CÓ THỂ tạo <code>my-data</code> ở <code>us-east-1</code> và <code>my-data</code> ở <code>eu-west-1</code> nếu cả 2 đều thuộc cùng 1 account.</p>
+<p><strong>Quy tắc đặt tên (quan trọng trong exam):</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Quy tắc</th><th>Mô tả</th></tr></thead><tbody><tr><td>✔ Độ dài</td><td>3–63 ký tự</td></tr><tr><td>✔ Bắt đầu bằng</td><td>Chữ cái thường hoặc số</td></tr><tr><td>❌ Không dùng</td><td>Chữ hoa, dấu gạch dưới <code>_</code></td></tr><tr><td>❌ Không được là</td><td>Dạng IP (vd: <code>192.168.1.1</code>)</td></tr><tr><td>❌ Không bắt đầu bằng</td><td>Prefix <code>xn--</code></td></tr><tr><td>❌ Không kết thúc bằng</td><td>Suffix <code>-s3alias</code></td></tr></tbody></table></div>
+<p><strong>Tại sao quy tắc nghiêm vậy?</strong> Vì S3 phải tạo endpoint DNS dạng <code>https://my-bucket.s3.amazonaws.com</code> — tên kỳ lạ sẽ làm DNS không hoạt động.</p>
+<hr/>
+<h2 id="objects--cách-s3-lưu-trữ-dữ-liệu">Objects — Cách S3 lưu trữ dữ liệu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objects--cách-s3-lưu-trữ-dữ-liệu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Trong S3, mọi thứ đều là <strong>object</strong> (không có “folder” thật sự).</p>
+<p>Mỗi object gồm:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thành phần</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Data</strong></td><td>Nội dung file (bytes)</td></tr><tr><td><strong>Key</strong></td><td>Đường dẫn đầy đủ (FULL PATH)</td></tr><tr><td><strong>Metadata</strong></td><td>System metadata (Content-Type…) + User metadata (tự đặt)</td></tr><tr><td><strong>Tags</strong></td><td>Tối đa 10 tags (dùng cho lifecycle, security, billing)</td></tr><tr><td><strong>Version ID</strong></td><td>Nếu bật Versioning</td></tr></tbody></table></div>
+<h3 id="key--full-path-của-object">Key = Full Path của Object<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key--full-path-của-object" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>my_file.txt
+my_folder/my_file.txt
+my_folder/another_folder/my_file.txt
+</code></pre>
+<p><strong>Prefix + Object name:</strong></p>
+<ul>
+<li>Key: <code>my_folder/another_folder/my_file.txt</code></li>
+<li>Prefix: <code>my_folder/another_folder/</code></li>
+<li>Object name: <code>my_file.txt</code></li>
+</ul>
+<blockquote>
+<p>Prefix quan trọng để tối ưu performance — xem <a href="../../../.././13---advanced-amazon-s3/13.4---s3-event-notifications--and--performance" class="internal internal-link alias" data-slug="13---advanced-amazon-s3/13.4---s3-event-notifications--and--performance">S3 Performance</a>.</p>
+</blockquote>
+<h3 id="s3-không-có-thư-mục-thật">S3 KHÔNG có thư mục thật<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#s3-không-có-thư-mục-thật" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph realWorld [\&quot;Thực tế bên trong S3 — flat list\&quot;]\n        K1[\&quot;Key: folder/sub/file1.txt\&quot;]\n        K2[\&quot;Key: folder/sub/file2.jpg\&quot;]\n        K3[\&quot;Key: folder/other/file3.pdf\&quot;]\n    end\n    subgraph uiView [\&quot;Giao diện Console hiển thị\&quot;]\n        F1[\&quot;folder/\&quot;]\n        F2[\&quot;folder/sub/\&quot;]\n        F3[\&quot;file1.txt\&quot;]\n        F4[\&quot;file2.jpg\&quot;]\n        F1 --> F2 --> F3\n        F2 --> F4\n    end&quot;">graph LR
+    subgraph realWorld [&quot;Thực tế bên trong S3 — flat list&quot;]
+        K1[&quot;Key: folder/sub/file1.txt&quot;]
+        K2[&quot;Key: folder/sub/file2.jpg&quot;]
+        K3[&quot;Key: folder/other/file3.pdf&quot;]
+    end
+    subgraph uiView [&quot;Giao diện Console hiển thị&quot;]
+        F1[&quot;folder/&quot;]
+        F2[&quot;folder/sub/&quot;]
+        F3[&quot;file1.txt&quot;]
+        F4[&quot;file2.jpg&quot;]
+        F1 --> F2 --> F3
+        F2 --> F4
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p>UI Console hiển thị folder, nhưng đó chỉ là object có key chứa dấu <code>/</code> — được giả lập. <strong>S3 thật sự chỉ lưu flat list of objects với key dài</strong>.</p>
+<h3 id="kích-thước-object">Kích thước Object<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kích-thước-object" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Tối đa: 5 TB per object</strong></li>
+<li>Upload <strong>> 5 GB → bắt buộc dùng Multipart Upload</strong></li>
+<li>Nên dùng Multipart khi file > <strong>100 MB</strong> (song song, resume được)</li>
+</ul>
+<hr/>
+<h2 id="bảng-từ-khoá-đề-thi">Bảng từ khoá đề thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-từ-khoá-đề-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Từ khoá trong đề</th><th>Chọn</th></tr></thead><tbody><tr><td>”Bucket name đã bị người khác dùng ở account khác”</td><td>Bình thường — tên bucket là <strong>Shared Global Namespace</strong></td></tr><tr><td>”Dùng lại đúng tên bucket ở region khác, cùng account”</td><td>Được phép — <strong>Account Regional Namespace</strong></td></tr><tr><td>”Bucket có phải service theo region không?”</td><td>Có — mỗi bucket thuộc 1 region, dù S3 trông như global</td></tr><tr><td>”File > 5 GB upload thế nào?”</td><td>Bắt buộc <strong>Multipart Upload</strong></td></tr><tr><td>”Muốn tối ưu tốc độ đọc/ghi hàng nghìn request/s”</td><td>Phân bổ nhiều <strong>prefix</strong> khác nhau</td></tr><tr><td>”S3 có folder thật không?”</td><td>Không — chỉ là <strong>key chứa dấu <code>/</code></strong>, UI giả lập folder</td></tr></tbody></table></div>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Tên bucket phải <strong>globally unique</strong> — trên toàn thế giới, không chỉ trong account.</li>
+<li>Bucket thuộc <strong>một region cụ thể</strong> — không phải global.</li>
+<li>Phân biệt <strong>Shared Global Namespace</strong> (tên bucket) vs <strong>Account Regional Namespace</strong> (cùng tên, khác region, cùng account thì được).</li>
+<li>S3 không có thư mục thật — chỉ là key với dấu <code>/</code>.</li>
+<li>Object tối đa <strong>5 TB</strong>; upload > 5 GB bắt buộc <strong>Multipart</strong>.</li>
+<li><strong>Prefix</strong> ảnh hưởng đến performance (baseline 3.500 PUT + 5.500 GET per prefix/sec).</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>S3 là flat key-value store — “folder” chỉ là prefix trong key.</li>
+<li>Bucket = container theo region; Object = file với full path key.</li>
+<li>Hiểu prefix là cơ sở để tối ưu performance và lifecycle rules.</li>
+<li>2 loại namespace (Shared Global vs Account Regional) là chi tiết nhỏ nhưng dễ bị hỏi dạng “tại sao lại…” — nhớ: tên là global, nhưng “chỗ chứa” (region) là account-scoped.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>S3 bucket naming rules</li>
+<li>S3 Object key, prefix và flat storage model</li>
+<li>Multipart Upload — khi nào bắt buộc, lợi ích</li>
+<li>Shared Global Namespace vs Account Regional Namespace</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-71" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#121--s3-buckets--objects" data-for="121--s3-buckets--objects">12.1 – S3 Buckets &amp; Objects</a></li><li class="depth-1"><a href="#s3-là-gì" data-for="s3-là-gì">S3 là gì?</a></li><li class="depth-1"><a href="#các-use-case-thực-tế" data-for="các-use-case-thực-tế">Các Use Case thực tế</a></li><li class="depth-1"><a href="#buckets--khái-niệm-và-quy-tắc-đặt-tên" data-for="buckets--khái-niệm-và-quy-tắc-đặt-tên">Buckets — Khái niệm và Quy tắc đặt tên</a></li><li class="depth-2"><a href="#2-kiểu-namespace--hay-bị-nhầm" data-for="2-kiểu-namespace--hay-bị-nhầm">2 kiểu Namespace — hay bị nhầm</a></li><li class="depth-1"><a href="#objects--cách-s3-lưu-trữ-dữ-liệu" data-for="objects--cách-s3-lưu-trữ-dữ-liệu">Objects — Cách S3 lưu trữ dữ liệu</a></li><li class="depth-2"><a href="#key--full-path-của-object" data-for="key--full-path-của-object">Key = Full Path của Object</a></li><li class="depth-2"><a href="#s3-không-có-thư-mục-thật" data-for="s3-không-có-thư-mục-thật">S3 KHÔNG có thư mục thật</a></li><li class="depth-2"><a href="#kích-thước-object" data-for="kích-thước-object">Kích thước Object</a></li><li class="depth-1"><a href="#bảng-từ-khoá-đề-thi" data-for="bảng-từ-khoá-đề-thi">Bảng từ khoá đề thi</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.0---s3-introduction-index" class="internal">12. Amazon S3 Introduction – Index</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

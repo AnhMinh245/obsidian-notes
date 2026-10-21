@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Monaco v2 Overview &amp; Architecture</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Monaco v2 Overview &amp; Architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Monaco v2 Overview &amp; Architecture"/><meta name="twitter:description" content="Monaco v2 Overview &amp; Architecture Thuộc MOC - Dynatrace · Next → 01 - Cài Đặt Monaco CLI &amp; First Deploy 1."/><meta property="og:description" content="Monaco v2 Overview &amp; Architecture Thuộc MOC - Dynatrace · Next → 01 - Cài Đặt Monaco CLI &amp; First Deploy 1."/><meta property="og:image:alt" content="Monaco v2 Overview &amp; Architecture Thuộc MOC - Dynatrace · Next → 01 - Cài Đặt Monaco CLI &amp; First Deploy 1."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/monaco/00---monaco-v2-overview--and--architecture"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/monaco/00---monaco-v2-overview--and--architecture"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Monaco v2 Overview &amp; Architecture Thuộc MOC - Dynatrace · Next → 01 - Cài Đặt Monaco CLI &amp; First Deploy 1."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/dynatrace/monaco/00---monaco-v2-overview--and--architecture" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-426" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-426" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/">Dynatrace</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/monaco/">Monaco</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Monaco v2 Overview &amp; Architecture</a></div></nav><h1 class="article-title">Monaco v2 Overview &amp; Architecture</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/draft" class="internal internal-link tag-link">status/draft</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/dynatrace" class="internal internal-link tag-link">domain/dynatrace</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/devops" class="internal internal-link tag-link">domain/devops</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Monaco Overview</span><span class="note-properties-separator">, </span><span class="note-properties-text">Dynatrace Monaco</span><span class="note-properties-separator">, </span><span class="note-properties-text">Monaco CaC</span><span class="note-properties-separator">, </span><span class="note-properties-text">Monitoring as Code</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>31 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="monaco-v2-overview--architecture">Monaco v2 Overview &amp; Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#monaco-v2-overview--architecture" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>Thuộc <a href="../../../../moc---dynatrace" class="internal internal-link alias" data-slug="moc---dynatrace">MOC - Dynatrace</a> · Next → <a href="../../../../02---areas/observability/dynatrace/monaco/01---cài-đặt-monaco-cli--and--first-deploy" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/01---cài-đặt-monaco-cli--and--first-deploy">01 - Cài Đặt Monaco CLI &amp; First Deploy</a></p>
+</blockquote>
+<hr/>
+<h2 id="1-monaco-là-gì--và-tại-sao-bạn-cần-nó">1. Monaco là gì — và tại sao bạn cần nó<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-monaco-là-gì--và-tại-sao-bạn-cần-nó" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-bối-cảnh-thực-tế">1.1 Bối cảnh thực tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-bối-cảnh-thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hình dung bạn đang quản lý <strong>5 Dynatrace environments</strong> cho dev / staging / prod của 3 team product khác nhau. Mỗi environment cần hàng trăm cấu hình: alerting profiles, management zones, auto-tagging rules, dashboards, SLOs, synthetic monitors, request attributes… Tất cả đang được setup thủ công qua UI.</p>
+<p>Hôm nay team Platform yêu cầu: “Thêm tag <code>cost-center</code> cho tất cả services trên cả 5 environments, áp dụng cùng logic.” Bạn mở Dynatrace UI, click vào env đầu tiên, tạo auto-tag rule, test xong… rồi lặp lại cho 4 env còn lại. Mất 2 tiếng. Tuần sau, team muốn sửa regex pattern — lại 2 tiếng nữa.</p>
+<p>Đây chính là vấn đề mà <strong>Monaco</strong> (viết tắt của <strong>Mon</strong>itoring <strong>a</strong>s <strong>Co</strong>de) ra đời để giải quyết.</p>
+<h3 id="12-pain-points-khi-config-thủ-công-qua-ui">1.2 Pain points khi config thủ công qua UI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-pain-points-khi-config-thủ-công-qua-ui" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Trước khi nói Monaco giải quyết gì, hãy liệt kê cụ thể những gì đang gây đau đầu:</p>
+<ol>
+<li>
+<p><strong>Không version control</strong> — Khi ai đó sửa alerting profile trên UI, không có Git history ghi lại ai sửa gì, lúc nào, vì lý do gì. Dynatrace có audit log, nhưng nó chỉ ghi “user X changed config Y” — không có diff chi tiết giống <code>git diff</code> để biết chính xác field nào đổi giá trị gì.</p>
+</li>
+<li>
+<p><strong>Không reproducible</strong> — Setup 1 environment mới từ đầu mất hàng giờ click-and-configure. Khi cần tạo env thứ 2 giống hệt, bạn phải mở env cũ bên cạnh và copy-paste từng config. Quên 1 cái = environment bị lệch mà không biết.</p>
+</li>
+<li>
+<p><strong>Configuration drift giữa environments</strong> — Dev, staging, prod ban đầu giống nhau. Sau 6 tháng, chúng “drift” — ai đó sửa threshold alerting trên prod nhưng quên staging, ai đó thêm management zone trên dev để test rồi quên xoá. Kết quả: staging không reflect prod, testing trở nên vô nghĩa.</p>
+</li>
+<li>
+<p><strong>Human error không có safety net</strong> — 1 click sai có thể disable alerting cho toàn bộ production. Không có <code>--dry-run</code>, không có PR review, không có rollback ngoài việc nhớ config cũ là gì và sửa lại bằng tay.</p>
+</li>
+<li>
+<p><strong>Không scale được theo tổ chức</strong> — 3 team cùng dùng 1 Dynatrace tenant. Team A sửa management zone, vô tình ảnh hưởng dashboard của team B. Không có cơ chế “ownership” hay “code review” cho config changes.</p>
+</li>
+<li>
+<p><strong>Không CI/CD friendly</strong> — Config monitoring nằm ngoài deployment pipeline. Application deploy qua ArgoCD/Jenkins/GitHub Actions, nhưng monitoring config vẫn phải setup manual sau khi deploy xong. Khoảng cách này tạo ra gap: app mới chạy production nhưng chưa có alerting → incident bị miss.</p>
+</li>
+<li>
+<p><strong>Audit và compliance khó</strong> — Trong regulated environments (tài chính, y tế), bạn cần chứng minh “monitoring config đã được review và approved trước khi deploy lên production.” Với UI manual, không có approval workflow nào ngoài việc tin tưởng người click.</p>
+</li>
+<li>
+<p><strong>Disaster recovery chậm</strong> — Nếu Dynatrace environment bị corrupt hoặc cần recreate (hiếm nhưng xảy ra với Managed), bạn phải setup lại từ đầu. Không có “backup” nào ngoài screenshots và documentation viết tay.</p>
+</li>
+</ol>
+<h3 id="13-tại-sao-đây-không-chỉ-là-nice-to-have">1.3 Tại sao đây không chỉ là nice-to-have<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-tại-sao-đây-không-chỉ-là-nice-to-have" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Trong thực tế enterprise, <strong>manual configuration là nguyên nhân #1 gây incident liên quan monitoring</strong>. Kịch bản kinh điển:</p>
+<blockquote>
+<p>Một kỹ sư sửa alerting profile trên production để giảm noise — tăng threshold từ 5% lên 15% error rate. Hoàn toàn hợp lý. Nhưng quên sửa staging. Hai tháng sau, staging bắt đầu có 10% error rate do bug mới. Staging không báo alert vì threshold vẫn là 5% (alert đã fire nhưng nobody checks staging alerts anyway). Bug lên production, alerting profile mới cần 15% mới fire. Khi cuối cùng alert fire ở 15% — impact đã lan rộng, khách hàng đã bị ảnh hưởng.</p>
+</blockquote>
+<p>Nếu alerting profile nằm trong Git, change phải qua PR review, deploy qua pipeline đến cả staging và prod — kịch bản trên không xảy ra.</p>
+<h3 id="14-monaco-giải-quyết-như-thế-nào">1.4 Monaco giải quyết như thế nào<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-monaco-giải-quyết-như-thế-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Monaco</strong> là CLI tool chính thức của Dynatrace, viết bằng <strong>Go</strong>, chạy standalone (single binary, không cần runtime). Tên đầy đủ trên GitHub: <code>dynatrace-configuration-as-code</code>.</p>
+<p>Cách Monaco giải quyết từng pain point:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Pain point</th><th>Giải pháp Monaco</th></tr></thead><tbody><tr><td>Không version control</td><td>Config = YAML/JSON files trong Git repo</td></tr><tr><td>Không reproducible</td><td><code>monaco deploy</code> — 1 command setup cả environment</td></tr><tr><td>Configuration drift</td><td>Cùng config deploy cho mọi env, chỉ khác parameters</td></tr><tr><td>Human error</td><td><code>--dry-run</code> + PR review trước khi deploy</td></tr><tr><td>Không scale</td><td>Chia project theo team, merge qua Git workflow</td></tr><tr><td>Không CI/CD</td><td>Monaco chạy trong pipeline như bất kỳ CLI tool nào</td></tr><tr><td>Audit/compliance</td><td>Git history = audit trail, PR = approval</td></tr><tr><td>Disaster recovery</td><td>Git repo = backup, <code>monaco deploy</code> = restore</td></tr></tbody></table></div>
+<h3 id="15-monaco-trong-ecosystem--so-sánh-để-hiểu-rõ-hơn">1.5 Monaco trong ecosystem — so sánh để hiểu rõ hơn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#15-monaco-trong-ecosystem--so-sánh-để-hiểu-rõ-hơn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Nếu bạn đã quen Terraform, cách nghĩ đơn giản nhất:</p>
+<blockquote>
+<p><strong>Terraform quản lý infrastructure as code → Monaco quản lý monitoring configuration as code.</strong></p>
+</blockquote>
+<p>Mối quan hệ tương tự ở nhiều khía cạnh:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khía cạnh</th><th>Terraform</th><th>Monaco</th></tr></thead><tbody><tr><td>Triết lý</td><td>Declarative, idempotent</td><td>Declarative, idempotent</td></tr><tr><td>Input</td><td><code>.tf</code> files (HCL)</td><td><code>config.yaml</code> + <code>.json</code> templates</td></tr><tr><td>Entry point</td><td><code>terraform init</code> + backend config</td><td><code>manifest.yaml</code></td></tr><tr><td>State tracking</td><td><code>terraform.tfstate</code></td><td><code>externalId</code> (không cần state file)</td></tr><tr><td>Apply</td><td><code>terraform apply</code></td><td><code>monaco deploy</code></td></tr><tr><td>Preview</td><td><code>terraform plan</code></td><td><code>monaco deploy --dry-run</code></td></tr><tr><td>Destroy</td><td><code>terraform destroy</code></td><td><code>monaco delete</code></td></tr><tr><td>Dependencies</td><td><code>depends_on</code> explicit</td><td><code>reference</code> parameters (implicit)</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Monaco không cần state file </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Đây là điểm khác biệt quan trọng nhất so với Terraform. Monaco dùng <code>externalId</code> — một hash unique được tính từ project + config type + config id — để track mỗi config trên Dynatrace. State được “lưu” ngay trên Dynatrace environment, không phải trong file riêng. Điều này loại bỏ hoàn toàn các vấn đề state lock, state corruption, state drift mà Terraform users rất quen thuộc.</p>
+</div>
+</blockquote>
+<p>Nếu bạn quen Kubernetes, một analogy khác:</p>
+<blockquote>
+<p><strong>Monaco <code>deploy</code> giống <code>kubectl apply</code> — chạy lại bao nhiêu lần cũng ra cùng kết quả (idempotent).</strong> Config đã tồn tại → update. Chưa có → tạo mới. Không bao giờ tạo duplicate.</p>
+</blockquote>
+<hr/>
+<h2 id="2-monaco-v1-vs-v2--migration-context">2. Monaco v1 vs v2 — Migration context<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-monaco-v1-vs-v2--migration-context" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-tại-sao-dynatrace-phải-viết-lại-v2">2.1 Tại sao Dynatrace phải viết lại v2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-tại-sao-dynatrace-phải-viết-lại-v2" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Monaco v1 ra đời khi Dynatrace chỉ có <strong>Classic Config API</strong>. Khi Dynatrace phát triển <strong>Settings 2.0</strong>, <strong>Automation</strong> (Workflows), <strong>Grail</strong> (Buckets, Documents, OpenPipeline), v1 không theo kịp vì:</p>
+<ul>
+<li>
+<p><strong>Name-based tracking</strong>: v1 dùng tên hiển thị (display name) để identify config. Nếu 2 configs cùng tên → conflict, Monaco không biết update cái nào. Trong enterprise với hàng trăm configs, name collision xảy ra thường xuyên hơn bạn nghĩ.</p>
+</li>
+<li>
+<p><strong>Chỉ hỗ trợ Classic API</strong>: v1 không có kiến trúc extensible để thêm config types mới. Mỗi lần Dynatrace ra API mới, phải hack thêm vào codebase cũ.</p>
+</li>
+<li>
+<p><strong>Không có delete</strong>: v1 chỉ có thể tạo và update — không xoá được config đã deploy. Muốn cleanup phải vào UI xoá tay.</p>
+</li>
+<li>
+<p><strong>Flat environment file</strong>: <code>environments.yaml</code> của v1 không support grouping, không có OAuth, không có environment variables cho secrets.</p>
+</li>
+</ul>
+<p>v2 được viết lại từ đầu (không phải refactor v1) để giải quyết tất cả vấn đề trên.</p>
+<h3 id="22-bảng-so-sánh-chi-tiết">2.2 Bảng so sánh chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-bảng-so-sánh-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>v1 (Legacy)</th><th>v2 (Active)</th></tr></thead><tbody><tr><td><strong>Entry point</strong></td><td><code>environments.yaml</code> flat file</td><td><code>manifest.yaml</code> với environment groups</td></tr><tr><td><strong>Config tracking</strong></td><td>Name-based (display name)</td><td><code>externalId</code> hash unique</td></tr><tr><td><strong>Config types</strong></td><td>Chỉ Classic API</td><td>Settings 2.0, Classic API, Automation, Bucket, Document, OpenPipeline, Account</td></tr><tr><td><strong>Dependencies</strong></td><td>Implicit via naming convention</td><td>Explicit <code>reference</code> parameters với type safety</td></tr><tr><td><strong>Delete</strong></td><td>❌ Không hỗ trợ</td><td>✅ <code>delete.yaml</code> + <code>monaco delete</code> command</td></tr><tr><td><strong>Download</strong></td><td>Hạn chế, không reliable</td><td>✅ Full download + roundtrip support</td></tr><tr><td><strong>Dry-run</strong></td><td>❌ Không có</td><td>✅ <code>--dry-run</code> flag — validate mà không deploy</td></tr><tr><td><strong>Auth model</strong></td><td>Chỉ API Token</td><td>API Token + OAuth Client Credentials</td></tr><tr><td><strong>Parallel deploy</strong></td><td>❌ Sequential only</td><td>✅ DAG-based + optional parallel</td></tr><tr><td><strong>Migration path</strong></td><td>—</td><td><code>monaco convert</code> tự động chuyển v1 → v2</td></tr></tbody></table></div>
+<h3 id="23-externalid--bí-mật-của-v2-tracking">2.3 externalId — Bí mật của v2 tracking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-externalid--bí-mật-của-v2-tracking" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><code>externalId</code> là hash unique cho mỗi config, được tính từ:</p>
+<pre><code>externalId = hash(projectName + configType + configId)
+</code></pre>
+<p>Nhờ đó Monaco biết <strong>chính xác</strong> config nào cần update, config nào cần tạo mới, <strong>không phụ thuộc vào tên hiển thị</strong>. Nếu bạn đổi display name từ “Production Alerts” thành “Prod Alert Profile”, Monaco vẫn biết đó là cùng 1 config và update thay vì tạo mới.</p>
+<p>Cơ chế này tương tự <strong>Terraform state tracking</strong> nhưng không cần state file:</p>
+<ul>
+<li>Terraform lưu mapping <code>resource address → cloud resource ID</code> trong <code>.tfstate</code></li>
+<li>Monaco lưu <code>externalId</code> dưới dạng tag/metadata trên chính Dynatrace environment</li>
+</ul>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>v1 đã deprecated — không còn nhận updates </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Monaco v1 chính thức deprecated từ <strong>v2.0.0 release</strong> (2022). Mọi project mới <strong>bắt buộc</strong> dùng v2. Nếu bạn đang có v1 project, chạy <code>monaco convert --environment environments.yaml --output-folder v2-project/</code> để migrate. Command này tự động chuyển đổi cấu trúc file, nhưng bạn vẫn cần review kết quả — đặc biệt là dependency references.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="3-kiến-trúc--how-monaco-works-under-the-hood">3. Kiến trúc — How Monaco works under the hood<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-kiến-trúc--how-monaco-works-under-the-hood" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-architectural-overview">3.1 Architectural Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-architectural-overview" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  ╔═══════════════════════════════════════════════════════════════════╗
+  ║                        DEVELOPER / CI PIPELINE                   ║
+  ║   Viết YAML configs → commit Git → trigger pipeline              ║
+  ╚═══════════════════╤═══════════════════════════════════════════════╝
+                      │  $ monaco deploy manifest.yaml
+                      ▼
+  ╔═══════════════════════════════════════════════════════════════════╗
+  ║                        MONACO CLI BINARY                         ║
+  ║                                                                   ║
+  ║   ┌─────────────┐   ┌─────────────┐   ┌──────────────────┐      ║
+  ║   │ 1. MANIFEST │──▶│ 2. PROJECT  │──▶│ 3. CONFIG PARSER │      ║
+  ║   │    PARSER   │   │   SCANNER   │   │  + SCHEMA VALID. │      ║
+  ║   └─────────────┘   └─────────────┘   └────────┬─────────┘      ║
+  ║                                                  │                ║
+  ║   ┌─────────────┐   ┌─────────────┐   ┌────────▼─────────┐      ║
+  ║   │ 6. RATE     │◀──│ 5. TOPO     │◀──│ 4. TEMPLATE      │      ║
+  ║   │    LIMITER  │   │    SORT     │   │    RESOLVER      │      ║
+  ║   └──────┬──────┘   └─────────────┘   └──────────────────┘      ║
+  ║          │                                                        ║
+  ║   ┌──────▼──────┐   ┌──────────────────────────────────┐         ║
+  ║   │ 7. API      │──▶│ 8. EXTERNAL ID TRACKER           │         ║
+  ║   │    DEPLOYER │   │    (track creates/updates)       │         ║
+  ║   └─────────────┘   └──────────────────────────────────┘         ║
+  ╚═══════════════════╤═══════════════════════════════════════════════╝
+                      │  HTTPS REST API calls
+                      │  (PUT/POST/DELETE)
+                      ▼
+  ╔═══════════════════════════════════════════════════════════════════╗
+  ║                    DYNATRACE ENVIRONMENT                         ║
+  ║              (SaaS / Managed / Platform)                         ║
+  ║   Settings 2.0 │ Classic API │ Automation │ Grail │ Account      ║
+  ╚═══════════════════════════════════════════════════════════════════╝
+</code></pre>
+<h3 id="32-flow-chi-tiết--8-bước-từ-yaml-đến-dynatrace">3.2 Flow chi tiết — 8 bước từ YAML đến Dynatrace<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-flow-chi-tiết--8-bước-từ-yaml-đến-dynatrace" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi lần bạn chạy <code>monaco deploy manifest.yaml</code>, đây là những gì xảy ra bên trong:</p>
+<p><strong>Bước 1 — Đọc manifest.yaml → phân tích environments, projects</strong></p>
+<p>Monaco bắt đầu bằng việc đọc <code>manifest.yaml</code> — file entry point duy nhất. Từ đây nó biết:</p>
+<ul>
+<li>Có bao nhiêu <strong>environments</strong> (dev, staging, prod) và credentials từng env</li>
+<li>Có bao nhiêu <strong>projects</strong> (shared, team-a, team-b) và path trên filesystem</li>
+<li>Environment <strong>groups</strong> — cho phép deploy theo nhóm (vd: deploy tất cả non-prod)</li>
+</ul>
+<p>Nếu bạn truyền flag <code>-e dev</code>, Monaco chỉ pick environment <code>dev</code> và bỏ qua phần còn lại.</p>
+<p><strong>Bước 2 — Scan project directories → tìm config.yaml files</strong></p>
+<p>Monaco đi qua từng project directory được khai báo, tìm tất cả file <code>config.yaml</code> trong mọi subfolder. Mỗi subfolder thường đại diện cho 1 config type (vd: <code>auto-tagging/</code>, <code>alerting-profile/</code>, <code>dashboard/</code>). Cấu trúc folder không bắt buộc — Monaco không quan tâm tên folder, nó đọc <code>type</code> field trong <code>config.yaml</code> để biết config thuộc loại nào.</p>
+<p><strong>Bước 3 — Parse config.yaml → validate schema references</strong></p>
+<p>Mỗi <code>config.yaml</code> được parse để extract:</p>
+<ul>
+<li>Config <code>id</code> (unique identifier trong scope project)</li>
+<li>Config <code>type</code> (settings schema, classic API endpoint, automation…)</li>
+<li>Template file path (JSON payload)</li>
+<li>Parameters (value, environment, reference, compound)</li>
+<li><code>skip</code> flag (cho phép disable config mà không xoá file)</li>
+</ul>
+<p>Nếu type là Settings 2.0, Monaco validate schema ID tồn tại trên target environment. Nếu schema không exist (vd: environment cũ chưa có feature mới), deploy sẽ fail với error message rõ ràng.</p>
+<p><strong>Bước 4 — Load template files → resolve Go template syntax</strong></p>
+<p>Template files (<code>.json</code>) chứa payload thật sự gửi đến Dynatrace API. Chúng dùng <strong>Go template syntax</strong> để inject parameters:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;{{ .name }}&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;rules&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;PROCESS_GROUP&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;{{ .tagKey }}&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;value&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;{{ .tagValue }}&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  }]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>Monaco resolve <code>{{ .name }}</code> bằng giá trị từ <code>parameters</code> section trong <code>config.yaml</code>. Nếu parameter type là <code>environment</code> → đọc từ OS environment variable. Nếu type là <code>reference</code> → resolve sau khi dependency deploy xong (bước 7).</p>
+<p><strong>Bước 5 — Build dependency graph (DAG) → topological sort</strong></p>
+<p>Đây là bước thông minh nhất. Monaco scan tất cả <code>reference</code> parameters để xây dựng <strong>Directed Acyclic Graph</strong> (DAG). Ví dụ:</p>
+<pre><code>SLO config → references → Management Zone
+Dashboard config → references → SLO config
+Dashboard config → references → Auto-tag config
+</code></pre>
+<p>DAG sau topological sort sẽ cho ra thứ tự deploy:</p>
+<ol>
+<li>Management Zone + Auto-tag (không phụ thuộc gì)</li>
+<li>SLO (phụ thuộc Management Zone)</li>
+<li>Dashboard (phụ thuộc SLO + Auto-tag)</li>
+</ol>
+<p>Nếu phát hiện <strong>circular dependency</strong> (A → B → A), Monaco báo lỗi ngay tại bước này mà không deploy gì.</p>
+<p><strong>Bước 6 — Rate limit calculation → tránh 429 errors</strong></p>
+<p>Dynatrace API có rate limits (thường 50 requests/minute cho Settings 2.0). Monaco không ngu ngốc fire hàng trăm requests cùng lúc — nó tính toán batch size và thêm delays giữa các batches. Với feature flag <code>MONACO_FEAT_GRAPH_DEPLOY_PARALLEL=true</code>, các configs ở cùng level trong DAG (không phụ thuộc nhau) được deploy song song trong cùng batch.</p>
+<p><strong>Bước 7 — Deploy batch → idempotent PUT/POST via Dynatrace API</strong></p>
+<p>Mỗi config được deploy với logic:</p>
+<ul>
+<li><strong>Settings 2.0</strong>: PUT request với <code>externalId</code> → Dynatrace tự biết create hay update</li>
+<li><strong>Classic API</strong>: Monaco check config đã tồn tại chưa (via externalId tag) → PUT update hoặc POST create</li>
+<li><strong>Automation</strong>: POST/PUT via Automation API endpoint</li>
+</ul>
+<p>Idempotent nghĩa là: chạy <code>monaco deploy</code> 5 lần liên tiếp với cùng config → kết quả trên Dynatrace giống hệt nhau, không tạo duplicate, không có side effects.</p>
+<p><strong>Bước 8 — Track externalId → cho phép update/delete chính xác</strong></p>
+<p>Sau khi deploy thành công, Monaco confirm <code>externalId</code> đã được gắn lên config trên Dynatrace. Lần deploy tiếp theo, nó dùng <code>externalId</code> để:</p>
+<ul>
+<li><strong>Tìm lại</strong> config đã deploy trước đó</li>
+<li><strong>Update</strong> nếu content thay đổi</li>
+<li><strong>Skip</strong> nếu content giống hệt (no-op)</li>
+<li><strong>Delete</strong> nếu config xuất hiện trong <code>delete.yaml</code></li>
+</ul>
+<h3 id="33-tại-sao-dependency-graph-quan-trọng">3.3 Tại sao dependency graph quan trọng?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-tại-sao-dependency-graph-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hãy tưởng tượng bạn có 1 SLO config reference Management Zone “Production Services”:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># SLO config</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">parameters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  mzId</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">reference</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    configType</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">management-zone</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    configId</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">mz-production</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    property</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">id</span></span></code></pre></figure>
+<p>Nếu Monaco deploy SLO <strong>trước</strong> Management Zone → API sẽ reject vì Management Zone ID chưa tồn tại. Monaco giải quyết bằng cách <strong>tự động</strong> detect reference này, thêm edge vào DAG, và deploy Management Zone trước.</p>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>So sánh với Terraform </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Dependency resolution trong Monaco tương tự <code>depends_on</code> trong Terraform, nhưng ở Monaco nó <strong>IMPLICIT</strong> qua reference parameters — bạn không cần khai báo dependency explicitly. Terraform cũng có implicit dependencies qua resource references (<code>aws_subnet.main.id</code>), nhưng đôi khi vẫn cần explicit <code>depends_on</code>. Monaco không bao giờ cần explicit dependency declaration.</p>
+</div>
+</blockquote>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>So sánh với ArgoCD sync waves </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nếu bạn quen ArgoCD, dependency ordering trong Monaco tương tự sync waves / Helm hook weights. Nhưng thay vì bạn phải annotate <code>argocd.argoproj.io/sync-wave: &quot;1&quot;</code> bằng tay, Monaco tự tính wave từ dependency graph. Ít manual work hơn, ít lỗi hơn.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="4-configuration-types--deep-dive">4. Configuration Types — Deep dive<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-configuration-types--deep-dive" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-tổng-quan-7-types">4.1 Tổng quan 7 types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-tổng-quan-7-types" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>#</th><th>Type</th><th>Keyword</th><th>Mô tả</th><th>Ví dụ config</th><th>Auth cần</th></tr></thead><tbody><tr><td>1</td><td><strong>Settings 2.0</strong></td><td><code>type: settings</code></td><td>Schema-based configs mới. Hầu hết configs hiện tại thuộc nhóm này.</td><td><code>builtin:tags.auto-tagging</code>, <code>builtin:alerting.profile</code>, <code>builtin:anomaly-detection.metric-events</code></td><td>API Token</td></tr><tr><td>2</td><td><strong>Classic API</strong></td><td><code>type: api</code></td><td>Legacy REST API endpoints. Đang dần được migrate sang Settings 2.0.</td><td><code>dashboard</code>, <code>synthetic-monitor</code>, <code>request-attributes</code>, <code>auto-tag</code></td><td>API Token</td></tr><tr><td>3</td><td><strong>Automation</strong></td><td><code>type: automation</code></td><td>Dynatrace Workflows và resources liên quan. Yêu cầu platform-level auth.</td><td><code>workflow</code>, <code>business-calendar</code>, <code>scheduling-rule</code></td><td>OAuth</td></tr><tr><td>4</td><td><strong>Bucket</strong></td><td><code>type: bucket</code></td><td>Grail data buckets cho custom data storage.</td><td>Custom log/metric/bizevents buckets</td><td>OAuth</td></tr><tr><td>5</td><td><strong>Document</strong></td><td><code>type: document</code></td><td>New-generation Dashboards và Notebooks.</td><td>Dashboards (new), Notebooks</td><td>OAuth</td></tr><tr><td>6</td><td><strong>OpenPipeline</strong></td><td><code>type: openpipeline</code></td><td>Data processing pipelines cho ingest.</td><td>Log/event/metric/bizevents pipelines</td><td>OAuth</td></tr><tr><td>7</td><td><strong>Account Management</strong></td><td><code>type: account</code></td><td>IAM resources ở account level. Deploy qua <code>monaco account</code> subcommand riêng.</td><td>Users, groups, policies, environment permissions</td><td>OAuth (Account)</td></tr></tbody></table></div>
+<h3 id="42-chi-tiết-từng-type">4.2 Chi tiết từng type<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-chi-tiết-từng-type" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Settings 2.0</strong> — Đây là type bạn sẽ dùng nhiều nhất. Mỗi Settings 2.0 config được define bởi 1 <strong>schema</strong> (vd: <code>builtin:tags.auto-tagging</code>). Schema quy định fields nào có thể set, validation rules, và scope (environment, host, process group…). Ưu điểm lớn nhất: Dynatrace validate payload theo schema <strong>trước</strong> khi apply, nên bạn biết lỗi ngay lập tức thay vì deploy xong mới phát hiện config sai.</p>
+<p><strong>Classic API</strong> — Các endpoint REST API truyền thống như <code>dashboard</code>, <code>alerting-profile</code>, <code>synthetic-monitor</code>. Payload là free-form JSON — không có schema validation phía server. Bạn có thể gửi JSON sai format và API vẫn accept, nhưng config sẽ behave unexpected. Classic API đang dần deprecated — khi 1 config type available ở cả Classic API và Settings 2.0, <strong>luôn ưu tiên Settings 2.0</strong>.</p>
+<p><strong>Automation</strong> — Workflows là tính năng mạnh nhất của Dynatrace platform: auto-remediation, notification routing, data processing… Automation configs yêu cầu <strong>OAuth</strong> vì chúng chạy ở platform level, không phải environment level. Có từ Monaco v2.6.0+.</p>
+<p><strong>Bucket</strong> — Grail data buckets cho phép bạn tạo custom storage cho logs, metrics, business events. Mỗi bucket có retention policy riêng. Dùng khi bạn cần tách biệt data giữa các teams hoặc compliance domains.</p>
+<p><strong>Document</strong> — Dynatrace đang migrate dashboards từ Classic (JSON-based) sang new-generation (Document-based). Nếu bạn đang dùng Dynatrace Apps / new UI, dashboards mới thuộc loại Document. Notebooks cũng là Document type.</p>
+<p><strong>OpenPipeline</strong> — Pipelines xử lý data trước khi vào Grail: masking PII, enrichment, routing, filtering. Đặc biệt quan trọng cho compliance (GDPR/HIPAA) — bạn cần ensure pipeline config consistent across environments.</p>
+<p><strong>Account Management</strong> — Users, groups, policies ở level <strong>account</strong> (không phải environment). Deploy qua subcommand riêng: <code>monaco account deploy</code>. Cần OAuth credentials với account-level scopes.</p>
+<h3 id="43-settings-20-vs-classic-api--migration-path">4.3 Settings 2.0 vs Classic API — Migration path<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-settings-20-vs-classic-api--migration-path" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dynatrace đang dần migrate Classic API sang Settings 2.0. Lộ trình:</p>
+<pre><code>Classic API (legacy) ──────────────────▶ Settings 2.0 (modern)
+                                          ▲
+  auto-tag          ───────▶  builtin:tags.auto-tagging        ✅ Done
+  alerting-profile  ───────▶  builtin:alerting.profile         ✅ Done
+  dashboard         ───────▶  Documents (new-gen)              🔄 In progress
+  synthetic-monitor ───────▶  (vẫn Classic, chưa migrate)      ⏳ Planned
+  request-attributes───────▶  builtin:request-attributes       ✅ Done
+</code></pre>
+<p>Khi bạn thấy 1 config type available ở cả 2, <strong>ưu tiên Settings 2.0</strong> vì:</p>
+<ul>
+<li><strong>Schema validation</strong> tốt hơn — bắt lỗi sớm</li>
+<li><strong>Scope control</strong> granular hơn — có thể apply ở host/process group level thay vì chỉ environment</li>
+<li><strong>Dynatrace roadmap</strong> focus vào Settings 2.0 — Classic API sẽ deprecated dần</li>
+<li><strong>externalId tracking</strong> native — không cần workaround</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Kiểm tra config thuộc loại nào </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Chạy <code>monaco generate schema</code> để list tất cả available Settings 2.0 schemas trên environment của bạn. Nếu config bạn cần không có trong list → dùng Classic API (tạm thời). Khi Dynatrace migrate xong schema đó, bạn sẽ thấy nó xuất hiện trong list và nên chuyển sang.</p>
+<p>Hoặc trong Dynatrace UI: <strong>Settings</strong> → tìm config → nếu URL chứa <code>/ui/settings/builtin:</code> → đó là Settings 2.0.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="5-authentication--security-model">5. Authentication — Security model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-authentication--security-model" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-hai-phương-thức-authentication">5.1 Hai phương thức authentication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-hai-phương-thức-authentication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Monaco hỗ trợ 2 phương thức auth, mỗi cái phục vụ scope khác nhau:</p>
+<p><strong>API Token</strong> — Authentication truyền thống cho environment-level resources. Token được tạo trong Dynatrace UI, scope vào <strong>1 environment cụ thể</strong>. Đơn giản, trực tiếp, đủ cho hầu hết use cases.</p>
+<p><strong>OAuth Client Credentials</strong> — Authentication cho platform-level resources. OAuth client được tạo trong Account Management, scope vào <strong>account/platform</strong> — cross-environment. Cần cho Automation, Documents, Buckets, OpenPipeline vì chúng là platform features, không tied vào 1 environment.</p>
+<h3 id="52-api-token--chi-tiết">5.2 API Token — chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-api-token--chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tạo token:</strong></p>
+<ol>
+<li>Dynatrace UI → <strong>Settings</strong> → <strong>Access tokens</strong> (hoặc search “Access tokens”)</li>
+<li><strong>Generate new token</strong> → đặt tên descriptive: <code>monaco-cicd-token</code></li>
+<li>Chọn scopes cần thiết (xem bảng bên dưới)</li>
+<li><strong>Generate</strong> → copy token (<code>dt0c01.XXXX.YYYY</code>) — chỉ hiển thị 1 lần</li>
+</ol>
+<p><strong>Scopes cần thiết theo use case:</strong></p>
+<pre><code># === MINIMUM cho deploy Settings 2.0 + Classic API ===
+settings.read               # Đọc Settings 2.0 configs
+settings.write              # Ghi Settings 2.0 configs
+ReadConfig                  # Đọc Classic API configs
+WriteConfig                 # Ghi Classic API configs
+
+# === Thêm cho download ===
+DataExport                  # Download dashboard data
+entities.read               # Đọc entity information
+
+# === Thêm cho specific config types ===
+ExternalSyntheticIntegration    # Synthetic monitors (3rd party)
+credentialVault.read            # Read credential vault entries
+credentialVault.write           # Write credential vault entries
+extensionEnvironment.read       # Extension 2.0 configs
+extensionEnvironment.write      # Extension 2.0 configs
+</code></pre>
+<p><strong>Best practices cho API Token:</strong></p>
+<ul>
+<li>Tạo <strong>dedicated token cho Monaco</strong> — không share với Terraform, scripts, hay tools khác. Khi token bị compromise, bạn revoke 1 token mà không ảnh hưởng tools khác.</li>
+<li>Đặt <strong>expiry date</strong> — token vĩnh viễn là security risk. Set expiry 90 ngày, có process rotate trước khi hết hạn.</li>
+<li>Lưu trong <strong>secret manager</strong> (HashiCorp Vault, AWS Secrets Manager, GitHub Secrets) — không bao giờ hardcode trong file.</li>
+<li>Trong CI/CD: inject qua <strong>environment variable</strong> <code>DT_API_TOKEN</code>.</li>
+</ul>
+<h3 id="53-oauth-client-credentials--chi-tiết">5.3 OAuth Client Credentials — chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-oauth-client-credentials--chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Khi nào cần OAuth:</strong></p>
+<p>OAuth cần cho mọi <strong>platform-level resources</strong>: Automation (Workflows), Documents (Dashboards new-gen, Notebooks), Buckets, OpenPipeline. Lý do: platform resources không tied vào 1 environment — chúng chạy ở platform layer, nên cần auth ở platform layer.</p>
+<p><strong>Tạo OAuth client:</strong></p>
+<ol>
+<li>Dynatrace <strong>Account Management</strong> → <strong>Identity &amp; Access Management</strong> → <strong>OAuth clients</strong></li>
+<li><strong>Create client</strong> → chọn scopes:
+<ul>
+<li><code>automation:workflows:write</code> — cho Workflows</li>
+<li><code>document:documents:write</code> — cho Documents</li>
+<li><code>storage:buckets:write</code> — cho Buckets</li>
+<li><code>openpipeline:configurations:write</code> — cho OpenPipeline</li>
+</ul>
+</li>
+<li>Nhận <code>clientId</code>, <code>clientSecret</code> → lưu an toàn</li>
+<li>Token endpoint: <code>https://sso.dynatrace.com/sso/oauth2/token</code> (SaaS)</li>
+</ol>
+<h3 id="54-bảng-tổng-hợp-resource-type--auth-method--required-scopes">5.4 Bảng tổng hợp: Resource type → Auth method → Required scopes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#54-bảng-tổng-hợp-resource-type--auth-method--required-scopes" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Resource Type</th><th>Auth Method</th><th>Required Scopes</th></tr></thead><tbody><tr><td>Settings 2.0</td><td>API Token</td><td><code>settings.read</code>, <code>settings.write</code></td></tr><tr><td>Classic API</td><td>API Token</td><td><code>ReadConfig</code>, <code>WriteConfig</code></td></tr><tr><td>Classic API (download)</td><td>API Token</td><td>+ <code>DataExport</code> (cho dashboards)</td></tr><tr><td>Synthetic monitors</td><td>API Token</td><td>+ <code>ExternalSyntheticIntegration</code></td></tr><tr><td>Automation (Workflows)</td><td>OAuth</td><td><code>automation:workflows:read</code>, <code>automation:workflows:write</code></td></tr><tr><td>Documents</td><td>OAuth</td><td><code>document:documents:read</code>, <code>document:documents:write</code></td></tr><tr><td>Buckets</td><td>OAuth</td><td><code>storage:buckets:read</code>, <code>storage:buckets:write</code></td></tr><tr><td>OpenPipeline</td><td>OAuth</td><td><code>openpipeline:configurations:read</code>, <code>openpipeline:configurations:write</code></td></tr><tr><td>Account (Users/Groups)</td><td>OAuth (Account)</td><td><code>account-idm-write</code>, <code>account-env-write</code></td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Tại sao OAuth cho Automation? </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Platform resources (Workflows, Documents) yêu cầu OAuth vì chúng chạy ở <strong>platform level</strong>, không phải environment level. API Token chỉ scope vào <strong>1 environment</strong>, trong khi OAuth scope vào <strong>platform/account</strong> — có thể truy cập cross-environment resources.</p>
+<p>Analogy: API Token giống SSH key cho 1 server cụ thể. OAuth giống IAM role trong AWS — scope vào account, có thể access multiple resources across regions.</p>
+</div>
+</blockquote>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>KHÔNG BAO GIỜ commit token vào Git </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Token bị leak trên Git (kể cả repo private) → attacker có thể:</p>
+<ul>
+<li><strong>Xoá</strong> toàn bộ Dynatrace config (alerting, dashboards, management zones)</li>
+<li><strong>Inject</strong> malicious alerting rules (suppress real alerts, tạo fake alerts)</li>
+<li><strong>Exfiltrate</strong> monitoring data (business metrics, user sessions, PII)</li>
+<li><strong>Modify</strong> synthetic monitors để point đến malicious endpoints</li>
+</ul>
+<p>Dùng environment variables + secret manager. <strong>Luôn luôn.</strong> Thêm <code>*.env</code> vào <code>.gitignore</code>. Chạy <code>git-secrets</code> hoặc <code>gitleaks</code> trong CI pipeline.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="6-project-structure--cách-tổ-chức-code">6. Project Structure — Cách tổ chức code<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-project-structure--cách-tổ-chức-code" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-cấu-trúc-directory-chuẩn">6.1 Cấu trúc directory chuẩn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-cấu-trúc-directory-chuẩn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>my-monaco-project/
+│
+├── manifest.yaml                          # Entry point — nơi Monaco đọc ĐẦU TIÊN
+├── delete.yaml                            # (optional) configs cần xoá
+│
+└── projects/
+    ├── shared/                            # Configs dùng chung cho mọi environment
+    │   ├── auto-tagging/                  # 1 folder = 1 config type
+    │   │   ├── config.yaml                # Định nghĩa configs + parameters
+    │   │   └── auto-tag-owner.json        # Template — JSON payload gửi DT API
+    │   ├── management-zone/
+    │   │   ├── config.yaml
+    │   │   └── mz-production.json
+    │   ├── alerting-profile/
+    │   │   ├── config.yaml
+    │   │   └── infra-alerts.json
+    │   ├── slo/
+    │   │   ├── config.yaml
+    │   │   └── availability-slo.json      # Template reference MZ → implicit dep
+    │   └── notification/
+    │       ├── config.yaml
+    │       └── slack-webhook.json
+    │
+    ├── team-frontend/                     # Configs riêng cho team Frontend
+    │   └── dashboard/
+    │       ├── config.yaml
+    │       └── frontend-overview.json
+    │
+    └── team-platform/                     # Configs riêng cho team Platform
+        └── workflow/
+            ├── config.yaml
+            └── auto-remediation.json
+</code></pre>
+<p><strong>Giải thích vai trò từng thành phần:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>File/Folder</th><th>Vai trò</th></tr></thead><tbody><tr><td><code>manifest.yaml</code></td><td>Entry point duy nhất. Define environments, auth credentials, project paths. Monaco đọc file này đầu tiên và từ đây discover mọi thứ khác.</td></tr><tr><td><code>delete.yaml</code></td><td>Khai báo configs cần xoá khỏi Dynatrace. Chỉ cần khi bạn muốn cleanup configs đã deploy trước đó.</td></tr><tr><td><code>projects/</code></td><td>Root folder chứa tất cả projects. Tên folder này tuỳ bạn — manifest reference bằng path.</td></tr><tr><td><code>shared/</code></td><td>Project chứa configs dùng chung. Convention phổ biến: 1 project “shared” + N projects theo team.</td></tr><tr><td><code>auto-tagging/</code></td><td>Subfolder cho 1 config type. Tên folder không quan trọng cho Monaco (nó đọc <code>type</code> trong config.yaml), nhưng đặt tên match config type giúp navigate dễ hơn.</td></tr><tr><td><code>config.yaml</code></td><td>File khai báo configs: id, name, type, parameters, template path, skip flag. 1 file có thể chứa nhiều configs.</td></tr><tr><td><code>auto-tag-owner.json</code></td><td>Template file — JSON payload thật sự gửi đến Dynatrace API. Dùng Go template syntax cho dynamic values.</td></tr></tbody></table></div>
+<h3 id="62-manifestyaml--anatomy-chi-tiết">6.2 manifest.yaml — Anatomy chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-manifestyaml--anatomy-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># manifest.yaml — entry point cho toàn bộ Monaco project</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Tương tự Terraform backend config: nói cho tool biết nơi deploy, nhưng</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># không chứa config thật (config nằm trong projects/)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">manifestVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;1.0&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ─── PROJECTS ────────────────────────────────────────────────</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Danh sách project directories. Mỗi project là 1 scope quản lý</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># riêng, có thể assign cho 1 team.</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">projects</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">shared</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                         # Tên logical, dùng trong reference</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">projects/shared</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                # Path relative tới manifest.yaml</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">team-frontend</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">projects/team-frontend</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">team-platform</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">projects/team-platform</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ─── ENVIRONMENT GROUPS ──────────────────────────────────────</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Nhóm environments lại để deploy theo batch.</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Có thể có nhiều groups: &quot;non-prod&quot;, &quot;prod&quot;, &quot;dr&quot;...</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">environmentGroups</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">default</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    environments</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # ── DEV ──</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">dev</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        url</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">environment</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">              # &quot;environment&quot; = đọc từ env var</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DT_DEV_URL</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">             # Tên env var, KHÔNG PHẢI URL trực tiếp</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        auth</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          token</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DT_DEV_TOKEN</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">          # Tên env var chứa API token</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # ── STAGING ──</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">staging</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        url</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">environment</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DT_STAGING_URL</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        auth</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          token</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DT_STAGING_TOKEN</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # ── PRODUCTION ──</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">production</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        url</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">environment</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DT_PROD_URL</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        auth</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          token</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DT_PROD_TOKEN</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          oAuth</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:                          </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># OAuth thêm vào cho Automation/Documents</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            clientId</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DT_PROD_OAUTH_ID</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # Env var chứa OAuth client ID</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            clientSecret</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DT_PROD_OAUTH_SECRET</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">            tokenEndpoint</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">environment</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">              value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DT_SSO_URL</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">         # https://sso.dynatrace.com/sso/oauth2/token</span></span></code></pre></figure>
+<p><strong>Giải thích từng field quan trọng:</strong></p>
+<ul>
+<li>
+<p><strong><code>manifestVersion: &quot;1.0&quot;</code></strong> — Version của manifest schema. Hiện tại luôn là <code>&quot;1.0&quot;</code>. Dynatrace có thể release version mới trong tương lai với breaking changes.</p>
+</li>
+<li>
+<p><strong><code>projects[].name</code></strong> — Tên logical của project. Dùng khi reference configs cross-project (vd: team-frontend dashboard reference shared management zone). Cũng dùng trong CLI flag <code>-p shared</code> để deploy 1 project cụ thể.</p>
+</li>
+<li>
+<p><strong><code>projects[].path</code></strong> — Path <strong>relative</strong> tới manifest.yaml. Monaco resolve path từ vị trí manifest file, không phải current working directory.</p>
+</li>
+<li>
+<p><strong><code>url.type: environment</code></strong> — Đây là điểm dễ nhầm nhất. <code>value: DT_DEV_URL</code> KHÔNG PHẢI URL — nó là <strong>tên environment variable</strong> mà Monaco sẽ đọc lúc runtime. Thiết kế này đảm bảo URL và credentials không bao giờ nằm trong file YAML (có thể commit vào Git).</p>
+</li>
+<li>
+<p><strong><code>auth.token.name</code></strong> — Tương tự, đây là tên env var chứa API token, không phải token string.</p>
+</li>
+<li>
+<p><strong><code>oAuth</code></strong> — Block OAuth chỉ cần khi project có Automation/Document/Bucket/OpenPipeline configs. Nếu bạn chỉ dùng Settings 2.0 và Classic API, block này không cần.</p>
+</li>
+</ul>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>manifest.yaml tương tự Terraform backend config </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Nó nói cho tool biết <strong>nơi deploy</strong> (environments) và <strong>gì deploy</strong> (projects), nhưng không chứa <strong>config thật</strong>. Config thật nằm trong các <code>config.yaml</code> files bên trong project directories. Giống cách Terraform backend config chỉ define state storage location, không chứa resource definitions.</p>
+</div>
+</blockquote>
+<h3 id="63-configyaml--settings-20">6.3 config.yaml — Settings 2.0<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#63-configyaml--settings-20" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># projects/shared/auto-tagging/config.yaml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">configs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">id</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">auto-tag-owner</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                    # ID unique trong project scope</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    config</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Owner Tag&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                   # Display name trên Dynatrace UI</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      template</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">auto-tag-owner.json</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # Template file cùng folder</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      skip</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">false</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                         # false = deploy, true = skip (disable)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      settings</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        schema</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">builtin:tags.auto-tagging</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> # Settings 2.0 schema ID</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        schemaVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;1.0.3&quot;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">            # Optional — pin schema version</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        scope</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">environment</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                # Scope: environment, host, process_group...</span></span></code></pre></figure>
+<p><strong>Giải thích fields:</strong></p>
+<ul>
+<li>
+<p><strong><code>id</code></strong> — Unique identifier cho config này <strong>trong scope project</strong>. Kết hợp với project name và config type, tạo thành <code>externalId</code> unique toàn cục. ID này KHÔNG PHẢI display name — bạn có thể đổi <code>name</code> mà không ảnh hưởng tracking.</p>
+</li>
+<li>
+<p><strong><code>template</code></strong> — Path relative tới <code>config.yaml</code> chứa JSON payload. Monaco đọc file này, resolve Go templates, rồi gửi kết quả tới API.</p>
+</li>
+<li>
+<p><strong><code>skip: false</code></strong> — Flag cực kỳ hữu ích. Set <code>true</code> để temporarily disable 1 config mà không cần xoá file. Dùng khi debug hoặc khi config gây issue trên 1 environment.</p>
+</li>
+<li>
+<p><strong><code>schema</code></strong> — Settings 2.0 schema ID. Tìm full list tại Dynatrace UI → Settings, hoặc <code>monaco generate schema</code>.</p>
+</li>
+<li>
+<p><strong><code>scope</code></strong> — Nơi config được apply. <code>environment</code> = toàn bộ environment. Có thể set scope granular hơn bằng entity selector hoặc reference tới host group/process group.</p>
+</li>
+</ul>
+<h3 id="64-configyaml--classic-api">6.4 config.yaml — Classic API<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#64-configyaml--classic-api" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># projects/shared/alerting-profile/config.yaml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">configs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">id</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">alerting-infra</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    config</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Infrastructure Alerts&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      template</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">infra-alerts.json</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      skip</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">false</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      api</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">alerting-profile</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">              # Classic API endpoint name</span></span></code></pre></figure>
+<p>Sự khác biệt với Settings 2.0: field <code>type</code> chỉ là <code>api: &lt;endpoint-name></code> — không có schema, schemaVersion, hay scope. Classic API scope luôn là environment-wide.</p>
+<h3 id="65-template-file-json--go-template-syntax">6.5 Template file (.json) — Go template syntax<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#65-template-file-json--go-template-syntax" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;{{ .name }}&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;rules&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;PROCESS_GROUP&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;enabled&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;valueFormat&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;{ProcessGroup:Environment:app}&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;propagationTypes&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;PROCESS_GROUP_TO_SERVICE&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;conditions&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">          &quot;key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">            &quot;attribute&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;PROCESS_GROUP_PREDEFINED_METADATA&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">            &quot;dynamicKey&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;KUBERNETES_NAMESPACE&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">            &quot;type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;PROCESS_PREDEFINED_METADATA_KEY&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">          },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">          &quot;comparisonInfo&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">            &quot;type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;STRING&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">            &quot;operator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;EXISTS&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">            &quot;negate&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">false</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">          }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>Go template syntax trong Monaco:</p>
+<ul>
+<li><code>{{ .name }}</code> → resolve từ <code>parameters</code> section hoặc config <code>name</code> field</li>
+<li><code>{{ .paramName }}</code> → resolve từ parameter có key <code>paramName</code></li>
+<li>Chỉ simple variable substitution — không hỗ trợ if/else/range trong template (khác với Helm templates)</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Naming convention cho folders </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Đặt tên folder match config type giúp navigate dễ hơn khi project lớn:</p>
+<ul>
+<li><code>auto-tagging/</code> cho <code>builtin:tags.auto-tagging</code></li>
+<li><code>alerting-profile/</code> cho <code>builtin:alerting.profile</code> hoặc Classic <code>alerting-profile</code></li>
+<li><code>management-zone/</code> cho <code>builtin:management-zones</code></li>
+</ul>
+<p>Monaco không enforce naming — bạn có thể đặt tên gì cũng được. Nhưng convention giúp team mới onboard nhanh hơn, và <code>grep</code> tìm config dễ hơn.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="7-cli-commands--tham-chiếu-nhanh">7. CLI Commands — Tham chiếu nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-cli-commands--tham-chiếu-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="71-bảng-commands">7.1 Bảng commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#71-bảng-commands" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>Mô tả</th><th>Use case</th></tr></thead><tbody><tr><td><code>monaco deploy</code></td><td>Deploy configs lên Dynatrace</td><td>Đây là command chính — dùng trong CI/CD và local dev</td></tr><tr><td><code>monaco deploy --dry-run</code></td><td>Validate configs mà không deploy thật</td><td>PR checks, pre-deploy verification</td></tr><tr><td><code>monaco download</code></td><td>Download configs từ Dynatrace về local</td><td>Backup, audit, bootstrap project từ env hiện có</td></tr><tr><td><code>monaco delete</code></td><td>Xoá configs theo <code>delete.yaml</code></td><td>Cleanup configs không còn cần</td></tr><tr><td><code>monaco convert</code></td><td>Migrate v1 → v2 format</td><td>1-time migration từ legacy projects</td></tr><tr><td><code>monaco generate deletefile</code></td><td>Sinh <code>delete.yaml</code> từ configs hiện có</td><td>Chuẩn bị cleanup trước khi decommission env</td></tr><tr><td><code>monaco generate schema</code></td><td>List tất cả Settings 2.0 schemas</td><td>Khám phá available config types</td></tr><tr><td><code>monaco account deploy</code></td><td>Deploy account-level resources (IAM)</td><td>Users, groups, policies management</td></tr><tr><td><code>monaco account download</code></td><td>Download account resources</td><td>Backup IAM configuration</td></tr><tr><td><code>monaco account delete</code></td><td>Delete account resources</td><td>Cleanup account-level configs</td></tr><tr><td><code>monaco version</code></td><td>In version CLI</td><td>Verify installation, debug</td></tr></tbody></table></div>
+<h3 id="72-common-flags">7.2 Common flags<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#72-common-flags" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Flag</th><th>Mô tả</th><th>Ví dụ</th></tr></thead><tbody><tr><td><code>--dry-run</code></td><td>Validate mà không deploy thật — <strong>luôn chạy trước deploy</strong></td><td><code>monaco deploy manifest.yaml --dry-run</code></td></tr><tr><td><code>--verbose</code> / <code>-v</code></td><td>Output chi tiết, hữu ích cho debug</td><td><code>monaco deploy -v manifest.yaml</code></td></tr><tr><td><code>-e &lt;env></code></td><td>Chỉ deploy/download cho environment cụ thể</td><td><code>monaco deploy manifest.yaml -e dev</code></td></tr><tr><td><code>-p &lt;project></code></td><td>Chỉ deploy project cụ thể</td><td><code>monaco deploy manifest.yaml -p shared</code></td></tr><tr><td><code>-c</code></td><td>Continue on error — không stop khi 1 config fail</td><td><code>monaco deploy -c manifest.yaml</code></td></tr><tr><td><code>--force</code></td><td>Force deploy kể cả khi validation warning</td><td><code>monaco deploy --force manifest.yaml</code></td></tr></tbody></table></div>
+<h3 id="73-lifecycle-flow">7.3 Lifecycle flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#73-lifecycle-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Một Monaco project lifecycle đi qua 4 giai đoạn chính:</p>
+<pre><code>┌──────────┐    ┌──────────┐    ┌──────────────┐    ┌──────────┐
+│ DOWNLOAD │───▶│  DEPLOY  │───▶│   DRY-RUN    │───▶│  DELETE  │
+│ (import) │    │ (create/ │    │ (validate    │    │ (cleanup │
+│          │    │  update) │    │  pre-deploy) │    │  decom)  │
+└──────────┘    └──────────┘    └──────────────┘    └──────────┘
+</code></pre>
+<ul>
+<li><strong>Download</strong>: Bootstrap — import configs từ existing environment vào Git repo</li>
+<li><strong>Deploy</strong>: Day-to-day — push config changes lên Dynatrace</li>
+<li><strong>Dry-run</strong>: Safety — validate trước mỗi deploy, đặc biệt trong CI/CD</li>
+<li><strong>Delete</strong>: Lifecycle end — cleanup configs khi decommission service/environment</li>
+</ul>
+<h3 id="74-workflow-thực-tế--combo-commands">7.4 Workflow thực tế — combo commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#74-workflow-thực-tế--combo-commands" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ─── WORKFLOW 1: Day-to-day development ───</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 1. Sửa config files trong IDE</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 2. Validate trước khi deploy</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">monaco</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> deploy</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> manifest.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --dry-run</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 3. Deploy lên dev environment</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">monaco</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> deploy</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> manifest.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -e</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> dev</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 4. Verify trên Dynatrace UI → OK</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 5. Deploy staging</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">monaco</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> deploy</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> manifest.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -e</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> staging</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 6. Deploy production (sau PR review + approval)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">monaco</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> deploy</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> manifest.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -e</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> production</span></span>
+<span data-line> </span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ─── WORKFLOW 2: Bootstrap project từ existing env ───</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Download tất cả configs từ production</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">monaco</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> download</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  --manifest</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> manifest.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  -e</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> production</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">  --output-folder</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> downloaded/</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Review downloaded configs, restructure, commit to Git</span></span>
+<span data-line> </span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ─── WORKFLOW 3: Cleanup deprecated configs ───</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 1. Generate delete file từ configs hiện có</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">monaco</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> generate</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> deletefile</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> manifest.yaml</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 2. Edit delete.yaml — giữ lại chỉ configs cần xoá</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 3. Delete từ environment</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">monaco</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> delete</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> manifest.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --file</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> delete.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -e</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> dev</span></span>
+<span data-line> </span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ─── WORKFLOW 4: CI/CD pipeline ───</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># PR check — chỉ validate, không deploy</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">monaco</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> deploy</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> manifest.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --dry-run</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Merge to main → deploy tất cả environments</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">monaco</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> deploy</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> manifest.yaml</span></span></code></pre></figure>
+<hr/>
+<h2 id="8-parameter-types--hệ-thống-templating">8. Parameter Types — Hệ thống templating<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-parameter-types--hệ-thống-templating" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Monaco có 4 loại parameter, mỗi loại phục vụ mục đích khác nhau. Hiểu rõ chúng là chìa khoá để viết config linh hoạt.</p>
+<h3 id="81-value-parameter--giá-trị-tĩnh">8.1 Value parameter — giá trị tĩnh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#81-value-parameter--giá-trị-tĩnh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">parameters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  owner</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">value</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;team-platform&quot;</span></span></code></pre></figure>
+<p>Giá trị hard-coded trực tiếp trong config file. Dùng cho:</p>
+<ul>
+<li>Giá trị không thay đổi giữa environments (team name, tag key names)</li>
+<li>Default values không nhạy cảm</li>
+<li>Giá trị cần version control rõ ràng</li>
+</ul>
+<p>Trong template: <code>{{ .owner }}</code> → resolve thành <code>team-platform</code>.</p>
+<p>Analogy: Giống <code>default</code> value trong Terraform variable — giá trị tĩnh, commit được vào Git.</p>
+<h3 id="82-environment-parameter--đọc-từ-env-var">8.2 Environment parameter — đọc từ env var<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#82-environment-parameter--đọc-từ-env-var" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">parameters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  alertEmail</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">environment</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ALERT_EMAIL</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">              # Tên OS environment variable</span></span></code></pre></figure>
+<p>Đọc giá trị từ <strong>OS environment variable</strong> lúc runtime. Dùng cho:</p>
+<ul>
+<li>Secrets (API keys, webhook URLs, email addresses)</li>
+<li>Giá trị khác nhau giữa environments mà không muốn hardcode</li>
+<li>Giá trị inject từ CI/CD pipeline (GitHub Secrets, Vault)</li>
+</ul>
+<p>Trong template: <code>{{ .alertEmail }}</code> → resolve thành giá trị của <code>$ALERT_EMAIL</code>.</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Environment type là cách Monaco inject secrets without hardcoding </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Giống Helm values nhưng đọc từ env vars thay vì <code>-f values.yaml</code>. Ưu điểm: secrets không bao giờ xuất hiện trong bất kỳ file nào trên disk — chúng chỉ tồn tại trong memory lúc Monaco chạy.</p>
+</div>
+</blockquote>
+<h3 id="83-compound-parameter--nối-nhiều-tham-số">8.3 Compound parameter — nối nhiều tham số<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#83-compound-parameter--nối-nhiều-tham-số" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">parameters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  owner</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">value</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;platform&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">value</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;prod&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  fullTag</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">compound</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    format</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;{{.owner}}-{{.env}}&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    references</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">owner</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">env</span></span></code></pre></figure>
+<p>Nối nhiều parameters thành 1 giá trị mới. Dùng khi:</p>
+<ul>
+<li>Cần tạo composite values từ nhiều sources</li>
+<li>Naming convention cần consistent (vd: <code>&lt;team>-&lt;env>-&lt;service></code>)</li>
+<li>Giá trị cuối cùng phụ thuộc vào nhiều inputs</li>
+</ul>
+<p>Trong template: <code>{{ .fullTag }}</code> → resolve thành <code>platform-prod</code>.</p>
+<h3 id="84-reference-parameter--tham-chiếu-config-khác-quan-trọng-nhất">8.4 Reference parameter — tham chiếu config khác (quan trọng nhất)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#84-reference-parameter--tham-chiếu-config-khác-quan-trọng-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># projects/shared/slo/config.yaml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">configs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">id</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">availability-slo</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    config</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Service Availability SLO&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      template</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">availability-slo.json</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      parameters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # Reference tới Management Zone đã deploy</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        managementZoneId</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">reference</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          project</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">shared</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                  # Project chứa config được reference</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          configType</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">management-zone</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # Type/folder name trong project đó</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          configId</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">mz-production</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">          # ID trong config.yaml đích</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          property</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">id</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                     # Property cần lấy (thường là &quot;id&quot;)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      skip</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">false</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      settings</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        schema</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">builtin:monitoring.slo</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        scope</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">environment</span></span></code></pre></figure>
+<p>Reference parameter là cơ chế mạnh nhất — nó tạo <strong>implicit dependency</strong> giữa configs. Khi Monaco thấy reference, nó:</p>
+<ol>
+<li><strong>Thêm edge vào dependency graph</strong>: SLO → depends on → Management Zone</li>
+<li><strong>Deploy Management Zone trước</strong> (theo topological sort)</li>
+<li><strong>Lấy <code>id</code> của MZ đã deploy</strong> → inject vào SLO template</li>
+<li><strong>Deploy SLO</strong> với MZ ID đã resolved</li>
+</ol>
+<p>Trong template: <code>{{ .managementZoneId }}</code> → resolve thành ID thật của Management Zone trên Dynatrace (vd: <code>vu9U3hXa3q0AAAABABlidWlsdGluOm1hbmFnZW1lbnQtem9uZXMABnRlbmFudAAGdGVuYW50AClNaWNyb3NlcnZpY2VzIERlbW8gLSBLdWJlcm5ldGVzvu9U3hXa3q0</code>).</p>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Reference vs Terraform depends_on </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Reference parameter kết hợp 2 chức năng mà trong Terraform tách rời:</p>
+<ul>
+<li><strong>Dependency declaration</strong> (<code>depends_on</code>)</li>
+<li><strong>Output reference</strong> (<code>module.vpc.id</code>)</li>
+</ul>
+<p>Trong Monaco, khi bạn viết <code>type: reference</code> + <code>property: id</code>, bạn vừa khai báo dependency, vừa lấy output value — tất cả trong 1 block. Gọn hơn, nhưng cũng implicit hơn — bạn cần đọc kỹ reference params để hiểu dependency graph.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="9-feature-flags">9. Feature Flags<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-feature-flags" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Monaco có một số feature flags bật qua <strong>environment variable</strong>. Chúng kiểm soát behavior nâng cao, thường dùng cho large-scale deployments.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature Flag</th><th>Mô tả</th><th>Default</th></tr></thead><tbody><tr><td><code>MONACO_FEAT_GRAPH_DEPLOY</code></td><td>Deploy theo dependency graph (DAG) thay vì sequential. Đảm bảo thứ tự deploy đúng theo dependencies.</td><td><strong>Enabled</strong> (v2.15+)</td></tr><tr><td><code>MONACO_FEAT_FAST_DEPENDENCY_RESOLVER</code></td><td>Dùng resolver nhanh hơn cho dependency graph. Giảm thời gian build DAG ở large projects.</td><td>Disabled</td></tr><tr><td><code>MONACO_FEAT_GRAPH_DEPLOY_PARALLEL</code></td><td>Cho phép deploy song song các configs ở cùng level trong DAG (không phụ thuộc nhau). Giảm thời gian deploy tổng thể.</td><td>Disabled</td></tr></tbody></table></div>
+<p><strong>Khi nào nên bật:</strong></p>
+<ul>
+<li>
+<p><strong><code>GRAPH_DEPLOY_PARALLEL</code></strong>: Khi project có 100+ configs và deploy time quá lâu. Parallel deploy có thể giảm 50-70% thời gian. Tuy nhiên, cần lưu ý rate limits — parallel requests tăng risk 429 errors. Monaco có built-in rate limiter nhưng với rất nhiều concurrent configs, vẫn nên monitor.</p>
+</li>
+<li>
+<p><strong><code>FAST_DEPENDENCY_RESOLVER</code></strong>: Khi DAG build mất quá lâu (>10 giây). Thường chỉ xảy ra với 500+ configs với nhiều cross-references.</p>
+</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Bật feature flags</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> MONACO_FEAT_GRAPH_DEPLOY_PARALLEL</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">true</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> MONACO_FEAT_FAST_DEPENDENCY_RESOLVER</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">true</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">monaco</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> deploy</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> manifest.yaml</span></span></code></pre></figure>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Feature flags có thể thay đổi giữa versions </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Dynatrace có thể promote feature flag thành default behavior (như <code>GRAPH_DEPLOY</code> đã enabled by default từ v2.15), hoặc remove flag khi feature stable. Luôn check release notes khi upgrade Monaco version.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="10-links--next-steps">10. Links &amp; Next Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-links--next-steps" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="101-official-resources">10.1 Official Resources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#101-official-resources" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>📖 <strong>Documentation</strong>: <a href="https://docs.dynatrace.com/docs/deliver/configuration-as-code" class="external external-link">Configuration as Code<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> — reference chính thức, luôn up-to-date</li>
+<li>💻 <strong>GitHub Repository</strong>: <a href="https://github.com/Dynatrace/dynatrace-configuration-as-code" class="external external-link">dynatrace-configuration-as-code<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> — source code, issues, releases</li>
+<li>📦 <strong>Sample Configs</strong>: <a href="https://github.com/Dynatrace/dynatrace-configuration-as-code/tree/main/cmd/monaco/integrationtest/v2" class="external external-link">Integration test samples<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> — real-world config examples từ test suite của Monaco</li>
+<li>📝 <strong>Release Notes</strong>: <a href="https://github.com/Dynatrace/dynatrace-configuration-as-code/releases" class="external external-link">GitHub Releases<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> — changelog cho mỗi version</li>
+<li>🎓 <strong>Dynatrace University</strong>: <a href="https://university.dynatrace.com/" class="external external-link">Configuration as Code course<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> — free learning path</li>
+</ul>
+<h3 id="102-next-notes-trong-series">10.2 Next notes trong series<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#102-next-notes-trong-series" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Note</th><th>Nội dung</th></tr></thead><tbody><tr><td><a href="../../../../02---areas/observability/dynatrace/monaco/01---cài-đặt-monaco-cli--and--first-deploy" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/01---cài-đặt-monaco-cli--and--first-deploy">01 - Cài Đặt Monaco CLI &amp; First Deploy</a></td><td>Hands-on: cài CLI, tạo project đầu tiên, deploy auto-tag rule</td></tr><tr><td><a href="../../../../02---areas/observability/dynatrace/monaco/02---settings-2.0--and--classic-api-configs" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/02---settings-2.0--and--classic-api-configs">02 - Settings 2.0 &amp; Classic API Configs</a></td><td>Deep dive vào config types, schema exploration</td></tr><tr><td><a href="../../../../02---areas/observability/dynatrace/monaco/03---automation-workflows--and--advanced-types" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/03---automation-workflows--and--advanced-types">03 - Automation Workflows &amp; Advanced Types</a></td><td>Workflows, Documents, Buckets — platform-level configs</td></tr><tr><td><a href="../../../../02---areas/observability/dynatrace/monaco/04---multi-environment--and--parameter-overrides" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/04---multi-environment--and--parameter-overrides">04 - Multi-Environment &amp; Parameter Overrides</a></td><td>Strategies cho multi-env deployment, environment-specific values</td></tr><tr><td><a href="../../../../02---areas/observability/dynatrace/monaco/05---delete,-download--and--drift-management" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/05---delete,-download--and--drift-management">05 - Delete, Download &amp; Drift Management</a></td><td>Lifecycle management, drift detection</td></tr><tr><td><a href="../../../../02---areas/observability/dynatrace/monaco/06---monaco-+-argocd-gitops-integration" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/06---monaco-+-argocd-gitops-integration">06 - Monaco + ArgoCD GitOps Integration</a></td><td>GitOps pattern, ArgoCD hooks</td></tr><tr><td><a href="../../../../02---areas/observability/dynatrace/monaco/07---ci-cd-pipeline--and--secret-management" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/07---ci-cd-pipeline--and--secret-management">07 - CI-CD Pipeline &amp; Secret Management</a></td><td>GitHub Actions/Jenkins pipelines, secret injection</td></tr><tr><td><a href="../../../../02---areas/observability/dynatrace/monaco/08---production-patterns--and--best-practices" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/monaco/08---production-patterns--and--best-practices">08 - Production Patterns &amp; Best Practices</a></td><td>Enterprise patterns, team structure, governance</td></tr></tbody></table></div>
+<h3 id="103-related-notes">10.3 Related notes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#103-related-notes" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="../../../../moc---dynatrace" class="internal internal-link alias" data-slug="moc---dynatrace">MOC - Dynatrace</a> — Map of Content cho toàn bộ Dynatrace knowledge</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-376" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#monaco-v2-overview--architecture" data-for="monaco-v2-overview--architecture">Monaco v2 Overview &amp; Architecture</a></li><li class="depth-1"><a href="#1-monaco-là-gì--và-tại-sao-bạn-cần-nó" data-for="1-monaco-là-gì--và-tại-sao-bạn-cần-nó">1. Monaco là gì — và tại sao bạn cần nó</a></li><li class="depth-2"><a href="#11-bối-cảnh-thực-tế" data-for="11-bối-cảnh-thực-tế">1.1 Bối cảnh thực tế</a></li><li class="depth-2"><a href="#12-pain-points-khi-config-thủ-công-qua-ui" data-for="12-pain-points-khi-config-thủ-công-qua-ui">1.2 Pain points khi config thủ công qua UI</a></li><li class="depth-2"><a href="#13-tại-sao-đây-không-chỉ-là-nice-to-have" data-for="13-tại-sao-đây-không-chỉ-là-nice-to-have">1.3 Tại sao đây không chỉ là nice-to-have</a></li><li class="depth-2"><a href="#14-monaco-giải-quyết-như-thế-nào" data-for="14-monaco-giải-quyết-như-thế-nào">1.4 Monaco giải quyết như thế nào</a></li><li class="depth-2"><a href="#15-monaco-trong-ecosystem--so-sánh-để-hiểu-rõ-hơn" data-for="15-monaco-trong-ecosystem--so-sánh-để-hiểu-rõ-hơn">1.5 Monaco trong ecosystem — so sánh để hiểu rõ hơn</a></li><li class="depth-1"><a href="#2-monaco-v1-vs-v2--migration-context" data-for="2-monaco-v1-vs-v2--migration-context">2. Monaco v1 vs v2 — Migration context</a></li><li class="depth-2"><a href="#21-tại-sao-dynatrace-phải-viết-lại-v2" data-for="21-tại-sao-dynatrace-phải-viết-lại-v2">2.1 Tại sao Dynatrace phải viết lại v2</a></li><li class="depth-2"><a href="#22-bảng-so-sánh-chi-tiết" data-for="22-bảng-so-sánh-chi-tiết">2.2 Bảng so sánh chi tiết</a></li><li class="depth-2"><a href="#23-externalid--bí-mật-của-v2-tracking" data-for="23-externalid--bí-mật-của-v2-tracking">2.3 externalId — Bí mật của v2 tracking</a></li><li class="depth-1"><a href="#3-kiến-trúc--how-monaco-works-under-the-hood" data-for="3-kiến-trúc--how-monaco-works-under-the-hood">3. Kiến trúc — How Monaco works under the hood</a></li><li class="depth-2"><a href="#31-architectural-overview" data-for="31-architectural-overview">3.1 Architectural Overview</a></li><li class="depth-2"><a href="#32-flow-chi-tiết--8-bước-từ-yaml-đến-dynatrace" data-for="32-flow-chi-tiết--8-bước-từ-yaml-đến-dynatrace">3.2 Flow chi tiết — 8 bước từ YAML đến Dynatrace</a></li><li class="depth-2"><a href="#33-tại-sao-dependency-graph-quan-trọng" data-for="33-tại-sao-dependency-graph-quan-trọng">3.3 Tại sao dependency graph quan trọng?</a></li><li class="depth-1"><a href="#4-configuration-types--deep-dive" data-for="4-configuration-types--deep-dive">4. Configuration Types — Deep dive</a></li><li class="depth-2"><a href="#41-tổng-quan-7-types" data-for="41-tổng-quan-7-types">4.1 Tổng quan 7 types</a></li><li class="depth-2"><a href="#42-chi-tiết-từng-type" data-for="42-chi-tiết-từng-type">4.2 Chi tiết từng type</a></li><li class="depth-2"><a href="#43-settings-20-vs-classic-api--migration-path" data-for="43-settings-20-vs-classic-api--migration-path">4.3 Settings 2.0 vs Classic API — Migration path</a></li><li class="depth-1"><a href="#5-authentication--security-model" data-for="5-authentication--security-model">5. Authentication — Security model</a></li><li class="depth-2"><a href="#51-hai-phương-thức-authentication" data-for="51-hai-phương-thức-authentication">5.1 Hai phương thức authentication</a></li><li class="depth-2"><a href="#52-api-token--chi-tiết" data-for="52-api-token--chi-tiết">5.2 API Token — chi tiết</a></li><li class="depth-2"><a href="#53-oauth-client-credentials--chi-tiết" data-for="53-oauth-client-credentials--chi-tiết">5.3 OAuth Client Credentials — chi tiết</a></li><li class="depth-2"><a href="#54-bảng-tổng-hợp-resource-type--auth-method--required-scopes" data-for="54-bảng-tổng-hợp-resource-type--auth-method--required-scopes">5.4 Bảng tổng hợp: Resource type → Auth method → Required scopes</a></li><li class="depth-1"><a href="#6-project-structure--cách-tổ-chức-code" data-for="6-project-structure--cách-tổ-chức-code">6. Project Structure — Cách tổ chức code</a></li><li class="depth-2"><a href="#61-cấu-trúc-directory-chuẩn" data-for="61-cấu-trúc-directory-chuẩn">6.1 Cấu trúc directory chuẩn</a></li><li class="depth-2"><a href="#62-manifestyaml--anatomy-chi-tiết" data-for="62-manifestyaml--anatomy-chi-tiết">6.2 manifest.yaml — Anatomy chi tiết</a></li><li class="depth-2"><a href="#63-configyaml--settings-20" data-for="63-configyaml--settings-20">6.3 config.yaml — Settings 2.0</a></li><li class="depth-2"><a href="#64-configyaml--classic-api" data-for="64-configyaml--classic-api">6.4 config.yaml — Classic API</a></li><li class="depth-2"><a href="#65-template-file-json--go-template-syntax" data-for="65-template-file-json--go-template-syntax">6.5 Template file (.json) — Go template syntax</a></li><li class="depth-1"><a href="#7-cli-commands--tham-chiếu-nhanh" data-for="7-cli-commands--tham-chiếu-nhanh">7. CLI Commands — Tham chiếu nhanh</a></li><li class="depth-2"><a href="#71-bảng-commands" data-for="71-bảng-commands">7.1 Bảng commands</a></li><li class="depth-2"><a href="#72-common-flags" data-for="72-common-flags">7.2 Common flags</a></li><li class="depth-2"><a href="#73-lifecycle-flow" data-for="73-lifecycle-flow">7.3 Lifecycle flow</a></li><li class="depth-2"><a href="#74-workflow-thực-tế--combo-commands" data-for="74-workflow-thực-tế--combo-commands">7.4 Workflow thực tế — combo commands</a></li><li class="depth-1"><a href="#8-parameter-types--hệ-thống-templating" data-for="8-parameter-types--hệ-thống-templating">8. Parameter Types — Hệ thống templating</a></li><li class="depth-2"><a href="#81-value-parameter--giá-trị-tĩnh" data-for="81-value-parameter--giá-trị-tĩnh">8.1 Value parameter — giá trị tĩnh</a></li><li class="depth-2"><a href="#82-environment-parameter--đọc-từ-env-var" data-for="82-environment-parameter--đọc-từ-env-var">8.2 Environment parameter — đọc từ env var</a></li><li class="depth-2"><a href="#83-compound-parameter--nối-nhiều-tham-số" data-for="83-compound-parameter--nối-nhiều-tham-số">8.3 Compound parameter — nối nhiều tham số</a></li><li class="depth-2"><a href="#84-reference-parameter--tham-chiếu-config-khác-quan-trọng-nhất" data-for="84-reference-parameter--tham-chiếu-config-khác-quan-trọng-nhất">8.4 Reference parameter — tham chiếu config khác (quan trọng nhất)</a></li><li class="depth-1"><a href="#9-feature-flags" data-for="9-feature-flags">9. Feature Flags</a></li><li class="depth-1"><a href="#10-links--next-steps" data-for="10-links--next-steps">10. Links &amp; Next Steps</a></li><li class="depth-2"><a href="#101-official-resources" data-for="101-official-resources">10.1 Official Resources</a></li><li class="depth-2"><a href="#102-next-notes-trong-series" data-for="102-next-notes-trong-series">10.2 Next notes trong series</a></li><li class="depth-2"><a href="#103-related-notes" data-for="103-related-notes">10.3 Related notes</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/dynatrace/monaco/01---cài-đặt-monaco-cli--and--first-deploy" class="internal">Cài Đặt Monaco CLI &amp; First Deploy</a></li><li><a href="../../../../02---areas/observability/dynatrace/monaco/02---settings-2.0--and--classic-api-configs" class="internal">Settings 2.0 &amp; Classic API Configs</a></li><li><a href="../../../../02---areas/observability/dynatrace/monaco/03---automation-workflows--and--advanced-types" class="internal">Automation Workflows &amp; Advanced Types</a></li><li><a href="../../../../02---areas/observability/dynatrace/monaco/07---ci-cd-pipeline--and--secret-management" class="internal">CI/CD Pipeline &amp; Secret Management</a></li><li><a href="../../../../02---areas/observability/dynatrace/monaco/08---production-patterns--and--best-practices" class="internal">Production Patterns &amp; Best Practices</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

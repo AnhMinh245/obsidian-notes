@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>03.2 - Schema và Functional Level</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="03.2 - Schema và Functional Level"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="03.2 - Schema và Functional Level"/><meta name="twitter:description" content="Schema và Functional Level - Nền tảng nâng cấp Tóm tắt nhanh Schema định nghĩa mọi object class và attribute trong AD — replicate đến toàn bộ DC trong forest Schema là cumulative và additive: chỉ thêm, gần như không thể xoá — mỗi thay đổi là vĩnh viễn Functional Level (FFL/DFL) là cơ chế unlock tính..."/><meta property="og:description" content="Schema và Functional Level - Nền tảng nâng cấp Tóm tắt nhanh Schema định nghĩa mọi object class và attribute trong AD — replicate đến toàn bộ DC trong forest Schema là cumulative và additive: chỉ thêm, gần như không thể xoá — mỗi thay đổi là vĩnh viễn Functional Level (FFL/DFL) là cơ chế unlock tính..."/><meta property="og:image:alt" content="Schema và Functional Level - Nền tảng nâng cấp Tóm tắt nhanh Schema định nghĩa mọi object class và attribute trong AD — replicate đến toàn bộ DC trong forest Schema là cumulative và additive: chỉ thêm, gần như không thể xoá — mỗi thay đổi là vĩnh viễn Functional Level (FFL/DFL) là cơ chế unlock tính..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Schema và Functional Level - Nền tảng nâng cấp Tóm tắt nhanh Schema định nghĩa mọi object class và attribute trong AD — replicate đến toàn bộ DC trong forest Schema là cumulative và additive: chỉ thêm, gần như không thể xoá — mỗi thay đổi là vĩnh viễn Functional Level (FFL/DFL) là cơ chế unlock tính..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-479" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-479" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/">Windows Servers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/">AD Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/">03 - Vận hành nâng cao</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>03.2 - Schema và Functional Level</a></div></nav><h1 class="article-title">03.2 - Schema và Functional Level</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/windows-server" class="internal internal-link tag-link">domain/windows-server</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">AD Schema</span><span class="note-properties-separator">, </span><span class="note-properties-text">Functional Level</span><span class="note-properties-separator">, </span><span class="note-properties-text">FFL</span><span class="note-properties-separator">, </span><span class="note-properties-text">DFL</span><span class="note-properties-separator">, </span><span class="note-properties-text">Forest Functional Level</span><span class="note-properties-separator">, </span><span class="note-properties-text">Domain Functional Level</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>20 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="schema-và-functional-level---nền-tảng-nâng-cấp">Schema và Functional Level - Nền tảng nâng cấp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#schema-và-functional-level---nền-tảng-nâng-cấp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tóm-tắt-nhanh">Tóm tắt nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Schema</strong> định nghĩa mọi object class và attribute trong AD — replicate đến toàn bộ DC trong forest</li>
+<li>Schema là <strong>cumulative và additive</strong>: chỉ thêm, gần như không thể xoá — mỗi thay đổi là vĩnh viễn</li>
+<li><strong>Functional Level</strong> (FFL/DFL) là cơ chế unlock tính năng mới khi toàn bộ DC đạt OS tối thiểu</li>
+<li>Nâng Functional Level là <strong>thao tác một chiều không thể rollback</strong> — phải kiểm tra kỹ trước khi thực hiện</li>
+<li>Schema version và Functional Level là <strong>hai khái niệm khác nhau</strong> — có thể extend schema mà chưa nâng FL</li>
+<li>Trước khi nâng cấp AD lên WS2025: phải chạy <code>adprep</code> để extend schema lên version 91</li>
+</ul>
+<h2 id="ad-schema-deep-dive">AD Schema Deep Dive<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ad-schema-deep-dive" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="schema-là-gì">Schema là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#schema-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Schema là <strong>blueprint</strong> của toàn bộ AD database — tương tự database schema trong SQL</li>
+<li>Mọi object trong AD (user, computer, group, OU, GPO…) đều được <strong>định nghĩa bởi Schema</strong></li>
+<li>Schema gồm 2 thành phần chính:
+<ul>
+<li><strong>Object Classes</strong> (classSchema): định nghĩa loại object có thể tạo — ví dụ class <code>user</code>, class <code>computer</code>, class <code>organizationalUnit</code></li>
+<li><strong>Attributes</strong> (attributeSchema): định nghĩa thuộc tính gắn với object — ví dụ <code>sAMAccountName</code>, <code>mail</code>, <code>userPrincipalName</code>, <code>memberOf</code></li>
+</ul>
+</li>
+<li>Mỗi class quy định attribute nào là <strong>mandatory</strong> (bắt buộc) và <strong>optional</strong> (tuỳ chọn)</li>
+</ul>
+<h3 id="tương-tự-thực-tế">Tương tự thực tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tương-tự-thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Schema giống như <strong>bản thiết kế kiến trúc</strong> của một toà nhà: quy định có bao nhiêu loại phòng (class), mỗi phòng có bao nhiêu cửa sổ, bao nhiêu ổ điện (attribute)</li>
+<li>Một khi toà nhà đã xây (AD đã hoạt động), bạn có thể <strong>thêm phòng mới</strong> (add class), <strong>thêm ổ điện</strong> (add attribute), nhưng <strong>không thể xoá tầng</strong> đã xây (cannot delete class/attribute)</li>
+<li>Bản thiết kế này <strong>áp dụng cho toàn khu đô thị</strong> (forest) — không phải riêng 1 toà nhà (domain)</li>
+</ul>
+<h3 id="schema-partition">Schema Partition<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#schema-partition" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TB\n    subgraph forest[\&quot;Forest: corp.local\&quot;]\n        SchemaPartition[\&quot;Schema Partition&lt;br/>CN=Schema,CN=Configuration&lt;br/>REPLICATED FOREST-WIDE\&quot;]\n\n        subgraph domain1[\&quot;Domain: corp.local\&quot;]\n            DC1[\&quot;DC1 - Schema copy\&quot;]\n            DC2[\&quot;DC2 - Schema copy\&quot;]\n        end\n\n        subgraph domain2[\&quot;Domain: asia.corp.local\&quot;]\n            DC3[\&quot;DC3 - Schema copy\&quot;]\n            DC4[\&quot;DC4 - Schema copy\&quot;]\n        end\n    end\n\n    SchemaPartition -->|\&quot;Replicate\&quot;| DC1\n    SchemaPartition -->|\&quot;Replicate\&quot;| DC2\n    SchemaPartition -->|\&quot;Replicate\&quot;| DC3\n    SchemaPartition -->|\&quot;Replicate\&quot;| DC4&quot;">graph TB
+    subgraph forest[&quot;Forest: corp.local&quot;]
+        SchemaPartition[&quot;Schema Partition&lt;br/>CN=Schema,CN=Configuration&lt;br/>REPLICATED FOREST-WIDE&quot;]
+
+        subgraph domain1[&quot;Domain: corp.local&quot;]
+            DC1[&quot;DC1 - Schema copy&quot;]
+            DC2[&quot;DC2 - Schema copy&quot;]
+        end
+
+        subgraph domain2[&quot;Domain: asia.corp.local&quot;]
+            DC3[&quot;DC3 - Schema copy&quot;]
+            DC4[&quot;DC4 - Schema copy&quot;]
+        end
+    end
+
+    SchemaPartition -->|&quot;Replicate&quot;| DC1
+    SchemaPartition -->|&quot;Replicate&quot;| DC2
+    SchemaPartition -->|&quot;Replicate&quot;| DC3
+    SchemaPartition -->|&quot;Replicate&quot;| DC4
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>Schema được lưu trong <strong>Schema naming context</strong>: <code>CN=Schema,CN=Configuration,DC=corp,DC=local</code></li>
+<li>Nằm trong Configuration partition → <strong>replicate đến MỌI DC trong toàn forest</strong> (không chỉ domain)</li>
+<li>Vì replicate toàn forest → thay đổi Schema ảnh hưởng <strong>tất cả domain, tất cả DC</strong></li>
+<li>Chỉ có <strong>Schema Master</strong> (FSMO role) mới có quyền ghi vào Schema partition — xem <a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></li>
+</ul>
+<h3 id="cấu-trúc-bên-trong-schema">Cấu trúc bên trong Schema<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-trúc-bên-trong-schema" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="object-class-hierarchy">Object Class Hierarchy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#object-class-hierarchy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>AD Schema sử dụng <strong>inheritance</strong> (kế thừa) giống OOP:
+<ul>
+<li>Class <code>top</code> → class cha gốc của mọi class</li>
+<li>Class <code>person</code> kế thừa từ <code>top</code> → có các attribute chung cho “person”</li>
+<li>Class <code>organizationalPerson</code> kế thừa từ <code>person</code> → thêm attribute tổ chức</li>
+<li>Class <code>user</code> kế thừa từ <code>organizationalPerson</code> → thêm attribute login, password</li>
+</ul>
+</li>
+<li>Khi extend schema, class mới có thể <strong>kế thừa</strong> class có sẵn → tự động có mandatory/optional attributes của class cha</li>
+<li>3 loại class:
+<ul>
+<li><strong>Structural</strong>: có thể tạo instance (ví dụ: <code>user</code>, <code>computer</code>, <code>group</code>)</li>
+<li><strong>Auxiliary</strong>: bổ sung attribute cho class khác (ví dụ: <code>mailRecipient</code>)</li>
+<li><strong>Abstract</strong>: chỉ dùng làm cha để kế thừa (ví dụ: <code>top</code>, <code>person</code>)</li>
+</ul>
+</li>
+</ul>
+<h4 id="attribute-syntax-và-oid">Attribute Syntax và OID<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#attribute-syntax-và-oid" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Mỗi attribute có <strong>Object Identifier (OID)</strong> duy nhất — số dạng <code>1.2.840.113556.1.4.xxx</code></li>
+<li>OID đã dùng <strong>không bao giờ được tái sử dụng</strong> — kể cả khi attribute bị deactivate</li>
+<li>Mỗi attribute có <strong>syntax</strong> xác định kiểu dữ liệu:
+<ul>
+<li><code>2.5.5.12</code> = Unicode String</li>
+<li><code>2.5.5.9</code> = Integer</li>
+<li><code>2.5.5.8</code> = Boolean</li>
+<li><code>2.5.5.11</code> = Generalized Time</li>
+<li><code>2.5.5.1</code> = Distinguished Name (DN reference)</li>
+</ul>
+</li>
+</ul>
+<h3 id="tính-chất-quan-trọng-của-schema">Tính chất quan trọng của Schema<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tính-chất-quan-trọng-của-schema" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tính chất</th><th>Chi tiết</th><th>Hệ quả thực tế</th></tr></thead><tbody><tr><td><strong>Cumulative</strong></td><td>Schema mới bao gồm toàn bộ Schema cũ + phần mở rộng</td><td>Upgrade chỉ thêm, không thay thế</td></tr><tr><td><strong>Additive</strong></td><td>Chỉ có thể thêm class/attribute mới, thực tế không thể xoá</td><td>Phải test kỹ trước khi extend — sai thì sống chung</td></tr><tr><td><strong>Forest-wide</strong></td><td>Mọi thay đổi replicate đến tất cả DC trong forest</td><td>1 lỗi schema → ảnh hưởng toàn forest</td></tr><tr><td><strong>Versioned</strong></td><td>Mỗi phiên bản Windows Server tương ứng 1 schema version</td><td>Dùng version number để xác nhận state</td></tr><tr><td><strong>Irreversible</strong></td><td>Đã extend thì không rollback — chỉ có restore backup</td><td>LUÔN backup trước khi extend</td></tr></tbody></table></div>
+<ul>
+<li>Về mặt kỹ thuật, có thể <strong>deactivate</strong> (set <code>isDefunct = TRUE</code>) attribute/class cũ nhưng không thể xoá khỏi Schema</li>
+<li>Deactivated attribute vẫn tồn tại trong Schema, vẫn replicate, chỉ không thể tạo instance mới</li>
+<li>Object ID (OID) đã dùng không bao giờ được tái sử dụng — đảm bảo uniqueness vĩnh viễn</li>
+</ul>
+<h3 id="schema-version-theo-windows-server">Schema Version theo Windows Server<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#schema-version-theo-windows-server" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:center;">Windows Server</th><th style="text-align:center;">Schema Version</th><th style="text-align:center;">objectVersion</th><th>Thay đổi đáng chú ý</th></tr></thead><tbody><tr><td style="text-align:center;">WS 2003</td><td style="text-align:center;">30</td><td style="text-align:center;">13</td><td>Schema foundation cho modern AD</td></tr><tr><td style="text-align:center;">WS 2003 R2</td><td style="text-align:center;">31</td><td style="text-align:center;">13</td><td>Thêm auxiliary class cho UNIX attributes</td></tr><tr><td style="text-align:center;">WS 2008</td><td style="text-align:center;">44</td><td style="text-align:center;">14</td><td>+14 attributes: DFSR, fine-grained password policy</td></tr><tr><td style="text-align:center;">WS 2008 R2</td><td style="text-align:center;">47</td><td style="text-align:center;">14</td><td>+3 attributes: Managed Service Accounts, Recycle Bin support</td></tr><tr><td style="text-align:center;">WS 2012</td><td style="text-align:center;">56</td><td style="text-align:center;">15</td><td>+9 attributes: claims, compound auth, DC cloning</td></tr><tr><td style="text-align:center;">WS 2012 R2</td><td style="text-align:center;">69</td><td style="text-align:center;">15</td><td>+13 attributes: authentication policies/silos, Protected Users</td></tr><tr><td style="text-align:center;">WS 2016</td><td style="text-align:center;">87</td><td style="text-align:center;">15</td><td>+18 attributes: PAM, MIM integration, credential guard</td></tr><tr><td style="text-align:center;">WS 2019</td><td style="text-align:center;">88</td><td style="text-align:center;">15</td><td>+1 attribute: minor addition</td></tr><tr><td style="text-align:center;">WS 2022</td><td style="text-align:center;">88</td><td style="text-align:center;">15</td><td>Cùng schema version với 2019 — không có schema changes</td></tr><tr><td style="text-align:center;">WS 2025</td><td style="text-align:center;">91</td><td style="text-align:center;">16</td><td>+3 attributes: 32K database pages, improved Kerberos</td></tr></tbody></table></div>
+<p><strong>Kiểm tra schema version hiện tại</strong>:</p>
+<pre><code>dsquery * &quot;CN=Schema,CN=Configuration,DC=corp,DC=local&quot; -scope base -attr objectVersion
+</code></pre>
+<p><strong>Kiểm tra chi tiết hơn</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="powershell" data-theme="github-light github-dark"><code data-language="powershell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">Get-ADObject</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;CN=Schema,CN=Configuration,DC=corp,DC=local&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Properties objectVersion</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">,</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> whenChanged</span></span></code></pre></figure>
+<h3 id="deferred-index-creation">Deferred Index Creation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deferred-index-creation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Khi schema extension thêm attribute mới với flag <strong>indexed</strong> → AD cần build index cho attribute đó trên mọi DC</li>
+<li>Trong forest lớn (hàng triệu object), index building có thể <strong>tốn thời gian và resource</strong> đáng kể</li>
+<li><strong>Deferred Index Creation</strong> (từ WS2012+):
+<ul>
+<li>Index không được build ngay khi schema extend</li>
+<li>Thay vào đó, index được build <strong>sau khi replication hoàn tất</strong> và DC khởi động lại</li>
+<li>Giảm impact lên production trong quá trình schema extension</li>
+</ul>
+</li>
+<li>Attribute <code>searchFlags</code> value <code>8192</code> (bit 13) = fATTINDEX — flag yêu cầu index</li>
+<li>Best practice: schedule schema extension ngoài giờ cao điểm, cho phép DC rebuild index dần</li>
+</ul>
+<h2 id="schema-extension-process">Schema Extension Process<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#schema-extension-process" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="quy-trình-schema-extension">Quy trình Schema Extension<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quy-trình-schema-extension" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant Admin as Schema Admin\n    participant SM as Schema Master DC\n    participant InfraDC as Infra Master DC\n    participant AllDC as All DCs in Forest\n    participant NewDC as New DC to promote\n\n    Note over Admin: Step 1 - Forest Prep\n    Admin->>SM: adprep /forestprep\n    Note over SM: Require: Schema Admin +&lt;br/>Enterprise Admin membership\n    SM->>SM: Extend Schema partition&lt;br/>add new classes/attributes\n    SM->>AllDC: Replicate Schema changes&lt;br/>to all DCs\n\n    Note over Admin: Wait for replication to complete\n\n    Note over Admin: Step 2 - Domain Prep\n    Admin->>InfraDC: adprep /domainprep\n    Note over InfraDC: Require: Domain Admin&lt;br/>Run on EACH domain\n    InfraDC->>InfraDC: Update Domain partition&lt;br/>ACLs, container objects\n\n    Note over Admin: Step 3 - DC Promotion\n    Admin->>NewDC: Install AD DS + Promote\n    Note over NewDC: From WS2012+&lt;br/>adprep runs automatically&lt;br/>if account has sufficient rights&quot;">sequenceDiagram
+    participant Admin as Schema Admin
+    participant SM as Schema Master DC
+    participant InfraDC as Infra Master DC
+    participant AllDC as All DCs in Forest
+    participant NewDC as New DC to promote
+
+    Note over Admin: Step 1 - Forest Prep
+    Admin->>SM: adprep /forestprep
+    Note over SM: Require: Schema Admin +&lt;br/>Enterprise Admin membership
+    SM->>SM: Extend Schema partition&lt;br/>add new classes/attributes
+    SM->>AllDC: Replicate Schema changes&lt;br/>to all DCs
+
+    Note over Admin: Wait for replication to complete
+
+    Note over Admin: Step 2 - Domain Prep
+    Admin->>InfraDC: adprep /domainprep
+    Note over InfraDC: Require: Domain Admin&lt;br/>Run on EACH domain
+    InfraDC->>InfraDC: Update Domain partition&lt;br/>ACLs, container objects
+
+    Note over Admin: Step 3 - DC Promotion
+    Admin->>NewDC: Install AD DS + Promote
+    Note over NewDC: From WS2012+&lt;br/>adprep runs automatically&lt;br/>if account has sufficient rights
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Chi tiết từng bước</strong>:</p>
+<ol>
+<li>
+<p><strong><code>adprep /forestprep</code></strong>:</p>
+<ul>
+<li>Phải chạy trên DC giữ role <strong>Schema Master</strong></li>
+<li>Account chạy phải thuộc <strong>Schema Admins</strong> + <strong>Enterprise Admins</strong></li>
+<li>Modify Schema partition — thêm class và attribute cho OS mới</li>
+<li>Chỉ chạy <strong>1 lần cho toàn forest</strong></li>
+<li>Đợi replication hoàn tất trước khi tiếp (kiểm tra bằng <code>repadmin /replsummary</code>)</li>
+<li>Thời gian: thường vài phút, có thể lâu hơn trong forest lớn</li>
+</ul>
+</li>
+<li>
+<p><strong><code>adprep /domainprep</code></strong>:</p>
+<ul>
+<li>Phải chạy trên DC giữ role <strong>Infrastructure Master</strong> của <strong>mỗi domain</strong></li>
+<li>Account chạy phải thuộc <strong>Domain Admins</strong> của domain đó</li>
+<li>Update ACL, tạo container mới trong domain partition</li>
+<li>Chạy <strong>1 lần cho mỗi domain</strong> trong forest</li>
+<li>Nhanh hơn forestprep — thường vài giây đến vài phút</li>
+</ul>
+</li>
+<li>
+<p><strong>Automatic adprep (WS2012+)</strong>:</p>
+<ul>
+<li>Khi promote DC mới bằng Server Manager hoặc PowerShell</li>
+<li>Nếu account có đủ quyền (Schema Admin + Enterprise Admin) → adprep tự chạy</li>
+<li>Nếu không đủ quyền → phải chạy manual trước</li>
+<li><strong>Khuyến nghị</strong>: vẫn nên chạy manual trong production để kiểm soát timing</li>
+</ul>
+</li>
+</ol>
+<h2 id="third-party-schema-extensions">Third-party Schema Extensions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#third-party-schema-extensions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tổng-quan">Tổng quan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-quan" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nhiều ứng dụng enterprise cũng extend AD Schema</li>
+<li>Các extension này <strong>tồn tại vĩnh viễn</strong> trong Schema ngay cả khi gỡ ứng dụng</li>
+<li>Trước khi extend: luôn kiểm tra <strong>compatibility</strong> với schema version hiện tại</li>
+<li>Best practice: test trên <strong>lab environment</strong> trước khi extend production</li>
+</ul>
+<h3 id="exchange-server-schema-extensions">Exchange Server Schema Extensions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exchange-server-schema-extensions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:center;">Exchange Version</th><th style="text-align:center;">Schema Range-Upper</th><th style="text-align:center;">Số attribute thêm</th><th>Ghi chú</th></tr></thead><tbody><tr><td style="text-align:center;">Exchange 2013 RTM</td><td style="text-align:center;">15137</td><td style="text-align:center;">~150+</td><td>Major schema extension</td></tr><tr><td style="text-align:center;">Exchange 2013 SP1</td><td style="text-align:center;">15292</td><td style="text-align:center;">Thêm vài chục</td><td>Cumulative</td></tr><tr><td style="text-align:center;">Exchange 2013 CU23</td><td style="text-align:center;">15312</td><td style="text-align:center;"></td><td></td></tr><tr><td style="text-align:center;">Exchange 2016 RTM</td><td style="text-align:center;">15317</td><td style="text-align:center;">~20</td><td>Incremental từ 2013</td></tr><tr><td style="text-align:center;">Exchange 2016 CU23</td><td style="text-align:center;">15334</td><td style="text-align:center;"></td><td></td></tr><tr><td style="text-align:center;">Exchange 2019 RTM</td><td style="text-align:center;">17000</td><td style="text-align:center;">~30</td><td>New range</td></tr><tr><td style="text-align:center;">Exchange 2019 CU14</td><td style="text-align:center;">17003</td><td style="text-align:center;"></td><td></td></tr></tbody></table></div>
+<ul>
+<li>Exchange schema extension là <strong>lớn nhất</strong> trong các ứng dụng Microsoft — thêm hàng trăm attribute cho mailbox, transport, OAB, address policy…</li>
+<li>Kiểm tra Exchange schema version: <code>Get-ADObject &quot;CN=ms-Exch-Schema-Version-Pt,CN=Schema,CN=Configuration,DC=corp,DC=local&quot; -Properties rangeUpper</code></li>
+<li><strong>Lưu ý</strong>: uninstall Exchange <strong>không xoá</strong> schema extensions — chúng ở lại vĩnh viễn</li>
+</ul>
+<h3 id="sccm--configmgr-schema-extensions">SCCM / ConfigMgr Schema Extensions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sccm--configmgr-schema-extensions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Thêm khoảng <strong>30 attribute</strong> và <strong>5 class</strong> vào schema</li>
+<li>Cho phép client discovery, software deployment, hardware inventory qua AD</li>
+<li>Chạy bằng <code>extadsch.exe</code> từ SCCM media</li>
+<li>Kiểm tra: tìm attribute <code>msSMS-Site-Code</code> trong schema</li>
+</ul>
+<h3 id="các-ứng-dụng-khác">Các ứng dụng khác<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-ứng-dụng-khác" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Ứng dụng</th><th>Mô tả extension</th><th>Impact</th></tr></thead><tbody><tr><td>Lync / Skype for Business</td><td>Attribute cho voice, conferencing, presence</td><td>Trung bình (~20 attributes)</td></tr><tr><td>SCOM (System Center Operations Manager)</td><td>Ít — chủ yếu dùng SQL database riêng</td><td>Nhỏ</td></tr><tr><td>Citrix Virtual Apps</td><td>Attribute cho published apps, user sessions</td><td>Nhỏ (~10 attributes)</td></tr><tr><td>Custom enterprise apps</td><td>Tuỳ vendor — luôn yêu cầu OID riêng</td><td>Varies</td></tr></tbody></table></div>
+<h3 id="schema-conflicts-và-troubleshooting">Schema Conflicts và Troubleshooting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#schema-conflicts-và-troubleshooting" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="duplicate-oid-conflicts">Duplicate OID Conflicts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duplicate-oid-conflicts" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Xảy ra khi hai ứng dụng khác nhau cố dùng <strong>cùng OID</strong> cho attribute khác nhau</li>
+<li>Nguyên nhân phổ biến:
+<ul>
+<li>Vendor không đăng ký OID riêng với IANA, dùng OID tự chọn</li>
+<li>Developer copy schema extension từ nguồn khác mà không thay OID</li>
+</ul>
+</li>
+<li><strong>Hậu quả</strong>: <code>adprep</code> hoặc schema extension <strong>fail</strong> với lỗi “OID already exists”</li>
+<li><strong>Xử lý</strong>:
+<ul>
+<li>Liên hệ vendor để lấy schema extension với OID đúng</li>
+<li>Không tự sửa OID — có thể gây mất tương thích</li>
+<li>Test trong lab trước khi apply production — luôn luôn</li>
+</ul>
+</li>
+</ul>
+<h4 id="attribute-name-conflicts">Attribute Name Conflicts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#attribute-name-conflicts" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Hai extension dùng cùng <strong>ldapDisplayName</strong> cho attribute khác nhau</li>
+<li>Ít phổ biến hơn OID conflict nhưng vẫn xảy ra</li>
+<li>Schema extension sẽ fail nếu tên đã tồn tại với definition khác</li>
+</ul>
+<h4 id="best-practices-tránh-schema-conflicts">Best Practices tránh Schema Conflicts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#best-practices-tránh-schema-conflicts" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Luôn test schema extension trong <strong>isolated lab forest</strong> trước</li>
+<li>Verify vendor đã đăng ký <strong>OID arc riêng</strong> (nên bắt đầu từ <code>1.2.840.113556.1.8.xxxx</code> hoặc private arc)</li>
+<li>Kiểm tra schema compatibility matrix giữa các ứng dụng cần extend</li>
+<li>Backup System State trên Schema Master trước mọi extension</li>
+<li>Sau extension: chạy <code>repadmin /replsummary</code> để verify replication healthy</li>
+</ul>
+<h2 id="functional-level">Functional Level<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#functional-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="khái-niệm">Khái niệm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khái-niệm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Functional Level là cơ chế <strong>gate-keeping</strong>: unlock tính năng mới chỉ khi <strong>toàn bộ DC</strong> đạt OS tối thiểu</li>
+<li>Tương tự <strong>hiệp ước quốc tế</strong>: tính năng mới chỉ có hiệu lực khi <strong>tất cả</strong> thành viên (DC) đồng ý (chạy OS đủ mới)
+<ul>
+<li>Nếu 1 DC vẫn chạy OS cũ → không thể nâng FL vì DC đó không hiểu protocol/feature mới</li>
+</ul>
+</li>
+<li>Có 2 cấp:
+<ul>
+<li><strong>Forest Functional Level (FFL)</strong>: tính năng áp dụng toàn forest</li>
+<li><strong>Domain Functional Level (DFL)</strong>: tính năng áp dụng trong phạm vi 1 domain</li>
+</ul>
+</li>
+<li>DFL có thể <strong>cao hơn</strong> FFL nhưng <strong>không được thấp hơn</strong></li>
+<li>Nâng FFL yêu cầu <strong>tất cả DFL</strong> trong forest đều >= FFL target</li>
+</ul>
+<h3 id="feature-matrix-theo-functional-level">Feature Matrix theo Functional Level<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#feature-matrix-theo-functional-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;timeline\n    title Features unlocked by Forest Functional Level\n    2003 FFL : Forest Trust\n           : Linked-value replication\n           : Domain rename\n    2008 FFL : DFS-R for SYSVOL replication\n           : AES 128/256 for Kerberos\n           : Last interactive logon info\n    2008 R2 FFL : AD Recycle Bin\n              : Managed Service Accounts\n              : Authentication Mechanism Assurance\n    2012 FFL : KDC support for claims\n           : Compound authentication\n    2012 R2 FFL : Authentication Policies and Silos\n              : Protected Users security group\n              : DC protection policies\n    2016 FFL : Privileged Access Management - PAM\n           : AES required for Kerberos trust\n           : Resource-based constrained delegation\n    2025 FFL : Database 32K pages\n           : Improved security defaults\n           : Enhanced replication features&quot;">timeline
+    title Features unlocked by Forest Functional Level
+    2003 FFL : Forest Trust
+           : Linked-value replication
+           : Domain rename
+    2008 FFL : DFS-R for SYSVOL replication
+           : AES 128/256 for Kerberos
+           : Last interactive logon info
+    2008 R2 FFL : AD Recycle Bin
+              : Managed Service Accounts
+              : Authentication Mechanism Assurance
+    2012 FFL : KDC support for claims
+           : Compound authentication
+    2012 R2 FFL : Authentication Policies and Silos
+              : Protected Users security group
+              : DC protection policies
+    2016 FFL : Privileged Access Management - PAM
+           : AES required for Kerberos trust
+           : Resource-based constrained delegation
+    2025 FFL : Database 32K pages
+           : Improved security defaults
+           : Enhanced replication features
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="tính-năng-chi-tiết-theo-từng-functional-level">Tính năng chi tiết theo từng Functional Level<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tính-năng-chi-tiết-theo-từng-functional-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="ffl-2003--linked-value-replication-lvr">FFL 2003 — Linked-Value Replication (LVR)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ffl-2003--linked-value-replication-lvr" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Trước FFL 2003</strong>: group membership replicate <strong>toàn bộ attribute <code>member</code></strong> mỗi khi có thay đổi
+<ul>
+<li>Group 5000 members, thêm 1 member → replicate lại cả 5000 entries → bandwidth lớn, conflict nhiều</li>
+</ul>
+</li>
+<li><strong>Từ FFL 2003</strong>: Linked-Value Replication chỉ replicate <strong>giá trị thay đổi</strong> (delta)
+<ul>
+<li>Thêm 1 member → chỉ replicate 1 entry mới → efficient, ít conflict</li>
+</ul>
+</li>
+<li>LVR là <strong>yêu cầu bắt buộc</strong> cho group lớn (>5000 members) — trước đó group bị giới hạn ngầm khoảng 5000 members vì replication issue</li>
+<li>Đây là 1 trong những lý do quan trọng nhất để nâng lên tối thiểu FFL 2003</li>
+</ul>
+<h4 id="ffl-2008--dfs-r-cho-sysvol">FFL 2008 — DFS-R cho SYSVOL<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ffl-2008--dfs-r-cho-sysvol" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>SYSVOL chứa <strong>Group Policy objects</strong> và <strong>logon scripts</strong> — cần replicate giữa tất cả DC</li>
+<li><strong>FRS (File Replication Service)</strong>: cơ chế cũ, không reliable, khó troubleshoot, không hỗ trợ differential replication</li>
+<li><strong>DFS-R (Distributed File System Replication)</strong>: cơ chế mới, efficient, differential, self-healing</li>
+<li>Khi nâng FFL lên 2008: <strong>không tự động</strong> migrate SYSVOL từ FRS sang DFS-R
+<ul>
+<li>Phải chạy migration thủ công theo 4 giai đoạn: Start → Prepared → Redirected → Eliminated</li>
+<li>Kiểm tra trạng thái: <code>dfsrmig /getglobalstate</code></li>
+</ul>
+</li>
+<li><strong>Quan trọng</strong>: nếu FFL đã ở 2008+ mà SYSVOL vẫn dùng FRS → cần migrate ngay (FRS đã deprecated)</li>
+</ul>
+<h4 id="ffl-2008-r2--ad-recycle-bin">FFL 2008 R2 — AD Recycle Bin<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ffl-2008-r2--ad-recycle-bin" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Trước đây: xoá object trong AD → object thành <strong>tombstone</strong> → chỉ giữ lại vài attribute (SID, GUID) → sau tombstone lifetime (60-180 ngày) → xoá vĩnh viễn</li>
+<li><strong>AD Recycle Bin</strong>: object bị xoá → vào trạng thái <strong>deleted</strong> (giữ TẤT CẢ attributes) → sau deleted object lifetime → thành recycled → sau recycled lifetime → xoá vĩnh viễn</li>
+<li><strong>Khôi phục</strong>: có thể restore object với <strong>toàn bộ attribute</strong> (group membership, linked values…) thay vì chỉ SID/GUID</li>
+<li><strong>Lưu ý quan trọng</strong>: bật Recycle Bin là <strong>thao tác một chiều</strong> — bật rồi <strong>không tắt được</strong></li>
+<li>Default deleted object lifetime: 180 ngày (có thể tuỳ chỉnh)</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    subgraph beforeRecycleBin[\&quot;Before Recycle Bin\&quot;]\n        Delete1[\&quot;Delete Object\&quot;] --> Tombstone[\&quot;Tombstone&lt;br/>Only keeps SID, GUID&lt;br/>Group membership lost\&quot;]\n        Tombstone -->|\&quot;60-180 days\&quot;| Gone1[\&quot;Permanently deleted\&quot;]\n    end\n\n    subgraph afterRecycleBin[\&quot;After enabling Recycle Bin\&quot;]\n        Delete2[\&quot;Delete Object\&quot;] --> Deleted[\&quot;Deleted State&lt;br/>Keeps ALL attributes&lt;br/>Fully restorable\&quot;]\n        Deleted -->|\&quot;180 days\&quot;| Recycled[\&quot;Recycled State&lt;br/>Fewer attributes kept\&quot;]\n        Recycled -->|\&quot;180 days\&quot;| Gone2[\&quot;Permanently deleted\&quot;]\n    end&quot;">flowchart LR
+    subgraph beforeRecycleBin[&quot;Before Recycle Bin&quot;]
+        Delete1[&quot;Delete Object&quot;] --> Tombstone[&quot;Tombstone&lt;br/>Only keeps SID, GUID&lt;br/>Group membership lost&quot;]
+        Tombstone -->|&quot;60-180 days&quot;| Gone1[&quot;Permanently deleted&quot;]
+    end
+
+    subgraph afterRecycleBin[&quot;After enabling Recycle Bin&quot;]
+        Delete2[&quot;Delete Object&quot;] --> Deleted[&quot;Deleted State&lt;br/>Keeps ALL attributes&lt;br/>Fully restorable&quot;]
+        Deleted -->|&quot;180 days&quot;| Recycled[&quot;Recycled State&lt;br/>Fewer attributes kept&quot;]
+        Recycled -->|&quot;180 days&quot;| Gone2[&quot;Permanently deleted&quot;]
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h4 id="ffl-2012-r2--authentication-policies-và-protected-users">FFL 2012 R2 — Authentication Policies và Protected Users<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ffl-2012-r2--authentication-policies-và-protected-users" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Protected Users security group</strong>: member của group này được bảo vệ đặc biệt
+<ul>
+<li>Không dùng NTLM auth (chỉ Kerberos)</li>
+<li>Không delegation</li>
+<li>Kerberos TGT lifetime giảm xuống 4 giờ (thay vì 10 giờ)</li>
+<li>Không lưu plaintext credentials trong LSASS</li>
+</ul>
+</li>
+<li><strong>Authentication Policies</strong>: cho phép restrict authentication scope cho privileged accounts
+<ul>
+<li>Ví dụ: Domain Admin chỉ được login từ DC, không từ workstation</li>
+<li>Dựa trên Kerberos Armoring (FAST)</li>
+</ul>
+</li>
+<li><strong>Authentication Silos</strong>: group các tài khoản và policy lại → enforce authentication boundary</li>
+</ul>
+<h4 id="ffl-2016--privileged-access-management-pam">FFL 2016 — Privileged Access Management (PAM)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ffl-2016--privileged-access-management-pam" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>PAM</strong>: cho phép tạo <strong>time-limited group membership</strong> (just-in-time access)
+<ul>
+<li>Admin không phải member thường trực của Domain Admins</li>
+<li>Khi cần → request membership → được cấp cho 1-4 giờ → tự động remove</li>
+</ul>
+</li>
+<li>Yêu cầu <strong>MIM (Microsoft Identity Manager)</strong> hoặc custom solution để quản lý PAM</li>
+<li><strong>Shadow principal</strong>: user từ production forest được map vào bastion forest với time-limited membership</li>
+<li>Giảm attack surface vì privileged group thường rỗng — attacker không thể lợi dụng persistent membership</li>
+</ul>
+<h4 id="ffl-2025--windows-server-2025-new-features">FFL 2025 — Windows Server 2025 New Features<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ffl-2025--windows-server-2025-new-features" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Database 32K pages</strong>:
+<ul>
+<li>NTDS.DIT trước đây dùng <strong>8K page size</strong> (giống ESE engine)</li>
+<li>WS2025 nâng lên <strong>32K page size</strong> → hỗ trợ multi-valued attributes lớn hơn nhiều (>1600 values per attribute)</li>
+<li>Giải quyết vấn đề group >1600 members gặp khó khăn trong single-valued attribute storage</li>
+<li><strong>Không tự động convert</strong> DB cũ → cần migration process</li>
+<li>Chỉ có hiệu lực khi <strong>tất cả DC đều chạy WS2025</strong> và FFL được nâng lên 2025</li>
+</ul>
+</li>
+<li><strong>Improved Kerberos</strong>:
+<ul>
+<li>Kerberos Key Distribution (KKDCP) improvements</li>
+<li>Khả năng authenticate mà không cần line-of-sight đến DC qua HTTPS proxy</li>
+<li>Enhanced certificate-based authentication</li>
+</ul>
+</li>
+<li><strong>LDAP improvements</strong>:
+<ul>
+<li>LDAP channel binding mặc định được enforce</li>
+<li>LDAP signing required by default</li>
+<li>Cải thiện security posture cho LDAP communication</li>
+</ul>
+</li>
+<li><strong>Improved security defaults</strong>:
+<ul>
+<li>SMB over QUIC support</li>
+<li>Enhanced credential protection</li>
+<li>Default security hardening không cần manual configuration</li>
+</ul>
+</li>
+</ul>
+<h3 id="bảng-tương-thích-os-và-functional-level">Bảng tương thích OS và Functional Level<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-tương-thích-os-và-functional-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:center;">Functional Level</th><th style="text-align:center;">DC OS tối thiểu</th><th style="text-align:center;">Có thể chứa DC chạy</th></tr></thead><tbody><tr><td style="text-align:center;">2008</td><td style="text-align:center;">WS 2008</td><td style="text-align:center;">WS 2008, 2008R2, 2012, 2012R2, 2016, 2019, 2022, 2025</td></tr><tr><td style="text-align:center;">2008 R2</td><td style="text-align:center;">WS 2008 R2</td><td style="text-align:center;">WS 2008R2, 2012, 2012R2, 2016, 2019, 2022, 2025</td></tr><tr><td style="text-align:center;">2012</td><td style="text-align:center;">WS 2012</td><td style="text-align:center;">WS 2012, 2012R2, 2016, 2019, 2022, 2025</td></tr><tr><td style="text-align:center;">2012 R2</td><td style="text-align:center;">WS 2012 R2</td><td style="text-align:center;">WS 2012R2, 2016, 2019, 2022, 2025</td></tr><tr><td style="text-align:center;">2016</td><td style="text-align:center;">WS 2016</td><td style="text-align:center;">WS 2016, 2019, 2022, 2025</td></tr><tr><td style="text-align:center;">2025</td><td style="text-align:center;">WS 2025</td><td style="text-align:center;">WS 2025</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Lưu ý</strong>: WS2019 và WS2022 <strong>không có FFL riêng</strong> — chúng sử dụng FFL 2016. Điều này nghĩa là nâng cấp từ WS2016 lên WS2019/2022 <strong>không yêu cầu nâng FFL</strong>.</p>
+</blockquote>
+<h3 id="mối-quan-hệ-ffl-và-dfl">Mối quan hệ FFL và DFL<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mối-quan-hệ-ffl-và-dfl" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    FFL[\&quot;Forest Functional Level&lt;br/>Applies forest-wide\&quot;]\n    DFL_Root[\&quot;DFL Root Domain&lt;br/>corp.local\&quot;]\n    DFL_Child1[\&quot;DFL Child Domain&lt;br/>asia.corp.local\&quot;]\n    DFL_Child2[\&quot;DFL Child Domain&lt;br/>eu.corp.local\&quot;]\n\n    FFL -->|\&quot;DFL >= FFL\&quot;| DFL_Root\n    FFL -->|\&quot;DFL >= FFL\&quot;| DFL_Child1\n    FFL -->|\&quot;DFL >= FFL\&quot;| DFL_Child2\n\n    Note1[\&quot;Example: FFL = 2016\&quot;]\n    Note2[\&quot;DFL root = 2016 - OK\&quot;]\n    Note3[\&quot;DFL asia = 2025 - OK (higher)\&quot;]\n    Note4[\&quot;DFL eu = 2012R2 - NOT ALLOWED&lt;br/>lower than FFL\&quot;]\n\n    style Note4 fill:#ff6b6b,color:#fff&quot;">graph TD
+    FFL[&quot;Forest Functional Level&lt;br/>Applies forest-wide&quot;]
+    DFL_Root[&quot;DFL Root Domain&lt;br/>corp.local&quot;]
+    DFL_Child1[&quot;DFL Child Domain&lt;br/>asia.corp.local&quot;]
+    DFL_Child2[&quot;DFL Child Domain&lt;br/>eu.corp.local&quot;]
+
+    FFL -->|&quot;DFL >= FFL&quot;| DFL_Root
+    FFL -->|&quot;DFL >= FFL&quot;| DFL_Child1
+    FFL -->|&quot;DFL >= FFL&quot;| DFL_Child2
+
+    Note1[&quot;Example: FFL = 2016&quot;]
+    Note2[&quot;DFL root = 2016 - OK&quot;]
+    Note3[&quot;DFL asia = 2025 - OK (higher)&quot;]
+    Note4[&quot;DFL eu = 2012R2 - NOT ALLOWED&lt;br/>lower than FFL&quot;]
+
+    style Note4 fill:#ff6b6b,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Quy tắc quan trọng</strong>:</p>
+<ul>
+<li>Nâng FFL <strong>yêu cầu</strong> tất cả DFL trong forest đều >= FFL target</li>
+<li>Nâng DFL <strong>không yêu cầu</strong> FFL phải nâng theo</li>
+<li>Trong forest multi-domain, có thể nâng DFL child domain lên 2025 trong khi FFL vẫn ở 2016 (nếu root domain chưa sẵn sàng)</li>
+</ul>
+<h3 id="quy-trình-nâng-functional-level">Quy trình nâng Functional Level<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quy-trình-nâng-functional-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    Start[\&quot;Need to raise Functional Level\&quot;] --> Inventory[\&quot;Inventory all DCs&lt;br/>in forest/domain\&quot;]\n    Inventory --> CheckOS{\&quot;All DCs running&lt;br/>OS >= target level?\&quot;}\n\n    CheckOS -->|No| Upgrade[\&quot;Upgrade or replace&lt;br/>DCs running old OS\&quot;]\n    Upgrade --> CheckOS\n\n    CheckOS -->|Yes| CheckRepl{\&quot;Replication healthy?&lt;br/>repadmin /replsummary\&quot;}\n    CheckRepl -->|No| FixRepl[\&quot;Fix replication first\&quot;]\n    FixRepl --> CheckRepl\n\n    CheckRepl -->|Yes| CheckRODC{\&quot;Any RODC running&lt;br/>old OS?\&quot;}\n    CheckRODC -->|Yes| DemoteRODC[\&quot;Demote old RODC first\&quot;]\n    DemoteRODC --> CheckRODC\n\n    CheckRODC -->|No| Backup[\&quot;Full System State Backup&lt;br/>all DCs\&quot;]\n    Backup --> RaiseDFL[\&quot;Raise DFL per domain&lt;br/>start with child domains\&quot;]\n    RaiseDFL --> RaiseFFL[\&quot;Raise FFL\&quot;]\n    RaiseFFL --> Verify[\&quot;Verify new features&lt;br/>work correctly\&quot;]\n    RaiseFFL --> Warning[\&quot;CANNOT ROLLBACK&lt;br/>Only restore from backup\&quot;]\n\n    style Warning fill:#ff6b6b,color:#fff\n    style Backup fill:#ffd43b,color:#000&quot;">flowchart TD
+    Start[&quot;Need to raise Functional Level&quot;] --> Inventory[&quot;Inventory all DCs&lt;br/>in forest/domain&quot;]
+    Inventory --> CheckOS{&quot;All DCs running&lt;br/>OS >= target level?&quot;}
+
+    CheckOS -->|No| Upgrade[&quot;Upgrade or replace&lt;br/>DCs running old OS&quot;]
+    Upgrade --> CheckOS
+
+    CheckOS -->|Yes| CheckRepl{&quot;Replication healthy?&lt;br/>repadmin /replsummary&quot;}
+    CheckRepl -->|No| FixRepl[&quot;Fix replication first&quot;]
+    FixRepl --> CheckRepl
+
+    CheckRepl -->|Yes| CheckRODC{&quot;Any RODC running&lt;br/>old OS?&quot;}
+    CheckRODC -->|Yes| DemoteRODC[&quot;Demote old RODC first&quot;]
+    DemoteRODC --> CheckRODC
+
+    CheckRODC -->|No| Backup[&quot;Full System State Backup&lt;br/>all DCs&quot;]
+    Backup --> RaiseDFL[&quot;Raise DFL per domain&lt;br/>start with child domains&quot;]
+    RaiseDFL --> RaiseFFL[&quot;Raise FFL&quot;]
+    RaiseFFL --> Verify[&quot;Verify new features&lt;br/>work correctly&quot;]
+    RaiseFFL --> Warning[&quot;CANNOT ROLLBACK&lt;br/>Only restore from backup&quot;]
+
+    style Warning fill:#ff6b6b,color:#fff
+    style Backup fill:#ffd43b,color:#000
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="critical-tính-không-thể-đảo-ngược">CRITICAL: Tính không thể đảo ngược<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#critical-tính-không-thể-đảo-ngược" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Nâng FFL/DFL là thao tác MỘT CHIỀU</strong> — không có lệnh “lower functional level”</li>
+<li>Cách duy nhất để “hạ” FFL: <strong>restore AD từ backup</strong> trước khi nâng → mất mọi thay đổi sau đó</li>
+<li>Vì vậy:
+<ul>
+<li><strong>Luôn backup</strong> System State trên tất cả DC trước khi nâng</li>
+<li><strong>Luôn test</strong> trên lab environment trước</li>
+<li><strong>Luôn verify</strong> tất cả ứng dụng compatible với target functional level</li>
+<li><strong>Đặc biệt</strong>: kiểm tra xem có ứng dụng nào phụ thuộc tính năng bị thay đổi khi nâng level</li>
+<li>Ví dụ: ứng dụng dùng NTLM auth → nâng FFL + bật Protected Users → app bị break</li>
+</ul>
+</li>
+</ul>
+<h3 id="decision-framework-nâng-hay-không-nâng">Decision Framework: Nâng hay không nâng?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#decision-framework-nâng-hay-không-nâng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Yếu tố cân nhắc</th><th>Nâng ngay</th><th>Chờ thêm</th></tr></thead><tbody><tr><td>Tất cả DC đã chạy target OS</td><td>Có</td><td>Chưa hoặc đang migration</td></tr><tr><td>Cần tính năng mới (Recycle Bin, PAM…)</td><td>Cần ngay</td><td>Chưa cần</td></tr><tr><td>Ứng dụng third-party đã test compatible</td><td>Đã test OK</td><td>Chưa test hoặc có concern</td></tr><tr><td>Có backup strategy verified</td><td>Có, đã test restore</td><td>Chưa verify restore works</td></tr><tr><td>Maintenance window available</td><td>Có</td><td>Khó arrange</td></tr><tr><td>Replication healthy 100%</td><td>Healthy</td><td>Có issues chưa fix</td></tr></tbody></table></div>
+<h3 id="checklist-trước-khi-nâng-functional-level">Checklist trước khi nâng Functional Level<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#checklist-trước-khi-nâng-functional-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Tất cả DC chạy OS >= target level</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> RODC (nếu có) cũng chạy OS >= target level</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> <code>repadmin /replsummary</code> không có lỗi</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> <code>dcdiag /v</code> pass trên tất cả DC</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Full System State backup hoàn tất</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Lab test đã xong, không có issue</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Các ứng dụng third-party (Exchange, SCCM…) compatible với target level</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Thời gian thực hiện ngoài giờ cao điểm</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Có kế hoạch rollback (restore backup) nếu cần</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Stakeholders đã được thông báo</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Schema version đã được extend phù hợp (adprep đã chạy)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> DNS resolution hoạt động bình thường</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> SYSVOL replication healthy (DFS-R hoặc đã migrate từ FRS)</li>
+</ul>
+<h2 id="mối-liên-hệ-schema-version-và-functional-level">Mối liên hệ Schema Version và Functional Level<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mối-liên-hệ-schema-version-và-functional-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    SchemaExtend[\&quot;Schema Extension&lt;br/>adprep /forestprep&lt;br/>Add classes/attributes\&quot;] --> SchemaRepl[\&quot;Schema Replication&lt;br/>Forest-wide\&quot;]\n    SchemaRepl --> DomainPrep[\&quot;Domain Prep&lt;br/>adprep /domainprep&lt;br/>Update ACLs\&quot;]\n    DomainPrep --> DCUpgrade[\&quot;Upgrade DCs&lt;br/>Replace OS\&quot;]\n    DCUpgrade --> RaiseDFL[\&quot;Raise DFL\&quot;]\n    RaiseDFL --> RaiseFFL[\&quot;Raise FFL&lt;br/>Unlock features\&quot;]\n\n    SchemaExtend -.->|\&quot;Can be done early&lt;br/>without raising FL\&quot;| DCUpgrade\n    RaiseFFL -.->|\&quot;CANNOT&lt;br/>rollback\&quot;| Warning[\&quot;Cannot lower FL\&quot;]\n\n    style Warning fill:#ff6b6b,color:#fff&quot;">graph LR
+    SchemaExtend[&quot;Schema Extension&lt;br/>adprep /forestprep&lt;br/>Add classes/attributes&quot;] --> SchemaRepl[&quot;Schema Replication&lt;br/>Forest-wide&quot;]
+    SchemaRepl --> DomainPrep[&quot;Domain Prep&lt;br/>adprep /domainprep&lt;br/>Update ACLs&quot;]
+    DomainPrep --> DCUpgrade[&quot;Upgrade DCs&lt;br/>Replace OS&quot;]
+    DCUpgrade --> RaiseDFL[&quot;Raise DFL&quot;]
+    RaiseDFL --> RaiseFFL[&quot;Raise FFL&lt;br/>Unlock features&quot;]
+
+    SchemaExtend -.->|&quot;Can be done early&lt;br/>without raising FL&quot;| DCUpgrade
+    RaiseFFL -.->|&quot;CANNOT&lt;br/>rollback&quot;| Warning[&quot;Cannot lower FL&quot;]
+
+    style Warning fill:#ff6b6b,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>Schema version</strong> và <strong>Functional Level</strong> là hai thứ <strong>khác nhau</strong>:
+<ul>
+<li>Schema version: quyết định object class/attribute nào tồn tại trong database</li>
+<li>Functional Level: quyết định tính năng nào được bật</li>
+</ul>
+</li>
+<li>Có thể extend Schema (chạy adprep) mà <strong>chưa nâng Functional Level</strong>
+<ul>
+<li>Điều này cho phép add WS2025 DC vào forest mà FFL vẫn ở 2016</li>
+<li>Schema extension là prerequisite, nhưng FL raise là bước riêng biệt</li>
+</ul>
+</li>
+<li>Ngược lại, nâng Functional Level <strong>yêu cầu</strong> Schema đã được extend phù hợp</li>
+<li>Quy trình đúng khi nâng cấp AD:
+<ol>
+<li>Extend Schema (<code>adprep /forestprep</code>) → Schema version mới</li>
+<li>Update domain (<code>adprep /domainprep</code>)</li>
+<li>Nâng cấp/thay thế tất cả DC lên OS mới</li>
+<li>Nâng DFL → nâng FFL (thao tác cuối cùng — điểm không thể quay lại)</li>
+</ol>
+</li>
+</ul>
+<h2 id="câu-hỏi-thường-gặp-faq">Câu hỏi thường gặp (FAQ)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-thường-gặp-faq" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="q-schema-extension-có-gây-downtime-không">Q: Schema extension có gây downtime không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-schema-extension-có-gây-downtime-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Không.</strong> AD vẫn hoạt động bình thường trong quá trình extend. Tuy nhiên, Schema replication là <strong>high-priority</strong> → có thể tăng replication traffic tạm thời. Trong forest lớn, nên schedule ngoài giờ cao điểm.</p>
+<h3 id="q-nâng-ffl-có-rollback-được-không">Q: Nâng FFL có rollback được không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-nâng-ffl-có-rollback-được-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Không.</strong> Nâng FFL/DFL là thao tác MỘT CHIỀU. Cách duy nhất “rollback” là <strong>restore AD từ backup</strong> trước khi nâng → mất mọi thay đổi sau đó. Vì vậy LUÔN backup trước.</p>
+<h3 id="q-ws2019-và-ws2022-có-functional-level-riêng-không">Q: WS2019 và WS2022 có Functional Level riêng không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-ws2019-và-ws2022-có-functional-level-riêng-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Không.</strong> Cả WS2019 và WS2022 đều sử dụng FFL/DFL 2016. Điều này nghĩa là nâng cấp từ WS2016 DC lên WS2022 DC <strong>không cần nâng FFL</strong>.</p>
+<h3 id="q-có-thể-có-dfl-khác-nhau-trong-cùng-forest-không">Q: Có thể có DFL khác nhau trong cùng forest không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-có-thể-có-dfl-khác-nhau-trong-cùng-forest-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Có.</strong> Mỗi domain trong forest có thể có DFL khác nhau, miễn là <strong>tất cả DFL >= FFL</strong>. Ví dụ: FFL = 2016, DFL root = 2016, DFL child = 2025 → hợp lệ.</p>
+<h3 id="q-exchange-schema-extension-lớn-đến-mức-nào">Q: Exchange schema extension lớn đến mức nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-exchange-schema-extension-lớn-đến-mức-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Rất lớn. Exchange thêm <strong>hàng trăm attribute</strong> vào schema. Replication có thể tốn bandwidth đáng kể trong forest lớn. Nên chạy ngoài giờ cao điểm và monitor replication sau đó.</p>
+<h3 id="q-gỡ-exchange-có-xoá-schema-extension-không">Q: Gỡ Exchange có xoá schema extension không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-gỡ-exchange-có-xoá-schema-extension-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Không.</strong> Schema extension <strong>tồn tại vĩnh viễn</strong> ngay cả khi gỡ Exchange hoàn toàn. Schema là additive — không thể xoá attribute/class đã thêm.</p>
+<h2 id="lưu-ý-quan-trọng">Lưu ý quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Schema extension <strong>không gây downtime</strong> — AD vẫn hoạt động bình thường trong quá trình extend</li>
+<li>Tuy nhiên, Schema replication là <strong>high-priority</strong> → có thể tăng replication traffic tạm thời</li>
+<li><strong>Không rollback được Schema extension</strong> — nếu sai, chỉ có thể deactivate attribute mới, không xoá được</li>
+<li>Exchange schema extensions đặc biệt lớn — cần plan bandwidth cho replication</li>
+<li>Khi nâng FFL lên 2008: SYSVOL chuyển từ FRS sang DFS-R — cần migrate thủ công nếu chưa làm</li>
+<li>Khi nâng FFL lên 2008R2: có thể bật AD Recycle Bin — <strong>bật rồi không tắt được</strong></li>
+<li>Khi nâng FFL lên 2025: cần plan cho <strong>32K database page migration</strong> — significant change</li>
+</ul>
+<h2 id="mối-quan-hệ-với-các-thành-phần-khác">Mối quan hệ với các thành phần khác<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mối-quan-hệ-với-các-thành-phần-khác" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></strong>: Schema Master FSMO role kiểm soát ai được ghi vào Schema</li>
+<li><strong><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad">01.3 - Domain Controller - Trái tim của AD</a></strong>: DC OS version quyết định có thể nâng FL đến đâu</li>
+<li><strong><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.4---tree-và-forest---cấu-trúc-phân-cấp-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.4---tree-và-forest---cấu-trúc-phân-cấp-ad">01.4 - Tree và Forest - Cấu trúc phân cấp AD</a></strong>: FFL áp dụng toàn forest, DFL theo từng domain</li>
+<li><strong><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller">03.3 - RODC - Read-Only Domain Controller</a></strong>: RODC OS cũ phải demote trước khi nâng FL</li>
+<li><strong><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></strong>: Schema extension là bước đầu tiên trong upgrade project</li>
+</ul>
+<h2 id="liên-kết">Liên kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#liên-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.4---tree-và-forest---cấu-trúc-phân-cấp-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.4---tree-và-forest---cấu-trúc-phân-cấp-ad">01.4 - Tree và Forest - Cấu trúc phân cấp AD</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad">01.3 - Domain Controller - Trái tim của AD</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller">03.3 - RODC - Read-Only Domain Controller</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li>
+<li><a href="../../../../moc---windows-server-ad-2025" class="internal internal-link alias" data-slug="moc---windows-server-ad-2025">MOC - Windows Server AD 2025</a></li>
+</ul>
+<h2 id="tham-khảo">Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/schema/active-directory-schema" class="external external-link">AD DS Schema - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/active-directory-functional-levels" class="external external-link">Forest and Domain Functional Levels - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-active-directory-domain-services--level-100-#adprep" class="external external-link">Understanding adprep - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/whats-new-active-directory-domain-services" class="external external-link">What’s new in AD DS in Windows Server 2025 - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/adac/introduction-to-active-directory-administrative-center-enhancements--level-100-#ad_recycle_bin_mgmt" class="external external-link">AD Recycle Bin Step-by-Step - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/microsoft-identity-manager/pam/privileged-identity-management-for-active-directory-domain-services" class="external external-link">Privileged Access Management - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-429" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#schema-và-functional-level---nền-tảng-nâng-cấp" data-for="schema-và-functional-level---nền-tảng-nâng-cấp">Schema và Functional Level - Nền tảng nâng cấp</a></li><li class="depth-1"><a href="#tóm-tắt-nhanh" data-for="tóm-tắt-nhanh">Tóm tắt nhanh</a></li><li class="depth-1"><a href="#ad-schema-deep-dive" data-for="ad-schema-deep-dive">AD Schema Deep Dive</a></li><li class="depth-2"><a href="#schema-là-gì" data-for="schema-là-gì">Schema là gì?</a></li><li class="depth-2"><a href="#tương-tự-thực-tế" data-for="tương-tự-thực-tế">Tương tự thực tế</a></li><li class="depth-2"><a href="#schema-partition" data-for="schema-partition">Schema Partition</a></li><li class="depth-2"><a href="#cấu-trúc-bên-trong-schema" data-for="cấu-trúc-bên-trong-schema">Cấu trúc bên trong Schema</a></li><li class="depth-2"><a href="#tính-chất-quan-trọng-của-schema" data-for="tính-chất-quan-trọng-của-schema">Tính chất quan trọng của Schema</a></li><li class="depth-2"><a href="#schema-version-theo-windows-server" data-for="schema-version-theo-windows-server">Schema Version theo Windows Server</a></li><li class="depth-2"><a href="#deferred-index-creation" data-for="deferred-index-creation">Deferred Index Creation</a></li><li class="depth-1"><a href="#schema-extension-process" data-for="schema-extension-process">Schema Extension Process</a></li><li class="depth-2"><a href="#quy-trình-schema-extension" data-for="quy-trình-schema-extension">Quy trình Schema Extension</a></li><li class="depth-1"><a href="#third-party-schema-extensions" data-for="third-party-schema-extensions">Third-party Schema Extensions</a></li><li class="depth-2"><a href="#tổng-quan" data-for="tổng-quan">Tổng quan</a></li><li class="depth-2"><a href="#exchange-server-schema-extensions" data-for="exchange-server-schema-extensions">Exchange Server Schema Extensions</a></li><li class="depth-2"><a href="#sccm--configmgr-schema-extensions" data-for="sccm--configmgr-schema-extensions">SCCM / ConfigMgr Schema Extensions</a></li><li class="depth-2"><a href="#các-ứng-dụng-khác" data-for="các-ứng-dụng-khác">Các ứng dụng khác</a></li><li class="depth-2"><a href="#schema-conflicts-và-troubleshooting" data-for="schema-conflicts-và-troubleshooting">Schema Conflicts và Troubleshooting</a></li><li class="depth-1"><a href="#functional-level" data-for="functional-level">Functional Level</a></li><li class="depth-2"><a href="#khái-niệm" data-for="khái-niệm">Khái niệm</a></li><li class="depth-2"><a href="#feature-matrix-theo-functional-level" data-for="feature-matrix-theo-functional-level">Feature Matrix theo Functional Level</a></li><li class="depth-2"><a href="#tính-năng-chi-tiết-theo-từng-functional-level" data-for="tính-năng-chi-tiết-theo-từng-functional-level">Tính năng chi tiết theo từng Functional Level</a></li><li class="depth-2"><a href="#bảng-tương-thích-os-và-functional-level" data-for="bảng-tương-thích-os-và-functional-level">Bảng tương thích OS và Functional Level</a></li><li class="depth-2"><a href="#mối-quan-hệ-ffl-và-dfl" data-for="mối-quan-hệ-ffl-và-dfl">Mối quan hệ FFL và DFL</a></li><li class="depth-2"><a href="#quy-trình-nâng-functional-level" data-for="quy-trình-nâng-functional-level">Quy trình nâng Functional Level</a></li><li class="depth-2"><a href="#critical-tính-không-thể-đảo-ngược" data-for="critical-tính-không-thể-đảo-ngược">CRITICAL: Tính không thể đảo ngược</a></li><li class="depth-2"><a href="#decision-framework-nâng-hay-không-nâng" data-for="decision-framework-nâng-hay-không-nâng">Decision Framework: Nâng hay không nâng?</a></li><li class="depth-2"><a href="#checklist-trước-khi-nâng-functional-level" data-for="checklist-trước-khi-nâng-functional-level">Checklist trước khi nâng Functional Level</a></li><li class="depth-1"><a href="#mối-liên-hệ-schema-version-và-functional-level" data-for="mối-liên-hệ-schema-version-và-functional-level">Mối liên hệ Schema Version và Functional Level</a></li><li class="depth-1"><a href="#câu-hỏi-thường-gặp-faq" data-for="câu-hỏi-thường-gặp-faq">Câu hỏi thường gặp (FAQ)</a></li><li class="depth-2"><a href="#q-schema-extension-có-gây-downtime-không" data-for="q-schema-extension-có-gây-downtime-không">Q: Schema extension có gây downtime không?</a></li><li class="depth-2"><a href="#q-nâng-ffl-có-rollback-được-không" data-for="q-nâng-ffl-có-rollback-được-không">Q: Nâng FFL có rollback được không?</a></li><li class="depth-2"><a href="#q-ws2019-và-ws2022-có-functional-level-riêng-không" data-for="q-ws2019-và-ws2022-có-functional-level-riêng-không">Q: WS2019 và WS2022 có Functional Level riêng không?</a></li><li class="depth-2"><a href="#q-có-thể-có-dfl-khác-nhau-trong-cùng-forest-không" data-for="q-có-thể-có-dfl-khác-nhau-trong-cùng-forest-không">Q: Có thể có DFL khác nhau trong cùng forest không?</a></li><li class="depth-2"><a href="#q-exchange-schema-extension-lớn-đến-mức-nào" data-for="q-exchange-schema-extension-lớn-đến-mức-nào">Q: Exchange schema extension lớn đến mức nào?</a></li><li class="depth-2"><a href="#q-gỡ-exchange-có-xoá-schema-extension-không" data-for="q-gỡ-exchange-có-xoá-schema-extension-không">Q: Gỡ Exchange có xoá schema extension không?</a></li><li class="depth-1"><a href="#lưu-ý-quan-trọng" data-for="lưu-ý-quan-trọng">Lưu ý quan trọng</a></li><li class="depth-1"><a href="#mối-quan-hệ-với-các-thành-phần-khác" data-for="mối-quan-hệ-với-các-thành-phần-khác">Mối quan hệ với các thành phần khác</a></li><li class="depth-1"><a href="#liên-kết" data-for="liên-kết">Liên kết</a></li><li class="depth-1"><a href="#tham-khảo" data-for="tham-khảo">Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.2---domain---đơn-vị-quản-lý-cốt-lõi" class="internal">01.2 - Domain - Đơn vị quản lý cốt lõi</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.4---tree-và-forest---cấu-trúc-phân-cấp-ad" class="internal">01.4 - Tree và Forest - Cấu trúc phân cấp AD</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal">02.1 - AD DS - Active Directory Domain Services</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller" class="internal">03.3 - RODC - Read-Only Domain Controller</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers" class="internal">04.1 - Triển khai Additional Domain Controllers</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal">04.5 - Kiểm thử toàn diện</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

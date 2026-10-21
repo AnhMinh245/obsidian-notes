@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>03.3 - RODC - Read-Only Domain Controller</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="03.3 - RODC - Read-Only Domain Controller"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="03.3 - RODC - Read-Only Domain Controller"/><meta name="twitter:description" content="RODC - Read-Only Domain Controller Tóm tắt nhanh RODC là bản sao chỉ đọc của AD database, ra mắt từ Windows Server 2008 Mọi thay đổi từ RODC đều được chuyển tiếp (refer) đến writable DC — RODC không bao giờ tự ghi Replication một chiều: writable DC → RODC, không bao giờ ngược lại Password Replicatio..."/><meta property="og:description" content="RODC - Read-Only Domain Controller Tóm tắt nhanh RODC là bản sao chỉ đọc của AD database, ra mắt từ Windows Server 2008 Mọi thay đổi từ RODC đều được chuyển tiếp (refer) đến writable DC — RODC không bao giờ tự ghi Replication một chiều: writable DC → RODC, không bao giờ ngược lại Password Replicatio..."/><meta property="og:image:alt" content="RODC - Read-Only Domain Controller Tóm tắt nhanh RODC là bản sao chỉ đọc của AD database, ra mắt từ Windows Server 2008 Mọi thay đổi từ RODC đều được chuyển tiếp (refer) đến writable DC — RODC không bao giờ tự ghi Replication một chiều: writable DC → RODC, không bao giờ ngược lại Password Replicatio..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="RODC - Read-Only Domain Controller Tóm tắt nhanh RODC là bản sao chỉ đọc của AD database, ra mắt từ Windows Server 2008 Mọi thay đổi từ RODC đều được chuyển tiếp (refer) đến writable DC — RODC không bao giờ tự ghi Replication một chiều: writable DC → RODC, không bao giờ ngược lại Password Replicatio..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-480" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-480" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/">Windows Servers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/">AD Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/">03 - Vận hành nâng cao</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>03.3 - RODC - Read-Only Domain Controller</a></div></nav><h1 class="article-title">03.3 - RODC - Read-Only Domain Controller</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/windows-server" class="internal internal-link tag-link">domain/windows-server</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">RODC</span><span class="note-properties-separator">, </span><span class="note-properties-text">Read-Only Domain Controller</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>19 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="rodc---read-only-domain-controller">RODC - Read-Only Domain Controller<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rodc---read-only-domain-controller" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tóm-tắt-nhanh">Tóm tắt nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>RODC là bản sao <strong>chỉ đọc</strong> của AD database, ra mắt từ Windows Server 2008</li>
+<li>Mọi thay đổi từ RODC đều được <strong>chuyển tiếp (refer)</strong> đến writable DC — RODC không bao giờ tự ghi</li>
+<li>Replication <strong>một chiều</strong>: writable DC → RODC, không bao giờ ngược lại</li>
+<li><strong>Password Replication Policy (PRP)</strong> kiểm soát password nào được cache trên RODC — đây là tính năng bảo mật cốt lõi</li>
+<li>RODC sử dụng <code>krbtgt</code> account riêng → nếu bị compromised, <code>krbtgt</code> chính không bị ảnh hưởng</li>
+<li>Trong kịch bản nâng cấp AD, RODC chạy OS cũ cần <strong>demote trước</strong> khi nâng Functional Level</li>
+</ul>
+<h2 id="rodc-là-gì">RODC là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rodc-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="định-nghĩa-và-mục-đích">Định nghĩa và mục đích<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#định-nghĩa-và-mục-đích" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>RODC giữ một bản sao <strong>read-only</strong> của AD database (NTDS.DIT)</li>
+<li>Không thể tạo, sửa, xoá object trực tiếp trên RODC</li>
+<li>Khi client cố gắng write (đổi password, tạo computer account…) → RODC <strong>refer request</strong> đến writable DC</li>
+<li>Thiết kế dành cho các location có <strong>rủi ro bảo mật vật lý cao</strong> hoặc <strong>kết nối WAN không ổn định</strong></li>
+</ul>
+<h3 id="tương-tự-thực-tế">Tương tự thực tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tương-tự-thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>RODC giống như <strong>bản photocopy</strong> của sổ sách công ty đặt tại văn phòng chi nhánh:
+<ul>
+<li>Nhân viên chi nhánh có thể <strong>đọc</strong> thông tin (xác thực, tra cứu)</li>
+<li>Nhưng không thể <strong>sửa</strong> sổ sách gốc — mọi thay đổi phải gửi về <strong>trụ sở chính</strong> (writable DC) để xử lý</li>
+<li>Nếu bản photocopy bị đánh cắp → thông tin bị lộ hạn chế (chỉ những gì đã photo), không ảnh hưởng sổ gốc</li>
+<li>Sổ gốc cập nhật → photocopy mới được gửi xuống chi nhánh (unidirectional replication)</li>
+</ul>
+</li>
+</ul>
+<h2 id="rodc-vs-full-dc--so-sánh-chi-tiết">RODC vs Full DC — So sánh chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rodc-vs-full-dc--so-sánh-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th style="text-align:center;">Full (Writable) DC</th><th style="text-align:center;">RODC</th></tr></thead><tbody><tr><td><strong>NTDS.DIT</strong></td><td style="text-align:center;">Read-Write</td><td style="text-align:center;"><strong>Read-Only</strong></td></tr><tr><td><strong>SYSVOL</strong></td><td style="text-align:center;">Read-Write</td><td style="text-align:center;"><strong>Read-Only</strong></td></tr><tr><td><strong>DNS zones</strong></td><td style="text-align:center;">Read-Write</td><td style="text-align:center;"><strong>Read-Only</strong></td></tr><tr><td><strong>Replication direction</strong></td><td style="text-align:center;">Bidirectional</td><td style="text-align:center;"><strong>Inbound only</strong></td></tr><tr><td><strong>Originate changes</strong></td><td style="text-align:center;">Có</td><td style="text-align:center;"><strong>Không</strong></td></tr><tr><td><strong>Password storage</strong></td><td style="text-align:center;">Tất cả password hashes</td><td style="text-align:center;"><strong>Chỉ cached (PRP)</strong></td></tr><tr><td><strong>FSMO roles</strong></td><td style="text-align:center;">Có thể giữ</td><td style="text-align:center;"><strong>Không thể</strong></td></tr><tr><td><strong>Global Catalog</strong></td><td style="text-align:center;">Full GC</td><td style="text-align:center;"><strong>Read-only GC</strong></td></tr><tr><td><strong>krbtgt account</strong></td><td style="text-align:center;">Domain-wide krbtgt</td><td style="text-align:center;"><strong>krbtgt riêng (krbtgt_xxx)</strong></td></tr><tr><td><strong>AD CS (Certificate Services)</strong></td><td style="text-align:center;">Hỗ trợ</td><td style="text-align:center;"><strong>Không hỗ trợ</strong></td></tr><tr><td><strong>DFS Replication role</strong></td><td style="text-align:center;">Hỗ trợ</td><td style="text-align:center;"><strong>Không hỗ trợ</strong></td></tr><tr><td><strong>Schema changes</strong></td><td style="text-align:center;">Schema Master only</td><td style="text-align:center;"><strong>Không bao giờ</strong></td></tr><tr><td><strong>Filtered Attribute Set</strong></td><td style="text-align:center;">Không áp dụng</td><td style="text-align:center;"><strong>Có — loại attribute nhạy cảm</strong></td></tr><tr><td><strong>Admin delegation</strong></td><td style="text-align:center;">Full admin model</td><td style="text-align:center;"><strong>Administrator Role Separation (ARS)</strong></td></tr><tr><td><strong>BitLocker recovery keys</strong></td><td style="text-align:center;">Lưu trữ đầy đủ</td><td style="text-align:center;"><strong>Mặc định không replicate</strong></td></tr><tr><td><strong>Deployment</strong></td><td style="text-align:center;">Standard promote</td><td style="text-align:center;"><strong>Staged installation available</strong></td></tr><tr><td><strong>Khi bị compromised</strong></td><td style="text-align:center;">Toàn bộ AD data bị lộ</td><td style="text-align:center;"><strong>Chỉ cached data bị lộ</strong></td></tr></tbody></table></div>
+<h2 id="kiến-trúc-rodc">Kiến trúc RODC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kiến-trúc-rodc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="unidirectional-replication">Unidirectional Replication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#unidirectional-replication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph HQ[\&quot;Headquarter - Data Center\&quot;]\n        WDC1[\&quot;Writable DC1\&quot;]\n        WDC2[\&quot;Writable DC2\&quot;]\n    end\n\n    subgraph Branch[\&quot;Branch Office\&quot;]\n        RODC1[\&quot;RODC\&quot;]\n    end\n\n    WDC1 &lt;-->|\&quot;Bidirectional&lt;br/>Replication\&quot;| WDC2\n    WDC1 -->|\&quot;Unidirectional&lt;br/>Replication\&quot;| RODC1\n    WDC2 -->|\&quot;Unidirectional&lt;br/>Replication\&quot;| RODC1\n    RODC1 -.->|\&quot;NO reverse&lt;br/>replication\&quot;| WDC1\n\n    style RODC1 fill:#74c0fc,color:#000&quot;">graph LR
+    subgraph HQ[&quot;Headquarter - Data Center&quot;]
+        WDC1[&quot;Writable DC1&quot;]
+        WDC2[&quot;Writable DC2&quot;]
+    end
+
+    subgraph Branch[&quot;Branch Office&quot;]
+        RODC1[&quot;RODC&quot;]
+    end
+
+    WDC1 &lt;-->|&quot;Bidirectional&lt;br/>Replication&quot;| WDC2
+    WDC1 -->|&quot;Unidirectional&lt;br/>Replication&quot;| RODC1
+    WDC2 -->|&quot;Unidirectional&lt;br/>Replication&quot;| RODC1
+    RODC1 -.->|&quot;NO reverse&lt;br/>replication&quot;| WDC1
+
+    style RODC1 fill:#74c0fc,color:#000
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Tại sao unidirectional quan trọng</strong>:</p>
+<ul>
+<li>Nếu RODC bị compromised và attacker inject data giả → data <strong>không thể</strong> replicate ngược lên writable DC</li>
+<li>Ngay cả khi attacker có toàn quyền trên RODC, AD database ở HQ <strong>không bị ảnh hưởng</strong></li>
+<li>Đây là khác biệt bảo mật fundamentally so với writable DC — writable DC bị compromised → attacker có thể modify data và replicate đến toàn forest</li>
+</ul>
+<h3 id="filtered-attribute-set-fas">Filtered Attribute Set (FAS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#filtered-attribute-set-fas" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Một số attribute nhạy cảm <strong>không được replicate</strong> xuống RODC:
+<ul>
+<li>Credential-related attributes (ngoại trừ password được phép cache qua PRP)</li>
+<li>LAPS passwords (<code>ms-Mcs-AdmPwd</code>) — local admin password tất cả machines</li>
+<li>BitLocker recovery keys (mặc định) — đĩa mã hoá của tất cả machines</li>
+<li>Các attribute được đánh dấu “confidential” hoặc thuộc FAS</li>
+<li>Custom sensitive attributes do admin thêm vào FAS</li>
+</ul>
+</li>
+<li>Admin có thể tự <strong>thêm attribute vào FAS</strong> để ngăn replicate xuống RODC</li>
+<li><strong>Không thể</strong> thêm system-critical attributes vào FAS (ví dụ: <code>objectSID</code>, <code>sAMAccountName</code>)</li>
+<li>Mục đích: nếu RODC bị đánh cắp vật lý → dữ liệu nhạy cảm <strong>không bị lộ</strong></li>
+</ul>
+<h3 id="rodc-và-krbtgt-account-riêng">RODC và krbtgt Account riêng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rodc-và-krbtgt-account-riêng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Mỗi RODC có <strong>krbtgt account riêng</strong>: <code>krbtgt_&lt;RODC-number></code></li>
+<li>TGT (Ticket Granting Ticket) do RODC cấp được ký bằng krbtgt riêng này</li>
+<li><strong>Hệ quả bảo mật quan trọng</strong>:
+<ul>
+<li>Nếu RODC bị compromised → attacker có <code>krbtgt_xxx</code> → chỉ có thể forge TGT cho RODC đó</li>
+<li>Writable DC <strong>không chấp nhận</strong> TGT ký bằng <code>krbtgt_xxx</code> → attacker không thể dùng TGT giả để truy cập resource ở HQ</li>
+<li>Trong khi đó, nếu writable DC bị compromised → attacker có <code>krbtgt</code> chính → <strong>Golden Ticket attack</strong> → toàn bộ forest bị ảnh hưởng</li>
+</ul>
+</li>
+<li>Đây là lý do chính mà RODC được coi là <strong>an toàn hơn đáng kể</strong> so với writable DC ở branch office</li>
+</ul>
+<h2 id="password-replication-policy-prp">Password Replication Policy (PRP)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#password-replication-policy-prp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>PRP là cơ chế kiểm soát <strong>password nào được cache</strong> trên RODC — đây là tính năng bảo mật cốt lõi nhất của RODC.</p>
+<h3 id="cách-hoạt-động">Cách hoạt động<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-hoạt-động" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Allowed List</strong> (<code>msDS-RevealOnDemandGroup</code>): account nào <strong>ĐƯỢC PHÉP</strong> cache password trên RODC</li>
+<li><strong>Denied List</strong> (<code>msDS-NeverRevealGroup</code>): account nào <strong>KHÔNG BAO GIỜ</strong> được cache</li>
+<li><strong>Denied List ưu tiên hơn Allowed List</strong> — nếu account nằm trong cả hai, <strong>deny thắng</strong></li>
+<li><strong>Default policy</strong>: deny tất cả, chỉ cache những account được admin explicitly allow</li>
+<li>Password chỉ được cache <strong>khi user authenticate thành công</strong> qua RODC lần đầu (on-demand caching)</li>
+</ul>
+<h3 id="default-denied-list">Default Denied List<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#default-denied-list" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Các group sau bị deny mặc định — <strong>không bao giờ</strong> nên cho phép cache:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Group</th><th>Lý do deny</th></tr></thead><tbody><tr><td>Account Operators</td><td>Có quyền tạo/sửa account — nếu lộ password = có thể create backdoor</td></tr><tr><td>Server Operators</td><td>Có quyền quản lý server — lộ = server compromise</td></tr><tr><td>Backup Operators</td><td>Có quyền backup data — lộ = data exfiltration</td></tr><tr><td>Administrators</td><td>Local admin DC — lộ = DC compromise</td></tr><tr><td>Domain Admins</td><td>Full domain control — lộ = domain compromise</td></tr><tr><td>Enterprise Admins</td><td>Full forest control — lộ = forest compromise</td></tr><tr><td>Schema Admins</td><td>Schema modification — lộ = schema corruption</td></tr><tr><td>Denied RODC Password Replication Group</td><td>Catch-all deny group</td></tr><tr><td><code>krbtgt</code> account</td><td>Master Kerberos key — lộ = Golden Ticket</td></tr></tbody></table></div>
+<h3 id="luồng-xác-thực-qua-rodc--chi-tiết">Luồng xác thực qua RODC — chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#luồng-xác-thực-qua-rodc--chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant User as User at Branch\n    participant RODC as RODC Branch\n    participant WDC as Writable DC HQ\n\n    User->>RODC: 1. Kerberos Auth Request\n\n    alt Password already cached on RODC\n        RODC->>RODC: 2a. Check local cache\n        RODC->>RODC: 3a. Validate password\n        RODC->>User: 4a. TGT - Auth successful\n        Note over RODC,User: No WAN link needed&lt;br/>RODC signs TGT with its own krbtgt_xxx\n    else Password not cached\n        RODC->>RODC: 2b. Check local cache: not found\n        RODC->>WDC: 3b. Forward auth request via WAN\n        WDC->>WDC: 4b. Validate password\n        WDC->>RODC: 5b. Auth result + TGT\n        RODC->>User: 6b. TGT - Auth successful\n\n        Note over RODC: 7b. Check PRP\n        alt User is in Allowed List\n            RODC->>WDC: 8b-yes. Request to cache password\n            WDC->>RODC: 9b-yes. Replicate password hash to cache\n            Note over RODC: Next time: offline auth possible\n        else User not in Allowed List\n            Note over RODC: 8b-no. Not cached&lt;br/>Next time: still needs WAN\n        end\n    end&quot;">sequenceDiagram
+    participant User as User at Branch
+    participant RODC as RODC Branch
+    participant WDC as Writable DC HQ
+
+    User->>RODC: 1. Kerberos Auth Request
+
+    alt Password already cached on RODC
+        RODC->>RODC: 2a. Check local cache
+        RODC->>RODC: 3a. Validate password
+        RODC->>User: 4a. TGT - Auth successful
+        Note over RODC,User: No WAN link needed&lt;br/>RODC signs TGT with its own krbtgt_xxx
+    else Password not cached
+        RODC->>RODC: 2b. Check local cache: not found
+        RODC->>WDC: 3b. Forward auth request via WAN
+        WDC->>WDC: 4b. Validate password
+        WDC->>RODC: 5b. Auth result + TGT
+        RODC->>User: 6b. TGT - Auth successful
+
+        Note over RODC: 7b. Check PRP
+        alt User is in Allowed List
+            RODC->>WDC: 8b-yes. Request to cache password
+            WDC->>RODC: 9b-yes. Replicate password hash to cache
+            Note over RODC: Next time: offline auth possible
+        else User not in Allowed List
+            Note over RODC: 8b-no. Not cached&lt;br/>Next time: still needs WAN
+        end
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="chiến-lược-prp--so-sánh-chi-tiết">Chiến lược PRP — So sánh chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chiến-lược-prp--so-sánh-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Chiến lược</th><th>Allowed List chứa</th><th>Ưu điểm</th><th>Nhược điểm</th><th>Phù hợp cho</th></tr></thead><tbody><tr><td><strong>Conservative</strong></td><td>Chỉ user thường xuyên ở branch</td><td>Ít password bị expose khi RODC bị compromised</td><td>User mới/visitor cần WAN mỗi lần auth</td><td>High-security environments</td></tr><tr><td><strong>Per-site</strong></td><td>Tất cả user + computer của site đó</td><td>Auth offline cho mọi user tại site</td><td>Nhiều password trên RODC hơn</td><td>Standard branch offices</td></tr><tr><td><strong>Per-role</strong></td><td>User theo role/department tại site</td><td>Balance giữa security và usability</td><td>Phức tạp quản lý group membership</td><td>Medium-security, mixed roles</td></tr><tr><td><strong>Blanket allow</strong></td><td>Tất cả domain users</td><td>Mọi user auth offline được</td><td>Rủi ro cao nếu RODC bị compromised</td><td><strong>Không khuyến nghị</strong></td></tr></tbody></table></div>
+<h3 id="prp-planning--chiến-lược-thực-tế">PRP Planning — Chiến lược thực tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#prp-planning--chiến-lược-thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="per-site-strategy-khuyến-nghị-cho-đa-số-tổ-chức">Per-site Strategy (khuyến nghị cho đa số tổ chức)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#per-site-strategy-khuyến-nghị-cho-đa-số-tổ-chức" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Tạo <strong>1 security group cho mỗi RODC</strong>: <code>RODC-&lt;SiteName>-Allowed</code>
+<ul>
+<li>Ví dụ: <code>RODC-BranchHCM-Allowed</code>, <code>RODC-BranchDN-Allowed</code></li>
+</ul>
+</li>
+<li>Add user <strong>và computer</strong> account của site vào group
+<ul>
+<li>Computer account cần cache vì <strong>machine authentication</strong> cũng cần Kerberos</li>
+<li>Nếu không cache computer password → máy không join domain offline</li>
+</ul>
+</li>
+<li>Add group vào Allowed List của RODC tương ứng</li>
+<li><strong>Review định kỳ</strong>: khi user chuyển site → remove khỏi group site cũ, add vào group site mới</li>
+</ul>
+<h4 id="per-role-strategy-cho-môi-trường-yêu-cầu-bảo-mật-cao-hơn">Per-role Strategy (cho môi trường yêu cầu bảo mật cao hơn)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#per-role-strategy-cho-môi-trường-yêu-cầu-bảo-mật-cao-hơn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Tạo group theo <strong>chức năng</strong>: <code>RODC-&lt;SiteName>-StandardUsers</code>, <code>RODC-&lt;SiteName>-ITStaff</code></li>
+<li>Chỉ allow standard users — IT staff luôn authenticate qua WAN (tránh cache privileged password)</li>
+<li>Service accounts: cân nhắc kỹ — nếu cache thì app chạy offline, nếu không cache thì app chết khi mất WAN</li>
+</ul>
+<h4 id="ví-dụ-thực-tế-tổ-chức-500-users-5-branch-offices">Ví dụ thực tế: Tổ chức 500 users, 5 branch offices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ví-dụ-thực-tế-tổ-chức-500-users-5-branch-offices" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TB\n    subgraph HQ[\&quot;HQ - Da Nang\&quot;]\n        WDC1[\&quot;Writable DC1\&quot;]\n        WDC2[\&quot;Writable DC2\&quot;]\n    end\n\n    subgraph Branch1[\&quot;Branch HCM - 120 users\&quot;]\n        RODC_HCM[\&quot;RODC-HCM\&quot;]\n        GRP_HCM[\&quot;RODC-HCM-Allowed&lt;br/>120 users + 150 computers\&quot;]\n    end\n\n    subgraph Branch2[\&quot;Branch HN - 80 users\&quot;]\n        RODC_HN[\&quot;RODC-HN\&quot;]\n        GRP_HN[\&quot;RODC-HN-Allowed&lt;br/>80 users + 100 computers\&quot;]\n    end\n\n    subgraph Branch3[\&quot;Branch CT - 15 users\&quot;]\n        NoDC[\&quot;No DC&lt;br/>Auth via VPN\&quot;]\n    end\n\n    WDC1 -->|\&quot;Replicate\&quot;| RODC_HCM\n    WDC1 -->|\&quot;Replicate\&quot;| RODC_HN\n    GRP_HCM -.->|\&quot;PRP Allowed\&quot;| RODC_HCM\n    GRP_HN -.->|\&quot;PRP Allowed\&quot;| RODC_HN\n\n    style NoDC fill:#ffd43b,color:#000&quot;">graph TB
+    subgraph HQ[&quot;HQ - Da Nang&quot;]
+        WDC1[&quot;Writable DC1&quot;]
+        WDC2[&quot;Writable DC2&quot;]
+    end
+
+    subgraph Branch1[&quot;Branch HCM - 120 users&quot;]
+        RODC_HCM[&quot;RODC-HCM&quot;]
+        GRP_HCM[&quot;RODC-HCM-Allowed&lt;br/>120 users + 150 computers&quot;]
+    end
+
+    subgraph Branch2[&quot;Branch HN - 80 users&quot;]
+        RODC_HN[&quot;RODC-HN&quot;]
+        GRP_HN[&quot;RODC-HN-Allowed&lt;br/>80 users + 100 computers&quot;]
+    end
+
+    subgraph Branch3[&quot;Branch CT - 15 users&quot;]
+        NoDC[&quot;No DC&lt;br/>Auth via VPN&quot;]
+    end
+
+    WDC1 -->|&quot;Replicate&quot;| RODC_HCM
+    WDC1 -->|&quot;Replicate&quot;| RODC_HN
+    GRP_HCM -.->|&quot;PRP Allowed&quot;| RODC_HCM
+    GRP_HN -.->|&quot;PRP Allowed&quot;| RODC_HN
+
+    style NoDC fill:#ffd43b,color:#000
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>HCM</strong> (120 users): đủ lớn → RODC + per-site PRP</li>
+<li><strong>HN</strong> (80 users): đủ lớn → RODC + per-site PRP</li>
+<li><strong>CT</strong> (15 users): quá nhỏ → <strong>không deploy RODC</strong>, dùng VPN auth về HQ
+<ul>
+<li>Threshold khuyến nghị: &lt; 25 users → VPN thay vì RODC (overhead quản lý > lợi ích)</li>
+</ul>
+</li>
+</ul>
+<h3 id="rodc-và-fine-grained-password-policies">RODC và Fine-Grained Password Policies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rodc-và-fine-grained-password-policies" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Fine-Grained Password Policy (FGPP) áp dụng <strong>trên writable DC</strong> — RODC chỉ enforce khi user auth qua writable DC</li>
+<li>Khi user auth <strong>trực tiếp trên RODC</strong> (password đã cache) → FGPP <strong>vẫn được enforce</strong> vì policy information được replicate xuống RODC</li>
+<li>Tuy nhiên, password <strong>change</strong> luôn được refer lên writable DC → FGPP complexity/history check thực hiện trên writable DC</li>
+<li><strong>Lưu ý</strong>: account lockout policy cũng enforce qua writable DC — RODC forward lockout events lên writable DC (hoặc PDC Emulator)</li>
+</ul>
+<h2 id="administrator-role-separation-ars">Administrator Role Separation (ARS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#administrator-role-separation-ars" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="vấn-đề-cần-giải-quyết">Vấn đề cần giải quyết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề-cần-giải-quyết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Branch office thường có IT staff local với skill thấp — chỉ cần basic maintenance (restart, check status)</li>
+<li>Nếu cho IT staff local làm Domain Admin → rủi ro quá lớn</li>
+<li>Nếu không cho quyền gì → mọi maintenance đều cần remote support từ HQ → chậm, tốn resource</li>
+</ul>
+<h3 id="ars-là-gì">ARS là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ars-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>RODC cho phép <strong>delegate local admin</strong> trên RODC mà <strong>không cần</strong> Domain Admin rights</li>
+<li>Delegated admin có thể:
+<ul>
+<li>Login vào RODC server</li>
+<li>Quản lý local services (restart DNS, DHCP nếu có)</li>
+<li>Monitor RODC health</li>
+<li>Basic troubleshooting</li>
+</ul>
+</li>
+<li>Delegated admin <strong>KHÔNG THỂ</strong>:
+<ul>
+<li>Tạo/sửa/xoá AD objects</li>
+<li>Modify Group Policy</li>
+<li>Truy cập AD database trực tiếp</li>
+<li>Transfer/seize FSMO roles</li>
+<li>Access cached password data</li>
+</ul>
+</li>
+</ul>
+<h3 id="cấu-hình-ars">Cấu hình ARS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-hình-ars" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Set trong RODC computer account properties: tab “Managed By” hoặc qua <code>dsmgmt</code> tool</li>
+<li>Có thể delegate cho <strong>user</strong> hoặc <strong>group</strong></li>
+<li>Best practice: tạo group <code>RODC-&lt;SiteName>-LocalAdmins</code> → add IT staff vào group → delegate group</li>
+</ul>
+<h2 id="rodc-dns-behavior">RODC DNS Behavior<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rodc-dns-behavior" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="read-only-dns">Read-Only DNS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#read-only-dns" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>RODC có thể chạy <strong>DNS Server role</strong> — nhưng là <strong>read-only DNS</strong></li>
+<li>RODC nhận DNS zone data từ writable DC qua <strong>AD-integrated DNS replication</strong></li>
+<li>Client có thể <strong>query</strong> DNS từ RODC bình thường (resolve names)</li>
+<li>Client <strong>không thể</strong> dynamic DNS update trực tiếp trên RODC</li>
+</ul>
+<h3 id="dns-update-referral">DNS Update Referral<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-update-referral" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant Client as Client PC\n    participant RODC_DNS as RODC DNS Server\n    participant WDC_DNS as Writable DC DNS\n\n    Client->>RODC_DNS: 1. DNS Dynamic Update&lt;br/>Register A record\n    RODC_DNS->>RODC_DNS: 2. Read-only zone&lt;br/>Cannot accept update\n    RODC_DNS->>Client: 3. Referral to writable DC DNS\n    Client->>WDC_DNS: 4. DNS Dynamic Update&lt;br/>(redirected)\n    WDC_DNS->>WDC_DNS: 5. Accept update&lt;br/>Write to AD-integrated zone\n    WDC_DNS->>RODC_DNS: 6. Replicate updated record&lt;br/>(normal AD replication)\n    Note over RODC_DNS: Record now available on RODC&quot;">sequenceDiagram
+    participant Client as Client PC
+    participant RODC_DNS as RODC DNS Server
+    participant WDC_DNS as Writable DC DNS
+
+    Client->>RODC_DNS: 1. DNS Dynamic Update&lt;br/>Register A record
+    RODC_DNS->>RODC_DNS: 2. Read-only zone&lt;br/>Cannot accept update
+    RODC_DNS->>Client: 3. Referral to writable DC DNS
+    Client->>WDC_DNS: 4. DNS Dynamic Update&lt;br/>(redirected)
+    WDC_DNS->>WDC_DNS: 5. Accept update&lt;br/>Write to AD-integrated zone
+    WDC_DNS->>RODC_DNS: 6. Replicate updated record&lt;br/>(normal AD replication)
+    Note over RODC_DNS: Record now available on RODC
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>Quan trọng</strong>: nếu WAN link down → client <strong>không thể</strong> register DNS record → có thể gây issues cho services phụ thuộc DNS registration (SCCM, SCOM agent…)</li>
+<li>Workaround: configure DHCP ở branch để thực hiện DNS update thay client (DHCP option)</li>
+</ul>
+<h2 id="rodc-và-bitlocker-integration">RODC và BitLocker Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rodc-và-bitlocker-integration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Mặc định, <strong>BitLocker recovery keys</strong> thuộc Filtered Attribute Set → <strong>không replicate</strong> xuống RODC</li>
+<li>Nếu user tại branch bị lock out khỏi BitLocker → admin phải query recovery key từ <strong>writable DC ở HQ</strong></li>
+<li>Cần WAN link để retrieve key → nếu WAN down + BitLocker lock = user bị stuck</li>
+<li><strong>Tuỳ chọn</strong>: có thể remove BitLocker recovery key attribute khỏi FAS → cho phép replicate xuống RODC
+<ul>
+<li>Ưu điểm: local admin có thể retrieve key khi WAN down</li>
+<li>Nhược điểm: nếu RODC bị đánh cắp → attacker có recovery key → decrypt disk</li>
+<li><strong>Khuyến nghị</strong>: giữ mặc định (không replicate) trừ khi có nhu cầu offline recovery rõ ràng</li>
+</ul>
+</li>
+</ul>
+<h2 id="use-cases">Use Cases<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#use-cases" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="branch-office-với-bảo-mật-vật-lý-kém">Branch Office với bảo mật vật lý kém<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#branch-office-với-bảo-mật-vật-lý-kém" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Văn phòng chi nhánh nhỏ, không có phòng server riêng</li>
+<li>RODC đặt trong tủ rack không khoá chuyên dụng hoặc dưới bàn IT</li>
+<li>Nếu bị đánh cắp: chỉ mất password đã cache (revocable — reset được) + read-only data</li>
+<li>So với writable DC bị đánh cắp: mất <strong>toàn bộ AD database</strong> bao gồm mọi password hash → catastrophic, phải reset tất cả password trong domain</li>
+</ul>
+<h3 id="kết-nối-wan-không-ổn-định">Kết nối WAN không ổn định<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kết-nối-wan-không-ổn-định" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Branch office có WAN link chất lượng kém hoặc hay đứt (ADSL, 4G backup, satellite)</li>
+<li>RODC cache password cho phép user <strong>xác thực local</strong> khi WAN down</li>
+<li>Không cache → user không thể login khi mất WAN (trừ cached credentials trên máy client — chỉ có hiệu lực nếu user đã login trước đó trên cùng máy)</li>
+<li>RODC cũng cache <strong>DNS records</strong> → name resolution hoạt động offline</li>
+</ul>
+<h3 id="dmz-scenarios-hạn-chế-không-còn-khuyến-nghị">DMZ Scenarios (hạn chế, không còn khuyến nghị)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dmz-scenarios-hạn-chế-không-còn-khuyến-nghị" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Một số tổ chức đặt RODC trong DMZ cho ứng dụng cần AD auth</li>
+<li>Giảm attack surface so với writable DC trong DMZ</li>
+<li>Tuy nhiên, Microsoft khuyến nghị <strong>Azure AD Application Proxy</strong> hoặc <strong>Web Application Proxy</strong> thay vì RODC trong DMZ cho môi trường hiện đại</li>
+<li>RODC trong DMZ cũng cần firewall rules phức tạp (RPC, LDAP, Kerberos ports)</li>
+</ul>
+<h2 id="rodc-staged-installation">RODC Staged Installation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rodc-staged-installation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="quy-trình-2-giai-đoạn">Quy trình 2 giai đoạn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quy-trình-2-giai-đoạn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Cho phép <strong>uỷ quyền cài đặt RODC</strong> cho non-admin (branch office IT)</li>
+<li>Quy trình:
+<ol>
+<li><strong>Domain Admin</strong> (tại HQ) tạo RODC computer account trong AD (pre-stage):
+<ul>
+<li>Chọn site</li>
+<li>Configure PRP (Allowed/Denied lists)</li>
+<li>Chỉ định delegated admin</li>
+<li>Set DNS/GC options</li>
+</ul>
+</li>
+<li><strong>Branch IT</strong> (non-admin) chạy Server Manager hoặc PowerShell để attach server vào account đã tạo
+<ul>
+<li>Branch IT <strong>không cần</strong> Domain Admin credentials</li>
+<li>Chỉ cần credentials của delegated admin account</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Useful cho tổ chức lớn có nhiều branch office với IT staff local skill thấp</li>
+<li><strong>Bảo mật</strong>: Domain Admin kiểm soát hoàn toàn security policy, branch IT chỉ thực hiện physical installation</li>
+</ul>
+<h3 id="staged-installation-workflow">Staged Installation Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#staged-installation-workflow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    subgraph HQ_Phase[\&quot;Phase 1 - HQ Domain Admin\&quot;]\n        A1[\&quot;Create RODC computer account&lt;br/>in AD Users and Computers\&quot;]\n        A2[\&quot;Select target site&lt;br/>for RODC\&quot;]\n        A3[\&quot;Configure PRP:&lt;br/>Allowed + Denied lists\&quot;]\n        A4[\&quot;Designate delegated admin&lt;br/>for RODC\&quot;]\n        A5[\&quot;Set DNS, GC options\&quot;]\n        A1 --> A2 --> A3 --> A4 --> A5\n    end\n\n    subgraph Branch_Phase[\&quot;Phase 2 - Branch IT Staff\&quot;]\n        B1[\&quot;Install Windows Server&lt;br/>on hardware\&quot;]\n        B2[\&quot;Install AD DS role&lt;br/>via Server Manager\&quot;]\n        B3[\&quot;Promote: Attach to&lt;br/>pre-staged account\&quot;]\n        B4[\&quot;Replication from&lt;br/>writable DC\&quot;]\n        B5[\&quot;RODC online&lt;br/>and operational\&quot;]\n        B1 --> B2 --> B3 --> B4 --> B5\n    end\n\n    HQ_Phase --> Branch_Phase\n\n    style HQ_Phase fill:#1a3a5c,color:#fff\n    style Branch_Phase fill:#2d6a2e,color:#fff&quot;">flowchart TD
+    subgraph HQ_Phase[&quot;Phase 1 - HQ Domain Admin&quot;]
+        A1[&quot;Create RODC computer account&lt;br/>in AD Users and Computers&quot;]
+        A2[&quot;Select target site&lt;br/>for RODC&quot;]
+        A3[&quot;Configure PRP:&lt;br/>Allowed + Denied lists&quot;]
+        A4[&quot;Designate delegated admin&lt;br/>for RODC&quot;]
+        A5[&quot;Set DNS, GC options&quot;]
+        A1 --> A2 --> A3 --> A4 --> A5
+    end
+
+    subgraph Branch_Phase[&quot;Phase 2 - Branch IT Staff&quot;]
+        B1[&quot;Install Windows Server&lt;br/>on hardware&quot;]
+        B2[&quot;Install AD DS role&lt;br/>via Server Manager&quot;]
+        B3[&quot;Promote: Attach to&lt;br/>pre-staged account&quot;]
+        B4[&quot;Replication from&lt;br/>writable DC&quot;]
+        B5[&quot;RODC online&lt;br/>and operational&quot;]
+        B1 --> B2 --> B3 --> B4 --> B5
+    end
+
+    HQ_Phase --> Branch_Phase
+
+    style HQ_Phase fill:#1a3a5c,color:#fff
+    style Branch_Phase fill:#2d6a2e,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h2 id="rodc-trong-modern-hybrid-scenarios">RODC trong Modern Hybrid Scenarios<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rodc-trong-modern-hybrid-scenarios" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="azure-ad-connect-và-rodc">Azure AD Connect và RODC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#azure-ad-connect-và-rodc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Azure AD Connect <strong>không hỗ trợ</strong> cài đặt trên RODC</li>
+<li>Azure AD Connect phải chạy trên <strong>writable DC</strong> hoặc member server có kết nối đến writable DC</li>
+<li>RODC user data <strong>sẽ được sync</strong> lên Azure AD (vì data replicate từ writable DC → RODC, và Azure AD Connect đọc từ writable DC)</li>
+<li>Không có impact đặc biệt từ RODC lên Azure AD Connect — nhưng cũng không có lợi ích trực tiếp</li>
+</ul>
+<h3 id="vpn-và-sd-wan-impact">VPN và SD-WAN Impact<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vpn-và-sd-wan-impact" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Always-on VPN</strong> hiện đại (IKEv2, WireGuard): bandwidth ổn định, latency thấp → giảm nhu cầu RODC
+<ul>
+<li>User authenticate qua VPN tunnel → đến writable DC ở HQ trực tiếp</li>
+<li>Không cần local DC/RODC nếu VPN đủ reliable</li>
+</ul>
+</li>
+<li><strong>SD-WAN</strong>: multiple WAN links với failover tự động → WAN downtime giảm đáng kể
+<ul>
+<li>Ngày xưa WAN down 4 giờ/tháng → với SD-WAN có thể &lt; 5 phút/tháng</li>
+<li>RODC ít cần thiết hơn khi WAN reliability > 99.9%</li>
+</ul>
+</li>
+<li><strong>Tuy nhiên</strong>, RODC vẫn có giá trị khi:
+<ul>
+<li>Compliance yêu cầu local authentication capability (financial, healthcare, government)</li>
+<li>Site có regulatory requirement về data locality</li>
+<li>Bandwidth quá thấp cho nhiều concurrent auth requests (satellite link, remote mining sites)</li>
+</ul>
+</li>
+</ul>
+<h3 id="khi-nào-rodc-vẫn-cần-trong-2025">Khi nào RODC vẫn cần trong 2025?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-nào-rodc-vẫn-cần-trong-2025" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Scenario</th><th style="text-align:center;">RODC vẫn cần?</th><th>Lý do</th></tr></thead><tbody><tr><td>Branch 50+ users, WAN unreliable</td><td style="text-align:center;"><strong>Có</strong></td><td>Authentication volume + WAN risk</td></tr><tr><td>Branch 50+ users, SD-WAN reliable</td><td style="text-align:center;"><strong>Có thể</strong></td><td>Giảm WAN load, offline capability</td></tr><tr><td>Branch &lt; 25 users, VPN reliable</td><td style="text-align:center;"><strong>Không</strong></td><td>Overhead > benefit</td></tr><tr><td>Compliance require local auth</td><td style="text-align:center;"><strong>Có</strong></td><td>Regulatory requirement</td></tr><tr><td>Isolated site (ship, oil rig, mine)</td><td style="text-align:center;"><strong>Có</strong></td><td>Không có WAN alternative</td></tr><tr><td>DMZ deployment</td><td style="text-align:center;"><strong>Không</strong></td><td>Dùng Azure AD App Proxy</td></tr><tr><td>Azure AD hybrid, cloud-first</td><td style="text-align:center;"><strong>Thường không</strong></td><td>Cloud auth thay thế local DC</td></tr></tbody></table></div>
+<h2 id="decision-framework-giữ-hay-loại-bỏ-rodc">Decision Framework: Giữ hay loại bỏ RODC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#decision-framework-giữ-hay-loại-bỏ-rodc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="flowchart-quyết-định">Flowchart quyết định<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#flowchart-quyết-định" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    Start[\&quot;Evaluate RODC in&lt;br/>AD upgrade plan\&quot;]\n\n    Start --> Q1{\&quot;RODC running&lt;br/>old OS?\&quot;}\n    Q1 -->|Yes| Must[\&quot;MUST handle&lt;br/>before raising FFL\&quot;]\n\n    Must --> Option1[\&quot;Option A: Upgrade RODC&lt;br/>to new OS - in-place or rebuild\&quot;]\n    Must --> Option2[\&quot;Option B: Demote RODC&lt;br/>remove entirely\&quot;]\n\n    Q1 -->|No| Q2{\&quot;Branch still needs&lt;br/>local DC?\&quot;}\n\n    Q2 -->|Yes| Q3{\&quot;WAN reliability&lt;br/>improved?\&quot;}\n    Q3 -->|Still poor| Keep[\&quot;Keep RODC&lt;br/>Review PRP + update OS\&quot;]\n    Q3 -->|Good now| Q4{\&quot;More than 25 users&lt;br/>at branch?\&quot;}\n    Q4 -->|Yes| KeepMaybe[\&quot;Consider keeping&lt;br/>Reduce WAN load + offline\&quot;]\n    Q4 -->|No| Decom[\&quot;Decommission RODC&lt;br/>Use VPN/SD-WAN\&quot;]\n\n    Q2 -->|No| Decom\n\n    Option2 --> Reasons[\&quot;Reasons to remove\&quot;]\n    Decom --> Reasons\n\n    Reasons --> R1[\&quot;Modern VPN/SD-WAN\&quot;]\n    Reasons --> R2[\&quot;Azure AD / Entra ID\&quot;]\n    Reasons --> R3[\&quot;Simplify topology\&quot;]\n    Reasons --> R4[\&quot;Reduce attack surface\&quot;]&quot;">flowchart TD
+    Start[&quot;Evaluate RODC in&lt;br/>AD upgrade plan&quot;]
+
+    Start --> Q1{&quot;RODC running&lt;br/>old OS?&quot;}
+    Q1 -->|Yes| Must[&quot;MUST handle&lt;br/>before raising FFL&quot;]
+
+    Must --> Option1[&quot;Option A: Upgrade RODC&lt;br/>to new OS - in-place or rebuild&quot;]
+    Must --> Option2[&quot;Option B: Demote RODC&lt;br/>remove entirely&quot;]
+
+    Q1 -->|No| Q2{&quot;Branch still needs&lt;br/>local DC?&quot;}
+
+    Q2 -->|Yes| Q3{&quot;WAN reliability&lt;br/>improved?&quot;}
+    Q3 -->|Still poor| Keep[&quot;Keep RODC&lt;br/>Review PRP + update OS&quot;]
+    Q3 -->|Good now| Q4{&quot;More than 25 users&lt;br/>at branch?&quot;}
+    Q4 -->|Yes| KeepMaybe[&quot;Consider keeping&lt;br/>Reduce WAN load + offline&quot;]
+    Q4 -->|No| Decom[&quot;Decommission RODC&lt;br/>Use VPN/SD-WAN&quot;]
+
+    Q2 -->|No| Decom
+
+    Option2 --> Reasons[&quot;Reasons to remove&quot;]
+    Decom --> Reasons
+
+    Reasons --> R1[&quot;Modern VPN/SD-WAN&quot;]
+    Reasons --> R2[&quot;Azure AD / Entra ID&quot;]
+    Reasons --> R3[&quot;Simplify topology&quot;]
+    Reasons --> R4[&quot;Reduce attack surface&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="bảng-đánh-giá-chi-tiết">Bảng đánh giá chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-đánh-giá-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Yếu tố</th><th style="text-align:center;">Giữ RODC (weight)</th><th style="text-align:center;">Bỏ RODC (weight)</th></tr></thead><tbody><tr><td>WAN link hay đứt</td><td style="text-align:center;">+3</td><td style="text-align:center;"></td></tr><tr><td>WAN ổn định (SD-WAN, MPLS)</td><td style="text-align:center;"></td><td style="text-align:center;">+2</td></tr><tr><td>Users > 50 tại branch</td><td style="text-align:center;">+2</td><td style="text-align:center;"></td></tr><tr><td>Users &lt; 25 tại branch</td><td style="text-align:center;"></td><td style="text-align:center;">+3</td></tr><tr><td>Physical security tốt</td><td style="text-align:center;">+1</td><td style="text-align:center;"></td></tr><tr><td>Physical security kém</td><td style="text-align:center;">+1 (RODC safer than full DC)</td><td style="text-align:center;">+1 (bỏ DC hoàn toàn safer)</td></tr><tr><td>Compliance require local auth</td><td style="text-align:center;">+3</td><td style="text-align:center;"></td></tr><tr><td>Cloud-first strategy</td><td style="text-align:center;"></td><td style="text-align:center;">+2</td></tr><tr><td>Always-on VPN deployed</td><td style="text-align:center;"></td><td style="text-align:center;">+2</td></tr><tr><td>Đã có Azure AD hybrid</td><td style="text-align:center;"></td><td style="text-align:center;">+1</td></tr><tr><td>IT staff local để maintain</td><td style="text-align:center;">+1</td><td style="text-align:center;"></td></tr><tr><td>Không có IT staff local</td><td style="text-align:center;"></td><td style="text-align:center;">+2</td></tr></tbody></table></div>
+<p><strong>Scoring</strong>: cộng điểm từng cột → cột nào cao hơn → hướng đi phù hợp</p>
+<h2 id="quy-trình-demote-rodc-logic">Quy trình Demote RODC (logic)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quy-trình-demote-rodc-logic" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>Lưu ý</strong>: đây là quy trình logic, không phải hands-on lab.</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    subgraph PreCheck[\&quot;Phase 1 - Pre-checks\&quot;]\n        P1[\&quot;Identify RODC to demote\&quot;]\n        P2[\&quot;List cached passwords&lt;br/>on RODC - msDS-RevealedList\&quot;]\n        P3[\&quot;Verify replication healthy&lt;br/>RODC to writable DC\&quot;]\n        P4[\&quot;Notify branch users&lt;br/>about auth flow change\&quot;]\n        P5[\&quot;Verify VPN/WAN&lt;br/>alternative is ready\&quot;]\n        P1 --> P2 --> P3 --> P4 --> P5\n    end\n\n    subgraph Demote[\&quot;Phase 2 - Demote\&quot;]\n        D1[\&quot;Force final replication&lt;br/>from writable DC\&quot;]\n        D2[\&quot;Demote RODC&lt;br/>AD DS role removal\&quot;]\n        D3[\&quot;Choose: delete metadata&lt;br/>or keep computer object\&quot;]\n        D1 --> D2 --> D3\n    end\n\n    subgraph Cleanup[\&quot;Phase 3 - Cleanup\&quot;]\n        C1[\&quot;Delete RODC DNS records:&lt;br/>SRV, A, CNAME\&quot;]\n        C2[\&quot;Delete NTDS Settings object&lt;br/>in AD Sites and Services\&quot;]\n        C3[\&quot;Delete computer object&lt;br/>if not deleted in prior step\&quot;]\n        C4[\&quot;Reset cached passwords&lt;br/>for security\&quot;]\n        C1 --> C2 --> C3 --> C4\n    end\n\n    subgraph Verify[\&quot;Phase 4 - Verification\&quot;]\n        V1[\&quot;repadmin /replsummary&lt;br/>RODC no longer listed\&quot;]\n        V2[\&quot;DNS resolution works&lt;br/>for branch users\&quot;]\n        V3[\&quot;Branch users&lt;br/>auth successfully via WAN\&quot;]\n        V4[\&quot;dcdiag passes&lt;br/>on remaining DCs\&quot;]\n        V1 --> V2 --> V3 --> V4\n    end\n\n    PreCheck --> Demote --> Cleanup --> Verify&quot;">flowchart TD
+    subgraph PreCheck[&quot;Phase 1 - Pre-checks&quot;]
+        P1[&quot;Identify RODC to demote&quot;]
+        P2[&quot;List cached passwords&lt;br/>on RODC - msDS-RevealedList&quot;]
+        P3[&quot;Verify replication healthy&lt;br/>RODC to writable DC&quot;]
+        P4[&quot;Notify branch users&lt;br/>about auth flow change&quot;]
+        P5[&quot;Verify VPN/WAN&lt;br/>alternative is ready&quot;]
+        P1 --> P2 --> P3 --> P4 --> P5
+    end
+
+    subgraph Demote[&quot;Phase 2 - Demote&quot;]
+        D1[&quot;Force final replication&lt;br/>from writable DC&quot;]
+        D2[&quot;Demote RODC&lt;br/>AD DS role removal&quot;]
+        D3[&quot;Choose: delete metadata&lt;br/>or keep computer object&quot;]
+        D1 --> D2 --> D3
+    end
+
+    subgraph Cleanup[&quot;Phase 3 - Cleanup&quot;]
+        C1[&quot;Delete RODC DNS records:&lt;br/>SRV, A, CNAME&quot;]
+        C2[&quot;Delete NTDS Settings object&lt;br/>in AD Sites and Services&quot;]
+        C3[&quot;Delete computer object&lt;br/>if not deleted in prior step&quot;]
+        C4[&quot;Reset cached passwords&lt;br/>for security&quot;]
+        C1 --> C2 --> C3 --> C4
+    end
+
+    subgraph Verify[&quot;Phase 4 - Verification&quot;]
+        V1[&quot;repadmin /replsummary&lt;br/>RODC no longer listed&quot;]
+        V2[&quot;DNS resolution works&lt;br/>for branch users&quot;]
+        V3[&quot;Branch users&lt;br/>auth successfully via WAN&quot;]
+        V4[&quot;dcdiag passes&lt;br/>on remaining DCs&quot;]
+        V1 --> V2 --> V3 --> V4
+    end
+
+    PreCheck --> Demote --> Cleanup --> Verify
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="reset-cached-passwords-sau-demote">Reset cached passwords sau demote<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#reset-cached-passwords-sau-demote" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Khi RODC bị demote hoặc decommission, best practice là <strong>reset password</strong> cho tất cả account đã cache trên RODC đó</li>
+<li>Lý do: nếu RODC hardware bị tái sử dụng hoặc bị attacker truy cập → password hash trên disk có thể bị extract</li>
+<li>Kiểm tra danh sách cached passwords: thuộc tính <code>msDS-RevealedList</code> trên RODC computer object</li>
+<li><strong>Nếu RODC bị compromised (stolen)</strong>: reset password <strong>ngay lập tức</strong>, không chờ demote</li>
+<li>Có thể dùng script/automation để bulk reset — nhưng phải thông báo affected users trước</li>
+</ul>
+<h3 id="forced-removal-khi-rodc-không-accessible">Forced Removal (khi RODC không accessible)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#forced-removal-khi-rodc-không-accessible" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nếu RODC server đã chết / bị đánh cắp / không thể demote gracefully:
+<ol>
+<li>Metadata cleanup: xoá RODC object khỏi AD bằng <code>ntdsutil</code> hoặc AD Users and Computers</li>
+<li>Xoá DNS records manually</li>
+<li>Reset tất cả cached passwords <strong>ngay lập tức</strong></li>
+<li>Xoá computer account</li>
+<li>Review security — xem có dấu hiệu compromise không</li>
+</ol>
+</li>
+</ul>
+<h2 id="câu-hỏi-thường-gặp-faq">Câu hỏi thường gặp (FAQ)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-thường-gặp-faq" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="q-rodc-có-thể-giữ-fsmo-role-không">Q: RODC có thể giữ FSMO role không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-rodc-có-thể-giữ-fsmo-role-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Không</strong>, tuyệt đối không. Tất cả 5 FSMO role yêu cầu write capability → phải nằm trên writable DC. Xem <a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt">03.1 - FSMO Roles - 5 vai trò chủ chốt</a>.</p>
+<h3 id="q-rodc-có-thể-là-global-catalog-không">Q: RODC có thể là Global Catalog không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-rodc-có-thể-là-global-catalog-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Có</strong>, RODC có thể là GC — nhưng là <strong>read-only GC</strong>. Client có thể query GC port (3268) trên RODC để search cross-domain. Tuy nhiên, GC data trên RODC cũng là read-only và tuân theo FAS (filtered attributes bị loại bỏ).</p>
+<h3 id="q-nếu-wan-down-user-có-login-được-không">Q: Nếu WAN down, user có login được không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-nếu-wan-down-user-có-login-được-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tuỳ thuộc PRP</strong>. Nếu user đã authenticate ít nhất 1 lần qua RODC <strong>VÀ</strong> password đã được cache (user trong Allowed List) → có, login offline được. Nếu password chưa cache → không, phải chờ WAN restore.</p>
+<h3 id="q-rodc-có-thể-chạy-dhcp-không">Q: RODC có thể chạy DHCP không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-rodc-có-thể-chạy-dhcp-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Có</strong>, RODC có thể chạy DHCP Server role. DHCP trên RODC hoạt động bình thường vì DHCP không phụ thuộc AD write capability. Đây là cách phổ biến để cung cấp IP addressing tại branch office.</p>
+<h3 id="q-deploy-rodc-với-bao-nhiêu-user-thì-hợp-lý">Q: Deploy RODC với bao nhiêu user thì hợp lý?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-deploy-rodc-với-bao-nhiêu-user-thì-hợp-lý" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Không có con số tuyệt đối, nhưng rule of thumb:</p>
+<ul>
+<li><strong>&lt; 25 users</strong>: VPN/SD-WAN thường đủ, RODC overhead không đáng</li>
+<li><strong>25-50 users</strong>: cân nhắc tuỳ WAN quality và compliance requirements</li>
+<li><strong>> 50 users</strong>: RODC thường có giá trị rõ ràng (giảm WAN load, offline capability)</li>
+</ul>
+<h3 id="q-attacker-chiếm-được-rodc-có-thể-làm-gì">Q: Attacker chiếm được RODC có thể làm gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-attacker-chiếm-được-rodc-có-thể-làm-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Đọc AD database (read-only) — nhưng không có sensitive attributes (FAS)</li>
+<li>Crack cached password hashes — <strong>chỉ</strong> password trong PRP Allowed list đã từng authenticate</li>
+<li><strong>Không thể</strong>: modify AD, replicate changes lên writable DC, forge Golden Ticket (krbtgt riêng)</li>
+<li><strong>Response</strong>: reset cached passwords ngay, investigate compromise scope, rebuild RODC</li>
+</ul>
+<h2 id="lưu-ý-quan-trọng">Lưu ý quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>RODC <strong>không thể giữ FSMO role</strong> — tất cả 5 FSMO role phải nằm trên writable DC</li>
+<li>RODC <strong>có thể là Global Catalog server</strong> (GC) — nhưng là read-only GC</li>
+<li>RODC sử dụng <code>krbtgt</code> account riêng (<code>krbtgt_&lt;RODC-number></code>) → nếu RODC compromised, <code>krbtgt</code> chính không bị ảnh hưởng</li>
+<li>RODC có thể chạy <strong>DNS Server role</strong> (read-only) — client update DNS → RODC refer lên writable DC chạy DNS</li>
+<li>Trong môi trường <strong>multi-domain</strong>: RODC chỉ cache password cho domain mà nó thuộc về</li>
+<li><strong>Không deploy RODC</strong> nếu branch office chỉ có 1-2 user → overhead quản lý lớn hơn lợi ích</li>
+<li>RODC <strong>không hỗ trợ</strong> AD Certificate Services, DFS Replication role (trên chính RODC)</li>
+<li>Khi plan AD 2025 upgrade: inventory tất cả RODC, xác định OS version, quyết định nâng cấp hay demote từng cái</li>
+<li><strong>RODC và LAPS</strong>: LAPS passwords mặc định thuộc FAS → không replicate xuống RODC → branch IT không thể retrieve local admin password từ RODC</li>
+</ul>
+<h2 id="mối-quan-hệ-với-các-thành-phần-khác">Mối quan hệ với các thành phần khác<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mối-quan-hệ-với-các-thành-phần-khác" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad">01.3 - Domain Controller - Trái tim của AD</a></strong>: RODC là một loại DC đặc biệt — read-only variant</li>
+<li><strong><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication">01.6 - Global Catalog và Sites - Tìm kiếm và Replication</a></strong>: RODC tham gia replication topology (inbound only), có thể là read-only GC</li>
+<li><strong><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></strong>: RODC không thể giữ FSMO role</li>
+<li><strong><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level">03.2 - Schema và Functional Level</a></strong>: RODC OS version ảnh hưởng khả năng nâng Functional Level</li>
+<li><strong><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></strong>: RODC cần được inventory và xử lý trong upgrade plan</li>
+<li><strong><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.5---trust-relationships---quan-hệ-tin-tưởng" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.5---trust-relationships---quan-hệ-tin-tưởng">01.5 - Trust Relationships - Quan hệ tin tưởng</a></strong>: RODC tham gia trust bình thường nhưng chỉ read-only</li>
+</ul>
+<h2 id="liên-kết">Liên kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#liên-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad">01.3 - Domain Controller - Trái tim của AD</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication">01.6 - Global Catalog và Sites - Tìm kiếm và Replication</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level">03.2 - Schema và Functional Level</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li>
+<li><a href="../../../../moc---windows-server-ad-2025" class="internal internal-link alias" data-slug="moc---windows-server-ad-2025">MOC - Windows Server AD 2025</a></li>
+</ul>
+<h2 id="tham-khảo">Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/rodc/read-only-domain-controllers" class="external external-link">RODC Overview - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/rodc/rodc-password-replication-policy" class="external external-link">RODC Password Replication Policy - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/rodc-filtered-attribute-set" class="external external-link">RODC Filtered Attribute Set - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/demoting-domain-controllers-and-domains" class="external external-link">Demoting Domain Controllers - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/rodc/install-a-windows-server-2012-active-directory-read-only-domain-controller--rodc---level-200-" class="external external-link">RODC Deployment Guide - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/rodc/rodc-administrator-role-separation" class="external external-link">Administrator Role Separation - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-430" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#rodc---read-only-domain-controller" data-for="rodc---read-only-domain-controller">RODC - Read-Only Domain Controller</a></li><li class="depth-1"><a href="#tóm-tắt-nhanh" data-for="tóm-tắt-nhanh">Tóm tắt nhanh</a></li><li class="depth-1"><a href="#rodc-là-gì" data-for="rodc-là-gì">RODC là gì?</a></li><li class="depth-2"><a href="#định-nghĩa-và-mục-đích" data-for="định-nghĩa-và-mục-đích">Định nghĩa và mục đích</a></li><li class="depth-2"><a href="#tương-tự-thực-tế" data-for="tương-tự-thực-tế">Tương tự thực tế</a></li><li class="depth-1"><a href="#rodc-vs-full-dc--so-sánh-chi-tiết" data-for="rodc-vs-full-dc--so-sánh-chi-tiết">RODC vs Full DC — So sánh chi tiết</a></li><li class="depth-1"><a href="#kiến-trúc-rodc" data-for="kiến-trúc-rodc">Kiến trúc RODC</a></li><li class="depth-2"><a href="#unidirectional-replication" data-for="unidirectional-replication">Unidirectional Replication</a></li><li class="depth-2"><a href="#filtered-attribute-set-fas" data-for="filtered-attribute-set-fas">Filtered Attribute Set (FAS)</a></li><li class="depth-2"><a href="#rodc-và-krbtgt-account-riêng" data-for="rodc-và-krbtgt-account-riêng">RODC và krbtgt Account riêng</a></li><li class="depth-1"><a href="#password-replication-policy-prp" data-for="password-replication-policy-prp">Password Replication Policy (PRP)</a></li><li class="depth-2"><a href="#cách-hoạt-động" data-for="cách-hoạt-động">Cách hoạt động</a></li><li class="depth-2"><a href="#default-denied-list" data-for="default-denied-list">Default Denied List</a></li><li class="depth-2"><a href="#luồng-xác-thực-qua-rodc--chi-tiết" data-for="luồng-xác-thực-qua-rodc--chi-tiết">Luồng xác thực qua RODC — chi tiết</a></li><li class="depth-2"><a href="#chiến-lược-prp--so-sánh-chi-tiết" data-for="chiến-lược-prp--so-sánh-chi-tiết">Chiến lược PRP — So sánh chi tiết</a></li><li class="depth-2"><a href="#prp-planning--chiến-lược-thực-tế" data-for="prp-planning--chiến-lược-thực-tế">PRP Planning — Chiến lược thực tế</a></li><li class="depth-2"><a href="#rodc-và-fine-grained-password-policies" data-for="rodc-và-fine-grained-password-policies">RODC và Fine-Grained Password Policies</a></li><li class="depth-1"><a href="#administrator-role-separation-ars" data-for="administrator-role-separation-ars">Administrator Role Separation (ARS)</a></li><li class="depth-2"><a href="#vấn-đề-cần-giải-quyết" data-for="vấn-đề-cần-giải-quyết">Vấn đề cần giải quyết</a></li><li class="depth-2"><a href="#ars-là-gì" data-for="ars-là-gì">ARS là gì?</a></li><li class="depth-2"><a href="#cấu-hình-ars" data-for="cấu-hình-ars">Cấu hình ARS</a></li><li class="depth-1"><a href="#rodc-dns-behavior" data-for="rodc-dns-behavior">RODC DNS Behavior</a></li><li class="depth-2"><a href="#read-only-dns" data-for="read-only-dns">Read-Only DNS</a></li><li class="depth-2"><a href="#dns-update-referral" data-for="dns-update-referral">DNS Update Referral</a></li><li class="depth-1"><a href="#rodc-và-bitlocker-integration" data-for="rodc-và-bitlocker-integration">RODC và BitLocker Integration</a></li><li class="depth-1"><a href="#use-cases" data-for="use-cases">Use Cases</a></li><li class="depth-2"><a href="#branch-office-với-bảo-mật-vật-lý-kém" data-for="branch-office-với-bảo-mật-vật-lý-kém">Branch Office với bảo mật vật lý kém</a></li><li class="depth-2"><a href="#kết-nối-wan-không-ổn-định" data-for="kết-nối-wan-không-ổn-định">Kết nối WAN không ổn định</a></li><li class="depth-2"><a href="#dmz-scenarios-hạn-chế-không-còn-khuyến-nghị" data-for="dmz-scenarios-hạn-chế-không-còn-khuyến-nghị">DMZ Scenarios (hạn chế, không còn khuyến nghị)</a></li><li class="depth-1"><a href="#rodc-staged-installation" data-for="rodc-staged-installation">RODC Staged Installation</a></li><li class="depth-2"><a href="#quy-trình-2-giai-đoạn" data-for="quy-trình-2-giai-đoạn">Quy trình 2 giai đoạn</a></li><li class="depth-2"><a href="#staged-installation-workflow" data-for="staged-installation-workflow">Staged Installation Workflow</a></li><li class="depth-1"><a href="#rodc-trong-modern-hybrid-scenarios" data-for="rodc-trong-modern-hybrid-scenarios">RODC trong Modern Hybrid Scenarios</a></li><li class="depth-2"><a href="#azure-ad-connect-và-rodc" data-for="azure-ad-connect-và-rodc">Azure AD Connect và RODC</a></li><li class="depth-2"><a href="#vpn-và-sd-wan-impact" data-for="vpn-và-sd-wan-impact">VPN và SD-WAN Impact</a></li><li class="depth-2"><a href="#khi-nào-rodc-vẫn-cần-trong-2025" data-for="khi-nào-rodc-vẫn-cần-trong-2025">Khi nào RODC vẫn cần trong 2025?</a></li><li class="depth-1"><a href="#decision-framework-giữ-hay-loại-bỏ-rodc" data-for="decision-framework-giữ-hay-loại-bỏ-rodc">Decision Framework: Giữ hay loại bỏ RODC</a></li><li class="depth-2"><a href="#flowchart-quyết-định" data-for="flowchart-quyết-định">Flowchart quyết định</a></li><li class="depth-2"><a href="#bảng-đánh-giá-chi-tiết" data-for="bảng-đánh-giá-chi-tiết">Bảng đánh giá chi tiết</a></li><li class="depth-1"><a href="#quy-trình-demote-rodc-logic" data-for="quy-trình-demote-rodc-logic">Quy trình Demote RODC (logic)</a></li><li class="depth-2"><a href="#reset-cached-passwords-sau-demote" data-for="reset-cached-passwords-sau-demote">Reset cached passwords sau demote</a></li><li class="depth-2"><a href="#forced-removal-khi-rodc-không-accessible" data-for="forced-removal-khi-rodc-không-accessible">Forced Removal (khi RODC không accessible)</a></li><li class="depth-1"><a href="#câu-hỏi-thường-gặp-faq" data-for="câu-hỏi-thường-gặp-faq">Câu hỏi thường gặp (FAQ)</a></li><li class="depth-2"><a href="#q-rodc-có-thể-giữ-fsmo-role-không" data-for="q-rodc-có-thể-giữ-fsmo-role-không">Q: RODC có thể giữ FSMO role không?</a></li><li class="depth-2"><a href="#q-rodc-có-thể-là-global-catalog-không" data-for="q-rodc-có-thể-là-global-catalog-không">Q: RODC có thể là Global Catalog không?</a></li><li class="depth-2"><a href="#q-nếu-wan-down-user-có-login-được-không" data-for="q-nếu-wan-down-user-có-login-được-không">Q: Nếu WAN down, user có login được không?</a></li><li class="depth-2"><a href="#q-rodc-có-thể-chạy-dhcp-không" data-for="q-rodc-có-thể-chạy-dhcp-không">Q: RODC có thể chạy DHCP không?</a></li><li class="depth-2"><a href="#q-deploy-rodc-với-bao-nhiêu-user-thì-hợp-lý" data-for="q-deploy-rodc-với-bao-nhiêu-user-thì-hợp-lý">Q: Deploy RODC với bao nhiêu user thì hợp lý?</a></li><li class="depth-2"><a href="#q-attacker-chiếm-được-rodc-có-thể-làm-gì" data-for="q-attacker-chiếm-được-rodc-có-thể-làm-gì">Q: Attacker chiếm được RODC có thể làm gì?</a></li><li class="depth-1"><a href="#lưu-ý-quan-trọng" data-for="lưu-ý-quan-trọng">Lưu ý quan trọng</a></li><li class="depth-1"><a href="#mối-quan-hệ-với-các-thành-phần-khác" data-for="mối-quan-hệ-với-các-thành-phần-khác">Mối quan hệ với các thành phần khác</a></li><li class="depth-1"><a href="#liên-kết" data-for="liên-kết">Liên kết</a></li><li class="depth-1"><a href="#tham-khảo" data-for="tham-khảo">Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal">01.3 - Domain Controller - Trái tim của AD</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication" class="internal">01.6 - Global Catalog và Sites - Tìm kiếm và Replication</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal">02.1 - AD DS - Active Directory Domain Services</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level" class="internal">03.2 - Schema và Functional Level</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

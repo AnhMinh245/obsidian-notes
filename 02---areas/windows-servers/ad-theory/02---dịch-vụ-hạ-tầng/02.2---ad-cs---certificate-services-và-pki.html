@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>02.2 - AD CS - Certificate Services và PKI</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="02.2 - AD CS - Certificate Services và PKI"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="02.2 - AD CS - Certificate Services và PKI"/><meta name="twitter:description" content="AD CS - Certificate Services và PKI Tóm tắt nhanh PKI (Public Key Infrastructure) là hệ thống quản lý digital certificates — nền tảng cho mã hoá, xác thực, và chữ ký số trong môi trường enterprise AD CS là implementation của PKI trong Windows Server — tích hợp sâu với Active Directory qua Enterprise..."/><meta property="og:description" content="AD CS - Certificate Services và PKI Tóm tắt nhanh PKI (Public Key Infrastructure) là hệ thống quản lý digital certificates — nền tảng cho mã hoá, xác thực, và chữ ký số trong môi trường enterprise AD CS là implementation của PKI trong Windows Server — tích hợp sâu với Active Directory qua Enterprise..."/><meta property="og:image:alt" content="AD CS - Certificate Services và PKI Tóm tắt nhanh PKI (Public Key Infrastructure) là hệ thống quản lý digital certificates — nền tảng cho mã hoá, xác thực, và chữ ký số trong môi trường enterprise AD CS là implementation của PKI trong Windows Server — tích hợp sâu với Active Directory qua Enterprise..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="AD CS - Certificate Services và PKI Tóm tắt nhanh PKI (Public Key Infrastructure) là hệ thống quản lý digital certificates — nền tảng cho mã hoá, xác thực, và chữ ký số trong môi trường enterprise AD CS là implementation của PKI trong Windows Server — tích hợp sâu với Active Directory qua Enterprise..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-475" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-475" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/">Windows Servers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/">AD Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/">02 - Dịch vụ hạ tầng</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>02.2 - AD CS - Certificate Services và PKI</a></div></nav><h1 class="article-title">02.2 - AD CS - Certificate Services và PKI</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/windows-server" class="internal internal-link tag-link">domain/windows-server</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">AD CS</span><span class="note-properties-separator">, </span><span class="note-properties-text">Certificate Services</span><span class="note-properties-separator">, </span><span class="note-properties-text">PKI</span><span class="note-properties-separator">, </span><span class="note-properties-text">Active Directory Certificate Services</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>18 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="ad-cs---certificate-services-và-pki">AD CS - Certificate Services và PKI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ad-cs---certificate-services-và-pki" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tóm-tắt-nhanh">Tóm tắt nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>PKI</strong> (Public Key Infrastructure) là hệ thống quản lý digital certificates — nền tảng cho mã hoá, xác thực, và chữ ký số trong môi trường enterprise</li>
+<li>AD CS là implementation của PKI trong Windows Server — tích hợp sâu với Active Directory qua <strong>Enterprise CA</strong>, hỗ trợ auto-enrollment và certificate templates</li>
+<li>Kiến trúc PKI khuyến nghị: <strong>2-tier</strong> — Root CA offline (bảo vệ private key) + Issuing CA online (phục vụ enrollment)</li>
+<li>Revocation checking qua <strong>CRL</strong> (danh sách thu hồi) hoặc <strong>OCSP</strong> (kiểm tra realtime) đảm bảo certificate bị revoke không còn được tin tưởng</li>
+<li><strong>AD CS attack surface</strong> là mối quan tâm bảo mật lớn — ESC1-ESC8 vulnerabilities cần được awareness và mitigation</li>
+</ul>
+<h2 id="nền-tảng-cryptography">Nền tảng Cryptography<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nền-tảng-cryptography" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="symmetric-vs-asymmetric">Symmetric vs Asymmetric<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#symmetric-vs-asymmetric" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>Symmetric</th><th>Asymmetric</th></tr></thead><tbody><tr><td>Key</td><td>1 key dùng chung (shared secret)</td><td>Cặp key: Public + Private</td></tr><tr><td>Tốc độ</td><td>Nhanh (AES-256: hàng GB/s)</td><td>Chậm hơn 100-1000x</td></tr><tr><td>Key length tương đương</td><td>AES-128 = RSA-3072</td><td>RSA-2048 minimum hiện tại</td></tr><tr><td>Use case</td><td>Mã hoá bulk data (AES, 3DES)</td><td>Key exchange, digital signature (RSA, ECC)</td></tr><tr><td>Vấn đề chính</td><td>Phân phối key an toàn</td><td>Performance, key size lớn</td></tr><tr><td>Ví dụ thuật toán</td><td>AES-256, ChaCha20</td><td>RSA-2048, ECC P-256, Ed25519</td></tr></tbody></table></div>
+<ul>
+<li>Trong thực tế, <strong>hybrid approach</strong>: dùng asymmetric để trao đổi symmetric key, sau đó dùng symmetric key để mã hoá data
+<ul>
+<li>TLS handshake hoạt động chính xác như vậy: RSA/ECDHE trao đổi key → AES mã hoá data</li>
+<li>Tương tự: bạn dùng khoá vàng (asymmetric) để khóa hộp chứa chìa khoá thường (symmetric), rồi dùng chìa khoá thường để mở cửa chính</li>
+</ul>
+</li>
+</ul>
+<h3 id="digital-certificate---x509">Digital Certificate - X.509<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#digital-certificate---x509" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Certificate là một <strong>tài liệu số</strong> ràng buộc public key với identity, được ký bởi CA đáng tin cậy. Giống như CMND/CCCD — cơ quan nhà nước (CA) xác nhận danh tính bạn (public key + identity) bằng con dấu (digital signature).</p>
+<p>Các trường quan trọng trong X.509 v3:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Trường</th><th>Mô tả</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>Subject</strong></td><td>Identity được cấp cert (DN, CN, hoặc SAN)</td><td><code>CN=webserver.corp.local</code></td></tr><tr><td><strong>Issuer</strong></td><td>CA đã ký certificate</td><td><code>CN=Corp Issuing CA</code></td></tr><tr><td><strong>Serial Number</strong></td><td>Số duy nhất do CA gán</td><td><code>4A:00:00:00:12:...</code></td></tr><tr><td><strong>Validity</strong></td><td>Not Before + Not After</td><td>2026-01-01 → 2028-01-01</td></tr><tr><td><strong>Public Key</strong></td><td>Public key + algorithm</td><td>RSA 2048 bits</td></tr><tr><td><strong>Signature</strong></td><td>Chữ ký của Issuer CA</td><td>SHA256withRSA</td></tr><tr><td><strong>Key Usage</strong></td><td>Mục đích cryptographic cơ bản</td><td>Digital Signature, Key Encipherment</td></tr><tr><td><strong>Enhanced Key Usage</strong></td><td>Mục đích application-specific</td><td>Server Authentication, Client Authentication</td></tr><tr><td><strong>Subject Alternative Name</strong></td><td>Tên bổ sung</td><td>DNS: web.corp.local, IP: 10.0.0.5</td></tr><tr><td><strong>CRL Distribution Points</strong></td><td>URL tải CRL</td><td><code>http://pki.corp.local/CRL/</code></td></tr><tr><td><strong>Authority Information Access</strong></td><td>URL CA cert + OCSP</td><td><code>http://pki.corp.local/AIA/</code></td></tr></tbody></table></div>
+<h3 id="certificate-chain-of-trust">Certificate Chain of Trust<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#certificate-chain-of-trust" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    Root[\&quot;Root CA Certificate&lt;br/>Self-signed&lt;br/>Trusted anchor&lt;br/>Validity: 15-20 years\&quot;]\n    Policy[\&quot;Policy CA Certificate&lt;br/>Signed by Root CA&lt;br/>Optional tier\&quot;]\n    Issuing[\&quot;Issuing CA Certificate&lt;br/>Signed by Root/Policy CA&lt;br/>Validity: 5-10 years\&quot;]\n    EndEntity[\&quot;End-Entity Certificate&lt;br/>Signed by Issuing CA&lt;br/>Validity: 1-3 years\&quot;]\n\n    Root -->|\&quot;Signs\&quot;| Policy\n    Policy -->|\&quot;Signs\&quot;| Issuing\n    Issuing -->|\&quot;Signs\&quot;| EndEntity\n\n    TrustStore[\&quot;Trusted Root CA Store&lt;br/>on every client\&quot;] -.->|\&quot;Client trusts&lt;br/>Root CA\&quot;| Root&quot;">graph TD
+    Root[&quot;Root CA Certificate&lt;br/>Self-signed&lt;br/>Trusted anchor&lt;br/>Validity: 15-20 years&quot;]
+    Policy[&quot;Policy CA Certificate&lt;br/>Signed by Root CA&lt;br/>Optional tier&quot;]
+    Issuing[&quot;Issuing CA Certificate&lt;br/>Signed by Root/Policy CA&lt;br/>Validity: 5-10 years&quot;]
+    EndEntity[&quot;End-Entity Certificate&lt;br/>Signed by Issuing CA&lt;br/>Validity: 1-3 years&quot;]
+
+    Root -->|&quot;Signs&quot;| Policy
+    Policy -->|&quot;Signs&quot;| Issuing
+    Issuing -->|&quot;Signs&quot;| EndEntity
+
+    TrustStore[&quot;Trusted Root CA Store&lt;br/>on every client&quot;] -.->|&quot;Client trusts&lt;br/>Root CA&quot;| Root
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>Chain validation</strong> — client xây dựng chain từ end-entity cert lên Root CA
+<ul>
+<li>Mỗi cert trong chain được verify bằng public key của cert ở tầng trên</li>
+<li>Tương tự: bạn tin công ty A vì công ty A được uỷ quyền bởi bộ B, mà bộ B được chính phủ cấp phép (Root)</li>
+</ul>
+</li>
+<li>Chain hợp lệ khi: tất cả cert chưa hết hạn + chưa bị revoke + Root CA nằm trong <strong>Trusted Root CA Store</strong> của client</li>
+<li>Enterprise CA tự động publish Root CA cert vào AD → tất cả domain members tự tin tưởng
+<ul>
+<li>Non-domain machines phải cài Root CA cert thủ công hoặc qua GPO preferences</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="ca-hierarchy">CA Hierarchy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ca-hierarchy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="single-tier-không-khuyến-nghị-cho-production">Single-tier (không khuyến nghị cho production)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#single-tier-không-khuyến-nghị-cho-production" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>1 CA vừa là Root vừa là Issuing</li>
+<li>Root CA <strong>luôn online</strong> → private key của Root CA luôn bị expose trên server đang chạy</li>
+<li>Nếu Root CA bị compromise → <strong>toàn bộ PKI</strong> phải xây lại từ đầu — tất cả certificates đã issue trở thành untrusted</li>
+<li>Chỉ phù hợp: lab, test, hoặc tổ chức rất nhỏ (&lt;50 users) không có yêu cầu compliance</li>
+</ul>
+<h3 id="two-tier-phổ-biến-nhất">Two-tier (phổ biến nhất)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#two-tier-phổ-biến-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph Offline[\&quot;Offline - Air-gapped\&quot;]\n        RootCA[\&quot;Root CA&lt;br/>Self-signed cert&lt;br/>Validity: 15-20 years&lt;br/>OFFLINE after signing Issuing CA\&quot;]\n    end\n\n    subgraph Online[\&quot;Online - Domain Joined\&quot;]\n        IssuingCA[\&quot;Issuing CA&lt;br/>Enterprise CA&lt;br/>Validity: 5-10 years&lt;br/>AD-integrated\&quot;]\n    end\n\n    subgraph Clients[\&quot;End Entities\&quot;]\n        User[\&quot;User Certificates\&quot;]\n        Computer[\&quot;Computer Certificates\&quot;]\n        WebServer[\&quot;Web Server Certificates\&quot;]\n        DC[\&quot;DC Certificates\&quot;]\n    end\n\n    RootCA -->|\&quot;Sign CA certificate&lt;br/>Periodic CRL publish\&quot;| IssuingCA\n    IssuingCA -->|\&quot;Issue certificates\&quot;| User\n    IssuingCA -->|\&quot;Issue certificates\&quot;| Computer\n    IssuingCA -->|\&quot;Issue certificates\&quot;| WebServer\n    IssuingCA -->|\&quot;Issue certificates\&quot;| DC&quot;">graph TD
+    subgraph Offline[&quot;Offline - Air-gapped&quot;]
+        RootCA[&quot;Root CA&lt;br/>Self-signed cert&lt;br/>Validity: 15-20 years&lt;br/>OFFLINE after signing Issuing CA&quot;]
+    end
+
+    subgraph Online[&quot;Online - Domain Joined&quot;]
+        IssuingCA[&quot;Issuing CA&lt;br/>Enterprise CA&lt;br/>Validity: 5-10 years&lt;br/>AD-integrated&quot;]
+    end
+
+    subgraph Clients[&quot;End Entities&quot;]
+        User[&quot;User Certificates&quot;]
+        Computer[&quot;Computer Certificates&quot;]
+        WebServer[&quot;Web Server Certificates&quot;]
+        DC[&quot;DC Certificates&quot;]
+    end
+
+    RootCA -->|&quot;Sign CA certificate&lt;br/>Periodic CRL publish&quot;| IssuingCA
+    IssuingCA -->|&quot;Issue certificates&quot;| User
+    IssuingCA -->|&quot;Issue certificates&quot;| Computer
+    IssuingCA -->|&quot;Issue certificates&quot;| WebServer
+    IssuingCA -->|&quot;Issue certificates&quot;| DC
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>Root CA</strong>: Standalone CA, cài trên máy <strong>không join domain</strong>, tắt máy sau khi ký Issuing CA cert
+<ul>
+<li>Chỉ bật lên khi: ký cert cho Issuing CA mới, renew Issuing CA cert, publish CRL mới</li>
+<li>CRL validity dài (6-12 tháng) vì Root CA offline — phải bật máy publish CRL trước khi CRL hiện tại hết hạn</li>
+<li>Private key nên lưu trên <strong>HSM</strong> (Hardware Security Module) nếu có budget</li>
+<li>Lưu offline trên USB encrypted hoặc smart card nếu không có HSM</li>
+</ul>
+</li>
+<li><strong>Issuing CA</strong>: Enterprise CA, join domain, phục vụ enrollment hàng ngày
+<ul>
+<li>AD-integrated: tự publish cert vào AD, hỗ trợ auto-enrollment</li>
+<li>CRL validity ngắn hơn (1-7 ngày) + Delta CRL (vài giờ)</li>
+<li>Có thể có nhiều Issuing CA cho các mục đích khác nhau (1 cho internal, 1 cho DMZ)</li>
+</ul>
+</li>
+</ul>
+<h3 id="three-tier">Three-tier<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#three-tier" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Thêm <strong>Policy CA</strong> giữa Root và Issuing</li>
+<li>Policy CA định nghĩa certificate policies, cross-certification giữa các PKI hierarchy</li>
+<li>Dùng trong tổ chức lớn hoặc khi cần <strong>cross-trust</strong> giữa nhiều PKI (vd: sáp nhập công ty)</li>
+<li>Hiếm gặp trong thực tế — 2-tier đủ cho hầu hết enterprise</li>
+</ul>
+<hr/>
+<h2 id="ca-types-trong-ad">CA Types trong AD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ca-types-trong-ad" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="enterprise-ca-vs-standalone-ca">Enterprise CA vs Standalone CA<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#enterprise-ca-vs-standalone-ca" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>Enterprise CA</th><th>Standalone CA</th></tr></thead><tbody><tr><td><strong>Domain join</strong></td><td>Bắt buộc</td><td>Không yêu cầu</td></tr><tr><td><strong>Certificate templates</strong></td><td>Có — kiểm soát loại cert</td><td>Không — mọi request manual</td></tr><tr><td><strong>Auto-enrollment</strong></td><td>Có — qua GPO</td><td>Không</td></tr><tr><td><strong>Subject population</strong></td><td>Tự động từ AD attributes</td><td>Manual — requester specify</td></tr><tr><td><strong>Request approval</strong></td><td>Tự động (nếu template cho phép)</td><td>Mặc định pending — admin approve</td></tr><tr><td><strong>AD integration</strong></td><td>Publish cert/CRL vào AD</td><td>Không</td></tr><tr><td><strong>Use case chính</strong></td><td>Issuing CA cho enterprise</td><td>Root CA (offline, không join domain)</td></tr></tbody></table></div>
+<h3 id="enterprise-ca-chi-tiết">Enterprise CA chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#enterprise-ca-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Tích hợp AD:
+<ul>
+<li>Publish certificates và CRL vào AD (LDAP paths)</li>
+<li>Đọc certificate templates từ AD Configuration partition</li>
+<li>Hỗ trợ <strong>auto-enrollment</strong> qua Group Policy</li>
+<li>Kerberos authentication cho enrollment — single sign-on</li>
+</ul>
+</li>
+<li>Dùng <strong>certificate templates</strong> để kiểm soát loại cert được issue</li>
+<li>Tự động populate Subject dựa trên AD attributes (sAMAccountName, UPN, dNSHostName)</li>
+<li>CA certificate publish vào: <code>CN=Certification Authorities,CN=Public Key Services,CN=Services,CN=Configuration,DC=...</code></li>
+</ul>
+<hr/>
+<h2 id="certificate-templates">Certificate Templates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#certificate-templates" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="template-versions">Template Versions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#template-versions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Version</th><th>Hỗ trợ từ</th><th>Đặc điểm</th></tr></thead><tbody><tr><td><strong>V1</strong></td><td>Windows 2000</td><td>Không thể sửa, chỉ duplicate; không support auto-enrollment</td></tr><tr><td><strong>V2</strong></td><td>Windows Server 2003</td><td>Editable, auto-enrollment support, supersede support</td></tr><tr><td><strong>V3</strong></td><td>Windows Server 2008</td><td>CNG (Cryptography Next Generation), Suite B, ECC support</td></tr><tr><td><strong>V4</strong></td><td>Windows Server 2012</td><td>Renewal with same key, key attestation, TPM integration</td></tr></tbody></table></div>
+<h3 id="permissions-trên-template-security">Permissions trên Template (Security)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#permissions-trên-template-security" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Template permissions quyết định <strong>ai được phép request certificate</strong> — đây là điểm quan trọng cho cả operations và security:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Permission</th><th>Mô tả</th><th>Ai nên có</th></tr></thead><tbody><tr><td><strong>Read</strong></td><td>Thấy template trong enrollment UI</td><td>Authenticated Users (mặc định)</td></tr><tr><td><strong>Enroll</strong></td><td>Được phép request cert từ template</td><td>Groups cụ thể (vd: Domain Computers)</td></tr><tr><td><strong>Autoenroll</strong></td><td>Hệ thống tự request và renew cert</td><td>Groups cần auto-enrollment</td></tr><tr><td><strong>Write</strong></td><td>Sửa template properties</td><td>CA Admins only</td></tr><tr><td><strong>Full Control</strong></td><td>Quản trị toàn diện</td><td>Enterprise Admins</td></tr></tbody></table></div>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>WARNING</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Autoenroll + Enroll</strong> permission phải cùng grant cho 1 subject thì auto-enrollment mới hoạt động. Chỉ có Autoenroll mà thiếu Enroll → auto-enrollment fail âm thầm.</p>
+</div>
+</blockquote>
+<h3 id="key-usage-và-eku">Key Usage và EKU<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-usage-và-eku" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Key Usage</strong> — mục đích cryptographic cơ bản:
+<ul>
+<li>Digital Signature — ký data (authentication, code signing)</li>
+<li>Key Encipherment — mã hoá symmetric key (RSA key exchange trong TLS)</li>
+<li>Key Agreement — thoả thuận key (Diffie-Hellman, ECDH)</li>
+<li>Non-Repudiation — chữ ký pháp lý, không thể chối bỏ</li>
+</ul>
+</li>
+<li><strong>Enhanced Key Usage (EKU)</strong> — application-specific:
+<ul>
+<li>Server Authentication (1.3.6.1.5.5.7.3.1) — HTTPS, RDP, LDAPS</li>
+<li>Client Authentication (1.3.6.1.5.5.7.3.2) — smart card logon, 802.1X, VPN</li>
+<li>Code Signing (1.3.6.1.5.5.7.3.3) — ký software, scripts, drivers</li>
+<li>Smart Card Logon (1.3.6.1.4.1.311.20.2.2) — Windows smart card authentication</li>
+<li>KDC Authentication (1.3.6.1.5.2.3.5) — Domain Controller Kerberos</li>
+<li>OCSP Signing (1.3.6.1.5.5.7.3.9) — OCSP responder</li>
+<li>Email Protection (1.3.6.1.5.5.7.3.4) — S/MIME email encryption/signing</li>
+</ul>
+</li>
+</ul>
+<h3 id="common-templates">Common Templates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-templates" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Template</th><th>Dùng cho</th><th>EKU</th><th>Auto-enroll default</th></tr></thead><tbody><tr><td><strong>Computer</strong></td><td>Machine authentication, IPSec</td><td>Client + Server Auth</td><td>No</td></tr><tr><td><strong>User</strong></td><td>Email signing, EFS, Client Auth</td><td>Multiple</td><td>No</td></tr><tr><td><strong>Web Server</strong></td><td>HTTPS / TLS</td><td>Server Authentication</td><td>No</td></tr><tr><td><strong>Domain Controller</strong></td><td>DC authentication, LDAPS</td><td>Client + Server Auth + Smart Card Logon</td><td>Yes</td></tr><tr><td><strong>Domain Controller Authentication</strong></td><td>Kerberos + LDAPS (modern)</td><td>KDC Authentication</td><td>Yes</td></tr><tr><td><strong>Workstation Authentication</strong></td><td>Computer identity</td><td>Client Authentication</td><td>No</td></tr><tr><td><strong>Code Signing</strong></td><td>Ký software</td><td>Code Signing</td><td>No</td></tr><tr><td><strong>OCSP Response Signing</strong></td><td>OCSP responder</td><td>OCSP Signing</td><td>No</td></tr></tbody></table></div>
+<hr/>
+<h2 id="certificate-based-authentication">Certificate-based Authentication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#certificate-based-authentication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="smart-card-logon">Smart Card Logon<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#smart-card-logon" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>User insert smart card (chứa private key + certificate) thay vì nhập password</li>
+<li>Quy trình: Smart card provider → Kerberos PKINIT → KDC verify certificate + issue TGT</li>
+<li>Yêu cầu:
+<ul>
+<li>DC certificate với KDC Authentication EKU (template: Domain Controller Authentication)</li>
+<li>User certificate với Smart Card Logon EKU</li>
+<li>Root CA trusted bởi cả client và DC</li>
+<li><strong>CRL accessible</strong> tại thời điểm logon — nếu CRL check fail → logon fail</li>
+</ul>
+</li>
+<li>Use case: high-security environments, government, financial — thay thế password hoàn toàn</li>
+</ul>
+<h3 id="eap-tls-8021x">EAP-TLS (802.1X)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#eap-tls-8021x" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Certificate-based authentication cho <strong>network access control</strong></li>
+<li>Client present certificate → RADIUS server (NPS) verify → grant/deny network access</li>
+<li>Dùng cho: wired 802.1X, wireless WPA2/WPA3-Enterprise, VPN</li>
+<li>Yêu cầu:
+<ul>
+<li>Computer certificate trên client (auto-enrolled)</li>
+<li>Server certificate trên NPS/RADIUS server</li>
+<li>Trusted Root CA trên cả 2 phía</li>
+</ul>
+</li>
+</ul>
+<h3 id="code-signing">Code Signing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#code-signing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Ký digital signature lên executables, scripts, drivers, packages</li>
+<li>Windows verify signature → xác nhận: (1) code chưa bị tamper, (2) biết ai ký</li>
+<li>Use case:
+<ul>
+<li>PowerShell execution policy: <code>AllSigned</code> yêu cầu tất cả scripts phải được ký</li>
+<li>Device driver signing: Windows 10/11 yêu cầu driver signed</li>
+<li>Application deployment: SCCM/Intune verify signature trước khi install</li>
+</ul>
+</li>
+<li><strong>Code Signing certificate</strong> nên có hardware-protected private key (HSM, smart card)</li>
+</ul>
+<hr/>
+<h2 id="enrollment-methods">Enrollment Methods<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#enrollment-methods" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="auto-enrollment-qua-gpo">Auto-enrollment qua GPO<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#auto-enrollment-qua-gpo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant GPO as \&quot;Group Policy\&quot;\n    participant Client as \&quot;Client Machine\&quot;\n    participant CA as \&quot;Enterprise CA\&quot;\n    participant AD as \&quot;Active Directory\&quot;\n\n    GPO->>Client: 1. Policy: Enable auto-enrollment\n    Client->>AD: 2. Query certificate templates&lt;br/>Check Autoenroll permission\n    AD-->>Client: 3. Templates available for client\n\n    Client->>Client: 4. Check local cert store&lt;br/>Cert missing or expiring?\n\n    Client->>CA: 5. Submit enrollment request&lt;br/>CMC/PKCS 10\n    CA->>AD: 6. Verify permissions&lt;br/>Validate request\n    CA->>CA: 7. Sign certificate\n    CA-->>Client: 8. Return signed certificate\n\n    Client->>Client: 9. Install cert into&lt;br/>Local Machine/User store&quot;">sequenceDiagram
+    participant GPO as &quot;Group Policy&quot;
+    participant Client as &quot;Client Machine&quot;
+    participant CA as &quot;Enterprise CA&quot;
+    participant AD as &quot;Active Directory&quot;
+
+    GPO->>Client: 1. Policy: Enable auto-enrollment
+    Client->>AD: 2. Query certificate templates&lt;br/>Check Autoenroll permission
+    AD-->>Client: 3. Templates available for client
+
+    Client->>Client: 4. Check local cert store&lt;br/>Cert missing or expiring?
+
+    Client->>CA: 5. Submit enrollment request&lt;br/>CMC/PKCS 10
+    CA->>AD: 6. Verify permissions&lt;br/>Validate request
+    CA->>CA: 7. Sign certificate
+    CA-->>Client: 8. Return signed certificate
+
+    Client->>Client: 9. Install cert into&lt;br/>Local Machine/User store
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>GPO setting: <code>Computer/User Configuration → Policies → Windows Settings → Security Settings → Public Key Policies → Certificate Services Client - Auto-Enrollment</code></li>
+<li><strong>Trigger</strong>: Group Policy refresh cycle (mỗi ~90 phút) hoặc user logon / computer startup</li>
+<li>Client kiểm tra: template nào mình có quyền Autoenroll + cert hiện tại còn hạn không + cert đã bị supersede chưa</li>
+<li><strong>Renewal</strong>: auto-enrollment cũng tự renew cert khi còn lại 10% validity period (mặc định, configurable trên template)
+<ul>
+<li>Ví dụ: cert 2 năm → auto-renew khi còn ~73 ngày</li>
+</ul>
+</li>
+<li><strong>Supersede</strong>: template mới thay thế template cũ → client tự request cert từ template mới, retire cert cũ</li>
+</ul>
+<h3 id="manual-enrollment">Manual Enrollment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#manual-enrollment" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>MMC</strong> — <code>certlm.msc</code> (Local Machine) hoặc <code>certmgr.msc</code> (Current User) → Request New Certificate</li>
+<li><strong>Web Enrollment</strong> — <code>https://&lt;CA>/certsrv</code> — CES/CEP web interface (legacy nhưng vẫn dùng cho non-domain devices)</li>
+<li><strong>certreq.exe</strong> — command-line tool, dùng INF file để define request
+<ul>
+<li>Workflow: <code>certreq -new request.inf request.req</code> → submit → <code>certreq -accept cert.cer</code></li>
+</ul>
+</li>
+<li><strong>PowerShell</strong>: <code>Get-Certificate -Template &lt;TemplateName> -CertStoreLocation Cert:\LocalMachine\My</code></li>
+</ul>
+<h3 id="ndes---network-device-enrollment-service">NDES - Network Device Enrollment Service<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ndes---network-device-enrollment-service" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Implementation của <strong>SCEP</strong> (Simple Certificate Enrollment Protocol) trên Windows</li>
+<li>Dùng cho thiết bị không join domain: network switches, routers, firewalls, mobile devices (MDM)</li>
+<li>NDES đứng giữa device và CA — nhận SCEP request, chuyển thành standard CA enrollment</li>
+<li>Dùng <strong>one-time password</strong> (challenge password) để authenticate device — mỗi password dùng 1 lần</li>
+<li>Mỗi NDES server có 2 RA (Registration Authority) certificates: Encryption + Signing</li>
+<li>Tích hợp phổ biến: <strong>Microsoft Intune</strong> dùng NDES/SCEP để deploy certificates đến mobile devices</li>
+</ul>
+<h3 id="cepces---certificate-enrollment-policyservice">CEP/CES - Certificate Enrollment Policy/Service<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cepces---certificate-enrollment-policyservice" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>CEP</strong> (Certificate Enrollment Policy Web Service) — cung cấp template information qua HTTPS</li>
+<li><strong>CES</strong> (Certificate Enrollment Web Service) — xử lý enrollment requests qua HTTPS</li>
+<li>Dùng cho: enrollment qua internet, cross-forest enrollment, devices không direct LDAP access đến AD</li>
+<li>Thay thế dần web enrollment (certsrv) cũ</li>
+</ul>
+<hr/>
+<h2 id="revocation">Revocation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#revocation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="crl---certificate-revocation-list">CRL - Certificate Revocation List<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#crl---certificate-revocation-list" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Base CRL</strong> — danh sách đầy đủ serial numbers của tất cả cert đã bị revoke
+<ul>
+<li>Publish định kỳ (thường 1 tuần cho Root CA, 1 ngày cho Issuing CA)</li>
+<li>File size tăng dần theo thời gian — sau vài năm có thể nhiều MB</li>
+<li>Client cache CRL cho đến khi hết validity (<code>Next Update</code> field)</li>
+</ul>
+</li>
+<li><strong>Delta CRL</strong> — chỉ chứa cert bị revoke <strong>kể từ Base CRL gần nhất</strong>
+<ul>
+<li>Publish thường xuyên hơn (vài giờ)</li>
+<li>File size nhỏ → download nhanh hơn</li>
+<li>Client kết hợp Base CRL + Delta CRL mới nhất</li>
+<li>Chỉ hỗ trợ từ CRL version 2 (V2)</li>
+</ul>
+</li>
+</ul>
+<h3 id="ocsp---online-certificate-status-protocol">OCSP - Online Certificate Status Protocol<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ocsp---online-certificate-status-protocol" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Realtime</strong> verification — client hỏi OCSP responder: “cert serial X còn valid không?”</li>
+<li>OCSP responder trả lời: <strong>Good</strong>, <strong>Revoked</strong>, hoặc <strong>Unknown</strong></li>
+<li>Windows Server có role <strong>Online Responder</strong> — cài riêng hoặc cùng CA server</li>
+</ul>
+<h3 id="crl-vs-ocsp---so-sánh-chi-tiết">CRL vs OCSP - So sánh chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#crl-vs-ocsp---so-sánh-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>CRL</th><th>OCSP</th></tr></thead><tbody><tr><td><strong>Response size</strong></td><td>Toàn bộ danh sách (có thể MB)</td><td>1 response cho 1 cert (~1 KB)</td></tr><tr><td><strong>Freshness</strong></td><td>Phụ thuộc publish interval</td><td>Near-realtime</td></tr><tr><td><strong>Offline support</strong></td><td>Client cache CRL → hoạt động offline</td><td>Cần OCSP responder online</td></tr><tr><td><strong>Server load</strong></td><td>File static, dễ CDN/cache</td><td>Mỗi check = 1 request → load cao</td></tr><tr><td><strong>Network traffic</strong></td><td>1 download lớn, dùng cho nhiều cert</td><td>Nhiều request nhỏ</td></tr><tr><td><strong>Privacy</strong></td><td>Client không tiết lộ cert nào đang check</td><td>OCSP responder biết client check cert nào</td></tr><tr><td><strong>Best practice</strong></td><td>Luôn cấu hình như fallback</td><td>Dùng làm primary cho cert volume lớn</td></tr></tbody></table></div>
+<p><strong>OCSP Stapling</strong>:</p>
+<ul>
+<li>Server tự query OCSP responder, cache response, gửi kèm trong TLS handshake</li>
+<li>Client không cần contact OCSP responder riêng → nhanh hơn, privacy tốt hơn</li>
+<li>Hỗ trợ trong IIS, Nginx, Apache</li>
+</ul>
+<h3 id="cdp-và-aia">CDP và AIA<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cdp-và-aia" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>CDP</strong> (CRL Distribution Points) — URL trong certificate chỉ client nơi tải CRL
+<ul>
+<li>Thường có nhiều URL theo thứ tự ưu tiên: <code>ldap:///</code> (AD), <code>http://</code> (web), <code>file://</code> (share)</li>
+<li>Client thử từng URL cho đến khi tải được — thứ tự quan trọng cho performance</li>
+<li>Best practice: <code>http://</code> URL đầu tiên (nhanh nhất, accessible from everywhere), <code>ldap://</code> sau</li>
+</ul>
+</li>
+<li><strong>AIA</strong> (Authority Information Access) — URL để:
+<ul>
+<li>Tải CA certificate (cho chain building): <code>http://pki.corp.local/AIA/IssuingCA.crt</code></li>
+<li>Truy cập OCSP responder: <code>http://ocsp.corp.local/ocsp</code></li>
+</ul>
+</li>
+<li>CDP/AIA phải <strong>accessible từ tất cả client</strong> — kể cả client ngoài domain (DMZ, internet)
+<ul>
+<li>Best practice: luôn có ít nhất 1 HTTP URL public</li>
+<li>Không dùng <code>ldap://</code> cho external clients (firewall chặn LDAP)</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="key-archival-và-recovery">Key Archival và Recovery<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-archival-và-recovery" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="mục-đích">Mục đích<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mục-đích" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Khi user mất private key (máy hỏng, profile corrupt) → không đọc được data đã encrypt
+<ul>
+<li>Email đã encrypt bằng S/MIME</li>
+<li>File encrypt bằng EFS (Encrypting File System)</li>
+</ul>
+</li>
+<li>Key archival cho phép CA lưu bản sao private key → admin có thể recover khi cần</li>
+</ul>
+<h3 id="cách-hoạt-động">Cách hoạt động<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-hoạt-động" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    User[\&quot;User requests cert&lt;br/>with key archival\&quot;] --> CA[\&quot;Enterprise CA&lt;br/>Encrypts private key&lt;br/>with KRA certificate\&quot;]\n    CA --> DB[\&quot;CA Database&lt;br/>Archived private key&lt;br/>encrypted\&quot;]\n    Admin[\&quot;Recovery Agent\&quot;] --> DB\n    DB -->|\&quot;Decrypt with&lt;br/>KRA private key\&quot;| Recovered[\&quot;Recovered&lt;br/>private key\&quot;]\n\n    style DB fill:#1a5276,stroke:#333,color:#fff&quot;">flowchart LR
+    User[&quot;User requests cert&lt;br/>with key archival&quot;] --> CA[&quot;Enterprise CA&lt;br/>Encrypts private key&lt;br/>with KRA certificate&quot;]
+    CA --> DB[&quot;CA Database&lt;br/>Archived private key&lt;br/>encrypted&quot;]
+    Admin[&quot;Recovery Agent&quot;] --> DB
+    DB -->|&quot;Decrypt with&lt;br/>KRA private key&quot;| Recovered[&quot;Recovered&lt;br/>private key&quot;]
+
+    style DB fill:#1a5276,stroke:#333,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>KRA</strong> (Key Recovery Agent) — certificate đặc biệt cho phép decrypt archived keys
+<ul>
+<li>KRA certificate template: <code>Key Recovery Agent</code></li>
+<li>Chỉ cấp cho admin được uỷ quyền (thường 2-3 người, require approval)</li>
+</ul>
+</li>
+<li>CA encrypt user private key bằng KRA public key trước khi lưu vào database</li>
+<li>Recovery: dùng <code>certutil -recoverkey</code> hoặc CA MMC → retrieve archived key</li>
+</ul>
+<h3 id="best-practices">Best Practices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#best-practices" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>CHỈ archive encryption keys</strong> (EFS, S/MIME) — KHÔNG archive signing keys
+<ul>
+<li>Signing key bị compromise → attacker ký giả mạo → không thể chứng minh non-repudiation</li>
+</ul>
+</li>
+<li>Yêu cầu ít nhất <strong>2 KRA</strong> cho redundancy</li>
+<li>Test recovery process định kỳ — đừng đợi emergency mới test</li>
+<li>KRA private keys nên lưu trên HSM hoặc smart card</li>
+</ul>
+<hr/>
+<h2 id="ksp-vs-csp">KSP vs CSP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ksp-vs-csp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="csp---cryptographic-service-provider-legacy">CSP - Cryptographic Service Provider (Legacy)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#csp---cryptographic-service-provider-legacy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Kiến trúc crypto cũ của Windows (từ Windows NT)</li>
+<li>Dùng <strong>CryptoAPI</strong> (CAPI) — API crypto đầu tiên của Microsoft</li>
+<li>Provider phổ biến: <code>Microsoft RSA SChannel Cryptographic Provider</code>, <code>Microsoft Enhanced Cryptographic Provider</code></li>
+<li>Giới hạn: chỉ hỗ trợ RSA, không hỗ trợ ECC, Suite B, hoặc CNG algorithms</li>
+</ul>
+<h3 id="ksp---key-storage-provider-modern">KSP - Key Storage Provider (Modern)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ksp---key-storage-provider-modern" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Kiến trúc crypto mới, dùng <strong>CNG</strong> (Cryptography Next Generation) — từ Windows Vista/2008</li>
+<li>Hỗ trợ: RSA, ECC (P-256, P-384, P-521), Suite B algorithms</li>
+<li>Provider phổ biến:
+<ul>
+<li><code>Microsoft Software Key Storage Provider</code> — software-based, mặc định</li>
+<li><code>Microsoft Platform Crypto Provider</code> — dùng TPM chip trên hardware</li>
+<li><code>Microsoft Smart Card Key Storage Provider</code> — smart card</li>
+</ul>
+</li>
+<li><strong>Luôn ưu tiên KSP</strong> cho certificate templates mới (V3, V4)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>CSP (Legacy)</th><th>KSP (Modern)</th></tr></thead><tbody><tr><td>API</td><td>CryptoAPI (CAPI)</td><td>CNG</td></tr><tr><td>ECC support</td><td>Không</td><td>Có</td></tr><tr><td>Suite B</td><td>Không</td><td>Có</td></tr><tr><td>TPM support</td><td>Limited</td><td>Full</td></tr><tr><td>Template version</td><td>V1, V2</td><td>V3, V4</td></tr><tr><td>Khuyến nghị</td><td>Chỉ cho legacy apps</td><td>Mặc định cho mọi thứ mới</td></tr></tbody></table></div>
+<hr/>
+<h2 id="internal-pki-vs-public-ca">Internal PKI vs Public CA<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#internal-pki-vs-public-ca" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>Internal PKI (AD CS)</th><th>Public CA (DigiCert, Let’s Encrypt…)</th></tr></thead><tbody><tr><td><strong>Trust scope</strong></td><td>Chỉ trusted trong org (domain members)</td><td>Trusted globally (mọi browser/OS)</td></tr><tr><td><strong>Cost</strong></td><td>Infrastructure cost, không per-cert cost</td><td>Per-cert cost (hoặc free với Let’s Encrypt)</td></tr><tr><td><strong>Control</strong></td><td>Full control: templates, policies, EKU</td><td>Limited — CA quyết định</td></tr><tr><td><strong>Certificate types</strong></td><td>Mọi loại: user, computer, code signing, custom</td><td>Chủ yếu TLS/SSL, code signing</td></tr><tr><td><strong>Auto-enrollment</strong></td><td>Có — qua GPO</td><td>Không (trừ ACME protocol)</td></tr><tr><td><strong>Validity period</strong></td><td>Configurable (1 năm, 5 năm, tuỳ ý)</td><td>Max 398 ngày (TLS, từ 2020)</td></tr><tr><td><strong>Compliance</strong></td><td>Self-managed</td><td>CA cung cấp compliance reports</td></tr><tr><td><strong>External access</strong></td><td>Client ngoài org phải cài Root CA cert</td><td>Tự động trusted</td></tr></tbody></table></div>
+<p><strong>Khi nào dùng cái nào</strong>:</p>
+<ul>
+<li><strong>Internal PKI</strong>: internal servers, DC certificates, smart card, 802.1X, internal web apps, EFS, S/MIME internal</li>
+<li><strong>Public CA</strong>: public-facing websites, email S/MIME external, public code signing</li>
+<li><strong>Kết hợp</strong>: dùng cả hai — internal PKI cho nội bộ, public CA cho đối ngoại</li>
+</ul>
+<hr/>
+<h2 id="ad-cs-attack-surface-awareness">AD CS Attack Surface Awareness<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ad-cs-attack-surface-awareness" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tổng-quan-esc1-esc8">Tổng quan ESC1-ESC8<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-quan-esc1-esc8" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AD CS misconfigurations là vector tấn công phổ biến. Các lỗ hổng được phân loại ESC1 đến ESC8 (và expanding):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>ESC</th><th>Tên</th><th>Mô tả tóm tắt</th><th>Severity</th></tr></thead><tbody><tr><td><strong>ESC1</strong></td><td>Misconfigured Templates - SAN</td><td>Template cho phép requester specify Subject Alternative Name + có Client Auth EKU → impersonate bất kỳ user</td><td>Critical</td></tr><tr><td><strong>ESC2</strong></td><td>Misconfigured Templates - Any Purpose</td><td>Template có <code>Any Purpose</code> hoặc <code>SubCA</code> EKU → dùng cho bất kỳ mục đích</td><td>High</td></tr><tr><td><strong>ESC3</strong></td><td>Enrollment Agent Templates</td><td>Template cho phép enroll on behalf of others</td><td>High</td></tr><tr><td><strong>ESC4</strong></td><td>Vulnerable Template ACL</td><td>Template permissions cho phép low-privilege user sửa template</td><td>High</td></tr><tr><td><strong>ESC5</strong></td><td>Vulnerable PKI Object ACL</td><td>ACL trên CA objects, containers trong AD bị misconfigured</td><td>High</td></tr><tr><td><strong>ESC6</strong></td><td>EDITF_ATTRIBUTESUBJECTALTNAME2</td><td>CA flag cho phép bất kỳ request nào specify SAN</td><td>Critical</td></tr><tr><td><strong>ESC7</strong></td><td>Vulnerable CA ACL</td><td>Low-privilege user có ManageCA hoặc ManageCertificates trên CA</td><td>High</td></tr><tr><td><strong>ESC8</strong></td><td>NTLM Relay to AD CS</td><td>HTTP enrollment endpoint vulnerable to NTLM relay</td><td>Critical</td></tr></tbody></table></div>
+<h3 id="mitigation-cơ-bản">Mitigation cơ bản<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mitigation-cơ-bản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>IMPORTANT</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Không phải tất cả misconfigurations đều là vulnerability — chúng trở thành vulnerability khi combined với attacker access. Defense-in-depth là key.</p>
+</div>
+</blockquote>
+<ul>
+<li><strong>ESC1</strong>: Review tất cả templates — disable <code>ENROLLEE_SUPPLIES_SUBJECT</code> flag trên templates có Client Auth EKU. Chỉ enable cho templates thực sự cần (vd: Web Server)</li>
+<li><strong>ESC6</strong>: Disable <code>EDITF_ATTRIBUTESUBJECTALTNAME2</code> trên CA: <code>certutil -config &quot;CA\Name&quot; -setreg policy\EditFlags -EDITF_ATTRIBUTESUBJECTALTNAME2</code></li>
+<li><strong>ESC8</strong>: Enforce HTTPS cho enrollment endpoints, enable Extended Protection for Authentication</li>
+<li><strong>General</strong>: Audit template permissions định kỳ, limit Enroll permission chỉ cho groups cần thiết</li>
+</ul>
+<p><strong>Công cụ audit</strong>:</p>
+<ul>
+<li><strong>Certify</strong> (GhostPack) — scan AD CS misconfigurations</li>
+<li><strong>Certipy</strong> (Python) — alternative tool cho AD CS auditing</li>
+<li><strong>PSPKIAudit</strong> (PowerShell) — Microsoft-friendly option</li>
+</ul>
+<hr/>
+<h2 id="câu-hỏi-thường-gặp">Câu hỏi thường gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-thường-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Q: Có cần AD CS nếu đã dùng public CA (Let’s Encrypt, DigiCert)?</strong><br/>
+A: Có, nếu cần auto-enrollment cho domain computers, smart card logon, 802.1X, EFS, hoặc bất kỳ certificate nào yêu cầu AD integration. Public CA không thể auto-enroll qua GPO hay tạo custom templates.</p>
+<p><strong>Q: Root CA nên để online hay offline?</strong><br/>
+A: <strong>Offline luôn</strong> trong production. Root CA chỉ cần bật để ký Issuing CA cert và publish CRL. Online Root CA = single point of catastrophic failure cho toàn bộ PKI.</p>
+<p><strong>Q: CRL hết hạn thì sao?</strong><br/>
+A: Client không validate được certificate → connection fail → <strong>outage</strong>. Nếu Root CA CRL hết hạn → LDAPS, smart card logon, RD Gateway — tất cả fail. Đây là outage phổ biến thứ 2 (sau cert expiry) trong PKI operations.</p>
+<p><strong>Q: Certificate template V1 có cần upgrade lên V4 không?</strong><br/>
+A: Không bắt buộc nhưng khuyến nghị cho templates mới. V1 không hỗ trợ auto-enrollment, V2+ thì có. Nếu cần ECC/CNG → phải V3+. Không modify V1 trực tiếp — duplicate rồi sửa bản copy.</p>
+<p><strong>Q: NDES có an toàn không?</strong><br/>
+A: NDES dùng one-time passwords nhưng password management có thể weak nếu không cấu hình đúng. Luôn dùng HTTPS, limit challenge password lifetime, monitor enrollment logs.</p>
+<hr/>
+<h2 id="lưu-ý-quan-trọng">Lưu ý quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>CAUTION</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Root CA private key</strong> là tài sản quan trọng nhất trong PKI — nếu bị compromise, toàn bộ PKI mất tin cậy và phải rebuild từ đầu. Giữ Root CA <strong>offline</strong> và lưu private key trên HSM nếu có thể.</p>
+</div>
+</blockquote>
+<ul>
+<li><strong>CRL expiry</strong> — nếu CRL hết hạn và client không tải được CRL mới → certificate validation <strong>fail</strong> → service outage. Monitor CRL validity, set calendar reminder trước khi CRL expiry</li>
+<li><strong>Certificate template permissions</strong> — cấu hình sai template permissions là vector tấn công phổ biến (ESC1-ESC8)
+<ul>
+<li>Đặc biệt nguy hiểm: template cho phép user specify Subject Alternative Name + có EKU Client Authentication → impersonation attack</li>
+<li>Review template permissions quarterly</li>
+</ul>
+</li>
+<li><strong>Key archival</strong> — enable cho encryption certificates (Email, EFS) để recover khi user mất private key. <strong>Không</strong> archive signing key — violate non-repudiation principle</li>
+<li><strong>CA backup</strong> — backup CA database + private key định kỳ. Mất CA database = mất khả năng revoke cert đã issue
+<ul>
+<li><code>certutil -backup &lt;BackupFolder></code> hoặc <code>Backup-CARoleService</code> PowerShell</li>
+</ul>
+</li>
+<li><strong>Cert chaining errors</strong> — lỗi phổ biến: client không có Issuing CA cert trong Intermediate CA store → chain không build được. Enterprise CA tự publish vào AD, nhưng non-domain machines cần cài thủ công</li>
+<li><strong>CA certificate renewal</strong> — plan trước! Issuing CA cert expiry = CA ngừng issue cert. Renew ít nhất 6 tháng trước expiry</li>
+</ul>
+<hr/>
+<h2 id="mối-quan-hệ-với-các-thành-phần-khác">Mối quan hệ với các thành phần khác<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mối-quan-hệ-với-các-thành-phần-khác" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>AD DS</strong> là nền tảng — Enterprise CA yêu cầu domain join, templates lưu trong AD, auto-enrollment qua GPO → xem <a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services">02.1 - AD DS - Active Directory Domain Services</a></li>
+<li><strong>Domain Controllers</strong> cần certificate cho LDAPS và Kerberos PKINIT → xem <a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad">01.3 - Domain Controller - Trái tim của AD</a></li>
+<li><strong>RDS</strong> dùng certificates cho RD Gateway SSL, RD Web HTTPS, SSO → xem <a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services">02.4 - RDS - Remote Desktop Services</a></li>
+<li><strong>DNS</strong> cần cho CDP/AIA HTTP resolution → xem <a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory">01.7 - DNS trong Active Directory</a></li>
+<li><strong>Migration</strong> CA trong dự án nâng cấp → xem <a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server">04.2 - Chuyển đổi FSMO và Certificate Server</a></li>
+</ul>
+<hr/>
+<h2 id="liên-kết">Liên kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#liên-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services">02.1 - AD DS - Active Directory Domain Services</a> — AD DS là nền tảng để Enterprise CA hoạt động</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad">01.3 - Domain Controller - Trái tim của AD</a> — DC cần certificate cho LDAPS và Kerberos PKINIT</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server">04.2 - Chuyển đổi FSMO và Certificate Server</a> — migration và nâng cấp CA</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services">02.4 - RDS - Remote Desktop Services</a> — RDS components cần certificates</li>
+<li><a href="../../../../moc---windows-server-ad-2025" class="internal internal-link alias" data-slug="moc---windows-server-ad-2025">MOC - Windows Server AD 2025</a></li>
+</ul>
+<h2 id="tham-khảo">Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/active-directory-certificate-services-overview" class="external external-link">AD CS Overview - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh831740(v=ws.11)" class="external external-link">PKI Design Guide - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/certificate-template-concepts" class="external external-link">Certificate Templates - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh831574(v=ws.11)" class="external external-link">Revocation Checking - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://posts.specterops.io/certified-pre-owned-d95910965cd2" class="external external-link">Certified Pre-Owned - SpecterOps<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> — AD CS attack surface research</li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/key-archival-and-management" class="external external-link">Key Archival and Recovery - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-425" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#ad-cs---certificate-services-và-pki" data-for="ad-cs---certificate-services-và-pki">AD CS - Certificate Services và PKI</a></li><li class="depth-1"><a href="#tóm-tắt-nhanh" data-for="tóm-tắt-nhanh">Tóm tắt nhanh</a></li><li class="depth-1"><a href="#nền-tảng-cryptography" data-for="nền-tảng-cryptography">Nền tảng Cryptography</a></li><li class="depth-2"><a href="#symmetric-vs-asymmetric" data-for="symmetric-vs-asymmetric">Symmetric vs Asymmetric</a></li><li class="depth-2"><a href="#digital-certificate---x509" data-for="digital-certificate---x509">Digital Certificate - X.509</a></li><li class="depth-2"><a href="#certificate-chain-of-trust" data-for="certificate-chain-of-trust">Certificate Chain of Trust</a></li><li class="depth-1"><a href="#ca-hierarchy" data-for="ca-hierarchy">CA Hierarchy</a></li><li class="depth-2"><a href="#single-tier-không-khuyến-nghị-cho-production" data-for="single-tier-không-khuyến-nghị-cho-production">Single-tier (không khuyến nghị cho production)</a></li><li class="depth-2"><a href="#two-tier-phổ-biến-nhất" data-for="two-tier-phổ-biến-nhất">Two-tier (phổ biến nhất)</a></li><li class="depth-2"><a href="#three-tier" data-for="three-tier">Three-tier</a></li><li class="depth-1"><a href="#ca-types-trong-ad" data-for="ca-types-trong-ad">CA Types trong AD</a></li><li class="depth-2"><a href="#enterprise-ca-vs-standalone-ca" data-for="enterprise-ca-vs-standalone-ca">Enterprise CA vs Standalone CA</a></li><li class="depth-2"><a href="#enterprise-ca-chi-tiết" data-for="enterprise-ca-chi-tiết">Enterprise CA chi tiết</a></li><li class="depth-1"><a href="#certificate-templates" data-for="certificate-templates">Certificate Templates</a></li><li class="depth-2"><a href="#template-versions" data-for="template-versions">Template Versions</a></li><li class="depth-2"><a href="#permissions-trên-template-security" data-for="permissions-trên-template-security">Permissions trên Template (Security)</a></li><li class="depth-2"><a href="#key-usage-và-eku" data-for="key-usage-và-eku">Key Usage và EKU</a></li><li class="depth-2"><a href="#common-templates" data-for="common-templates">Common Templates</a></li><li class="depth-1"><a href="#certificate-based-authentication" data-for="certificate-based-authentication">Certificate-based Authentication</a></li><li class="depth-2"><a href="#smart-card-logon" data-for="smart-card-logon">Smart Card Logon</a></li><li class="depth-2"><a href="#eap-tls-8021x" data-for="eap-tls-8021x">EAP-TLS (802.1X)</a></li><li class="depth-2"><a href="#code-signing" data-for="code-signing">Code Signing</a></li><li class="depth-1"><a href="#enrollment-methods" data-for="enrollment-methods">Enrollment Methods</a></li><li class="depth-2"><a href="#auto-enrollment-qua-gpo" data-for="auto-enrollment-qua-gpo">Auto-enrollment qua GPO</a></li><li class="depth-2"><a href="#manual-enrollment" data-for="manual-enrollment">Manual Enrollment</a></li><li class="depth-2"><a href="#ndes---network-device-enrollment-service" data-for="ndes---network-device-enrollment-service">NDES - Network Device Enrollment Service</a></li><li class="depth-2"><a href="#cepces---certificate-enrollment-policyservice" data-for="cepces---certificate-enrollment-policyservice">CEP/CES - Certificate Enrollment Policy/Service</a></li><li class="depth-1"><a href="#revocation" data-for="revocation">Revocation</a></li><li class="depth-2"><a href="#crl---certificate-revocation-list" data-for="crl---certificate-revocation-list">CRL - Certificate Revocation List</a></li><li class="depth-2"><a href="#ocsp---online-certificate-status-protocol" data-for="ocsp---online-certificate-status-protocol">OCSP - Online Certificate Status Protocol</a></li><li class="depth-2"><a href="#crl-vs-ocsp---so-sánh-chi-tiết" data-for="crl-vs-ocsp---so-sánh-chi-tiết">CRL vs OCSP - So sánh chi tiết</a></li><li class="depth-2"><a href="#cdp-và-aia" data-for="cdp-và-aia">CDP và AIA</a></li><li class="depth-1"><a href="#key-archival-và-recovery" data-for="key-archival-và-recovery">Key Archival và Recovery</a></li><li class="depth-2"><a href="#mục-đích" data-for="mục-đích">Mục đích</a></li><li class="depth-2"><a href="#cách-hoạt-động" data-for="cách-hoạt-động">Cách hoạt động</a></li><li class="depth-2"><a href="#best-practices" data-for="best-practices">Best Practices</a></li><li class="depth-1"><a href="#ksp-vs-csp" data-for="ksp-vs-csp">KSP vs CSP</a></li><li class="depth-2"><a href="#csp---cryptographic-service-provider-legacy" data-for="csp---cryptographic-service-provider-legacy">CSP - Cryptographic Service Provider (Legacy)</a></li><li class="depth-2"><a href="#ksp---key-storage-provider-modern" data-for="ksp---key-storage-provider-modern">KSP - Key Storage Provider (Modern)</a></li><li class="depth-1"><a href="#internal-pki-vs-public-ca" data-for="internal-pki-vs-public-ca">Internal PKI vs Public CA</a></li><li class="depth-1"><a href="#ad-cs-attack-surface-awareness" data-for="ad-cs-attack-surface-awareness">AD CS Attack Surface Awareness</a></li><li class="depth-2"><a href="#tổng-quan-esc1-esc8" data-for="tổng-quan-esc1-esc8">Tổng quan ESC1-ESC8</a></li><li class="depth-2"><a href="#mitigation-cơ-bản" data-for="mitigation-cơ-bản">Mitigation cơ bản</a></li><li class="depth-1"><a href="#câu-hỏi-thường-gặp" data-for="câu-hỏi-thường-gặp">Câu hỏi thường gặp</a></li><li class="depth-1"><a href="#lưu-ý-quan-trọng" data-for="lưu-ý-quan-trọng">Lưu ý quan trọng</a></li><li class="depth-1"><a href="#mối-quan-hệ-với-các-thành-phần-khác" data-for="mối-quan-hệ-với-các-thành-phần-khác">Mối quan hệ với các thành phần khác</a></li><li class="depth-1"><a href="#liên-kết" data-for="liên-kết">Liên kết</a></li><li class="depth-1"><a href="#tham-khảo" data-for="tham-khảo">Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal">02.1 - AD DS - Active Directory Domain Services</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services" class="internal">02.4 - RDS - Remote Desktop Services</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server" class="internal">04.2 - Chuyển đổi FSMO và Certificate Server</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal">04.4 - DHCP và RDS Migration</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal">04.5 - Kiểm thử toàn diện</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

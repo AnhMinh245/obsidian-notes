@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>28 – Disaster Recovery &amp; Migrations: RPO/RTO, DMS, Snow Family</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="28 – Disaster Recovery &amp; Migrations: RPO/RTO, DMS, Snow Family"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="28 – Disaster Recovery &amp; Migrations: RPO/RTO, DMS, Snow Family"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 28 – Disaster Recovery &amp; Migrations: RPO/RTO, DMS, Snow Family Cách đọc note này: (1) DR Overview — RPO/RTO là gì → (2) 4 chiến lược DR, bảng so sánh kinh điển nhất của cả kỳ thi → (3) AWS Elastic Disaster Recovery (DRS) — công cụ thực thi DR → (4) Migration ..."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 28 – Disaster Recovery &amp; Migrations: RPO/RTO, DMS, Snow Family Cách đọc note này: (1) DR Overview — RPO/RTO là gì → (2) 4 chiến lược DR, bảng so sánh kinh điển nhất của cả kỳ thi → (3) AWS Elastic Disaster Recovery (DRS) — công cụ thực thi DR → (4) Migration ..."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 28 – Disaster Recovery &amp; Migrations: RPO/RTO, DMS, Snow Family Cách đọc note này: (1) DR Overview — RPO/RTO là gì → (2) 4 chiến lược DR, bảng so sánh kinh điển nhất của cả kỳ thi → (3) AWS Elastic Disaster Recovery (DRS) — công cụ thực thi DR → (4) Migration ..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/28---disaster-recovery--and--migrations"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/28---disaster-recovery--and--migrations"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 28 – Disaster Recovery &amp; Migrations: RPO/RTO, DMS, Snow Family Cách đọc note này: (1) DR Overview — RPO/RTO là gì → (2) 4 chiến lược DR, bảng so sánh kinh điển nhất của cả kỳ thi → (3) AWS Elastic Disaster Recovery (DRS) — công cụ thực thi DR → (4) Migration ..."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/28---disaster-recovery--and--migrations" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-96" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-96" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>28 – Disaster Recovery &amp; Migrations: RPO/RTO, DMS, Snow Family</a></div></nav><h1 class="article-title">28 – Disaster Recovery &amp; Migrations: RPO/RTO, DMS, Snow Family</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Disaster Recovery AWS</span><span class="note-properties-separator">, </span><span class="note-properties-text">Pilot Light</span><span class="note-properties-separator">, </span><span class="note-properties-text">Warm Standby</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Database Migration Service</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Snow Family</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Elastic Disaster Recovery</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-10-11T17:00:00.000Z">12 thg 10, 2026</time><span>18 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="28--disaster-recovery--migrations-rporto-dms-snow-family">28 – Disaster Recovery &amp; Migrations: RPO/RTO, DMS, Snow Family<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#28--disaster-recovery--migrations-rporto-dms-snow-family" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> (1) DR Overview — RPO/RTO là gì → (2) 4 chiến lược DR, bảng so sánh <strong>kinh điển nhất của cả kỳ thi</strong> → (3) AWS Elastic Disaster Recovery (DRS) — công cụ thực thi DR → (4) Migration dữ liệu &amp; database (DMS, SCT, MGN, Discovery Service) → (5) AWS Backup → (6) Snow Family — chuyển dữ liệu offline khi mạng không đủ → (7) So sánh &amp; chọn đáp án thi.</p>
+<p>Có một note khác trong vault viết sâu hơn về DR theo góc nhìn “domain thi”: <a href="../../../02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.4---disaster-recovery-strategies" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.4---disaster-recovery-strategies">2.4 - Disaster Recovery Strategies</a>. Note này bám theo đúng mạch slide của Stephane Maarek, ngắn gọn hơn và có thêm phần Migration mà note kia không có.</p>
+</blockquote>
+<hr/>
+<h2 id="1-disaster-recovery-overview">1. Disaster Recovery Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-disaster-recovery-overview" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Disaster</strong> = bất kỳ sự kiện nào ảnh hưởng xấu tới hoạt động kinh doanh hoặc tài chính công ty. <strong>Disaster Recovery (DR)</strong> = chuẩn bị trước và phục hồi sau sự kiện đó.</p>
+<h3 id="11-ba-dạng-dr-theo-đích-đến">1.1 Ba dạng DR theo đích đến<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-ba-dạng-dr-theo-đích-đến" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dạng</th><th>Mô tả</th><th>Đặc điểm</th></tr></thead><tbody><tr><td><strong>On-premise → On-premise</strong></td><td>DR truyền thống, tự xây data center dự phòng</td><td>Đắt nhất, không liên quan AWS</td></tr><tr><td><strong>On-premise → AWS Cloud</strong></td><td><strong>Hybrid recovery</strong></td><td>Data center chính vẫn on-prem, AWS làm nơi phục hồi</td></tr><tr><td><strong>AWS Region A → AWS Region B</strong></td><td>DR thuần AWS, multi-region</td><td>Phổ biến nhất trong đề thi SAA-C03</td></tr></tbody></table></div>
+<h3 id="12-rpo-và-rto--hai-trục-quyết-định-mọi-thứ">1.2 RPO và RTO — hai trục quyết định mọi thứ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-rpo-và-rto--hai-trục-quyết-định-mọi-thứ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    LastBackup[\&quot;Bản backup / replicate&lt;br/>gần nhất\&quot;] -->|\&quot;RPO: dữ liệu có thể mất\&quot;| Disaster[\&quot;Sự cố xảy ra\&quot;]\n    Disaster -->|\&quot;RTO: thời gian downtime\&quot;| Recovery[\&quot;Hệ thống hoạt động lại\&quot;]&quot;">graph LR
+    LastBackup[&quot;Bản backup / replicate&lt;br/>gần nhất&quot;] -->|&quot;RPO: dữ liệu có thể mất&quot;| Disaster[&quot;Sự cố xảy ra&quot;]
+    Disaster -->|&quot;RTO: thời gian downtime&quot;| Recovery[&quot;Hệ thống hoạt động lại&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khái niệm</th><th>Trả lời câu hỏi</th><th>Trục thời gian</th></tr></thead><tbody><tr><td><strong>RPO</strong> (Recovery Point Objective)</td><td>Chấp nhận <strong>mất dữ liệu</strong> tối đa bao lâu?</td><td>Nhìn <strong>về trước</strong> sự cố</td></tr><tr><td><strong>RTO</strong> (Recovery Time Objective)</td><td>Chấp nhận <strong>downtime</strong> tối đa bao lâu?</td><td>Nhìn <strong>về sau</strong> sự cố</td></tr></tbody></table></div>
+<blockquote>
+<p>RPO thấp → cần replicate liên tục (gần real-time). RTO thấp → cần hạ tầng compute <strong>đã chạy sẵn</strong>, không phải dựng từ đầu. Hai con số này do business quyết định, kiến trúc chỉ là công cụ để đạt được chúng.</p>
+</blockquote>
+<h3 id="13-bộ-công-cụ-aws-hỗ-trợ-dr-theo-tầng">1.3 Bộ công cụ AWS hỗ trợ DR (theo tầng)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-bộ-công-cụ-aws-hỗ-trợ-dr-theo-tầng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Slide gốc gom các dịch vụ AWS liên quan DR thành 5 nhóm — nhớ theo bảng này để không bỏ sót:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tầng</th><th>Dịch vụ tiêu biểu</th></tr></thead><tbody><tr><td><strong>Backup</strong></td><td>EBS Snapshots, RDS automated backup/snapshot, đẩy định kỳ sang S3/S3 IA/Glacier + Lifecycle Policy, Cross-Region Replication, Snowball/Storage Gateway (từ on-prem)</td></tr><tr><td><strong>High Availability</strong></td><td>Route 53 để chuyển DNS giữa region, RDS Multi-AZ, ElastiCache Multi-AZ, EFS, S3, Site-to-Site VPN làm backup cho Direct Connect</td></tr><tr><td><strong>Replication</strong></td><td>RDS Cross-Region Replication, Aurora Global Database, replicate database từ on-prem về RDS, Storage Gateway</td></tr><tr><td><strong>Automation</strong></td><td>CloudFormation/Elastic Beanstalk để tạo lại toàn bộ environment, CloudWatch alarm để reboot/recover EC2, Lambda cho automation tuỳ biến</td></tr><tr><td><strong>Chaos Engineering</strong></td><td>Chủ động phá hệ thống để kiểm chứng khả năng chịu lỗi — ví dụ <strong>“Simian Army”</strong> của Netflix, random terminate EC2</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Lưu ý quan trọng (cũng là bẫy thi phổ biến — xem thêm <a href="../../../02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.4---disaster-recovery-strategies" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.4---disaster-recovery-strategies">2.4 - Disaster Recovery Strategies</a> §8):</strong> Multi-AZ là <strong>High Availability</strong> (chịu lỗi 1 AZ), không phải Disaster Recovery (chịu lỗi cả Region). Đề hỏi “bảo vệ khỏi thảm hoạ diện rộng / mất cả Region” thì đáp án luôn có từ khoá <strong>Cross-Region</strong> hoặc <strong>Global</strong>, không phải Multi-AZ.</p>
+</blockquote>
+<hr/>
+<h2 id="2-bốn-chiến-lược-dr--câu-hỏi-thi-kinh-điển-nhất">2. Bốn chiến lược DR — câu hỏi thi kinh điển nhất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-bốn-chiến-lược-dr--câu-hỏi-thi-kinh-điển-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>RTO càng thấp (phục hồi càng nhanh) thì chi phí càng cao — đây là <strong>spectrum</strong> duy nhất cần nhớ, 4 chiến lược chỉ là 4 điểm trên trục đó.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    BR[\&quot;Backup and Restore&lt;br/>rẻ nhất – RTO chậm nhất\&quot;] --> PL[\&quot;Pilot Light\&quot;]\n    PL --> WS[\&quot;Warm Standby\&quot;]\n    WS --> AA[\&quot;Multi-Site Active-Active&lt;br/>đắt nhất – RTO nhanh nhất\&quot;]&quot;">graph LR
+    BR[&quot;Backup and Restore&lt;br/>rẻ nhất – RTO chậm nhất&quot;] --> PL[&quot;Pilot Light&quot;]
+    PL --> WS[&quot;Warm Standby&quot;]
+    WS --> AA[&quot;Multi-Site Active-Active&lt;br/>đắt nhất – RTO nhanh nhất&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Chiến lược</th><th>Compute lúc bình thường</th><th>Database lúc bình thường</th><th>RTO</th><th>RPO</th><th>Chi phí</th></tr></thead><tbody><tr><td><strong>Backup &amp; Restore</strong></td><td>Không có gì chạy</td><td>Chỉ có bản backup (snapshot)</td><td>Vài giờ – vài ngày</td><td>Vài giờ – vài ngày</td><td>$</td></tr><tr><td><strong>Pilot Light</strong></td><td>Tắt hoàn toàn (AMI sẵn sàng để bật)</td><td><strong>Chạy sẵn</strong>, replicate liên tục</td><td>Chục phút – vài giờ</td><td>Vài phút</td><td>$$</td></tr><tr><td><strong>Warm Standby</strong></td><td>Chạy ở <strong>quy mô tối thiểu</strong> (vd <code>min-size=1</code>)</td><td>Chạy sẵn, replicate liên tục</td><td>Vài phút</td><td>Vài giây – vài phút</td><td>$$$</td></tr><tr><td><strong>Multi-Site / Active-Active</strong></td><td>Chạy <strong>full production scale</strong> ở ≥ 2 nơi</td><td>Chạy full 2 chiều (Aurora Global, replicate 2 chiều)</td><td>Gần như 0</td><td>Gần như 0</td><td>$$$$</td></tr></tbody></table></div>
+<h3 id="21-chi-tiết-từng-chiến-lược">2.1 Chi tiết từng chiến lược<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-chi-tiết-từng-chiến-lược" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Backup &amp; Restore</strong> — sao lưu định kỳ (EBS Snapshot, RDS Snapshot, đẩy S3/Glacier có lifecycle; từ on-prem dùng Storage Gateway hoặc Snowball). Khi có sự cố, mới bắt đầu dựng lại hạ tầng (EC2, RDS…) từ backup ở region/nơi khác. Không có gì chạy sẵn → rẻ nhất nhưng cũng chậm nhất.</p>
+<p><strong>Pilot Light</strong> — ví như ngọn lửa mồi trong bếp gas: chỉ giữ phần <strong>lõi tối thiểu</strong> luôn “cháy”. Cụ thể: database (RDS secondary) chạy và replicate liên tục, còn tầng ứng dụng (EC2, ELB) <strong>tắt hẳn</strong>, chỉ có AMI sẵn sàng. Khi có sự cố, bật EC2 lên và trỏ vào database đang chạy sẵn → nhanh hơn Backup &amp; Restore vì không phải chờ restore data.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173751.png" alt width="auto" height="auto"/><br/>
+<em>EC2 “not running” chỉ có AMI sẵn sàng — RDS luôn chạy và nhận Data Replication liên tục từ on-premise.</em></p>
+<p><strong>Warm Standby</strong> — bản sao thu nhỏ của toàn bộ hệ thống production, <strong>chạy thật 24/7</strong> nhưng ở quy mô nhỏ nhất (Auto Scaling Group <code>min-size</code> thấp). Route 53 trỏ traffic; khi thảm hoạ, Auto Scaling bung ra full quy mô. Vì hệ thống đã “ấm” sẵn (đang phục vụ được request), RTO chỉ còn vài phút.</p>
+<p><strong>Multi-Site / Active-Active (Hot Site)</strong> — full production scale chạy song song ở AWS <strong>và</strong> on-premise, hoặc ở 2 AWS Region, cả hai đều <code>active</code>. Database dùng Aurora Global Database replicate 2 chiều. Route 53 chia traffic hoặc failover tức thì. RTO/RPO gần 0 vì không có gì phải “bật lên” — mọi thứ đã chạy sẵn ở cả hai nơi.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173752.png" alt width="auto" height="auto"/><br/>
+<em>Multi-Site: cả corporate data center (Reverse proxy + App Server + Primary DB) và AWS Cloud (ELB + EC2 Auto Scaling production) đều “active” song song, Route 53 chia traffic 2 chiều — failover gần như tức thì vì không có gì phải “bật lên”.</em></p>
+<blockquote>
+<p><strong>Điểm hay bị hỏi:</strong> phân biệt Pilot Light và Warm Standby không nằm ở database (cả hai đều replicate liên tục), mà nằm ở <strong>tầng compute</strong>: Pilot Light tắt hẳn EC2, Warm Standby giữ EC2 chạy ở quy mô nhỏ. Đây là câu hỏi rất hay gặp trong đề thi thật.</p>
+</blockquote>
+<hr/>
+<h2 id="3-aws-elastic-disaster-recovery-drs">3. AWS Elastic Disaster Recovery (DRS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-aws-elastic-disaster-recovery-drs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Tên cũ: <strong>CloudEndure Disaster Recovery</strong></li>
+<li>Công dụng: nhanh chóng phục hồi server vật lý, ảo, hoặc trên cloud khác <strong>vào AWS</strong></li>
+<li>Use case tiêu biểu: bảo vệ database quan trọng (Oracle, MySQL, SQL Server), ứng dụng enterprise (SAP), bảo vệ dữ liệu khỏi <strong>ransomware</strong></li>
+<li>Cơ chế: <strong>continuous block-level replication</strong> — replicate ở mức block đĩa, gần như real-time (tính bằng <strong>giây</strong>)</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Src[\&quot;Server nguồn&lt;br/>corporate data center hoặc cloud khác\&quot;] --> Agent[\&quot;AWS Replication Agent\&quot;]\n    Agent -->|\&quot;continuous replication (giây)\&quot;| Staging[\&quot;Staging Area&lt;br/>EC2 + EBS giá rẻ\&quot;]\n    Staging -->|\&quot;failover (phút)\&quot;| Prod[\&quot;Production&lt;br/>EC2 + EBS đích\&quot;]\n    Prod -.->|\&quot;failback\&quot;| Src&quot;">graph LR
+    Src[&quot;Server nguồn&lt;br/>corporate data center hoặc cloud khác&quot;] --> Agent[&quot;AWS Replication Agent&quot;]
+    Agent -->|&quot;continuous replication (giây)&quot;| Staging[&quot;Staging Area&lt;br/>EC2 + EBS giá rẻ&quot;]
+    Staging -->|&quot;failover (phút)&quot;| Prod[&quot;Production&lt;br/>EC2 + EBS đích&quot;]
+    Prod -.->|&quot;failback&quot;| Src
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Cơ chế “staging area” là điểm cốt lõi:</strong> DRS không chạy sẵn hạ tầng production đầy đủ ở AWS (khác Warm Standby/Multi-Site) — nó chỉ giữ một staging area <strong>giá rẻ</strong> (EC2/EBS nhỏ) để nhận replication liên tục. Khi thật sự failover, DRS mới dựng instance target đúng kích thước production, mất <strong>vài phút</strong>. Đây chính là cách DRS đạt RPO thấp (giây) mà chi phí vẫn thấp hơn Warm Standby thật sự — vì phần “chạy sẵn” chỉ là staging, không phải production.</p>
+<p>DRS còn hỗ trợ <strong>failback</strong> — đưa hệ thống về lại nguồn sau khi sự cố qua, phù hợp với đúng bản chất “Disaster Recovery” (tạm chuyển sang AWS rồi quay về, không phải chuyển hẳn).</p>
+</blockquote>
+<hr/>
+<h2 id="4-migration-dữ-liệu--database">4. Migration dữ liệu &amp; database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-migration-dữ-liệu--database" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Phần này khác hẳn phần DR ở trên: DR là <strong>chuẩn bị cho sự cố</strong>, Migration là <strong>chuyển hẳn</strong> hệ thống/dữ liệu sang AWS (hoặc giữa các DB engine).</p>
+<h3 id="41-aws-database-migration-service-dms">4.1 AWS Database Migration Service (DMS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-aws-database-migration-service-dms" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Di chuyển database vào AWS <strong>nhanh, an toàn</strong>, có khả năng <strong>tự phục hồi</strong> (resilient, self-healing)</li>
+<li><strong>Database nguồn vẫn hoạt động bình thường</strong> trong suốt quá trình migrate — đây là lợi thế lớn nhất so với việc tự viết script migrate thủ công</li>
+<li>Bắt buộc tạo <strong>1 EC2 instance chạy DMS</strong> (replication instance) để thực hiện task replicate</li>
+<li><strong>Continuous Data Replication</strong> dùng <strong>CDC (Change Data Capture)</strong> — chỉ đồng bộ phần thay đổi sau lần full load đầu tiên</li>
+<li>Hỗ trợ 2 kiểu migration:</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Kiểu</th><th>Ý nghĩa</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>Homogeneous</strong></td><td>Cùng engine</td><td>Oracle → Oracle</td></tr><tr><td><strong>Heterogeneous</strong></td><td>Khác engine</td><td>Microsoft SQL Server → Aurora</td></tr></tbody></table></div>
+<p><strong>Sources hỗ trợ:</strong> database on-premise/EC2 (Oracle, MS SQL Server, MySQL, MariaDB, PostgreSQL, MongoDB, SAP, DB2), Azure SQL Database, mọi loại Amazon RDS (kể cả Aurora), Amazon S3, DocumentDB.</p>
+<p><strong>Targets hỗ trợ:</strong> database on-premise/EC2 (Oracle, MS SQL Server, MySQL, MariaDB, PostgreSQL, SAP), Amazon RDS, Redshift, DynamoDB, S3, OpenSearch Service, Kinesis Data Streams, Apache Kafka, DocumentDB, Neptune, Redis, Babelfish.</p>
+<blockquote>
+<p><strong>Ghi nhớ nhanh:</strong> DMS replicate được cả 3 chiều — <strong>on-premise → AWS</strong>, <strong>AWS → AWS</strong>, và <strong>AWS → on-premise</strong>. Không chỉ một chiều đổ vào cloud.</p>
+</blockquote>
+<p><img src="../../.././../../attachments/pasted-image-20260902174109.png" alt width="auto" height="auto"/><br/>
+<em>Oracle DB nguồn vẫn chạy bình thường trong khi DMS Replication Instance (Full load + CDC) đẩy dữ liệu sang RDS MySQL đích; song song đó, server cài AWS SCT convert schema từ Oracle sang MySQL.</em></p>
+<h4 id="dms-multi-az-deployment">DMS Multi-AZ Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dms-multi-az-deployment" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Khi bật Multi-AZ, DMS tự tạo và duy trì một <strong>standby replica đồng bộ (synchronous)</strong> ở AZ khác cho chính replication instance.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Lợi ích</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>Data redundancy</strong></td><td>Có bản dự phòng nếu AZ chính lỗi</td></tr><tr><td><strong>Loại bỏ I/O freeze</strong></td><td>Không bị đứng khi cần backup instance</td></tr><tr><td><strong>Giảm latency spike</strong></td><td>Không có điểm nghẽn đơn lẻ</td></tr></tbody></table></div>
+<h3 id="42-aws-schema-conversion-tool-sct">4.2 AWS Schema Conversion Tool (SCT)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-aws-schema-conversion-tool-sct" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dùng khi migration là <strong>heterogeneous</strong> — nguồn và đích khác engine, cần convert <strong>schema</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Ví dụ</th><th>Loại</th></tr></thead><tbody><tr><td>SQL Server hoặc Oracle → MySQL, PostgreSQL, Aurora</td><td><strong>OLTP</strong></td></tr><tr><td>Teradata hoặc Oracle → Redshift</td><td><strong>OLAP</strong></td></tr></tbody></table></div>
+<ul>
+<li>Nên dùng instance <strong>compute-intensive</strong> để chạy convert (SCT tính toán nặng)</li>
+<li><strong>Không cần SCT nếu cùng engine</strong> — ví dụ on-premise PostgreSQL → RDS PostgreSQL: engine vẫn là PostgreSQL, RDS chỉ là nền tảng chạy, không có gì để convert</li>
+</ul>
+<p><strong>Kiến trúc điển hình (SCT + DMS phối hợp):</strong></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    OraDB[\&quot;Oracle DB&lt;br/>on-premise (nguồn)\&quot;] --> SCT[\&quot;Server cài AWS SCT&lt;br/>convert schema\&quot;]\n    SCT --> DMSInst[\&quot;AWS DMS&lt;br/>Replication Instance&lt;br/>full load + CDC\&quot;]\n    DMSInst --> RDSTarget[\&quot;RDS MySQL&lt;br/>(đích)\&quot;]&quot;">graph LR
+    OraDB[&quot;Oracle DB&lt;br/>on-premise (nguồn)&quot;] --> SCT[&quot;Server cài AWS SCT&lt;br/>convert schema&quot;]
+    SCT --> DMSInst[&quot;AWS DMS&lt;br/>Replication Instance&lt;br/>full load + CDC&quot;]
+    DMSInst --> RDSTarget[&quot;RDS MySQL&lt;br/>(đích)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Phân công rõ ràng:</strong> SCT chỉ lo <strong>schema</strong> (cấu trúc bảng, kiểu dữ liệu…), DMS lo <strong>dữ liệu</strong> (full load + đồng bộ liên tục bằng CDC). Hai công cụ đi cùng nhau khi khác engine, SCT bị loại bỏ khi cùng engine.</p>
+</blockquote>
+<h3 id="43-ví-dụ-thực-tế-rds-mysql--aurora-mysql">4.3 Ví dụ thực tế: RDS MySQL → Aurora MySQL<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-ví-dụ-thực-tế-rds-mysql--aurora-mysql" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cách</th><th>Mô tả</th><th>Ghi chú</th></tr></thead><tbody><tr><td><strong>Snapshot restore</strong></td><td>Chụp DB Snapshot từ RDS MySQL, restore thành Aurora MySQL DB</td><td>Nhanh, đơn giản</td></tr><tr><td><strong>Read Replica promote</strong></td><td>Tạo Aurora Read Replica từ RDS MySQL, đợi replication lag = 0, rồi promote thành cluster độc lập</td><td>Downtime gần 0 nhưng <strong>tốn thời gian + chi phí</strong> hơn</td></tr></tbody></table></div>
+<p><strong>External MySQL → Aurora MySQL</strong> (không phải RDS):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cách</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Percona XtraBackup → S3 → import</strong></td><td>Backup file bằng Percona XtraBackup, đẩy lên S3, tạo Aurora MySQL DB import trực tiếp từ S3</td></tr><tr><td><strong>mysqldump</strong></td><td>Tạo Aurora MySQL DB rồi dùng <code>mysqldump</code> để migrate — <strong>chậm hơn</strong> cách qua S3</td></tr></tbody></table></div>
+<p><strong>RDS PostgreSQL → Aurora PostgreSQL</strong> áp dụng đúng logic tương tự: snapshot restore hoặc read replica promote; với PostgreSQL external thì backup → S3 → import bằng extension <strong><code>aws_s3</code></strong>.</p>
+<blockquote>
+<p><strong>Quy tắc chốt:</strong> nếu cả 2 database (nguồn và đích) đang <strong>chạy song song</strong> và cần đồng bộ liên tục trong lúc chuyển đổi → dùng <strong>DMS</strong>, bất kể MySQL hay PostgreSQL.</p>
+</blockquote>
+<h3 id="44-aws-application-migration-service-mgn">4.4 AWS Application Migration Service (MGN)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#44-aws-application-migration-service-mgn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Tên gọi khác: <strong>“AWS evolution” của CloudEndure Migration</strong>, thay thế <strong>AWS Server Migration Service (SMS)</strong> đã cũ</li>
+<li>Giải pháp <strong>lift-and-shift (rehost)</strong> — đơn giản hoá việc chuyển ứng dụng sang AWS</li>
+<li>Convert server vật lý, ảo, hoặc trên cloud khác để <strong>chạy native trên AWS</strong></li>
+<li>Hỗ trợ nhiều nền tảng, OS, database</li>
+<li><strong>Minimal downtime</strong>, giảm chi phí</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Src2[\&quot;Server nguồn&lt;br/>corporate data center hoặc cloud khác\&quot;] --> Agent2[\&quot;AWS Replication Agent\&quot;]\n    Agent2 -->|\&quot;continuous replication\&quot;| Staging2[\&quot;Staging Area&lt;br/>EC2 + EBS giá rẻ\&quot;]\n    Staging2 -->|\&quot;cutover\&quot;| Prod2[\&quot;Production&lt;br/>EC2 + EBS đích\&quot;]&quot;">graph LR
+    Src2[&quot;Server nguồn&lt;br/>corporate data center hoặc cloud khác&quot;] --> Agent2[&quot;AWS Replication Agent&quot;]
+    Agent2 -->|&quot;continuous replication&quot;| Staging2[&quot;Staging Area&lt;br/>EC2 + EBS giá rẻ&quot;]
+    Staging2 -->|&quot;cutover&quot;| Prod2[&quot;Production&lt;br/>EC2 + EBS đích&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>MGN vs DRS — bẫy thi dễ nhầm nhất phần này:</strong> kiến trúc gần như <strong>giống hệt nhau</strong> (Replication Agent → Staging Area giá rẻ → chuyển sang production), vì cả hai đều “tiến hoá” từ CloudEndure. Khác biệt nằm ở <strong>mục đích và điểm kết thúc</strong>:</p>
+<ul>
+<li><strong>DRS</strong> = Disaster Recovery → replicate <strong>liên tục vô thời hạn</strong>, sẵn sàng <strong>failover</strong> bất cứ lúc nào, và hỗ trợ <strong>failback</strong> về nguồn.</li>
+<li><strong>MGN</strong> = Migration → replicate cho tới khi <strong>cutover</strong> một lần, xong là <strong>kết thúc vòng đời</strong> của server nguồn — không có khái niệm failback.<br/>
+Thấy đề nói “chuyển hẳn, một lần, xong thì thôi” → <strong>MGN</strong>. Thấy đề nói “luôn sẵn sàng phục hồi, có thể quay lại nguồn” → <strong>DRS</strong>.</li>
+</ul>
+</blockquote>
+<h3 id="45-aws-application-discovery-service--aws-migration-hub">4.5 AWS Application Discovery Service + AWS Migration Hub<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#45-aws-application-discovery-service--aws-migration-hub" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dùng để <strong>lên kế hoạch migration</strong>, trước khi thực sự chuyển gì cả.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Kiểu discovery</th><th>Thu thập gì</th></tr></thead><tbody><tr><td><strong>Agentless</strong> (AWS Agentless Discovery Connector)</td><td>VM inventory, cấu hình, lịch sử hiệu năng (CPU, memory, disk)</td></tr><tr><td><strong>Agent-based</strong> (AWS Application Discovery Agent)</td><td>Cấu hình hệ thống, hiệu năng, tiến trình đang chạy, chi tiết kết nối mạng giữa các server</td></tr></tbody></table></div>
+<ul>
+<li>Mục tiêu: nắm được <strong>server utilization</strong> và <strong>dependency mapping</strong> (server nào phụ thuộc server nào) — thiếu thông tin này thì kế hoạch migration dễ bỏ sót phụ thuộc</li>
+<li>Dữ liệu thu được xem trong <strong>AWS Migration Hub</strong> — nơi theo dõi tiến độ migration tập trung</li>
+</ul>
+<h3 id="46-vm-importexport--vmware-cloud-on-aws">4.6 VM Import/Export &amp; VMware Cloud on AWS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#46-vm-importexport--vmware-cloud-on-aws" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>VM Import/Export</strong>: đưa VM hiện có (VMware, KVM, VirtualBox, Hyper-V) vào chạy trên EC2; cũng export ngược lại từ EC2 ra on-premise → dùng làm chiến lược DR repository cho VM on-prem</li>
+<li><strong>AWS cung cấp AMI Amazon Linux 2 dạng .iso</strong> để tải về chạy trên các hypervisor phổ biến</li>
+</ul>
+<p><strong>VMware Cloud on AWS</strong> — dành cho khách hàng đang quản lý data center bằng VMware Cloud, muốn <strong>mở rộng capacity sang AWS</strong> mà vẫn giữ nguyên phần mềm VMware quen thuộc (không cần học lại native AWS console).</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    OnPrem[\&quot;On-premises vCenter&lt;br/>vSphere-based environment\&quot;] -->|\&quot;Direct Connect\&quot;| VMCoA[\&quot;VMware Cloud on AWS&lt;br/>(vSphere)\&quot;]\n    VMCoA --> AWSSvc[\&quot;Dịch vụ AWS&lt;br/>EC2, S3, FSx, RDS, Redshift\&quot;]&quot;">graph LR
+    OnPrem[&quot;On-premises vCenter&lt;br/>vSphere-based environment&quot;] -->|&quot;Direct Connect&quot;| VMCoA[&quot;VMware Cloud on AWS&lt;br/>(vSphere)&quot;]
+    VMCoA --> AWSSvc[&quot;Dịch vụ AWS&lt;br/>EC2, S3, FSx, RDS, Redshift&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p>Use case: migrate workload vSphere sang AWS, chạy production song song hybrid, hoặc dùng làm <strong>chiến lược DR</strong>.</p>
+<hr/>
+<h2 id="5-aws-backup--sao-lưu-tập-trung">5. AWS Backup — sao lưu tập trung<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-aws-backup--sao-lưu-tập-trung" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Fully managed</strong>, quản lý và tự động hoá backup <strong>tập trung</strong> cho nhiều dịch vụ AWS — không cần viết script thủ công</li>
+<li>Dịch vụ được hỗ trợ: EC2/EBS, S3, RDS (mọi engine)/Aurora/DynamoDB, DocumentDB/Neptune, EFS/FSx (Lustre &amp; Windows File Server), Storage Gateway (Volume Gateway)</li>
+<li>Hỗ trợ <strong>cross-region</strong> và <strong>cross-account</strong> backup</li>
+<li>Hỗ trợ <strong>PITR</strong> (Point-in-Time Recovery) cho các dịch vụ có hỗ trợ, backup <strong>on-demand</strong> hoặc <strong>theo lịch</strong>, <strong>tag-based</strong> backup policy</li>
+</ul>
+<p><strong>Backup Plan</strong> cấu hình: tần suất (mỗi 12h, daily, weekly, monthly, hoặc cron expression), backup window, chuyển sang cold storage (Never/Days/Weeks/Months/Years), retention period.</p>
+<p><strong>Backup Vault Lock</strong> — bật chế độ <strong>WORM</strong> (Write Once Read Many) cho vault: chống xoá backup do nhầm lẫn hoặc do tấn công (ransomware), chống việc rút ngắn retention period. Khi bật, <strong>kể cả root user cũng không xoá được</strong> backup trước hạn.</p>
+<blockquote>
+<p>Đây chính là dịch vụ tương ứng với chi tiết “<strong>AWS Backup Vault Lock: chống ransomware xoá backup</strong>” trong <a href="../../../02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.4---disaster-recovery-strategies" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-2---resilient-architectures/2.4---disaster-recovery-strategies">2.4 - Disaster Recovery Strategies</a> §5 — hai note nói cùng một sự thật, chỉ khác cách trình bày.</p>
+</blockquote>
+<hr/>
+<h2 id="6-aws-snow-family--chuyển-dữ-liệu-offline">6. AWS Snow Family — chuyển dữ liệu offline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-aws-snow-family--chuyển-dữ-liệu-offline" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Vấn đề: mạng internet/Direct Connect <strong>không đủ băng thông</strong> để chuyển lượng dữ liệu lớn trong thời gian chấp nhận được → chuyển sang thiết bị vật lý, ship qua đường bưu điện.</p>
+<p><strong>Các thiết bị chính trong Snow Family</strong> (kiến thức nền AWS, không đi kèm số liệu chi tiết trong slide này):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thiết bị</th><th>Đặc điểm</th></tr></thead><tbody><tr><td><strong>Snowcone</strong></td><td>Nhỏ nhất, xách tay được, dung lượng vài TB, có thể chạy edge computing</td></tr><tr><td><strong>Snowball Edge</strong></td><td>Dung lượng hàng chục TB, có bản Storage Optimized và Compute Optimized (chạy được EC2/Lambda ngay trên thiết bị)</td></tr><tr><td><strong>Snowmobile</strong></td><td>Container chuyên dụng kéo bằng xe tải, quy mô <strong>exabyte</strong> — chỉ dùng cho migration cực lớn (data center to data center)</td></tr></tbody></table></div>
+<h3 id="61-ví-dụ-tính-toán-khi-nào-cần-snowball-thay-vì-truyền-qua-mạng">6.1 Ví dụ tính toán: khi nào cần Snowball thay vì truyền qua mạng?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-ví-dụ-tính-toán-khi-nào-cần-snowball-thay-vì-truyền-qua-mạng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bài toán slide gốc: chuyển <strong>200 TB</strong> dữ liệu lên cloud, đường truyền internet <strong>100 Mbps</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Thời gian ước tính</th><th>Ghi chú</th></tr></thead><tbody><tr><td><strong>Internet / Site-to-Site VPN (100 Mbps)</strong></td><td>200×1000×1000×8 ÷ 100 Mbps ≈ 16.000.000s ≈ <strong>185 ngày</strong></td><td>Dễ setup ngay, nhưng quá chậm</td></tr><tr><td><strong>Direct Connect 1 Gbps</strong></td><td>200×1000×8 ÷ 1 Gbps ≈ 1.600.000s ≈ <strong>18,5 ngày</strong></td><td>Nhanh hơn hẳn, nhưng setup lần đầu <strong>mất hơn 1 tháng</strong></td></tr><tr><td><strong>AWS Snowball</strong></td><td>Khoảng <strong>1 tuần</strong> end-to-end (đóng gói + ship + upload)</td><td>Có thể <strong>kết hợp với DMS</strong> để migrate database luôn trong lúc chuyển</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Công thức nhớ nhanh:</strong> thời gian (giây) ≈ dung lượng dữ liệu (đổi ra <strong>bit</strong>) ÷ băng thông (bit/s). Nếu con số ra <strong>nhiều tuần trở lên</strong> và deadline gấp → chọn <strong>Snow Family</strong>. Nếu là <strong>replication/transfer diễn ra liên tục, lâu dài</strong> (không phải một lần) → <strong>Site-to-Site VPN hoặc Direct Connect</strong>, kết hợp <strong>DMS</strong> (database) hoặc <strong>DataSync</strong> (file).</p>
+</blockquote>
+<hr/>
+<h2 id="7-so-sánh--chọn-đáp-án-thi">7. So sánh &amp; chọn đáp án thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-so-sánh--chọn-đáp-án-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Từ khoá trong đề bài</th><th>Chọn</th></tr></thead><tbody><tr><td>RTO/RPO gần bằng 0, sẵn sàng chi tối đa</td><td><strong>Multi-Site / Active-Active</strong></td></tr><tr><td>Ngân sách eo hẹp, chấp nhận downtime vài ngày</td><td><strong>Backup &amp; Restore</strong></td></tr><tr><td>Chỉ cần giữ database “ấm”, tắt hẳn compute</td><td><strong>Pilot Light</strong></td></tr><tr><td>Hệ thống chạy quy mô nhỏ 24/7, scale khi có sự cố</td><td><strong>Warm Standby</strong></td></tr><tr><td>Continuous block-level replication, protect ransomware</td><td><strong>AWS Elastic Disaster Recovery (DRS)</strong></td></tr><tr><td>Cần <strong>failback</strong> về nguồn sau sự cố</td><td><strong>DRS</strong> (không phải MGN)</td></tr><tr><td>Migrate server một lần, xong thì thôi, không cần quay lại</td><td><strong>AWS Application Migration Service (MGN)</strong></td></tr><tr><td>Database nguồn phải <strong>luôn khả dụng</strong> trong lúc migrate</td><td><strong>AWS DMS</strong></td></tr><tr><td>Migrate khác <strong>engine</strong> database (vd Oracle → Aurora)</td><td><strong>DMS + SCT</strong></td></tr><tr><td>Migrate <strong>cùng engine</strong> (vd PostgreSQL on-prem → RDS PostgreSQL)</td><td><strong>DMS</strong> (không cần SCT)</td></tr><tr><td>Multi-AZ để loại bỏ I/O freeze cho replication instance</td><td><strong>DMS Multi-AZ Deployment</strong></td></tr><tr><td>Cần biết server nào phụ thuộc server nào trước khi migrate</td><td><strong>AWS Application Discovery Service</strong> (+ theo dõi ở Migration Hub)</td></tr><tr><td>Backup tập trung nhiều dịch vụ, chống ransomware xoá backup</td><td><strong>AWS Backup</strong> + <strong>Vault Lock</strong></td></tr><tr><td>Giữ VMware vSphere, chỉ mở rộng sang AWS</td><td><strong>VMware Cloud on AWS</strong></td></tr><tr><td>Băng thông mạng không đủ để chuyển dữ liệu lớn đúng hạn</td><td><strong>AWS Snow Family</strong></td></tr><tr><td>Chuyển dữ liệu lớn kèm luôn cả database</td><td><strong>Snowball + DMS</strong></td></tr><tr><td>Transfer/replication diễn ra <strong>liên tục, lâu dài</strong></td><td><strong>Site-to-Site VPN / Direct Connect + DMS hoặc DataSync</strong></td></tr></tbody></table></div>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>RPO</strong> nhìn về trước sự cố (mất bao nhiêu dữ liệu), <strong>RTO</strong> nhìn về sau sự cố (downtime bao lâu).</li>
+<li>Thuộc lòng bảng <strong>4 chiến lược DR</strong>: Backup &amp; Restore → Pilot Light → Warm Standby → Multi-Site/Active-Active — RTO giảm dần, chi phí tăng dần. Phân biệt Pilot Light vs Warm Standby ở <strong>tầng compute</strong> (tắt hẳn vs chạy quy mô nhỏ).</li>
+<li><strong>Multi-AZ = High Availability</strong>, không phải Disaster Recovery. Đề hỏi bảo vệ khỏi mất cả Region → cần từ khoá <strong>Cross-Region / Global</strong>.</li>
+<li><strong>AWS Elastic Disaster Recovery (DRS)</strong> (tên cũ CloudEndure DR): continuous block-level replication (giây), staging area giá rẻ, failover (phút), <strong>hỗ trợ failback</strong>.</li>
+<li><strong>AWS Application Migration Service (MGN)</strong> (tên cũ CloudEndure Migration, thay AWS SMS): kiến trúc giống DRS nhưng dùng cho <strong>migrate một lần</strong> (cutover), <strong>không có failback</strong>.</li>
+<li><strong>DMS</strong>: database nguồn <strong>luôn khả dụng</strong> khi migrate; dùng <strong>CDC</strong> cho continuous replication; bắt buộc <strong>1 EC2 replication instance</strong>; hỗ trợ cả homogeneous lẫn heterogeneous; Multi-AZ tạo standby <strong>đồng bộ</strong>, giảm I/O freeze.</li>
+<li><strong>SCT</strong> chỉ cần khi <strong>khác engine</strong> (heterogeneous). Cùng engine (vd PostgreSQL → RDS PostgreSQL) thì <strong>không cần SCT</strong>.</li>
+<li>RDS MySQL → Aurora MySQL: <strong>snapshot restore</strong> (nhanh, đơn giản) hoặc <strong>read replica promote</strong> (downtime thấp hơn, tốn thời gian/chi phí hơn). External MySQL: <strong>Percona XtraBackup qua S3</strong> nhanh hơn <code>mysqldump</code>.</li>
+<li><strong>AWS Application Discovery Service</strong>: Agentless (Discovery Connector, chỉ VM) vs Agent-based (Discovery Agent, cả process + network) — dữ liệu tập hợp ở <strong>Migration Hub</strong>.</li>
+<li><strong>AWS Backup Vault Lock</strong> = WORM, <strong>kể cả root cũng không xoá được</strong> backup khi bật.</li>
+<li><strong>Snow Family</strong>: tính toán thời gian truyền qua mạng trước, nếu quá lâu (nhiều tuần) → chọn Snowball; <strong>replication liên tục lâu dài</strong> thì vẫn nên VPN/Direct Connect + DMS/DataSync, Snow Family chỉ hợp với <strong>one-time transfer</strong>.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Chủ đề này chia làm 2 nửa rất rõ: <strong>DR (chuẩn bị cho sự cố)</strong> và <strong>Migration (chuyển hẳn đi)</strong> — dễ nhầm vì AWS dùng chung “họ” công cụ (DRS/MGN cùng gốc CloudEndure, kiến trúc gần giống hệt nhau). Câu hỏi tự kiểm tra khi làm đề: “hệ thống có cần quay lại nguồn không?” — có thì DR, không thì Migration.</li>
+<li>Bảng 4 chiến lược DR là thứ đáng học thuộc lòng nhất trong cả bài — gần như chắc chắn xuất hiện trong đề thi thật dưới dạng tình huống (mô tả RTO/RPO/ngân sách rồi hỏi chọn chiến lược nào).</li>
+<li>Phần Migration (DMS/SCT) dễ nhầm với phần Data &amp; Analytics ở <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/22---data--and--analytics" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/22---data--and--analytics">22 - Data &amp; Analytics</a> vì cũng có ETL, cũng có S3 — khác biệt là DMS làm việc <strong>giữa 2 database sống</strong>, còn Glue làm ETL <strong>trên file tĩnh trong S3</strong>.</li>
+<li>Snow Family là ví dụ hiếm hoi trong khoá học có bài toán tính toán số học cụ thể (băng thông × thời gian) — nên nhớ công thức thay vì nhớ số, vì đề thi hay đổi số liệu.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>RPO vs RTO</li>
+<li>Bốn chiến lược DR (Backup &amp; Restore / Pilot Light / Warm Standby / Multi-Site Active-Active)</li>
+<li>AWS Elastic Disaster Recovery (DRS) — continuous block-level replication + failback</li>
+<li>AWS Application Migration Service (MGN) vs DRS — migration một lần vs DR liên tục</li>
+<li>AWS DMS — CDC, Multi-AZ, homogeneous vs heterogeneous</li>
+<li>AWS Schema Conversion Tool (SCT) — khi nào cần, khi nào không</li>
+<li>RDS MySQL/PostgreSQL → Aurora — các phương án migrate</li>
+<li>AWS Application Discovery Service (Agentless vs Agent-based) + Migration Hub</li>
+<li>AWS Backup Vault Lock (WORM)</li>
+<li>VMware Cloud on AWS</li>
+<li>AWS Snow Family — công thức tính thời gian truyền dữ liệu qua mạng</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-96" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#28--disaster-recovery--migrations-rporto-dms-snow-family" data-for="28--disaster-recovery--migrations-rporto-dms-snow-family">28 – Disaster Recovery &amp; Migrations: RPO/RTO, DMS, Snow Family</a></li><li class="depth-1"><a href="#1-disaster-recovery-overview" data-for="1-disaster-recovery-overview">1. Disaster Recovery Overview</a></li><li class="depth-2"><a href="#11-ba-dạng-dr-theo-đích-đến" data-for="11-ba-dạng-dr-theo-đích-đến">1.1 Ba dạng DR theo đích đến</a></li><li class="depth-2"><a href="#12-rpo-và-rto--hai-trục-quyết-định-mọi-thứ" data-for="12-rpo-và-rto--hai-trục-quyết-định-mọi-thứ">1.2 RPO và RTO — hai trục quyết định mọi thứ</a></li><li class="depth-2"><a href="#13-bộ-công-cụ-aws-hỗ-trợ-dr-theo-tầng" data-for="13-bộ-công-cụ-aws-hỗ-trợ-dr-theo-tầng">1.3 Bộ công cụ AWS hỗ trợ DR (theo tầng)</a></li><li class="depth-1"><a href="#2-bốn-chiến-lược-dr--câu-hỏi-thi-kinh-điển-nhất" data-for="2-bốn-chiến-lược-dr--câu-hỏi-thi-kinh-điển-nhất">2. Bốn chiến lược DR — câu hỏi thi kinh điển nhất</a></li><li class="depth-2"><a href="#21-chi-tiết-từng-chiến-lược" data-for="21-chi-tiết-từng-chiến-lược">2.1 Chi tiết từng chiến lược</a></li><li class="depth-1"><a href="#3-aws-elastic-disaster-recovery-drs" data-for="3-aws-elastic-disaster-recovery-drs">3. AWS Elastic Disaster Recovery (DRS)</a></li><li class="depth-1"><a href="#4-migration-dữ-liệu--database" data-for="4-migration-dữ-liệu--database">4. Migration dữ liệu &amp; database</a></li><li class="depth-2"><a href="#41-aws-database-migration-service-dms" data-for="41-aws-database-migration-service-dms">4.1 AWS Database Migration Service (DMS)</a></li><li class="depth-2"><a href="#42-aws-schema-conversion-tool-sct" data-for="42-aws-schema-conversion-tool-sct">4.2 AWS Schema Conversion Tool (SCT)</a></li><li class="depth-2"><a href="#43-ví-dụ-thực-tế-rds-mysql--aurora-mysql" data-for="43-ví-dụ-thực-tế-rds-mysql--aurora-mysql">4.3 Ví dụ thực tế: RDS MySQL → Aurora MySQL</a></li><li class="depth-2"><a href="#44-aws-application-migration-service-mgn" data-for="44-aws-application-migration-service-mgn">4.4 AWS Application Migration Service (MGN)</a></li><li class="depth-2"><a href="#45-aws-application-discovery-service--aws-migration-hub" data-for="45-aws-application-discovery-service--aws-migration-hub">4.5 AWS Application Discovery Service + AWS Migration Hub</a></li><li class="depth-2"><a href="#46-vm-importexport--vmware-cloud-on-aws" data-for="46-vm-importexport--vmware-cloud-on-aws">4.6 VM Import/Export &amp; VMware Cloud on AWS</a></li><li class="depth-1"><a href="#5-aws-backup--sao-lưu-tập-trung" data-for="5-aws-backup--sao-lưu-tập-trung">5. AWS Backup — sao lưu tập trung</a></li><li class="depth-1"><a href="#6-aws-snow-family--chuyển-dữ-liệu-offline" data-for="6-aws-snow-family--chuyển-dữ-liệu-offline">6. AWS Snow Family — chuyển dữ liệu offline</a></li><li class="depth-2"><a href="#61-ví-dụ-tính-toán-khi-nào-cần-snowball-thay-vì-truyền-qua-mạng" data-for="61-ví-dụ-tính-toán-khi-nào-cần-snowball-thay-vì-truyền-qua-mạng">6.1 Ví dụ tính toán: khi nào cần Snowball thay vì truyền qua mạng?</a></li><li class="depth-1"><a href="#7-so-sánh--chọn-đáp-án-thi" data-for="7-so-sánh--chọn-đáp-án-thi">7. So sánh &amp; chọn đáp án thi</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

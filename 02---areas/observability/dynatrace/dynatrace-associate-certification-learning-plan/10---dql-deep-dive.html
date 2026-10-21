@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>10 - DQL Deep Dive</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="10 - DQL Deep Dive"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="10 - DQL Deep Dive"/><meta name="twitter:description" content="# DQL Deep Dive — Dynatrace Query Language Chi Tiết DQL (Dynatrace Query Language) là ngôn ngữ query cho Grail — data lakehouse của Dynatrace."/><meta property="og:description" content="# DQL Deep Dive — Dynatrace Query Language Chi Tiết DQL (Dynatrace Query Language) là ngôn ngữ query cho Grail — data lakehouse của Dynatrace."/><meta property="og:image:alt" content="# DQL Deep Dive — Dynatrace Query Language Chi Tiết DQL (Dynatrace Query Language) là ngôn ngữ query cho Grail — data lakehouse của Dynatrace."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/10---dql-deep-dive"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/10---dql-deep-dive"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="# DQL Deep Dive — Dynatrace Query Language Chi Tiết DQL (Dynatrace Query Language) là ngôn ngữ query cho Grail — data lakehouse của Dynatrace."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/10---dql-deep-dive" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-415" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-415" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/">Dynatrace</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/">Dynatrace Associate Certification Learning Plan</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>10 - DQL Deep Dive</a></div></nav><h1 class="article-title">10 - DQL Deep Dive</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/dynatrace" class="internal internal-link tag-link">domain/dynatrace</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-03-31T17:00:00.000Z">01 thg 4, 2026</time><span>14 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p>﻿# DQL Deep Dive — Dynatrace Query Language Chi Tiết</p>
+<p>DQL (Dynatrace Query Language) là ngôn ngữ query cho <strong>Grail</strong> — data lakehouse của Dynatrace. DQL được dùng trong <strong>Dashboards, Notebooks, Logs App, Traces App</strong> và là phần <strong>thiết yếu cho thi</strong> (cả phần trắc nghiệm lẫn phần hands-on thực hành).</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>IMPORTANT</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Phần hands-on thực hành</strong> trong kỳ thi cho phép <strong>open book</strong> (tham khảo Dynatrace Documentation). Tuy nhiên, nếu không quen DQL syntax → sẽ <strong>mất rất nhiều thời gian</strong> tra cứu. Học trước = thi nhanh hơn.</p>
+</div>
+</blockquote>
+<hr/>
+<h1 id="phần-1-dql-là-gì-">Phần 1: DQL Là Gì? ⭐<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-1-dql-là-gì-" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="định-nghĩa">Định Nghĩa<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#định-nghĩa" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>DQL = ngôn ngữ query truy vấn trực tiếp Grail</strong> để lấy, lọc, biến đổi, và tổng hợp observability data.</p>
+<pre><code>Kiến trúc:
+
+  Dashboards ─┐
+  Notebooks ──┤
+  Logs App ───┤── DQL Query ──→ Grail (Data Lakehouse) ──→ Results
+  Traces App ─┤
+  API ────────┘
+
+  DQL là &quot;ngôn ngữ giao tiếp&quot; giữa bạn và Grail
+</code></pre>
+<h2 id="dql-vs-sql-">DQL vs SQL ⭐<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dql-vs-sql-" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th>DQL</th><th>SQL</th></tr></thead><tbody><tr><td><strong>Data source</strong></td><td>Grail (data lakehouse)</td><td>Relational database (tables)</td></tr><tr><td><strong>Schema</strong></td><td><strong>Schema-less</strong> — không cần define schema trước</td><td>Schema bắt buộc (CREATE TABLE)</td></tr><tr><td><strong>Processing</strong></td><td><strong>Pipeline</strong> (sequential, left → right)</td><td>Declarative (optimizer tự chọn execution plan)</td></tr><tr><td><strong>Syntax</strong></td><td><code>fetch → filter → summarize</code> (pipe <code>|</code>)</td><td><code>SELECT → FROM → WHERE → GROUP BY</code></td></tr><tr><td><strong>Bắt đầu bằng</strong></td><td><code>fetch</code> (lấy data)</td><td><code>SELECT</code> (chọn columns)</td></tr></tbody></table></div>
+<h2 id="so-sánh-cú-pháp-cơ-bản">So Sánh Cú Pháp Cơ Bản<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh-cú-pháp-cơ-bản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thao tác</th><th>DQL</th><th>SQL</th></tr></thead><tbody><tr><td><strong>Lấy tất cả</strong></td><td><code>fetch events</code></td><td><code>SELECT * FROM events</code></td></tr><tr><td><strong>Lọc</strong></td><td><code>fetch events | filter type == &quot;error&quot;</code></td><td><code>SELECT * FROM events WHERE type = 'error'</code></td></tr><tr><td><strong>Chọn fields</strong></td><td><code>fetch events | fields name, status</code></td><td><code>SELECT name, status FROM events</code></td></tr><tr><td><strong>Sắp xếp</strong></td><td><code>fetch events | sort timestamp desc</code></td><td><code>SELECT * FROM events ORDER BY timestamp DESC</code></td></tr><tr><td><strong>Đếm</strong></td><td><code>fetch events | summarize count()</code></td><td><code>SELECT COUNT(*) FROM events</code></td></tr><tr><td><strong>Nhóm</strong></td><td><code>fetch events | summarize count(), by:type</code></td><td><code>SELECT type, COUNT(*) FROM events GROUP BY type</code></td></tr></tbody></table></div>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>NOTE</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>DQL xử lý data <strong>tuần tự theo pipeline</strong> (bước 1 → bước 2 → bước 3). Mỗi bước nhận output từ bước trước làm input. Giống Unix pipes (<code>cat file | grep error | sort</code>).</p>
+</div>
+</blockquote>
+<p><strong>Tham khảo:</strong> <a href="https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/dql-comparison" class="external external-link">DQL compared to SQL and more<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<hr/>
+<h1 id="phần-2-cấu-trúc-dql-query-">Phần 2: Cấu Trúc DQL Query ⭐⭐<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-2-cấu-trúc-dql-query-" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="pipeline-model">Pipeline Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pipeline-model" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Mọi DQL query đều tuân theo pattern:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch &lt;data_type>           ← Bước 1: LẤY data từ Grail</span></span>
+<span data-line><span>| filter &lt;condition>        ← Bước 2: LỌC records</span></span>
+<span data-line><span>| fields &lt;field1>, &lt;field2> ← Bước 3: CHỌN fields cần hiển thị</span></span>
+<span data-line><span>| sort &lt;field> desc         ← Bước 4: SẮP XẾP</span></span>
+<span data-line><span>| limit &lt;number>            ← Bước 5: GIỚI HẠN kết quả</span></span></code></pre></figure>
+<p>Pipe <code>|</code> = <strong>chuyển output</strong> từ command trước sang command sau.</p>
+<h2 id="data-types-trong-fetch-">Data Types trong <code>fetch</code> ⭐<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#data-types-trong-fetch-" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><code>fetch</code> là command đầu tiên — chỉ định <strong>loại data</strong> cần lấy từ Grail:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Data type</th><th>Mô tả</th><th>Ví dụ</th></tr></thead><tbody><tr><td><code>logs</code></td><td>Log entries từ mọi nguồn</td><td><code>fetch logs</code></td></tr><tr><td><code>dt.entity.host</code></td><td>Host entities</td><td><code>fetch dt.entity.host</code></td></tr><tr><td><code>dt.entity.service</code></td><td>Service entities</td><td><code>fetch dt.entity.service</code></td></tr><tr><td><code>spans</code></td><td>Distributed traces (spans)</td><td><code>fetch spans</code></td></tr><tr><td><code>bizevents</code></td><td>Business events</td><td><code>fetch bizevents</code></td></tr><tr><td><code>events</code></td><td>Davis events (problems, info, deployment)</td><td><code>fetch events</code></td></tr><tr><td><code>dt.metrics</code></td><td>Metrics data (cú pháp đặc biệt)</td><td><code>timeseries avg(dt.host.cpu.usage)</code></td></tr></tbody></table></div>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>WARNING</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Metrics dùng cú pháp khác!</strong> Thay vì <code>fetch</code>, metrics dùng <code>timeseries</code>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>timeseries avg(dt.host.cpu.usage), by:{dt.entity.host}</span></span></code></pre></figure>
+<p>Đây là điểm hay gây nhầm lẫn trong thi.</p>
+</div>
+</blockquote>
+<hr/>
+<h1 id="phần-3-commands--các-lệnh-chính-">Phần 3: Commands — Các Lệnh Chính ⭐⭐<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-3-commands--các-lệnh-chính-" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tổng-quan-commands">Tổng Quan Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-quan-commands" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Category</th><th>Commands</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Fetching</strong></td><td><code>fetch</code>, <code>timeseries</code></td><td>Lấy data từ Grail</td></tr><tr><td><strong>Filtering</strong></td><td><code>filter</code></td><td>Lọc records theo conditions</td></tr><tr><td><strong>Selection</strong></td><td><code>fields</code>, <code>fieldsAdd</code>, <code>fieldsRemove</code></td><td>Chọn/thêm/xóa fields</td></tr><tr><td><strong>Aggregation</strong></td><td><code>summarize</code></td><td>Nhóm và tính toán aggregate</td></tr><tr><td><strong>Ordering</strong></td><td><code>sort</code>, <code>limit</code></td><td>Sắp xếp và giới hạn kết quả</td></tr><tr><td><strong>Parsing</strong></td><td><code>parse</code></td><td>Trích xuất data từ raw text</td></tr><tr><td><strong>Joining</strong></td><td><code>join</code>, <code>lookup</code></td><td>Kết hợp data từ nhiều sources</td></tr></tbody></table></div>
+<h2 id="chi-tiết-từng-command">Chi Tiết Từng Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chi-tiết-từng-command" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="fetch--lấy-data"><code>fetch</code> — Lấy Data<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fetch--lấy-data" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Lấy tất cả logs</span></span>
+<span data-line><span>fetch logs</span></span>
+<span data-line> </span>
+<span data-line><span>// Lấy logs trong 2 giờ gần nhất</span></span>
+<span data-line><span>fetch logs, from:now()-2h</span></span>
+<span data-line> </span>
+<span data-line><span>// Lấy host entities</span></span>
+<span data-line><span>fetch dt.entity.host</span></span></code></pre></figure>
+<h3 id="filter--lọc-data"><code>filter</code> — Lọc Data<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#filter--lọc-data" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Lọc theo giá trị chính xác</span></span>
+<span data-line><span>| filter loglevel == &quot;ERROR&quot;</span></span>
+<span data-line> </span>
+<span data-line><span>// Lọc nhiều điều kiện (AND)</span></span>
+<span data-line><span>| filter loglevel == &quot;ERROR&quot; and dt.entity.host == &quot;HOST-ABC123&quot;</span></span>
+<span data-line> </span>
+<span data-line><span>// Lọc chứa text (contains)</span></span>
+<span data-line><span>| filter content contains &quot;timeout&quot;</span></span>
+<span data-line> </span>
+<span data-line><span>// Lọc điều kiện OR</span></span>
+<span data-line><span>| filter status == &quot;ACTIVE&quot; or status == &quot;WARNING&quot;</span></span>
+<span data-line> </span>
+<span data-line><span>// Lọc so sánh số</span></span>
+<span data-line><span>| filter response_time > 5000</span></span></code></pre></figure>
+<p><strong>Operators trong <code>filter</code>:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Operator</th><th>Ý nghĩa</th><th>Ví dụ</th></tr></thead><tbody><tr><td><code>==</code></td><td>Bằng</td><td><code>filter status == &quot;ERROR&quot;</code></td></tr><tr><td><code>!=</code></td><td>Khác</td><td><code>filter status != &quot;OK&quot;</code></td></tr><tr><td><code>></code>, <code>&lt;</code>, <code>>=</code>, <code>&lt;=</code></td><td>So sánh</td><td><code>filter cpu > 90</code></td></tr><tr><td><code>contains</code></td><td>Chứa text</td><td><code>filter content contains &quot;warning&quot;</code></td></tr><tr><td><code>startsWith</code></td><td>Bắt đầu bằng</td><td><code>filter name startsWith &quot;prod&quot;</code></td></tr><tr><td><code>endsWith</code></td><td>Kết thúc bằng</td><td><code>filter log.source endsWith &quot;pgi.log&quot;</code></td></tr><tr><td><code>and</code>, <code>or</code>, <code>not</code></td><td>Logic</td><td><code>filter a == 1 and b == 2</code></td></tr><tr><td><code>in</code></td><td>Trong danh sách</td><td><code>filter status in (&quot;ERROR&quot;, &quot;FATAL&quot;)</code></td></tr><tr><td><code>isNotNull</code></td><td>Không null</td><td><code>filter isNotNull(user.id)</code></td></tr></tbody></table></div>
+<h3 id="fields--chọn-fields"><code>fields</code> — Chọn Fields<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fields--chọn-fields" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Chỉ hiển thị fields cần thiết</span></span>
+<span data-line><span>| fields timestamp, content, loglevel</span></span>
+<span data-line> </span>
+<span data-line><span>// Thêm field mới (tính toán)</span></span>
+<span data-line><span>| fieldsAdd duration_ms = duration / 1000000</span></span>
+<span data-line> </span>
+<span data-line><span>// Xóa field không cần</span></span>
+<span data-line><span>| fieldsRemove __metadata</span></span></code></pre></figure>
+<h3 id="summarize--tổng-hợp-"><code>summarize</code> — Tổng Hợp ⭐⭐<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#summarize--tổng-hợp-" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Đếm tổng records</span></span>
+<span data-line><span>| summarize count()</span></span>
+<span data-line> </span>
+<span data-line><span>// Đếm theo nhóm</span></span>
+<span data-line><span>| summarize count(), by:{loglevel}</span></span>
+<span data-line> </span>
+<span data-line><span>// Nhiều aggregations</span></span>
+<span data-line><span>| summarize </span></span>
+<span data-line><span>    total = count(),</span></span>
+<span data-line><span>    errors = countIf(loglevel == &quot;ERROR&quot;),</span></span>
+<span data-line><span>    avg_response = avg(response_time),</span></span>
+<span data-line><span>    by:{dt.entity.service}</span></span>
+<span data-line> </span>
+<span data-line><span>// Đặt tên cho aggregate field</span></span>
+<span data-line><span>| summarize error_count = count(), by:{host.name}</span></span></code></pre></figure>
+<p><strong>Aggregation functions phổ biến:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Function</th><th>Mô tả</th><th>Ví dụ</th></tr></thead><tbody><tr><td><code>count()</code></td><td>Đếm records</td><td><code>summarize count()</code></td></tr><tr><td><code>countIf(condition)</code></td><td>Đếm có điều kiện</td><td><code>countIf(status >= 400)</code></td></tr><tr><td><code>sum(field)</code></td><td>Tổng</td><td><code>sum(bytes_sent)</code></td></tr><tr><td><code>avg(field)</code></td><td>Trung bình</td><td><code>avg(response_time)</code></td></tr><tr><td><code>min(field)</code> / <code>max(field)</code></td><td>Min/Max</td><td><code>max(cpu.usage)</code></td></tr><tr><td><code>percentile(field, p)</code></td><td>Percentile</td><td><code>percentile(duration, 95)</code></td></tr></tbody></table></div>
+<h3 id="sort--limit--sắp-xếp--giới-hạn"><code>sort</code> &amp; <code>limit</code> — Sắp Xếp &amp; Giới Hạn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sort--limit--sắp-xếp--giới-hạn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Sắp xếp theo response time giảm dần</span></span>
+<span data-line><span>| sort response_time desc</span></span>
+<span data-line> </span>
+<span data-line><span>// Chỉ lấy top 10</span></span>
+<span data-line><span>| limit 10</span></span>
+<span data-line> </span>
+<span data-line><span>// Kết hợp: Top 10 slowest services</span></span>
+<span data-line><span>| sort avg_response desc</span></span>
+<span data-line><span>| limit 10</span></span></code></pre></figure>
+<h3 id="parse--trích-xuất-data"><code>parse</code> — Trích Xuất Data<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#parse--trích-xuất-data" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Parse IP address và HTTP status từ raw log</span></span>
+<span data-line><span>| parse content, &quot;LD IPADDR:ip ':' LONG:port LD 'HTTP/' LD INT:http_status&quot;</span></span>
+<span data-line> </span>
+<span data-line><span>// Kết quả: thêm fields ip, port, http_status vào mỗi record</span></span></code></pre></figure>
+<hr/>
+<h1 id="phần-4-ví-dụ-queries-thực-tế--exam-relevant">Phần 4: Ví Dụ Queries Thực Tế ⭐⭐ EXAM-RELEVANT<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-4-ví-dụ-queries-thực-tế--exam-relevant" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="41-logs--tìm-error-logs">4.1 Logs — Tìm Error Logs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-logs--tìm-error-logs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Tìm tất cả ERROR logs trong 1 giờ gần nhất</span></span>
+<span data-line><span>fetch logs, from:now()-1h</span></span>
+<span data-line><span>| filter loglevel == &quot;ERROR&quot;</span></span>
+<span data-line><span>| sort timestamp desc</span></span>
+<span data-line><span>| limit 50</span></span></code></pre></figure>
+<h2 id="42-logs--đếm-errors-theo-host">4.2 Logs — Đếm Errors Theo Host<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-logs--đếm-errors-theo-host" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Đếm error logs theo từng host</span></span>
+<span data-line><span>fetch logs, from:now()-24h</span></span>
+<span data-line><span>| filter loglevel == &quot;ERROR&quot;</span></span>
+<span data-line><span>| summarize error_count = count(), by:{host.name}</span></span>
+<span data-line><span>| sort error_count desc</span></span></code></pre></figure>
+<h2 id="43-business-events--phân-tích-checkout">4.3 Business Events — Phân Tích Checkout<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-business-events--phân-tích-checkout" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Lấy checkout business events</span></span>
+<span data-line><span>fetch bizevents</span></span>
+<span data-line><span>| filter event.type == &quot;checkout.completed&quot;</span></span>
+<span data-line><span>| summarize </span></span>
+<span data-line><span>    total_orders = count(),</span></span>
+<span data-line><span>    avg_cart_value = avg(cart_total),</span></span>
+<span data-line><span>    total_revenue = sum(cart_total)</span></span></code></pre></figure>
+<h2 id="44-spans--tìm-slow-requests">4.4 Spans — Tìm Slow Requests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#44-spans--tìm-slow-requests" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Tìm requests chậm hơn 5 giây</span></span>
+<span data-line><span>fetch spans</span></span>
+<span data-line><span>| filter duration > 5000000000    // duration tính bằng nanoseconds</span></span>
+<span data-line><span>| fields timestamp, span.name, duration, dt.entity.service</span></span>
+<span data-line><span>| sort duration desc</span></span>
+<span data-line><span>| limit 20</span></span></code></pre></figure>
+<h2 id="45-events--xem-davis-problems">4.5 Events — Xem Davis Problems<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#45-events--xem-davis-problems" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Xem problems trong tuần qua</span></span>
+<span data-line><span>fetch events, from:now()-7d</span></span>
+<span data-line><span>| filter event.kind == &quot;DAVIS_PROBLEM&quot;</span></span>
+<span data-line><span>| fields timestamp, display_id, title, event.status</span></span>
+<span data-line><span>| sort timestamp desc</span></span></code></pre></figure>
+<h2 id="46-entities--liệt-kê-hosts">4.6 Entities — Liệt Kê Hosts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#46-entities--liệt-kê-hosts" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Lấy tất cả hosts với OS info</span></span>
+<span data-line><span>fetch dt.entity.host</span></span>
+<span data-line><span>| fields entity.name, osType, monitoringMode</span></span>
+<span data-line><span>| sort entity.name asc</span></span></code></pre></figure>
+<h2 id="47-metrics--cpu-usage-trend">4.7 Metrics — CPU Usage Trend<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#47-metrics--cpu-usage-trend" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Trung bình CPU usage theo host trong 6 giờ</span></span>
+<span data-line><span>timeseries avg(dt.host.cpu.usage), by:{dt.entity.host}</span></span></code></pre></figure>
+<h2 id="48-logs--parse--aggregate">4.8 Logs — Parse &amp; Aggregate<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#48-logs--parse--aggregate" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Parse log content và tìm top IPs có nhiều failed requests</span></span>
+<span data-line><span>fetch logs, from:now()-4h</span></span>
+<span data-line><span>| filter log.source endsWith &quot;access.log&quot;</span></span>
+<span data-line><span>| parse content, &quot;IPADDR:client_ip LD 'HTTP/' LD INT:http_status&quot;</span></span>
+<span data-line><span>| summarize </span></span>
+<span data-line><span>    failed = countIf(http_status >= 400),</span></span>
+<span data-line><span>    success = countIf(http_status &lt; 400),</span></span>
+<span data-line><span>    by:{client_ip}</span></span>
+<span data-line><span>| sort failed desc</span></span>
+<span data-line><span>| limit 10</span></span></code></pre></figure>
+<hr/>
+<h1 id="phần-5-dql-trong-dashboard--notebook">Phần 5: DQL Trong Dashboard &amp; Notebook<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-5-dql-trong-dashboard--notebook" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="mỗi-dashboard-tile--1-dql-query">Mỗi Dashboard Tile = 1 DQL Query<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mỗi-dashboard-tile--1-dql-query" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>Dashboard Tile &quot;Error Rate by Service&quot;:
+  Query:
+    fetch logs, from:now()-1h
+    | filter loglevel == &quot;ERROR&quot;
+    | summarize error_count = count(), by:{dt.entity.service}
+    | sort error_count desc
+  
+  Visualization: Bar Chart
+</code></pre>
+<h2 id="notebook--dql--markdown--frozen-data">Notebook = DQL + Markdown + Frozen Data<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#notebook--dql--markdown--frozen-data" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>Section 1: [Markdown] &quot;Black Friday 2025 Post-Mortem&quot;
+
+Section 2: [DQL Query]
+  fetch events, from:2025-11-28, to:2025-11-29
+  | filter event.kind == &quot;DAVIS_PROBLEM&quot;
+  | summarize problem_count = count(), by:{ bin(timestamp, 1h) }
+  → Chart: Problems per hour during Black Friday
+  → Data FROZEN at query time (snapshot)
+
+Section 3: [Markdown] &quot;Root cause analysis...&quot;
+</code></pre>
+<h2 id="nơi-có-thể-viết-dql">Nơi Có Thể Viết DQL<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nơi-có-thể-viết-dql" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nơi</th><th>Cách dùng</th></tr></thead><tbody><tr><td><strong>Dashboards</strong></td><td>Mỗi tile chứa DQL query bên dưới</td></tr><tr><td><strong>Notebooks</strong></td><td>Sections với DQL queries (snapshot data)</td></tr><tr><td><strong>Logs App</strong></td><td>Filter UI tự generate DQL — bạn có thể edit</td></tr><tr><td><strong>Traces App</strong></td><td>Tương tự Logs App</td></tr><tr><td><strong>Data Explorer</strong></td><td>Visual builder → convert sang DQL</td></tr><tr><td><strong>API</strong></td><td>Gửi DQL queries qua API endpoint</td></tr><tr><td><strong>Workflows</strong></td><td>DQL trong automation triggers/actions</td></tr></tbody></table></div>
+<hr/>
+<h1 id="phần-6-tips--tricks-cho-thi-">Phần 6: Tips &amp; Tricks Cho Thi ⭐<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-6-tips--tricks-cho-thi-" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="những-lỗi-hay-gặp">Những Lỗi Hay Gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#những-lỗi-hay-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Lỗi</th><th>Đúng</th></tr></thead><tbody><tr><td><code>SELECT * FROM logs</code></td><td><code>fetch logs</code> — DQL KHÔNG dùng SELECT/FROM</td></tr><tr><td><code>fetch metrics</code></td><td><code>timeseries avg(dt.host.cpu.usage)</code> — Metrics dùng <code>timeseries</code></td></tr><tr><td><code>| where status = &quot;ERROR&quot;</code></td><td><code>| filter status == &quot;ERROR&quot;</code> — DQL dùng <code>filter</code> không phải <code>where</code>, dùng <code>==</code> không phải <code>=</code></td></tr><tr><td><code>| group by host</code></td><td><code>| summarize count(), by:{host}</code> — DQL dùng <code>summarize...by:{}</code> không phải <code>group by</code></td></tr></tbody></table></div>
+<h2 id="keywords-cần-nhớ-cho-thi">Keywords Cần Nhớ Cho Thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#keywords-cần-nhớ-cho-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Keyword</th><th>Ghi nhớ</th></tr></thead><tbody><tr><td><code>fetch</code></td><td><strong>Bắt đầu</strong> mọi query (trừ metrics)</td></tr><tr><td><code>filter</code></td><td><strong>Lọc</strong> records (tương đương WHERE trong SQL)</td></tr><tr><td><code>fields</code></td><td><strong>Chọn/hiển thị</strong> fields cụ thể</td></tr><tr><td><code>fieldsAdd</code></td><td><strong>Thêm</strong> field mới bằng tính toán</td></tr><tr><td><code>summarize</code></td><td><strong>Tổng hợp</strong> + nhóm (tương đương GROUP BY + aggregate trong SQL)</td></tr><tr><td><code>sort</code></td><td><strong>Sắp xếp</strong> (asc/desc)</td></tr><tr><td><code>limit</code></td><td><strong>Giới hạn</strong> số records</td></tr><tr><td><code>parse</code></td><td><strong>Trích xuất</strong> data từ raw text</td></tr><tr><td><code>timeseries</code></td><td><strong>Chỉ dùng cho metrics</strong> — không dùng fetch</td></tr><tr><td><code>by:{}</code></td><td>Dùng với <code>summarize</code> để <strong>nhóm theo fields</strong></td></tr><tr><td><code>pipe |</code></td><td><strong>Nối</strong> commands — output bước trước = input bước sau</td></tr></tbody></table></div>
+<h2 id="dql-không-cần-admin-rights">DQL Không Cần Admin Rights<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dql-không-cần-admin-rights" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>TIP</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Bất kỳ user nào có access vào Dynatrace đều có thể viết DQL (tùy thuộc data access via Management Zones). <strong>Không cần</strong> quyền Administrator. Đây là điểm hay ra thi.</p>
+</div>
+</blockquote>
+<h2 id="autocomplete--templates">Autocomplete &amp; Templates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#autocomplete--templates" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>DQL cung cấp:</p>
+<ul>
+<li><strong>Autocomplete</strong>: Gợi ý commands, fields khi gõ</li>
+<li><strong>Templates</strong>: Query mẫu cho use cases phổ biến</li>
+<li><strong>Data Explorer → DQL</strong>: Convert visual chart sang DQL query → learn by example</li>
+</ul>
+<p><strong>Tham khảo:</strong> <a href="https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/dql-reference" class="external external-link">DQL Language Reference<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<hr/>
+<h1 id="phần-7-practice-exercises--bài-tập-thực-hành">Phần 7: Practice Exercises — Bài Tập Thực Hành<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-7-practice-exercises--bài-tập-thực-hành" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>Dùng <a href="https://wkf10640.apps.dynatrace.com/ui/apps/dynatrace.learndql/" class="external external-link">Dynatrace Playground<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> để thực hành.</p>
+</blockquote>
+<h3 id="bài-1-tìm-error-logs">Bài 1: Tìm Error Logs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-1-tìm-error-logs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Yêu cầu</strong>: Lấy 20 error logs gần nhất, hiển thị timestamp, content, host.name</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Gợi ý: fetch logs | filter ... | fields ... | sort ... | limit ...</span></span></code></pre></figure>
+<details>
+<summary>Đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs</span></span>
+<span data-line><span>| filter loglevel == &quot;ERROR&quot;</span></span>
+<span data-line><span>| fields timestamp, content, host.name</span></span>
+<span data-line><span>| sort timestamp desc</span></span>
+<span data-line><span>| limit 20</span></span></code></pre></figure>
+</details>
+<h3 id="bài-2-đếm-logs-theo-level">Bài 2: Đếm Logs Theo Level<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-2-đếm-logs-theo-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Yêu cầu</strong>: Đếm số lượng logs theo từng loglevel trong 24 giờ qua</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Gợi ý: fetch ... | summarize ..., by:{...}</span></span></code></pre></figure>
+<details>
+<summary>Đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs, from:now()-24h</span></span>
+<span data-line><span>| summarize log_count = count(), by:{loglevel}</span></span>
+<span data-line><span>| sort log_count desc</span></span></code></pre></figure>
+</details>
+<h3 id="bài-3-top-5-services-có-nhiều-errors">Bài 3: Top 5 Services Có Nhiều Errors<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-3-top-5-services-có-nhiều-errors" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Yêu cầu</strong>: Tìm 5 services có nhiều error logs nhất trong 1 tuần</p>
+<details>
+<summary>Đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs, from:now()-7d</span></span>
+<span data-line><span>| filter loglevel == &quot;ERROR&quot;</span></span>
+<span data-line><span>| summarize error_count = count(), by:{dt.entity.service}</span></span>
+<span data-line><span>| sort error_count desc</span></span>
+<span data-line><span>| limit 5</span></span></code></pre></figure>
+</details>
+<h3 id="bài-4-business-events-analysis">Bài 4: Business Events Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-4-business-events-analysis" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Yêu cầu</strong>: Lấy tất cả business events, đếm theo event.type</p>
+<details>
+<summary>Đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch bizevents</span></span>
+<span data-line><span>| summarize event_count = count(), by:{event.type}</span></span>
+<span data-line><span>| sort event_count desc</span></span></code></pre></figure>
+</details>
+<h3 id="bài-5-problems-analysis">Bài 5: Problems Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-5-problems-analysis" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Yêu cầu</strong>: Xem problems trong 30 ngày, đếm theo severity</p>
+<details>
+<summary>Đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch events, from:now()-30d</span></span>
+<span data-line><span>| filter event.kind == &quot;DAVIS_PROBLEM&quot;</span></span>
+<span data-line><span>| summarize problem_count = count(), by:{event.status}</span></span>
+<span data-line><span>| sort problem_count desc</span></span></code></pre></figure>
+</details>
+<hr/>
+<h1 id="knowledge-check">Knowledge Check<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#knowledge-check" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h3 id="q1-what-does-the-pipe-symbol--do-in-a-dql-query">Q1: What does the pipe symbol <code>|</code> do in a DQL query?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q1-what-does-the-pipe-symbol--do-in-a-dql-query" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>A. It separates field names in a query.</li>
+<li>B. It passes the output of one command as input to the next command.</li>
+<li>C. It indicates the end of a DQL query.</li>
+<li>D. It creates a new data table in Grail.</li>
+</ul>
+<blockquote>
+<p><strong>Đáp án: B</strong> — It passes the output of one command as input to the next command (Chuyển output của command này sang command tiếp theo).</p>
+</blockquote>
+<p><strong>Tại sao B đúng?</strong></p>
+<p>DQL sử dụng <strong>pipeline model</strong>: mỗi command xử lý data → output trở thành input cho command tiếp theo qua pipe <code>|</code>.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs              → Lấy TẤT CẢ logs</span></span>
+<span data-line><span>| filter loglevel == &quot;ERROR&quot;  → Nhận ALL logs, chỉ giữ ERROR → output: chỉ ERROR logs</span></span>
+<span data-line><span>| sort timestamp desc         → Nhận ERROR logs, sắp xếp → output: sorted ERROR logs</span></span>
+<span data-line><span>| limit 10                    → Nhận sorted logs, chỉ giữ 10 → output: 10 records</span></span></code></pre></figure>
+<p>Giống Unix pipe: <code>cat access.log | grep ERROR | sort | head -10</code></p>
+<p><strong>Giải thích sai:</strong></p>
+<ul>
+<li><strong>A. Separates field names</strong>: Field names được phân tách bằng <strong>dấu phẩy</strong> <code>,</code> (VD: <code>fields name, status</code>), không phải pipe.</li>
+<li><strong>C. End of query</strong>: Query kết thúc tự nhiên sau command cuối. Pipe = <strong>tiếp tục</strong> xử lý, không phải kết thúc.</li>
+<li><strong>D. Creates data table</strong>: Pipe <strong>KHÔNG tạo</strong> tables. Grail lưu data sẵn. DQL chỉ <strong>query</strong> data, không modify Grail.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Exam tip:</strong> Pipe <code>|</code> = <strong>sequential processing</strong> = output → input. Keyword: “passes output”, “pipeline”.</p>
+</blockquote>
+<hr/>
+<h3 id="q2-which-command-is-used-to-retrieve-metric-data-in-dql">Q2: Which command is used to retrieve metric data in DQL?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q2-which-command-is-used-to-retrieve-metric-data-in-dql" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>A. <code>fetch metrics</code></li>
+<li>B. <code>select metrics</code></li>
+<li>C. <code>timeseries</code></li>
+<li>D. <code>query metrics</code></li>
+</ul>
+<blockquote>
+<p><strong>Đáp án: C</strong> — <code>timeseries</code></p>
+</blockquote>
+<p><strong>Tại sao C đúng?</strong></p>
+<p>Trong DQL, metrics dùng cú pháp <strong>đặc biệt</strong> khác với logs/spans/events:</p>
+<ul>
+<li><strong>Logs/spans/events</strong>: <code>fetch logs</code>, <code>fetch spans</code>, <code>fetch events</code></li>
+<li><strong>Metrics</strong>: <code>timeseries avg(dt.host.cpu.usage)</code> — KHÔNG dùng <code>fetch</code></li>
+</ul>
+<p><code>timeseries</code> tự động lấy data theo thời gian (time-series) và apply aggregation function (avg, sum, max…).</p>
+<p><strong>Giải thích sai:</strong></p>
+<ul>
+<li><strong>A. <code>fetch metrics</code></strong>: <code>fetch metrics</code> <strong>KHÔNG</strong> đúng syntax. Data type cho fetch là <code>logs</code>, <code>spans</code>, <code>events</code>, <code>bizevents</code>, <code>dt.entity.*</code> — <strong>không có</strong> <code>metrics</code>.</li>
+<li><strong>B. <code>select metrics</code></strong>: DQL <strong>KHÔNG dùng</strong> <code>select</code> — đó là SQL keyword. DQL dùng <code>fetch</code> hoặc <code>timeseries</code>.</li>
+<li><strong>D. <code>query metrics</code></strong>: <code>query</code> không phải DQL command.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Exam tip:</strong> Logs/spans/events = <code>fetch</code>. Metrics = <code>timeseries</code>. Đây là điểm hay gài bẫy!</p>
+</blockquote>
+<hr/>
+<h3 id="q3-which-dql-command-is-equivalent-to-sqls-where-clause">Q3: Which DQL command is equivalent to SQL’s WHERE clause?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q3-which-dql-command-is-equivalent-to-sqls-where-clause" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>A. <code>fields</code></li>
+<li>B. <code>summarize</code></li>
+<li>C. <code>filter</code></li>
+<li>D. <code>sort</code></li>
+</ul>
+<blockquote>
+<p><strong>Đáp án: C</strong> — <code>filter</code></p>
+</blockquote>
+<p><strong>Tại sao C đúng?</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>SQL</th><th>DQL</th></tr></thead><tbody><tr><td><code>WHERE status = 'ERROR'</code></td><td><code>| filter status == &quot;ERROR&quot;</code></td></tr></tbody></table></div>
+<p><code>filter</code> lọc records dựa trên conditions — chỉ giữ records thỏa mãn điều kiện. Chính xác tương đương <code>WHERE</code> trong SQL.</p>
+<p><strong>Giải thích sai:</strong></p>
+<ul>
+<li><strong>A. <code>fields</code></strong>: <code>fields</code> = <code>SELECT columns</code> (chọn fields hiển thị), không phải <code>WHERE</code> (lọc records).</li>
+<li><strong>B. <code>summarize</code></strong>: <code>summarize</code> = <code>GROUP BY + aggregate functions</code> (nhóm + tính toán), không phải lọc.</li>
+<li><strong>D. <code>sort</code></strong>: <code>sort</code> = <code>ORDER BY</code> (sắp xếp kết quả), không phải lọc.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Exam tip:</strong> <code>filter</code> = WHERE, <code>fields</code> = SELECT, <code>summarize</code> = GROUP BY, <code>sort</code> = ORDER BY. Nhớ mapping này cho thi.</p>
+</blockquote>
+<hr/>
+<h3 id="q4-where-does-dql-retrieve-its-data-from">Q4: Where does DQL retrieve its data from?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q4-where-does-dql-retrieve-its-data-from" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>A. OneAgent directly</li>
+<li>B. ActiveGate cache</li>
+<li>C. Grail data lakehouse</li>
+<li>D. External SQL databases</li>
+</ul>
+<blockquote>
+<p><strong>Đáp án: C</strong> — Grail data lakehouse</p>
+</blockquote>
+<p><strong>Tại sao C đúng?</strong></p>
+<p>DQL được thiết kế <strong>ĐẶC BIỆT</strong> để query data từ <strong>Grail</strong> — causational data lakehouse của Dynatrace. Flow:</p>
+<pre><code>OneAgent → (gom data) → Grail (lưu trữ) ← DQL (query)
+</code></pre>
+<p>Grail chứa <strong>TẤT CẢ</strong> observability data: logs, metrics, traces, events, business events, security data. DQL query trực tiếp vào Grail, sử dụng <strong>MPP (Massively Parallel Processing)</strong> engine cho tốc độ cao.</p>
+<p><strong>Giải thích sai:</strong></p>
+<ul>
+<li><strong>A. OneAgent directly</strong>: OneAgent <strong>thu thập</strong> data và <strong>gửi</strong> về Grail. DQL không query OneAgent trực tiếp — bạn query data <strong>đã được ingest</strong> vào Grail.</li>
+<li><strong>B. ActiveGate cache</strong>: ActiveGate là <strong>proxy</strong> relay data, không phải storage. Không có “cache” DQL query được.</li>
+<li><strong>D. External SQL databases</strong>: DQL là ngôn ngữ <strong>riêng</strong> cho Grail, không query external SQL databases. Muốn monitor external DB → dùng OneAgent/extensions, data sau đó vào Grail.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Exam tip:</strong> DQL → <strong>Grail</strong>. Không gì khác. Grail = <strong>data lakehouse</strong> (KHÔNG phải data warehouse hay database). Keywords: Grail, lakehouse, MPP.</p>
+</blockquote>
+<hr/>
+<h3 id="q5-true-or-false--you-must-be-a-dynatrace-administrator-to-write-and-run-dql-queries">Q5: True or False — You must be a Dynatrace Administrator to write and run DQL queries.<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q5-true-or-false--you-must-be-a-dynatrace-administrator-to-write-and-run-dql-queries" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>❌ <strong>False</strong></li>
+</ul>
+<blockquote>
+<p><strong>Đáp án: False</strong></p>
+</blockquote>
+<p><strong>Tại sao False?</strong></p>
+<p>DQL được thiết kế cho <strong>MỌI users</strong> — không chỉ admins:</p>
+<ul>
+<li><strong>Operators</strong> dùng DQL để investigate problems</li>
+<li><strong>Analysts</strong> dùng DQL để tạo reports</li>
+<li><strong>Developers</strong> dùng DQL để debug application behavior</li>
+</ul>
+<p>Quyền xem data phụ thuộc vào <strong>Management Zones</strong> và <strong>data access permissions</strong> — nhưng <strong>khả năng viết DQL</strong> không require admin rights.</p>
+<blockquote>
+<p>💡 <strong>Exam tip:</strong> Câu hỏi “must be admin” cho DQL → luôn <strong>False</strong>. DQL = accessible for everyone.</p>
+</blockquote>
+<hr/>
+<h3 id="q6-what-is-the-correct-syntax-structure-for-a-basic-dql-query">Q6: What is the correct syntax structure for a basic DQL query?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q6-what-is-the-correct-syntax-structure-for-a-basic-dql-query" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>A. <code>SELECT fields FROM logs WHERE condition</code></li>
+<li>B. <code>fetch logs | filter condition | fields field1, field2</code></li>
+<li>C. <code>query logs filter condition select fields</code></li>
+<li>D. <code>logs.fetch().filter().select()</code></li>
+</ul>
+<blockquote>
+<p><strong>Đáp án: B</strong> — <code>fetch logs | filter condition | fields field1, field2</code></p>
+</blockquote>
+<p><strong>Tại sao B đúng?</strong></p>
+<p>DQL syntax = <strong>command | command | command</strong> (pipe-based pipeline):</p>
+<ol>
+<li><code>fetch logs</code> — lấy data</li>
+<li><code>| filter condition</code> — lọc</li>
+<li><code>| fields field1, field2</code> — chọn fields</li>
+</ol>
+<p>Mọi DQL query bắt đầu bằng <code>fetch</code> (hoặc <code>timeseries</code> cho metrics), sau đó nối bằng <code>|</code>.</p>
+<p><strong>Giải thích sai:</strong></p>
+<ul>
+<li><strong>A</strong>: Đây là <strong>SQL syntax</strong>, không phải DQL.</li>
+<li><strong>C</strong>: <code>query</code> không phải DQL command. DQL dùng <code>fetch</code>.</li>
+<li><strong>D</strong>: Đây giống <strong>method chaining</strong> kiểu JavaScript, không phải DQL syntax.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Exam tip:</strong> DQL pattern: <strong>fetch + pipe + commands</strong>. Luôn bắt đầu bằng <code>fetch</code> (ngoại trừ metrics dùng <code>timeseries</code>).</p>
+</blockquote>
+<hr/>
+<h1 id="tóm-tắt">Tóm Tắt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>DQL là gì</strong></td><td>Query language cho Grail. Pipeline-based (pipe <code>|</code>)</td></tr><tr><td><strong>fetch</strong></td><td>Lấy data: logs, spans, events, bizevents, dt.entity.*</td></tr><tr><td><strong>timeseries</strong></td><td><strong>Chỉ cho metrics</strong> — không dùng fetch</td></tr><tr><td><strong>filter</strong></td><td>Lọc records (= WHERE trong SQL)</td></tr><tr><td><strong>fields/fieldsAdd</strong></td><td>Chọn/thêm fields (= SELECT trong SQL)</td></tr><tr><td><strong>summarize</strong></td><td>Aggregate + Group (= GROUP BY trong SQL)</td></tr><tr><td><strong>sort/limit</strong></td><td>Sắp xếp + giới hạn (= ORDER BY + LIMIT)</td></tr><tr><td><strong>parse</strong></td><td>Trích xuất data từ raw text</td></tr><tr><td><strong>DQL → Grail</strong></td><td>Query trực tiếp Grail, không query OneAgent/ActiveGate</td></tr><tr><td><strong>Admin rights</strong></td><td>KHÔNG cần admin để dùng DQL</td></tr><tr><td><strong>Ảnh hưởng licensing</strong></td><td>DQL queries consume DDUs — lưu ý khi query lớn</td></tr></tbody></table></div>
+<p><strong>Tài liệu tham khảo:</strong></p>
+<ul>
+<li><a href="https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/dql-reference" class="external external-link">DQL Language Reference<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/dql-comparison" class="external external-link">DQL compared to SQL<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/dql-guide#learn-dql-app" class="external external-link">How to use DQL<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.dynatrace.com/docs/analyze-explore-automate/logs/logs-on-grail-examples" class="external external-link">DQL examples for logs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.dynatrace.com/docs/analyze-explore-automate/metrics/dql-examples" class="external external-link">DQL examples for metrics<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.dynatrace.com/docs/observe/business-observability/bo-analysis" class="external external-link">DQL examples for business events<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://wkf10640.apps.dynatrace.com/ui/apps/dynatrace.learndql/" class="external external-link">Learn DQL App (Playground)<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<hr/>
+<h1 id="navigation">Navigation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#navigation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Prev</th><th>Next</th></tr></thead><tbody><tr><td>[[09 - Associate Certification Learning Path</td><td>09 - Learning Path]]</td></tr></tbody></table></div>
+<p><strong>All modules:</strong> <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/01---dynatrace-essentials---an-introduction-to-dynatrace" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/01---dynatrace-essentials---an-introduction-to-dynatrace">01</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/02---dynatrace-essentials---dynatrace-architecture" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/02---dynatrace-essentials---dynatrace-architecture">02</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/03---dynatrace-essentials---dynatrace-topology" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/03---dynatrace-essentials---dynatrace-topology">03</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/04---dynatrace-essentials---digital-experience-monitoring" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/04---dynatrace-essentials---digital-experience-monitoring">04</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/05---dynatrace-essentials---smart-organization" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/05---dynatrace-essentials---smart-organization">05</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/06---dynatrace-essentials---exploring-problems" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/06---dynatrace-essentials---exploring-problems">06</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/07---dynatrace-essentials---analyzing-your-observability-data" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/07---dynatrace-essentials---analyzing-your-observability-data">07</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/08---dynatrace-essentials---extending-dynatrace" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/08---dynatrace-essentials---extending-dynatrace">08</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/09---associate-certification-learning-path" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/09---associate-certification-learning-path">09</a> | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/10---dql-deep-dive" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/10---dql-deep-dive">10</a></p>
+<p>**See also:*<a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/mind-map---dynatrace-associate" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/mind-map---dynatrace-associate">Mind Map</a>]] | <a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/00---dynatrace-associate-certification-exam-study-guide" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/00---dynatrace-associate-certification-exam-study-guide">Study Guide</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-365" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#phần-1-dql-là-gì-" data-for="phần-1-dql-là-gì-">Phần 1: DQL Là Gì? ⭐</a></li><li class="depth-1"><a href="#định-nghĩa" data-for="định-nghĩa">Định Nghĩa</a></li><li class="depth-1"><a href="#dql-vs-sql-" data-for="dql-vs-sql-">DQL vs SQL ⭐</a></li><li class="depth-1"><a href="#so-sánh-cú-pháp-cơ-bản" data-for="so-sánh-cú-pháp-cơ-bản">So Sánh Cú Pháp Cơ Bản</a></li><li class="depth-0"><a href="#phần-2-cấu-trúc-dql-query-" data-for="phần-2-cấu-trúc-dql-query-">Phần 2: Cấu Trúc DQL Query ⭐⭐</a></li><li class="depth-1"><a href="#pipeline-model" data-for="pipeline-model">Pipeline Model</a></li><li class="depth-1"><a href="#data-types-trong-fetch-" data-for="data-types-trong-fetch-">Data Types trong fetch ⭐</a></li><li class="depth-0"><a href="#phần-3-commands--các-lệnh-chính-" data-for="phần-3-commands--các-lệnh-chính-">Phần 3: Commands — Các Lệnh Chính ⭐⭐</a></li><li class="depth-1"><a href="#tổng-quan-commands" data-for="tổng-quan-commands">Tổng Quan Commands</a></li><li class="depth-1"><a href="#chi-tiết-từng-command" data-for="chi-tiết-từng-command">Chi Tiết Từng Command</a></li><li class="depth-2"><a href="#fetch--lấy-data" data-for="fetch--lấy-data">fetch — Lấy Data</a></li><li class="depth-2"><a href="#filter--lọc-data" data-for="filter--lọc-data">filter — Lọc Data</a></li><li class="depth-2"><a href="#fields--chọn-fields" data-for="fields--chọn-fields">fields — Chọn Fields</a></li><li class="depth-2"><a href="#summarize--tổng-hợp-" data-for="summarize--tổng-hợp-">summarize — Tổng Hợp ⭐⭐</a></li><li class="depth-2"><a href="#sort--limit--sắp-xếp--giới-hạn" data-for="sort--limit--sắp-xếp--giới-hạn">sort &amp; limit — Sắp Xếp &amp; Giới Hạn</a></li><li class="depth-2"><a href="#parse--trích-xuất-data" data-for="parse--trích-xuất-data">parse — Trích Xuất Data</a></li><li class="depth-0"><a href="#phần-4-ví-dụ-queries-thực-tế--exam-relevant" data-for="phần-4-ví-dụ-queries-thực-tế--exam-relevant">Phần 4: Ví Dụ Queries Thực Tế ⭐⭐ EXAM-RELEVANT</a></li><li class="depth-1"><a href="#41-logs--tìm-error-logs" data-for="41-logs--tìm-error-logs">4.1 Logs — Tìm Error Logs</a></li><li class="depth-1"><a href="#42-logs--đếm-errors-theo-host" data-for="42-logs--đếm-errors-theo-host">4.2 Logs — Đếm Errors Theo Host</a></li><li class="depth-1"><a href="#43-business-events--phân-tích-checkout" data-for="43-business-events--phân-tích-checkout">4.3 Business Events — Phân Tích Checkout</a></li><li class="depth-1"><a href="#44-spans--tìm-slow-requests" data-for="44-spans--tìm-slow-requests">4.4 Spans — Tìm Slow Requests</a></li><li class="depth-1"><a href="#45-events--xem-davis-problems" data-for="45-events--xem-davis-problems">4.5 Events — Xem Davis Problems</a></li><li class="depth-1"><a href="#46-entities--liệt-kê-hosts" data-for="46-entities--liệt-kê-hosts">4.6 Entities — Liệt Kê Hosts</a></li><li class="depth-1"><a href="#47-metrics--cpu-usage-trend" data-for="47-metrics--cpu-usage-trend">4.7 Metrics — CPU Usage Trend</a></li><li class="depth-1"><a href="#48-logs--parse--aggregate" data-for="48-logs--parse--aggregate">4.8 Logs — Parse &amp; Aggregate</a></li><li class="depth-0"><a href="#phần-5-dql-trong-dashboard--notebook" data-for="phần-5-dql-trong-dashboard--notebook">Phần 5: DQL Trong Dashboard &amp; Notebook</a></li><li class="depth-1"><a href="#mỗi-dashboard-tile--1-dql-query" data-for="mỗi-dashboard-tile--1-dql-query">Mỗi Dashboard Tile = 1 DQL Query</a></li><li class="depth-1"><a href="#notebook--dql--markdown--frozen-data" data-for="notebook--dql--markdown--frozen-data">Notebook = DQL + Markdown + Frozen Data</a></li><li class="depth-1"><a href="#nơi-có-thể-viết-dql" data-for="nơi-có-thể-viết-dql">Nơi Có Thể Viết DQL</a></li><li class="depth-0"><a href="#phần-6-tips--tricks-cho-thi-" data-for="phần-6-tips--tricks-cho-thi-">Phần 6: Tips &amp; Tricks Cho Thi ⭐</a></li><li class="depth-1"><a href="#những-lỗi-hay-gặp" data-for="những-lỗi-hay-gặp">Những Lỗi Hay Gặp</a></li><li class="depth-1"><a href="#keywords-cần-nhớ-cho-thi" data-for="keywords-cần-nhớ-cho-thi">Keywords Cần Nhớ Cho Thi</a></li><li class="depth-1"><a href="#dql-không-cần-admin-rights" data-for="dql-không-cần-admin-rights">DQL Không Cần Admin Rights</a></li><li class="depth-1"><a href="#autocomplete--templates" data-for="autocomplete--templates">Autocomplete &amp; Templates</a></li><li class="depth-0"><a href="#phần-7-practice-exercises--bài-tập-thực-hành" data-for="phần-7-practice-exercises--bài-tập-thực-hành">Phần 7: Practice Exercises — Bài Tập Thực Hành</a></li><li class="depth-2"><a href="#bài-1-tìm-error-logs" data-for="bài-1-tìm-error-logs">Bài 1: Tìm Error Logs</a></li><li class="depth-2"><a href="#bài-2-đếm-logs-theo-level" data-for="bài-2-đếm-logs-theo-level">Bài 2: Đếm Logs Theo Level</a></li><li class="depth-2"><a href="#bài-3-top-5-services-có-nhiều-errors" data-for="bài-3-top-5-services-có-nhiều-errors">Bài 3: Top 5 Services Có Nhiều Errors</a></li><li class="depth-2"><a href="#bài-4-business-events-analysis" data-for="bài-4-business-events-analysis">Bài 4: Business Events Analysis</a></li><li class="depth-2"><a href="#bài-5-problems-analysis" data-for="bài-5-problems-analysis">Bài 5: Problems Analysis</a></li><li class="depth-0"><a href="#knowledge-check" data-for="knowledge-check">Knowledge Check</a></li><li class="depth-2"><a href="#q1-what-does-the-pipe-symbol--do-in-a-dql-query" data-for="q1-what-does-the-pipe-symbol--do-in-a-dql-query">Q1: What does the pipe symbol | do in a DQL query?</a></li><li class="depth-2"><a href="#q2-which-command-is-used-to-retrieve-metric-data-in-dql" data-for="q2-which-command-is-used-to-retrieve-metric-data-in-dql">Q2: Which command is used to retrieve metric data in DQL?</a></li><li class="depth-2"><a href="#q3-which-dql-command-is-equivalent-to-sqls-where-clause" data-for="q3-which-dql-command-is-equivalent-to-sqls-where-clause">Q3: Which DQL command is equivalent to SQL’s WHERE clause?</a></li><li class="depth-2"><a href="#q4-where-does-dql-retrieve-its-data-from" data-for="q4-where-does-dql-retrieve-its-data-from">Q4: Where does DQL retrieve its data from?</a></li><li class="depth-2"><a href="#q5-true-or-false--you-must-be-a-dynatrace-administrator-to-write-and-run-dql-queries" data-for="q5-true-or-false--you-must-be-a-dynatrace-administrator-to-write-and-run-dql-queries">Q5: True or False — You must be a Dynatrace Administrator to write and run DQL queries.</a></li><li class="depth-2"><a href="#q6-what-is-the-correct-syntax-structure-for-a-basic-dql-query" data-for="q6-what-is-the-correct-syntax-structure-for-a-basic-dql-query">Q6: What is the correct syntax structure for a basic DQL query?</a></li><li class="depth-0"><a href="#tóm-tắt" data-for="tóm-tắt">Tóm Tắt</a></li><li class="depth-0"><a href="#navigation" data-for="navigation">Navigation</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/00---dynatrace-associate-certification-exam-study-guide" class="internal">Tổng Quan</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/01---dynatrace-essentials---an-introduction-to-dynatrace" class="internal">Giới Thiệu Dynatrace</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/02---dynatrace-essentials---dynatrace-architecture" class="internal">02 - Dynatrace Essentials - Dynatrace Architecture</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/03---dynatrace-essentials---dynatrace-topology" class="internal">03 - Dynatrace Essentials - Dynatrace Topology</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/04---dynatrace-essentials---digital-experience-monitoring" class="internal">04 - Dynatrace Essentials - Digital Experience Monitoring</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/05---dynatrace-essentials---smart-organization" class="internal">05 - Dynatrace Essentials - Smart Organization</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/06---dynatrace-essentials---exploring-problems" class="internal">06 - Dynatrace Essentials - Exploring Problems</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/07---dynatrace-essentials---analyzing-your-observability-data" class="internal">07 - Dynatrace Essentials - Analyzing Your Observability Data</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/08---dynatrace-essentials---extending-dynatrace" class="internal">08 - Dynatrace Essentials - Extending Dynatrace</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/09---associate-certification-learning-path" class="internal">09 - Associate Certification Learning Path</a></li><li><a href="../../../../02---areas/observability/dynatrace/dynatrace-associate-certification-learning-plan/10---dql-deep-dive" class="internal">10 - DQL Deep Dive</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

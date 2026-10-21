@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>4. IAM &amp; AWS CLI</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="4. IAM &amp; AWS CLI"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="4. IAM &amp; AWS CLI"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 4."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 4."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 4."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/04---iam--and--aws-cli"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/04---iam--and--aws-cli"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 4."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/04---iam--and--aws-cli" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-50" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-50" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>4. IAM &amp; AWS CLI</a></div></nav><h1 class="article-title">4. IAM &amp; AWS CLI</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">IAM &amp; AWS CLI</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-09-12T17:00:00.000Z">13 thg 9, 2026</time><span>20 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="4-iam--aws-cli">4. IAM &amp; AWS CLI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-iam--aws-cli" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> Đây là bài <strong>nền tảng</strong> của cả khoá — mọi domain thi (Secure/Resilient/High-Performing/Cost-Optimized) đều dựa vào IAM ở tầng dưới. Note này chỉ dừng ở mức <strong>khái niệm cơ bản</strong> đúng như slide gốc (Users, Groups, Policies, MFA, 3 cách truy cập, Roles, Audit). Các khái niệm nâng cao hơn (SCP, Permission Boundary, Trust Policy, STS, Cross-account Role, IAM Identity Center) đã được đào sâu ở <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/25---advanced-identity-in-aws" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/25---advanced-identity-in-aws">25 - Advanced Identity in AWS</a> và <a href="../../../02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.1---iam---identity-and-access-management" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.1---iam---identity-and-access-management">1.1 - IAM - Identity and Access Management</a> — đọc 2 note đó sau khi nắm chắc nền tảng ở đây.</p>
+</blockquote>
+<h2 id="iam-là-gì">IAM là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#iam-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>IAM (Identity and Access Management)</strong> là dịch vụ quản lý danh tính và quyền truy cập của AWS. Đặc điểm quan trọng:</p>
+<ul>
+<li>Là <strong>Global service</strong> — không theo region, cấu hình một lần dùng cho tất cả region.</li>
+<li><strong>Root account</strong> được tạo mặc định khi lập tài khoản AWS → không nên dùng hoặc chia sẻ.</li>
+</ul>
+<h2 id="iam-users--groups">IAM Users &amp; Groups<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#iam-users--groups" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    Root[\&quot;Root Account&lt;br/>(Chỉ dùng lúc setup)\&quot;]\n    AdminGroup[\&quot;Group: Admins\&quot;]\n    DevGroup[\&quot;Group: Developers\&quot;]\n    UserAlice[\&quot;User: Alice\&quot;]\n    UserBob[\&quot;User: Bob\&quot;]\n    UserCharlie[\&quot;User: Charlie\&quot;]\n    NoGroup[\&quot;User: Dave&lt;br/>(không thuộc group nào)\&quot;]\n\n    AdminGroup --> UserAlice\n    AdminGroup --> UserBob\n    DevGroup --> UserBob\n    DevGroup --> UserCharlie\n    NoGroup&quot;">graph TD
+    Root[&quot;Root Account&lt;br/>(Chỉ dùng lúc setup)&quot;]
+    AdminGroup[&quot;Group: Admins&quot;]
+    DevGroup[&quot;Group: Developers&quot;]
+    UserAlice[&quot;User: Alice&quot;]
+    UserBob[&quot;User: Bob&quot;]
+    UserCharlie[&quot;User: Charlie&quot;]
+    NoGroup[&quot;User: Dave&lt;br/>(không thuộc group nào)&quot;]
+
+    AdminGroup --> UserAlice
+    AdminGroup --> UserBob
+    DevGroup --> UserBob
+    DevGroup --> UserCharlie
+    NoGroup
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Quy tắc:</strong></p>
+<ul>
+<li>Groups chỉ chứa users — không chứa group khác.</li>
+<li>User có thể thuộc nhiều groups.</li>
+<li>User có thể không thuộc group nào (nhưng không khuyến khích).</li>
+<li><strong>1 người thật = 1 IAM User</strong> — không dùng chung account.</li>
+</ul>
+<h2 id="iam-permissions--policies">IAM Permissions — Policies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#iam-permissions--policies" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Policy</strong> là JSON document định nghĩa quyền. Users và Groups được gán policies.</p>
+<p><strong>Nguyên tắc Least Privilege:</strong> Chỉ cấp quyền vừa đủ — không cấp nhiều hơn cần thiết.</p>
+<p><strong>Cấu trúc IAM Policy:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;Version&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;2012-10-17&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;Statement&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;Effect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Allow&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;Action&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;s3:GetObject&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;arn:aws:s3:::my-bucket/*&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  }]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Field</th><th>Bắt buộc?</th><th>Mô tả</th></tr></thead><tbody><tr><td><code>Version</code></td><td>Bắt buộc</td><td>Luôn dùng <code>&quot;2012-10-17&quot;</code></td></tr><tr><td><code>Id</code></td><td>Tùy chọn</td><td>Định danh cho cả policy</td></tr><tr><td><code>Statement</code></td><td>Bắt buộc</td><td>Một hoặc nhiều statement</td></tr><tr><td><code>Sid</code></td><td>Tùy chọn</td><td>Định danh cho từng statement</td></tr><tr><td><code>Effect</code></td><td>Bắt buộc</td><td><code>Allow</code> hoặc <code>Deny</code></td></tr><tr><td><code>Action</code></td><td>Bắt buộc</td><td>API AWS (vd: <code>s3:GetObject</code>, <code>ec2:StartInstances</code>)</td></tr><tr><td><code>Resource</code></td><td>Bắt buộc</td><td>ARN của resource áp dụng</td></tr><tr><td><code>Principal</code></td><td>Chỉ dùng trong resource-based policy</td><td>Ai được/bị áp dụng statement này</td></tr><tr><td><code>Condition</code></td><td>Tùy chọn</td><td>Điều kiện áp dụng (IP, MFA, thời gian…)</td></tr></tbody></table></div>
+<h3 id="policy-được-gán-vào-user-như-thế-nào--inheritance--3-loại-policy">Policy được gán vào user như thế nào? — Inheritance &amp; 3 loại Policy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#policy-được-gán-vào-user-như-thế-nào--inheritance--3-loại-policy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Một user nhận quyền theo <strong>2 đường</strong>: (1) kế thừa từ mọi <strong>Group</strong> mà user thuộc về, và (2) <strong>Policy gắn trực tiếp</strong> vào chính user đó. Quyền thực tế = <strong>hợp (union)</strong> của tất cả các policy này.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260913002456.png" alt width="auto" height="auto"/></p>
+<p><em>Charles và David thuộc 2 group cùng lúc (Developers+Audit Team, Audit Team+Operations) nên được cộng dồn quyền từ cả 2 group. Fred không thuộc group nào nhưng vẫn có quyền nhờ một policy gắn thẳng vào user — đây chính là <strong>inline policy</strong>.</em></p>
+<p>Có <strong>3 loại Identity-based Policy</strong>, phân biệt theo cách gắn và tái sử dụng:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Ai quản lý</th><th>Tái sử dụng?</th><th>Khi nào dùng</th></tr></thead><tbody><tr><td><strong>AWS Managed Policy</strong></td><td>AWS tạo &amp; duy trì sẵn (vd <code>AmazonS3ReadOnlyAccess</code>)</td><td>Có — gắn cho nhiều user/group/role</td><td>Nhu cầu phổ biến, không cần tuỳ biến, muốn AWS tự cập nhật khi có action/service mới</td></tr><tr><td><strong>Customer Managed Policy</strong></td><td>Tự tạo, tự quản lý</td><td>Có — gắn cho nhiều user/group/role</td><td>Cần tuỳ biến theo đúng nhu cầu, vẫn muốn 1 policy dùng chung nhiều nơi</td></tr><tr><td><strong>Inline Policy</strong></td><td>Tự tạo, <strong>nhúng chết</strong> vào 1 user/group/role duy nhất</td><td>Không — 1:1, xoá theo entity</td><td>Cần đảm bảo quan hệ 1-1 chặt chẽ (policy phải mất đi cùng lúc với entity), ít dùng trong thực tế</td></tr></tbody></table></div>
+<p><strong>2 cách user nhận permission (tóm tắt theo slide gốc):</strong></p>
+<ul>
+<li>Thông qua <strong>User Group</strong> (khuyến nghị — dễ quản lý, dùng Managed Policy).</li>
+<li>Gán <strong>trực tiếp</strong> vào user bằng <strong>Inline Policy</strong> (ít dùng — khó quản lý khi scale, không tái sử dụng được).</li>
+</ul>
+<blockquote>
+<p>Đào sâu hơn về Managed vs Inline, Permission Boundary, Resource-based Policy, SCP → xem <a href="../../../02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.1---iam---identity-and-access-management" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.1---iam---identity-and-access-management">1.1 - IAM - Identity and Access Management</a> §2 “Types of Policies”.</p>
+</blockquote>
+<h2 id="iam-password-policy--mfa">IAM Password Policy &amp; MFA<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#iam-password-policy--mfa" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="password-policy">Password Policy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#password-policy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AWS cho phép cấu hình password policy cho IAM users:</p>
+<ul>
+<li>Độ dài tối thiểu.</li>
+<li>Yêu cầu ký tự đặc biệt (uppercase, lowercase, số, non-alphanumeric).</li>
+<li>Cho phép user tự đổi password.</li>
+<li>Bắt buộc đổi password sau N ngày (expiration).</li>
+<li>Ngăn dùng lại password cũ.</li>
+</ul>
+<h3 id="mfa-multi-factor-authentication">MFA (Multi Factor Authentication)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mfa-multi-factor-authentication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>MFA = thứ bạn biết (password) + thứ bạn sở hữu (device).</strong></p>
+<p><img src="../../.././../../attachments/pasted-image-20260913002457.png" alt width="auto" height="auto"/></p>
+<p>Lợi ích: nếu password bị đánh cắp, account vẫn an toàn vì không có MFA device.</p>
+<p><strong>Bắt buộc bật MFA cho:</strong></p>
+<ul>
+<li>Root account.</li>
+<li>Tất cả IAM users có quyền admin.</li>
+</ul>
+<p><strong>Các thiết bị MFA hỗ trợ:</strong></p>
+<ul>
+<li>Virtual MFA device (Google Authenticator, Authy).</li>
+<li>Hardware TOTP token.</li>
+<li>Hardware Key Fob MFA device.</li>
+<li>AWS IAM Identity Center.</li>
+</ul>
+<h2 id="3-cách-truy-cập-aws">3 Cách Truy cập AWS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-cách-truy-cập-aws" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cách</th><th>Bảo vệ bằng</th><th>Dùng khi nào</th></tr></thead><tbody><tr><td><strong>AWS Management Console</strong></td><td>Password + MFA</td><td>Thao tác thủ công, cấu hình</td></tr><tr><td><strong>AWS CLI</strong></td><td>Access Keys</td><td>Script, automation, DevOps</td></tr><tr><td><strong>AWS SDK</strong></td><td>Access Keys</td><td>Code ứng dụng (Python, Java, Go…)</td></tr></tbody></table></div>
+<p><strong>Access Keys:</strong></p>
+<ul>
+<li>Gồm <strong>Access Key ID</strong> (<del>= username) và <strong>Secret Access Key</strong> (</del>= password).</li>
+<li>Tạo qua Console, user tự quản lý.</li>
+<li><strong>KHÔNG bao giờ share</strong> — bí mật như password.</li>
+<li>Không hardcode trong code — dùng IAM Roles hoặc environment variables.</li>
+</ul>
+<p><strong>AWS CLI</strong> là open-source (<code>https://github.com/aws/aws-cli</code>) — truy cập trực tiếp public API của AWS.</p>
+<p><strong>AWS SDK</strong> hỗ trợ nhiều ngôn ngữ: Python (boto3), JavaScript, Java, Go, .NET, Ruby, PHP, C++…</p>
+<h2 id="iam-roles-for-services">IAM Roles for Services<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#iam-roles-for-services" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Một số AWS service cần thực hiện hành động thay bạn (ví dụ EC2 gọi S3, Lambda gọi DynamoDB). Dùng <strong>IAM Role</strong> thay vì Access Keys để cấp quyền cho service.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    EC2[\&quot;EC2 Instance\&quot;] -->|\&quot;assume role\&quot;| Role[\&quot;IAM Role&lt;br/>(có policy S3:GetObject)\&quot;]\n    Role -->|\&quot;temporary credentials\&quot;| S3[\&quot;Amazon S3\&quot;]&quot;">graph LR
+    EC2[&quot;EC2 Instance&quot;] -->|&quot;assume role&quot;| Role[&quot;IAM Role&lt;br/>(có policy S3:GetObject)&quot;]
+    Role -->|&quot;temporary credentials&quot;| S3[&quot;Amazon S3&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Roles phổ biến:</strong></p>
+<ul>
+<li>EC2 Instance Roles.</li>
+<li>Lambda Function Roles.</li>
+<li>Roles for CloudFormation.</li>
+<li>Roles for ECS Tasks.</li>
+</ul>
+<p><strong>Tại sao dùng Role thay vì Access Keys cho EC2?</strong></p>
+<ul>
+<li>Role cấp <strong>temporary credentials</strong> — tự động rotate.</li>
+<li>Không cần lưu access key trên máy EC2 → an toàn hơn nhiều.</li>
+</ul>
+<h2 id="iam-security-tools--audit">IAM Security Tools — Audit<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#iam-security-tools--audit" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="iam-credentials-report-account-level">IAM Credentials Report (Account-level)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#iam-credentials-report-account-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Liệt kê <strong>tất cả users</strong> trong account và trạng thái credentials (password, MFA, access keys, date last used).</li>
+<li>Dùng để audit định kỳ và phát hiện user không dùng MFA.</li>
+</ul>
+<h3 id="iam-access-advisor-user-level">IAM Access Advisor (User-level)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#iam-access-advisor-user-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Hiển thị <strong>service permissions được cấp cho user</strong> và <strong>thời điểm cuối cùng được dùng</strong>.</li>
+<li>Dùng để tinh chỉnh policy — loại bỏ quyền không cần thiết (Least Privilege).</li>
+</ul>
+<h2 id="iam-best-practices--checklist">IAM Best Practices — Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#iam-best-practices--checklist" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>❌ Không dùng Root account (ngoài lúc setup ban đầu).</li>
+<li>✔ 1 người thật = 1 IAM User.</li>
+<li>✔ Quản lý permission qua <strong>Groups</strong>, không gán trực tiếp.</li>
+<li>✔ Tạo <strong>Password Policy</strong> mạnh.</li>
+<li>✔ Bắt buộc <strong>MFA</strong> cho root và admin users.</li>
+<li>✔ Dùng <strong>Roles</strong> cho AWS services (không dùng access key hardcode).</li>
+<li>✔ Audit định kỳ bằng <strong>Credentials Report &amp; Access Advisor</strong>.</li>
+<li>❌ Không share IAM users hay Access Keys.</li>
+</ul>
+<h2 id="bảng-từ-khoá-đề-thi">Bảng từ khoá đề thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-từ-khoá-đề-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Từ khoá trong đề</th><th>Chọn</th></tr></thead><tbody><tr><td>”1 người thật, nhiều máy/nhiều app cùng dùng chung 1 account”</td><td>Sai — <strong>1 người = 1 IAM User</strong>, không share</td></tr><tr><td>”EC2/Lambda cần gọi API của service khác”</td><td><strong>IAM Role</strong>, không phải Access Key hardcode</td></tr><tr><td>”Policy chỉ áp dụng cho đúng 1 user, phải mất đi cùng lúc user đó bị xoá”</td><td><strong>Inline Policy</strong></td></tr><tr><td>”Cùng 1 bộ quyền, muốn gắn cho nhiều user/group/role, AWS tự cập nhật”</td><td><strong>AWS Managed Policy</strong></td></tr><tr><td>”Cùng 1 bộ quyền, muốn gắn cho nhiều nơi nhưng tự kiểm soát nội dung”</td><td><strong>Customer Managed Policy</strong></td></tr><tr><td>”Muốn biết user nào chưa từng dùng quyền được cấp”</td><td><strong>IAM Access Advisor</strong></td></tr><tr><td>”Muốn audit toàn bộ account: ai có MFA, access key bao lâu chưa đổi”</td><td><strong>IAM Credentials Report</strong></td></tr><tr><td>”Bảo vệ account dù password bị lộ”</td><td><strong>MFA</strong></td></tr><tr><td>”Quản lý danh tính có theo từng region không?”</td><td>Không — IAM là <strong>Global service</strong></td></tr></tbody></table></div>
+<h2 id="câu-hỏi-ôn-tập">Câu hỏi ôn tập<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-ôn-tập" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>9 câu hỏi thực hành, bám sát các khái niệm nền tảng ở trên.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>#</th><th>Chủ đề</th><th>Đáp án đúng</th></tr></thead><tbody><tr><td>1</td><td>Định nghĩa đúng của IAM Role</td><td>Entity định nghĩa <strong>permissions</strong>, được <strong>AWS service</strong> sử dụng</td></tr><tr><td>2</td><td>IAM Security Tool là gì</td><td><strong>IAM Credentials Report</strong></td></tr><tr><td>3</td><td>Phát biểu SAI về IAM Users</td><td>User dùng <strong>root account credentials</strong> — sai, mỗi user có credentials riêng</td></tr><tr><td>4</td><td>IAM best practice</td><td><strong>Không dùng root user account</strong></td></tr><tr><td>5</td><td>Định nghĩa đúng của IAM Policies</td><td><strong>JSON document</strong> định nghĩa permissions, dùng cho User/Group/Role</td></tr><tr><td>6</td><td>Nguyên tắc áp dụng cho IAM Permissions</td><td><strong>Grant least privilege</strong></td></tr><tr><td>7</td><td>Tăng bảo mật cho root account</td><td><strong>Enable MFA</strong></td></tr><tr><td>8</td><td>Group có chứa được Group khác không</td><td><strong>False</strong> — Group chỉ chứa User</td></tr><tr><td>9</td><td>Thành phần KHÔNG thuộc về một Statement</td><td><strong>Version</strong> — thuộc Policy, không thuộc Statement</td></tr></tbody></table></div>
+<h3 id="câu-1--định-nghĩa-đúng-của-iam-role">Câu 1 — Định nghĩa đúng của IAM Role<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-1--định-nghĩa-đúng-của-iam-role" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>What is a proper definition of an IAM Role?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>IAM Users in multiple User Groups</li>
+<li>An IAM entity that defines a password policy for IAM Users</li>
+<li>An IAM entity that defines a set of permissions for making requests to AWS services, and will be used by an AWS service</li>
+<li>Permissions assigned to IAM Users to perform actions</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — User trong nhiều Group</td><td><strong>Sai</strong></td><td>Đây là mô tả quan hệ <strong>User–Group</strong> (mục “IAM Users &amp; Groups” ở trên), không liên quan gì tới Role</td></tr><tr><td>2 — Entity định nghĩa password policy</td><td><strong>Sai</strong></td><td>Password Policy là cấu hình <strong>riêng biệt</strong> ở cấp account (mục “IAM Password Policy &amp; MFA”), không phải chức năng của Role</td></tr><tr><td><strong>3 — Entity định nghĩa permissions, dùng bởi AWS service</strong></td><td><strong>Đúng</strong></td><td>Đúng định nghĩa ở mục “IAM Roles for Services”: Role được <strong>service</strong> (EC2, Lambda…) <strong>assume</strong> để lấy <strong>temporary credentials</strong>, gọi API thay bạn — không phải để gán cho user</td></tr><tr><td>4 — Permissions gán cho User để thực hiện action</td><td><strong>Sai</strong></td><td>Đây là mô tả của <strong>Policy</strong> gắn vào User (mục “IAM Permissions — Policies”), không phải Role — Role gắn với <strong>service/entity assume</strong>, không phải trực tiếp là “permissions của user”</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3.</strong></p>
+<blockquote>
+<p>Bẫy của câu: cả 4 phương án đều nghe “đúng kiểu IAM” (Group, Password Policy, Permissions) — nhưng chỉ có Role mới có đặc điểm riêng là <strong>được một AWS service assume</strong> để lấy credentials tạm thời, đúng như sơ đồ EC2 → assume role → S3 ở mục “IAM Roles for Services”.</p>
+</blockquote>
+<h3 id="câu-2--iam-security-tool">Câu 2 — IAM Security Tool<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-2--iam-security-tool" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Which of the following is an IAM Security Tool?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>IAM Credentials Report</li>
+<li>IAM Root Account Manager</li>
+<li>IAM Services Report</li>
+<li>IAM Security Advisor</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — IAM Credentials Report</strong></td><td><strong>Đúng</strong></td><td>Đúng tên tính năng thật ở mục “IAM Security Tools — Audit”: liệt kê toàn bộ user + trạng thái credentials (password, MFA, access key, last used)</td></tr><tr><td>2 — IAM Root Account Manager</td><td><strong>Sai</strong></td><td>Không tồn tại dịch vụ nào tên như vậy trong AWS</td></tr><tr><td>3 — IAM Services Report</td><td><strong>Sai</strong></td><td>Không tồn tại — tên gần giống “Credentials Report” để gây nhiễu</td></tr><tr><td>4 — IAM Security Advisor</td><td><strong>Sai</strong></td><td>Không tồn tại — cố tình đặt tên gần giống <strong>IAM Access Advisor</strong> (đúng tên thật, xem mục “IAM Access Advisor”) để đánh lừa</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — IAM Credentials Report.</strong></p>
+<blockquote>
+<p>Bẫy của câu: 3 phương án sai đều là tên <strong>nghe hợp lý</strong> nhưng không tồn tại, ghép từ các mảnh tên thật (Access Advisor, Credentials Report) theo kiểu khác. Chỉ có 2 công cụ audit thật của IAM: <strong>Credentials Report</strong> (account-level) và <strong>Access Advisor</strong> (user-level) — không có công cụ thứ ba nào tên “Root Account Manager/Services Report/Security Advisor”.</p>
+</blockquote>
+<h3 id="câu-3--phát-biểu-sai-về-iam-users">Câu 3 — Phát biểu SAI về IAM Users<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-3--phát-biểu-sai-về-iam-users" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Which answer is INCORRECT regarding IAM Users?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>IAM Users can belong to multiple User Groups</li>
+<li>IAM Users don’t have to belong to a User Group</li>
+<li>IAM Policies can be attached directly to IAM Users</li>
+<li>IAM Users access AWS services using root account credentials</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+<p>Đề hỏi ngược — tìm phát biểu <strong>SAI</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Bản thân phát biểu đúng/sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — User thuộc nhiều Group</td><td><strong>Đúng</strong> (không phải đáp án)</td><td>Đúng quy tắc ở mục “IAM Users &amp; Groups”: “User có thể thuộc nhiều groups”</td></tr><tr><td>2 — User không bắt buộc thuộc Group nào</td><td><strong>Đúng</strong> (không phải đáp án)</td><td>Đúng quy tắc: “User có thể không thuộc group nào (nhưng không khuyến khích)“</td></tr><tr><td>3 — Policy gắn trực tiếp vào User</td><td><strong>Đúng</strong> (không phải đáp án)</td><td>Đúng — đây chính là <strong>Inline Policy</strong>, gắn thẳng vào 1 user (mục “3 loại Identity-based Policy”)</td></tr><tr><td><strong>4 — User truy cập AWS bằng root account credentials</strong></td><td><strong>SAI → đây là đáp án</strong></td><td>Mỗi IAM User có <strong>credentials riêng</strong> (password/access key của chính mình) — <strong>không bao giờ</strong> dùng chung root account credentials, đúng nguyên tắc “1 người thật = 1 IAM User” và “Root account không nên dùng/chia sẻ”</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 4.</strong></p>
+<blockquote>
+<p>Dạng câu “tìm phát biểu SAI” dễ bẫy vì 3 phương án còn lại đều đúng và quen thuộc — chỉ cần nhớ nguyên tắc cốt lõi “mỗi user có danh tính riêng, root account tách biệt hoàn toàn” là loại được ngay đáp án 4.</p>
+</blockquote>
+<h3 id="câu-4--iam-best-practice">Câu 4 — IAM best practice<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-4--iam-best-practice" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Which of the following is an IAM best practice?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Create several IAM Users for one physical person</li>
+<li>Don’t use the root user account</li>
+<li>Share your AWS account credentials with your colleague, so (s)he can perform a task for you</li>
+<li>Do not enable MFA for easier access</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Tạo nhiều IAM User cho 1 người</td><td><strong>Sai</strong></td><td>Ngược lại quy tắc “1 người thật = 1 IAM User” — nên <strong>1 user cho 1 người</strong>, không phải nhiều user</td></tr><tr><td><strong>2 — Không dùng root user account</strong></td><td><strong>Đúng</strong></td><td>Đúng checklist ở mục “IAM Best Practices”: root chỉ dùng lúc setup ban đầu, việc hàng ngày dùng IAM User thường</td></tr><tr><td>3 — Share credentials cho đồng nghiệp</td><td><strong>Sai</strong></td><td>Vi phạm trực tiếp nguyên tắc “Không share IAM users hay Access Keys”</td></tr><tr><td>4 — Không bật MFA để truy cập dễ hơn</td><td><strong>Sai</strong></td><td>Ngược lại nguyên tắc “Bắt buộc MFA cho root và admin users” — đánh đổi bảo mật lấy tiện lợi là <strong>anti-pattern</strong>, không phải best practice</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — Don’t use the root user account.</strong></p>
+<blockquote>
+<p>Ba phương án sai đều là những <strong>anti-pattern kinh điển</strong> (multi-account cho 1 người, share credentials, tắt MFA) — mẹo nhận diện nhanh: cứ thấy đáp án nào “làm ngược lại” với IAM Best Practices Checklist đã liệt kê ở trên là loại ngay.</p>
+</blockquote>
+<h3 id="câu-5--định-nghĩa-đúng-của-iam-policies">Câu 5 — Định nghĩa đúng của IAM Policies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-5--định-nghĩa-đúng-của-iam-policies" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>What are IAM Policies?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>A set of policies that defines how AWS accounts interact with each other</li>
+<li>JSON documents that define a set of permissions for making requests to AWS services, and can be used by IAM Users, User Groups, and IAM Roles</li>
+<li>A set of policies that define a password for IAM Users</li>
+<li>A set of policies defined by AWS that show how customers interact with AWS</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Cách AWS account tương tác với nhau</td><td><strong>Sai</strong></td><td>Đó là phạm vi của <strong>Organizations/SCP/Resource Policy cross-account</strong>, không phải định nghĩa cốt lõi của IAM Policy</td></tr><tr><td><strong>2 — JSON document định nghĩa permissions, dùng cho User/Group/Role</strong></td><td><strong>Đúng</strong></td><td>Đúng nguyên văn mục “IAM Permissions — Policies”: Policy là <strong>JSON document</strong> định nghĩa quyền, gán được cho <strong>Users và Groups</strong> (và Roles)</td></tr><tr><td>3 — Định nghĩa password cho User</td><td><strong>Sai</strong></td><td>Đó là <strong>Password Policy</strong> — một khái niệm hoàn toàn khác (mục “IAM Password Policy &amp; MFA”), không phải IAM Policy nói chung</td></tr><tr><td>4 — AWS định nghĩa sẵn cách customer tương tác</td><td><strong>Sai</strong></td><td>Mô tả mơ hồ, không đúng bản chất kỹ thuật — Policy do <strong>chính bạn</strong> (hoặc AWS Managed) viết ra để cấp quyền, không phải AWS áp đặt cách tương tác</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2.</strong></p>
+<blockquote>
+<p>Câu hỏi trực diện nhất trong nhóm — kiểm tra đúng 2 từ khoá cốt lõi: <strong>JSON document</strong> + <strong>gán được cho Users/Groups/Roles</strong>. Phương án 3 dễ gây nhầm nhất vì tên “Password Policy” nghe rất giống nhưng là một tính năng <strong>riêng biệt</strong>, chỉ áp dụng cho mật khẩu, không phải cơ chế cấp quyền chung.</p>
+</blockquote>
+<h3 id="câu-6--nguyên-tắc-áp-dụng-cho-iam-permissions">Câu 6 — Nguyên tắc áp dụng cho IAM Permissions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-6--nguyên-tắc-áp-dụng-cho-iam-permissions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Which principle should you apply regarding IAM Permissions?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Grant most privilege</li>
+<li>Grant more permissions if your employee asks you to</li>
+<li>Grant least privilege</li>
+<li>Restrict root account permissions</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Grant <strong>most</strong> privilege</td><td><strong>Sai</strong></td><td>Ngược hoàn toàn với nguyên tắc đúng — cấp <strong>nhiều nhất có thể</strong> đi ngược lại bảo mật</td></tr><tr><td>2 — Cấp thêm quyền khi nhân viên yêu cầu</td><td><strong>Sai</strong></td><td>Cấp quyền theo <strong>yêu cầu miệng</strong> mà không đánh giá nhu cầu thực tế là phản lại chính tinh thần Least Privilege — dễ dẫn tới quyền dư thừa tích luỹ theo thời gian</td></tr><tr><td><strong>3 — Grant least privilege</strong></td><td><strong>Đúng</strong></td><td>Đúng nguyên văn mục “IAM Permissions — Policies”: <em>“Nguyên tắc Least Privilege: Chỉ cấp quyền vừa đủ — không cấp nhiều hơn cần thiết.”</em></td></tr><tr><td>4 — Giới hạn quyền của root account</td><td><strong>Sai</strong></td><td>Root account <strong>không giới hạn được quyền</strong> (root luôn full-access theo thiết kế AWS) — cách xử lý đúng là <strong>không dùng</strong> root, không phải “restrict permissions” của nó</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — Grant least privilege.</strong></p>
+<blockquote>
+<p>Phương án 4 là bẫy tinh vi nhất: nghe có vẻ hợp lý (“hạn chế quyền root cho an toàn”) nhưng thực tế <strong>không thể giới hạn quyền của root</strong> trong AWS — root luôn có toàn quyền theo thiết kế, best practice đúng là <strong>tránh dùng nó</strong> (đã ghi ở Câu 4 / mục “IAM Best Practices”), không phải đi “restrict” nó.</p>
+</blockquote>
+<h3 id="câu-7--tăng-bảo-mật-cho-root-account">Câu 7 — Tăng bảo mật cho root account<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-7--tăng-bảo-mật-cho-root-account" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>What should you do to increase your root account security?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Remove permissions from the root account</li>
+<li>Only access AWS services through AWS Command Line Interface (CLI)</li>
+<li>Don’t create IAM Users, only access your AWS account using the root account</li>
+<li>Enable Multi-Factor Authentication (MFA)</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Gỡ bớt quyền của root</td><td><strong>Sai</strong></td><td>Như phân tích ở Câu 6 — <strong>không thể</strong> gỡ/giới hạn quyền root, root luôn full-access theo thiết kế</td></tr><tr><td>2 — Chỉ truy cập AWS qua CLI</td><td><strong>Sai</strong></td><td>Đổi kênh truy cập (Console → CLI) không tự động tăng bảo mật — CLI vẫn dùng Access Keys, nếu bị lộ vẫn nguy hiểm y hệt, không giải quyết đúng vấn đề</td></tr><tr><td>3 — Không tạo IAM User, chỉ dùng root</td><td><strong>Sai</strong></td><td>Ngược <strong>hoàn toàn</strong> với best practice — càng dùng root nhiều càng rủi ro; đúng ra phải <strong>tạo IAM User</strong> và <strong>hạn chế tối đa</strong> việc dùng root</td></tr><tr><td><strong>4 — Bật MFA</strong></td><td><strong>Đúng</strong></td><td>Đúng khuyến nghị ở mục “IAM Password Policy &amp; MFA”: <em>“Bắt buộc bật MFA cho: Root account…”</em> — MFA là biện pháp cụ thể và hiệu quả nhất để tăng bảo mật cho chính root account</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 4 — Enable MFA.</strong></p>
+<blockquote>
+<p>So với Câu 4 (best practice tổng quát là “không dùng root”), câu này hỏi cụ thể hơn: <strong>nếu vẫn phải giữ root account thì làm gì để nó an toàn hơn</strong> — câu trả lời là bật MFA, không phải đổi kênh truy cập hay ảo tưởng “gỡ quyền” một tài khoản vốn luôn full-access.</p>
+</blockquote>
+<h3 id="câu-8--iam-user-groups-có-chứa-được-group-khác-không">Câu 8 — IAM User Groups có chứa được Group khác không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-8--iam-user-groups-có-chứa-được-group-khác-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>IAM User Groups can contain IAM Users and other User Groups.</p>
+</blockquote>
+<p><strong>Đáp án:</strong> True / False</p>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phát biểu</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>”Group chứa được cả User và Group khác”</td><td><strong>Sai → đáp án là False</strong></td><td>Đúng quy tắc đã ghi ở mục “IAM Users &amp; Groups”: <em>“Groups chỉ chứa users — không chứa group khác.”</em> Không có khái niệm <strong>nested group</strong> trong IAM</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: False.</strong></p>
+<blockquote>
+<p>Đây là câu hỏi kiểm tra trực tiếp một quy tắc dễ bị suy diễn sai theo thói quen từ hệ thống khác (nhiều hệ thống quyền — vd Active Directory — cho phép nhóm lồng nhóm). IAM <strong>không</strong> hỗ trợ điều này: cấu trúc chỉ có 2 tầng phẳng — <strong>Group chứa User</strong>, User có thể thuộc <strong>nhiều Group</strong>, nhưng Group không bao giờ chứa Group.</p>
+</blockquote>
+<h3 id="câu-9--thành-phần-nào-không-thuộc-về-một-statement-trong-iam-policy">Câu 9 — Thành phần nào KHÔNG thuộc về một Statement trong IAM Policy?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-9--thành-phần-nào-không-thuộc-về-một-statement-trong-iam-policy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>An IAM policy consists of one or more statements. A statement in an IAM Policy consists of the following, EXCEPT:</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Effect</li>
+<li>Principal</li>
+<li>Version</li>
+<li>Action</li>
+<li>Resource</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Thuộc Statement?</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Effect</td><td>Có</td><td><code>Allow</code>/<code>Deny</code> — field bắt buộc của mỗi Statement (bảng cấu trúc Policy ở trên)</td></tr><tr><td>2 — Principal</td><td>Có (khi cần)</td><td>Dùng trong <strong>resource-based policy</strong> để chỉ định ai bị áp dụng statement</td></tr><tr><td><strong>3 — Version</strong></td><td><strong>KHÔNG — đây là đáp án</strong></td><td><code>Version</code> nằm ở <strong>cấp Policy document</strong> (luôn là <code>&quot;2012-10-17&quot;</code>), áp dụng cho <strong>toàn bộ policy</strong>, không phải field bên trong từng Statement — nhìn lại khối JSON mẫu ở trên: <code>Version</code> nằm <strong>ngoài</strong>, <code>Statement</code> là mảng chứa các object riêng, mỗi object đó mới có <code>Sid/Effect/Action/Resource/Principal/Condition</code></td></tr><tr><td>4 — Action</td><td>Có</td><td>API AWS được phép/từ chối gọi — field bắt buộc</td></tr><tr><td>5 — Resource</td><td>Có</td><td>ARN của resource áp dụng — field bắt buộc</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — Version.</strong></p>
+<blockquote>
+<p>Đây là bẫy về <strong>cấu trúc lồng nhau</strong> của Policy JSON: <code>Version</code> và <code>Id</code> là field ở <strong>cấp ngoài cùng</strong> (áp dụng 1 lần cho cả document), còn <code>Sid/Effect/Principal/Action/Resource/Condition</code> mới là các field <strong>bên trong mỗi Statement</strong> (Statement lại là một <strong>mảng</strong>, có thể chứa nhiều object như vậy). Nhớ đúng theo bảng cấu trúc IAM Policy đã liệt kê ở đầu note: <code>Version</code> và <code>Statement</code> cùng cấp, không phải <code>Version</code> nằm trong <code>Statement</code>.</p>
+</blockquote>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>IAM là <strong>global service</strong> — không có region.</li>
+<li><strong>Root account không nên dùng</strong> — tạo IAM user admin thay thế.</li>
+<li><strong>Deny luôn thắng Allow</strong> trong policy evaluation (mặc định là Implicit Deny nếu không có Allow nào).</li>
+<li>User nhận quyền qua <strong>2 nguồn cộng dồn</strong>: Group (Managed Policy) + Policy gắn trực tiếp (Inline Policy) — dễ bị hỏi “vì sao user không thuộc group nào vẫn có quyền?” → do Inline Policy.</li>
+<li><strong>AWS Managed vs Customer Managed vs Inline</strong> — phân biệt theo khả năng tái sử dụng (2 loại đầu) và ai duy trì nội dung (AWS vs bạn).</li>
+<li>EC2 truy cập S3 an toàn nhất → <strong>IAM Role</strong>, không phải access key.</li>
+<li>MFA bảo vệ account dù password bị lộ.</li>
+<li><strong>IAM Access Advisor</strong> → xem service permissions được dùng lần cuối khi nào → tinh chỉnh Least Privilege.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>IAM là nền tảng bảo mật AWS — hiểu rõ Users, Groups, Roles, Policies là bắt buộc.</li>
+<li>Luôn ưu tiên Roles cho AWS services thay vì access keys.</li>
+<li>Audit định kỳ: Credentials Report (account-level) + Access Advisor (user-level).</li>
+<li>Note này chỉ là <strong>tầng nền</strong> — khi cần trả lời câu hỏi về SCP, Permission Boundary, Cross-account Role, IAM Identity Center thì quay lại <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/25---advanced-identity-in-aws" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/25---advanced-identity-in-aws">25 - Advanced Identity in AWS</a>, đừng cố nhớ hết ở đây.</li>
+<li>Bộ 9 câu ôn tập cho thấy 2 dạng bẫy lặp lại nhiều nhất: <strong>(a)</strong> tên nghe hợp lý nhưng không tồn tại (Câu 2: “IAM Security Advisor”/“Root Account Manager” đánh lừa từ tên thật Credentials Report/Access Advisor) và <strong>(b)</strong> nhầm cấp độ cấu trúc — Group không lồng Group (Câu 8), <code>Version</code> thuộc Policy chứ không thuộc Statement (Câu 9). Cứ thấy câu hỏi “X có chứa/gồm Y không” là phải đối chiếu lại đúng sơ đồ cấu trúc, đừng suy diễn theo hệ thống khác.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>IAM Policy structure và evaluation logic (Allow/Deny)</li>
+<li>So sánh 3 cách truy cập AWS (Console, CLI, SDK) và cơ chế bảo vệ</li>
+<li>IAM Roles vs Access Keys — khi nào dùng cái nào</li>
+<li>IAM Credentials Report vs Access Advisor</li>
+<li>AWS Managed Policy vs Customer Managed Policy vs Inline Policy — tiêu chí chọn</li>
+<li>Bộ 9 câu ôn tập IAM &amp; AWS CLI — bẫy tên tính năng không tồn tại + bẫy cấu trúc Policy/Group</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-50" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#4-iam--aws-cli" data-for="4-iam--aws-cli">4. IAM &amp; AWS CLI</a></li><li class="depth-1"><a href="#iam-là-gì" data-for="iam-là-gì">IAM là gì?</a></li><li class="depth-1"><a href="#iam-users--groups" data-for="iam-users--groups">IAM Users &amp; Groups</a></li><li class="depth-1"><a href="#iam-permissions--policies" data-for="iam-permissions--policies">IAM Permissions — Policies</a></li><li class="depth-2"><a href="#policy-được-gán-vào-user-như-thế-nào--inheritance--3-loại-policy" data-for="policy-được-gán-vào-user-như-thế-nào--inheritance--3-loại-policy">Policy được gán vào user như thế nào? — Inheritance &amp; 3 loại Policy</a></li><li class="depth-1"><a href="#iam-password-policy--mfa" data-for="iam-password-policy--mfa">IAM Password Policy &amp; MFA</a></li><li class="depth-2"><a href="#password-policy" data-for="password-policy">Password Policy</a></li><li class="depth-2"><a href="#mfa-multi-factor-authentication" data-for="mfa-multi-factor-authentication">MFA (Multi Factor Authentication)</a></li><li class="depth-1"><a href="#3-cách-truy-cập-aws" data-for="3-cách-truy-cập-aws">3 Cách Truy cập AWS</a></li><li class="depth-1"><a href="#iam-roles-for-services" data-for="iam-roles-for-services">IAM Roles for Services</a></li><li class="depth-1"><a href="#iam-security-tools--audit" data-for="iam-security-tools--audit">IAM Security Tools — Audit</a></li><li class="depth-2"><a href="#iam-credentials-report-account-level" data-for="iam-credentials-report-account-level">IAM Credentials Report (Account-level)</a></li><li class="depth-2"><a href="#iam-access-advisor-user-level" data-for="iam-access-advisor-user-level">IAM Access Advisor (User-level)</a></li><li class="depth-1"><a href="#iam-best-practices--checklist" data-for="iam-best-practices--checklist">IAM Best Practices — Checklist</a></li><li class="depth-1"><a href="#bảng-từ-khoá-đề-thi" data-for="bảng-từ-khoá-đề-thi">Bảng từ khoá đề thi</a></li><li class="depth-1"><a href="#câu-hỏi-ôn-tập" data-for="câu-hỏi-ôn-tập">Câu hỏi ôn tập</a></li><li class="depth-2"><a href="#câu-1--định-nghĩa-đúng-của-iam-role" data-for="câu-1--định-nghĩa-đúng-của-iam-role">Câu 1 — Định nghĩa đúng của IAM Role</a></li><li class="depth-2"><a href="#câu-2--iam-security-tool" data-for="câu-2--iam-security-tool">Câu 2 — IAM Security Tool</a></li><li class="depth-2"><a href="#câu-3--phát-biểu-sai-về-iam-users" data-for="câu-3--phát-biểu-sai-về-iam-users">Câu 3 — Phát biểu SAI về IAM Users</a></li><li class="depth-2"><a href="#câu-4--iam-best-practice" data-for="câu-4--iam-best-practice">Câu 4 — IAM best practice</a></li><li class="depth-2"><a href="#câu-5--định-nghĩa-đúng-của-iam-policies" data-for="câu-5--định-nghĩa-đúng-của-iam-policies">Câu 5 — Định nghĩa đúng của IAM Policies</a></li><li class="depth-2"><a href="#câu-6--nguyên-tắc-áp-dụng-cho-iam-permissions" data-for="câu-6--nguyên-tắc-áp-dụng-cho-iam-permissions">Câu 6 — Nguyên tắc áp dụng cho IAM Permissions</a></li><li class="depth-2"><a href="#câu-7--tăng-bảo-mật-cho-root-account" data-for="câu-7--tăng-bảo-mật-cho-root-account">Câu 7 — Tăng bảo mật cho root account</a></li><li class="depth-2"><a href="#câu-8--iam-user-groups-có-chứa-được-group-khác-không" data-for="câu-8--iam-user-groups-có-chứa-được-group-khác-không">Câu 8 — IAM User Groups có chứa được Group khác không?</a></li><li class="depth-2"><a href="#câu-9--thành-phần-nào-không-thuộc-về-một-statement-trong-iam-policy" data-for="câu-9--thành-phần-nào-không-thuộc-về-một-statement-trong-iam-policy">Câu 9 — Thành phần nào KHÔNG thuộc về một Statement trong IAM Policy?</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/25---advanced-identity-in-aws" class="internal">25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

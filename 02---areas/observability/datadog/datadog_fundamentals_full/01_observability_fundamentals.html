@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Phần 1: Observability &amp; Computer Fundamentals</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Phần 1: Observability &amp; Computer Fundamentals"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Phần 1: Observability &amp; Computer Fundamentals"/><meta name="twitter:description" content="Phần 1: Observability &amp; Computer Fundamentals Tỷ trọng ước tính: ~10% đề thi · Độ khó: Thấp–Trung bình 1.1 Vấn Đề Mà Observability Giải Quyết — Bức Tranh Toàn Cảnh Thế giới phần mềm đã thay đổi như thế nào? Ngày xưa (monolith era), một ứng dụng web chỉ là 1 process lớn chạy trên 1 server."/><meta property="og:description" content="Phần 1: Observability &amp; Computer Fundamentals Tỷ trọng ước tính: ~10% đề thi · Độ khó: Thấp–Trung bình 1.1 Vấn Đề Mà Observability Giải Quyết — Bức Tranh Toàn Cảnh Thế giới phần mềm đã thay đổi như thế nào? Ngày xưa (monolith era), một ứng dụng web chỉ là 1 process lớn chạy trên 1 server."/><meta property="og:image:alt" content="Phần 1: Observability &amp; Computer Fundamentals Tỷ trọng ước tính: ~10% đề thi · Độ khó: Thấp–Trung bình 1.1 Vấn Đề Mà Observability Giải Quyết — Bức Tranh Toàn Cảnh Thế giới phần mềm đã thay đổi như thế nào? Ngày xưa (monolith era), một ứng dụng web chỉ là 1 process lớn chạy trên 1 server."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/datadog_fundamentals_full/01_observability_fundamentals"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/datadog/datadog_fundamentals_full/01_observability_fundamentals"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Phần 1: Observability &amp; Computer Fundamentals Tỷ trọng ước tính: ~10% đề thi · Độ khó: Thấp–Trung bình 1.1 Vấn Đề Mà Observability Giải Quyết — Bức Tranh Toàn Cảnh Thế giới phần mềm đã thay đổi như thế nào? Ngày xưa (monolith era), một ứng dụng web chỉ là 1 process lớn chạy trên 1 server."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/datadog/datadog_fundamentals_full/01_observability_fundamentals" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-300" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-300" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/">Datadog</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/datadog/datadog_fundamentals_full/">datadog_fundamentals_full</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Phần 1: Observability &amp; Computer Fundamentals</a></div></nav><h1 class="article-title">Phần 1: Observability &amp; Computer Fundamentals</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/datadog" class="internal internal-link tag-link">domain/datadog</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-03-17T17:00:00.000Z">18 thg 3, 2026</time><span>12 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="phần-1-observability--computer-fundamentals">Phần 1: Observability &amp; Computer Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-1-observability--computer-fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Tỷ trọng ước tính</strong>: ~10% đề thi · <strong>Độ khó</strong>: Thấp–Trung bình</p>
+</blockquote>
+<hr/>
+<h2 id="11-vấn-đề-mà-observability-giải-quyết--bức-tranh-toàn-cảnh">1.1 Vấn Đề Mà Observability Giải Quyết — Bức Tranh Toàn Cảnh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-vấn-đề-mà-observability-giải-quyết--bức-tranh-toàn-cảnh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="thế-giới-phần-mềm-đã-thay-đổi-như-thế-nào">Thế giới phần mềm đã thay đổi như thế nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#thế-giới-phần-mềm-đã-thay-đổi-như-thế-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Ngày xưa (monolith era), một ứng dụng web chỉ là <strong>1 process lớn</strong> chạy trên <strong>1 server</strong>. Khi bị lỗi, bạn có thể:</p>
+<ul>
+<li>SSH vào server đó</li>
+<li>Xem log file</li>
+<li>Restart service</li>
+</ul>
+<p>Đủ. Đơn giản.</p>
+<p>Ngày nay (microservices era), <strong>1 request của user</strong> có thể đi qua:</p>
+<pre><code>User click &quot;Mua hàng&quot;
+    │
+    ├─→ API Gateway (Kubernetes pod, Node A)
+    │        │
+    │        ├─→ Auth Service (Pod, Node B) ─→ Database (RDS, us-east-1a)
+    │        │
+    │        ├─→ Cart Service (Pod, Node C) ─→ Redis Cache
+    │        │
+    │        ├─→ Payment Service (Pod, Node D) ─→ 3rd-party Stripe API
+    │        │        │
+    │        │        └─→ Fraud Detection ML (Lambda function)
+    │        │
+    │        └─→ Order Service (Pod, Node E) ─→ PostgreSQL
+    │                 │
+    │                 └─→ Email Service (SQS + Lambda)
+    │
+    └── User nhận &quot;Đặt hàng thành công&quot; sau 2.3 giây
+</code></pre>
+<p>Khi user báo “website chậm”, bạn hỏi câu gì?</p>
+<ul>
+<li>Pod nào? Node nào? Service nào? Deployment nào? Database replica nào?</li>
+<li>Lỗi xuất hiện lúc nào? Cho mọi user hay chỉ 1 user? Khu vực địa lý nào?</li>
+</ul>
+<p><strong>Không thể SSH vào từng pod để xem.</strong> Không thể “nhìn vào” system để tìm vấn đề.</p>
+<p>→ <strong>Đây là vấn đề observability giải quyết</strong>: Thay vì nhìn trực tiếp vào hệ thống, bạn <strong>suy luận trạng thái bên trong</strong> từ dữ liệu mà hệ thống <strong>phát ra</strong>.</p>
+<hr/>
+<h2 id="12-observability--định-nghĩa-chính-xác">1.2 Observability — Định Nghĩa Chính Xác<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-observability--định-nghĩa-chính-xác" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Observability</strong> là khả năng <strong>trả lời bất kỳ câu hỏi nào</strong> về trạng thái của hệ thống <strong>chỉ dựa vào dữ liệu đầu ra</strong> — không cần code thêm, không cần biết trước câu hỏi.</p>
+<blockquote>
+<p>💡 <strong>Ví dụ minh hoạ</strong>: Bác sĩ chẩn đoán bệnh nhân không cần “mở ra xem” — họ dùng nhiệt độ, huyết áp, xét nghiệm máu, X-quang. Hệ thống observable cho phép bạn “chẩn đoán” software tương tự.</p>
+</blockquote>
+<h3 id="monitoring--observability">Monitoring ≠ Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#monitoring--observability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Đây là nhầm lẫn cực kỳ phổ biến:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Traditional Monitoring</strong></th><th><strong>Observability</strong></th></tr></thead><tbody><tr><td><strong>Triết lý</strong></td><td>”Tôi biết cần kiểm tra gì&quot;</td><td>&quot;Tôi có thể hỏi bất kỳ điều gì”</td></tr><tr><td><strong>Cách tiếp cận</strong></td><td>Đặt cảnh báo → chờ ngưỡng bị vượt</td><td>Thu thập dữ liệu phong phú → khám phá</td></tr><tr><td><strong>Vấn đề phát hiện</strong></td><td>Known-knowns (lỗi đã biết)</td><td>Known + <strong>Unknown unknowns</strong></td></tr><tr><td><strong>Khi lỗi mới</strong></td><td>Không có alert → không biết</td><td>Đủ dữ liệu để điều tra</td></tr><tr><td><strong>Ví dụ</strong></td><td>CPU > 90% → alert</td><td>Tại sao user ở Việt Nam chậm hơn EU 3 lần?</td></tr></tbody></table></div>
+<p><strong>★ Exam tip</strong>: Câu hỏi phân biệt Monitoring vs Observability thường nhấn mạnh: Monitoring = <strong>phản ứng với known issues</strong>, Observability = <strong>khám phá unknown issues</strong>.</p>
+<hr/>
+<h2 id="13-ba-trụ-cột--nguyên-lý-hoạt-động-của-từng-pillar">1.3 Ba Trụ Cột — Nguyên Lý Hoạt Động Của Từng Pillar<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-ba-trụ-cột--nguyên-lý-hoạt-động-của-từng-pillar" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tại-sao-lại-cần-đúng-3-trụ-cột-này">Tại sao lại cần đúng 3 trụ cột này?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-lại-cần-đúng-3-trụ-cột-này" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bởi vì mỗi trụ cột trả lời <strong>một loại câu hỏi khác nhau</strong>, và bạn cần <strong>cả ba</strong> để hiểu đầy đủ:</p>
+<pre><code>Hệ thống bị chậm → Bạn cần biết:
+
+WHAT happened?   → METRICS  → &quot;Latency tăng từ 200ms lên 2s lúc 3:47pm&quot;
+WHERE happened?  → TRACES   → &quot;Bottleneck ở DB call trong Order Service&quot;
+WHY happened?    → LOGS     → &quot;Slow query vì query plan chọn sai index&quot;
+</code></pre>
+<p>Nếu thiếu 1 trong 3:</p>
+<ul>
+<li>Chỉ có Metrics → Biết có vấn đề nhưng không biết ở đâu, tại sao</li>
+<li>Chỉ có Logs → Biết chi tiết từng sự kiện nhưng không thấy flow tổng quan</li>
+<li>Chỉ có Traces → Biết luồng request nhưng không có context lịch sử</li>
+</ul>
+<hr/>
+<h3 id="pillar-1-metrics--what-happened">Pillar 1: METRICS — “What happened?”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pillar-1-metrics--what-happened" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="bản-chất">Bản chất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bản-chất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Metric là <strong>chuỗi số liệu thống kê theo thời gian</strong> (time-series). Mỗi data point là một cặp <code>(timestamp, value)</code>.</p>
+<pre><code>system.cpu.user (tại host: web-01, tag: env:production)
+
+timestamp     value
+14:00:00  →   45.2%
+14:00:15  →   52.1%
+14:00:30  →   78.4%   ← spike!
+14:00:45  →   81.2%
+14:01:00  →   55.8%
+</code></pre>
+<h4 id="tại-sao-metrics-lại-nhẹ-và-rẻ-nhất">Tại sao Metrics lại nhẹ và rẻ nhất?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-metrics-lại-nhẹ-và-rẻ-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Vì metrics <strong>bỏ hầu hết thông tin</strong>. Thay vì ghi “user abc gửi request X lúc 14:00:30 với payload 2KB và nhận response 500ms”, metrics chỉ ghi <code>latency.avg = 500</code> tại timestamp đó.</p>
+<ul>
+<li>Chi phí lưu trữ: <strong>1 data point</strong> = vài chục bytes</li>
+<li>1 host gửi ~100 metrics mỗi 15 giây = 6,000 points/phút = <strong>rất nhỏ</strong></li>
+</ul>
+<h4 id="khi-nào-metrics-là-đủ-khi-nào-không-đủ">Khi nào Metrics là đủ? Khi nào không đủ?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-nào-metrics-là-đủ-khi-nào-không-đủ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Đủ</strong> khi: Bạn muốn biết xu hướng, mức độ tải, health status tổng thể.</p>
+<p><strong>Không đủ</strong> khi: Bạn cần biết <strong>cụ thể request nào</strong> bị lỗi, <strong>ai</strong> gặp vấn đề, <strong>lý do</strong> cụ thể.</p>
+<hr/>
+<h3 id="pillar-2-logs--why-did-it-happen">Pillar 2: LOGS — “Why did it happen?”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pillar-2-logs--why-did-it-happen" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="bản-chất-1">Bản chất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bản-chất-1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Log là <strong>bản ghi văn bản</strong> mô tả từng sự kiện đã xảy ra — chi tiết nhất trong 3 pillars.</p>
+<pre><code>2024-03-15 14:00:30.412 ERROR [order-service] [trace_id=abc123] [user_id=7823]
+  OrderProcessingException: Payment gateway timeout after 5000ms
+  at PaymentClient.charge(PaymentClient.java:142)
+  at OrderService.processOrder(OrderService.java:87)
+  Caused by: java.net.SocketTimeoutException: Read timed out
+  Context: {order_id: 9876, amount: 150.00, currency: VND, retry_attempt: 3}
+</code></pre>
+<p>Từ 1 dòng log này, bạn biết:</p>
+<ul>
+<li><strong>Khi nào</strong>: 14:00:30.412 (chính xác đến millisecond)</li>
+<li><strong>Ở đâu</strong>: Order Service</li>
+<li><strong>Ai</strong>: user_id=7823, order_id=9876</li>
+<li><strong>Cái gì</strong>: Payment gateway timeout</li>
+<li><strong>Tại sao</strong>: Socket timeout sau 5000ms, đây là lần retry thứ 3</li>
+</ul>
+<h4 id="tại-sao-logs-đắt-nhất">Tại sao Logs đắt nhất?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-logs-đắt-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Logs <strong>giữ toàn bộ thông tin</strong> → volume khổng lồ. Một ứng dụng nhỏ có thể tạo ra <strong>hàng GB logs mỗi ngày</strong>. Lưu trữ, index, và search logs = chi phí chính của observability.</p>
+<p>→ <strong>Logging Without Limits</strong> ra đời để giải quyết: Ingest tất cả, chỉ index (tìm kiếm được) phần quan trọng.</p>
+<hr/>
+<h3 id="pillar-3-traces--where-in-the-chain">Pillar 3: TRACES — “Where in the chain?”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pillar-3-traces--where-in-the-chain" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="bản-chất-2">Bản chất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bản-chất-2" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Trace <strong>theo dõi hành trình</strong> của 1 request khi nó đi qua nhiều services — điều mà Metrics và Logs đơn lẻ không thể làm được.</p>
+<h4 id="cơ-chế-hoạt-động-quan-trọng-để-hiểu">Cơ chế hoạt động (quan trọng để hiểu)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cơ-chế-hoạt-động-quan-trọng-để-hiểu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Khi request bắt đầu, <strong>tracing library</strong> inject một <strong>Trace ID</strong> duy nhất:</p>
+<pre><code>User request → API Gateway
+│
+│ Trace ID: abc-123-xyz (tạo ở đây)
+│ Span ID: span-001 (root span)
+│ Bắt đầu: 14:00:30.000
+│
+├─→ Auth Service
+│   Trace ID: abc-123-xyz    ← CÙNG Trace ID, truyền qua HTTP header!
+│   Span ID: span-002
+│   Parent: span-001
+│   Bắt đầu: 14:00:30.050, Kết thúc: 14:00:30.080 (30ms)
+│
+└─→ Order Service
+    Trace ID: abc-123-xyz    ← Vẫn truyền theo
+    Span ID: span-003
+    Parent: span-001
+    Bắt đầu: 14:00:30.080, Kết thúc: 14:00:32.080 (!!2000ms!!)
+    │
+    └─→ Database Query
+        Span ID: span-004
+        Parent: span-003
+        Duration: 1800ms ← BỐT LỔ Ở ĐÂY!
+</code></pre>
+<p><strong>Flame graph</strong> visualize điều này: bạn nhìn ngay thấy span-004 (DB query) chiếm 90% thời gian của toàn trace.</p>
+<h4 id="tại-sao-traces-mạnh-hơn-logs">Tại sao Traces mạnh hơn Logs?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-traces-mạnh-hơn-logs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Logs từng service đều riêng lẻ — bạn phải <strong>tự correlate</strong> chúng. Với Traces, Datadog <strong>tự động</strong> kết nối các phases lại thành 1 picture hoàn chỉnh nhờ Trace ID truyền qua tất cả services.</p>
+<hr/>
+<h3 id="cách-3-pillars-phối-hợp--workflow-điều-tra">Cách 3 Pillars Phối Hợp — Workflow Điều Tra<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-3-pillars-phối-hợp--workflow-điều-tra" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>BƯỚC 1: Monitor Dashboard (METRICS)
+  Phát hiện: p99 latency tăng từ 300ms → 3s lúc 14:00
+  Tool: Datadog metric alert fired!
+
+BƯỚC 2: Drill down vào Traces (TRACES)
+  Filter traces: service=web-api, latency > 2s, time=14:00-14:10
+  Phát hiện: 80% slow traces đều có span &quot;db.query.orders&quot; mất 2s+
+  Tool: APM → Trace Explorer → click vào 1 slow trace → Flame Graph
+
+BƯỚC 3: Tìm Root Cause trong Logs (LOGS)
+  Filter: service=order-service, time=14:00, level=WARN|ERROR
+  Phát hiện: &quot;Slow query: SELECT * FROM orders WHERE customer_id=? (no index)&quot;
+  Tool: Log Explorer → correlate từ trace (click &quot;See related logs&quot;)
+
+KẾT QUẢ: Missing index trên cột customer_id → thêm index → latency về bình thường
+Thời gian điều tra: 5-10 phút (thay vì hours không có observability)
+</code></pre>
+<hr/>
+<h2 id="14-computer-fundamentals--cơ-chế-hoạt-động">1.4 Computer Fundamentals — Cơ Chế Hoạt Động<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-computer-fundamentals--cơ-chế-hoạt-động" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="cpu--cách-đọc-metrics-đúng">CPU — Cách Đọc Metrics Đúng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cpu--cách-đọc-metrics-đúng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="cpu-là-gì-dưới-góc-nhìn-os">CPU là gì dưới góc nhìn OS?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cpu-là-gì-dưới-góc-nhìn-os" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>CPU tại bất kỳ thời điểm nào đang ở <strong>1 trong các trạng thái này</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>CPU State</th><th>Metric</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>User</strong></td><td><code>system.cpu.user</code></td><td>Đang chạy code ứng dụng (user space)</td></tr><tr><td><strong>System</strong></td><td><code>system.cpu.system</code></td><td>Đang chạy OS kernel code (system calls)</td></tr><tr><td><strong>Wait (I/O)</strong></td><td><code>system.cpu.iowait</code></td><td><strong>Đang chờ</strong> disk hoặc network — <strong>không</strong> chạy gì!</td></tr><tr><td><strong>Stolen</strong></td><td><code>system.cpu.stolen</code></td><td>Hypervisor lấy CPU (VM bị “cướp” CPU)</td></tr><tr><td><strong>Idle</strong></td><td><code>system.cpu.idle</code></td><td>CPU hoàn toàn rảnh, không làm gì</td></tr></tbody></table></div>
+<p><strong>Quy tắc vàng</strong>: Tổng các states = 100%</p>
+<pre><code>Ví dụ đọc metrics:
+  cpu.user = 60%    → App đang dùng 60% CPU
+  cpu.system = 10%  → OS dùng thêm 10%
+  cpu.iowait = 25%  → CPU chờ disk/network 25% thời gian → DISK BOTTLENECK!
+  cpu.idle = 5%     → Chỉ 5% thời gian rảnh
+
+  ⚠️ Dù cpu.user + cpu.system &quot;chỉ&quot; 70%, nhưng iowait 25% = hệ thống đang bị slow disk!
+</code></pre>
+<h4 id="load-average--nguyên-lý">Load Average — Nguyên Lý<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#load-average--nguyên-lý" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Load Average</strong> là số <strong>processes đang chờ được CPU phục vụ</strong> tại 1 thời điểm (trung bình theo thời gian 1/5/15 phút).</p>
+<pre><code>Analogy: Hàng đợi tại quầy tính tiền siêu thị
+
+  4 cores = 4 quầy
+  Load 4.0 = 4 người đang được phục vụ, hàng chờ = 0 → 100% máy đang làm việc
+  Load 8.0 = 4 người đang phục vụ + 4 người đang chờ → overloaded!
+  Load 2.0 = 2 người phục vụ, 2 quầy trống → 50% utilized, nhàn rỗi
+
+  Quy tắc: Load > số cores = hệ thống OVERLOADED
+</code></pre>
+<p><strong>★ Exam trap cực kỳ phổ biến</strong>:</p>
+<p><code>system.cpu.idle = 5%</code> <strong>KHÔNG có nghĩa là</strong> “CPU đang dùng 5%”!</p>
+<p>Nó có nghĩa là: CPU <strong>rảnh</strong> 5% → đang bận <strong>95%</strong> thời gian!</p>
+<pre><code>Cách nhớ: idle = &quot;nhàn&quot; → 5% idle = 5% nhàn = 95% bận!
+</code></pre>
+<hr/>
+<h3 id="memory--tại-sao-available--free">Memory — Tại Sao <code>available</code> > <code>free</code>?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#memory--tại-sao-available--free" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="cơ-chế-os-quản-lý-ram">Cơ chế OS quản lý RAM<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cơ-chế-os-quản-lý-ram" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Linux có một tối ưu hoá thông minh: Khi RAM rảnh, OS <strong>không để trống</strong> — nó dùng RAM rảnh làm <strong>disk cache</strong> (page cache) để đọc disk lần sau nhanh hơn.</p>
+<pre><code>Máy có 16GB RAM. App đang dùng 6GB.
+
+  mem.used = 10GB    ← ??? Sao dùng nhiều vậy?
+  mem.free = 2GB     ← Còn ít quá!
+  mem.cached = 4GB   ← OS đang cache disk data
+  mem.available = 6GB ← Thực sự có thể dùng (free + cache có thể giải phóng)
+
+  ⟹ mem.available = 6GB: Nếu App cần thêm 4GB, OS sẽ giải phóng cache ngay!
+  ⟹ Chỉ nhìn mem.free = 2GB → PANIC không cần thiết!
+  ⟹ Số thực sự cần quan tâm: mem.available hoặc mem.usable
+</code></pre>
+<p><strong>Khi nào cần lo</strong>:</p>
+<ul>
+<li><code>mem.available</code> &lt; 10% tổng RAM → thực sự thiếu RAM</li>
+<li><code>system.swap.used</code> > 0 → OS đang dùng disk làm RAM → <strong>RẤT CHẬM</strong> → mua thêm RAM hoặc tối ưu app</li>
+</ul>
+<hr/>
+<h3 id="networking--tcp-vs-udp-cơ-chế-bắt-tay">Networking — TCP vs UDP: Cơ Chế Bắt Tay<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#networking--tcp-vs-udp-cơ-chế-bắt-tay" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="tcp--reliable-connection">TCP — Reliable connection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tcp--reliable-connection" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Sender                    Receiver
+  │─── SYN ─────────────→│   &quot;Tôi muốn kết nối&quot;
+  │←── SYN-ACK ──────────│   &quot;OK, tôi sẵn sàng&quot;
+  │─── ACK ─────────────→│   &quot;Đã nhận&quot;
+  │─── DATA ────────────→│   &quot;Gửi data&quot;
+  │←── ACK ──────────────│   &quot;Đã nhận data&quot;
+  
+  → Mỗi packet đều được xác nhận
+  → Nếu mất packet → tự động gửi lại
+  → RELIABLE nhưng SLOW hơn (overhead handshake + ACK)
+</code></pre>
+<p><strong>Datadog dùng TCP cho APM traces</strong> (port 8126) vì traces không thể mất — mất 1 span = mất toàn bộ picture.</p>
+<h4 id="udp--fast-connectionless">UDP — Fast, connectionless<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#udp--fast-connectionless" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Sender                    Receiver
+  │─── DATA ────────────→│   &quot;Gửi và quên&quot;
+  
+  → Không handshake, không ACK
+  → Mất packet? Không biết, không retry
+  → NHANH vì không cần đợi
+</code></pre>
+<p><strong>Datadog dùng UDP cho DogStatsD</strong> (port 8125) vì:</p>
+<ul>
+<li>Mất 1 metric data point trong 10 giây? Không sao, 10 giây sau gửi tiếp</li>
+<li>App <strong>KHÔNG BAO GIỜ bị chặn</strong> chờ monitoring → đây là ưu tiên #1</li>
+</ul>
+<hr/>
+<h3 id="ports--tại-sao-những-con-số-này">Ports — Tại Sao Những Con Số Này?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ports--tại-sao-những-con-số-này" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Port 443 (HTTPS) — Agent → Datadog Backend:
+  Firewall corp thường BLOCK tất cả ports ngoại trừ 80 (HTTP) và 443 (HTTPS)
+  → Datadog chọn 443 để hoạt động trong môi trường corp mà không cần đặc quyền firewall
+
+Port 8125 (UDP) — DogStatsD:
+  Port trong range 8000-9000 không cần root privilege để mở.
+  UDP để app gửi nhanh mà không block.
+
+Port 8126 (TCP) — APM:
+  Adjacent với DogStatsD (8125) để dễ nhớ.
+  TCP vì traces quan trọng hơn, không thể mất.
+</code></pre>
+<hr/>
+<h2 id="15-yaml--cơ-chế-parse-và-lỗi-phổ-biến">1.5 YAML — Cơ Chế Parse và Lỗi Phổ Biến<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#15-yaml--cơ-chế-parse-và-lỗi-phổ-biến" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tại-sao-yaml-dùng-spaces-thay-tabs">Tại sao YAML dùng spaces thay tabs?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-yaml-dùng-spaces-thay-tabs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>YAML được thiết kế để <strong>human-readable</strong> và <strong>unambiguous</strong>. Tab width có thể khác nhau giữa editors (tab = 2 spaces? 4 spaces? 8 spaces?). Spaces thì luôn là 1 space = 1 space — không có ambiguity.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Đúng ✅ — 2 spaces mỗi level</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">logs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">file</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">/var/log/app.log</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    tags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">env:production</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Sai ❌ — dùng tab thay space (nhìn giống nhau trên màn hình, nhưng sẽ lỗi!)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">logs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">	- </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">file       ← tab character!</span></span></code></pre></figure>
+<p><strong>Cách phát hiện lỗi YAML tab/space</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Hiện tab characters không nhìn thấy</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">cat</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> /etc/datadog-agent/datadog.yaml</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;\^I&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ^I = tab character</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Hoặc dùng command Agent</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">datadog-agent</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> configcheck</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Sẽ báo: &quot;YAML parse error: found character that cannot start any token&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="16-câu-hỏi-thường-gặp-với-giải-thích-tại-sao">1.6 Câu Hỏi Thường Gặp (Với Giải Thích Tại Sao)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#16-câu-hỏi-thường-gặp-với-giải-thích-tại-sao" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Q: Ba pillars of observability?</strong><br/>
+→ <strong>Metrics, Logs, Traces</strong> — mỗi cái trả lời: <em>What, Why, Where</em></p>
+<p><strong>Q: <code>system.cpu.idle = 5%</code> nghĩa là gì?</strong><br/>
+→ CPU đang <strong>dùng 95%</strong> (idle = % thời gian CPU rảnh, không phải % CPU đang dùng!)</p>
+<p><strong>Q: Load Average 8.0 trên máy 4 cores = điều gì?</strong><br/>
+→ Overloaded: 4 processes đang chờ CPU không có để dùng</p>
+<p><strong>Q: <code>mem.available</code> vs <code>mem.free</code>?</strong><br/>
+→ <code>available > free</code> vì <code>available</code> bao gồm cả page cache mà OS có thể giải phóng ngay</p>
+<p><strong>Q: Tại sao DogStatsD dùng UDP?</strong><br/>
+→ Để app KHÔNG bao giờ bị block chờ monitoring — performance của app là ưu tiên #1</p>
+<p><strong>Q: Tại sao Agent gửi data qua port 443?</strong><br/>
+→ Port 443 (HTTPS) luôn được firewall cho phép trong môi trường enterprise</p>
+<p><strong>Q: Lỗi YAML phổ biến nhất?</strong><br/>
+→ Dùng tabs thay spaces (YAML parser từ chối tab characters)</p>
+<p><strong>Q: monitoring vs observability — khác nhau thế nào?</strong><br/>
+→ Monitoring = phản ứng với known issues qua predefined thresholds. Observability = khám phá bất kỳ unknown issue nào qua dữ liệu phong phú.</p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-250" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#phần-1-observability--computer-fundamentals" data-for="phần-1-observability--computer-fundamentals">Phần 1: Observability &amp; Computer Fundamentals</a></li><li class="depth-1"><a href="#11-vấn-đề-mà-observability-giải-quyết--bức-tranh-toàn-cảnh" data-for="11-vấn-đề-mà-observability-giải-quyết--bức-tranh-toàn-cảnh">1.1 Vấn Đề Mà Observability Giải Quyết — Bức Tranh Toàn Cảnh</a></li><li class="depth-2"><a href="#thế-giới-phần-mềm-đã-thay-đổi-như-thế-nào" data-for="thế-giới-phần-mềm-đã-thay-đổi-như-thế-nào">Thế giới phần mềm đã thay đổi như thế nào?</a></li><li class="depth-1"><a href="#12-observability--định-nghĩa-chính-xác" data-for="12-observability--định-nghĩa-chính-xác">1.2 Observability — Định Nghĩa Chính Xác</a></li><li class="depth-2"><a href="#monitoring--observability" data-for="monitoring--observability">Monitoring ≠ Observability</a></li><li class="depth-1"><a href="#13-ba-trụ-cột--nguyên-lý-hoạt-động-của-từng-pillar" data-for="13-ba-trụ-cột--nguyên-lý-hoạt-động-của-từng-pillar">1.3 Ba Trụ Cột — Nguyên Lý Hoạt Động Của Từng Pillar</a></li><li class="depth-2"><a href="#tại-sao-lại-cần-đúng-3-trụ-cột-này" data-for="tại-sao-lại-cần-đúng-3-trụ-cột-này">Tại sao lại cần đúng 3 trụ cột này?</a></li><li class="depth-2"><a href="#pillar-1-metrics--what-happened" data-for="pillar-1-metrics--what-happened">Pillar 1: METRICS — “What happened?”</a></li><li class="depth-2"><a href="#pillar-2-logs--why-did-it-happen" data-for="pillar-2-logs--why-did-it-happen">Pillar 2: LOGS — “Why did it happen?”</a></li><li class="depth-2"><a href="#pillar-3-traces--where-in-the-chain" data-for="pillar-3-traces--where-in-the-chain">Pillar 3: TRACES — “Where in the chain?”</a></li><li class="depth-2"><a href="#cách-3-pillars-phối-hợp--workflow-điều-tra" data-for="cách-3-pillars-phối-hợp--workflow-điều-tra">Cách 3 Pillars Phối Hợp — Workflow Điều Tra</a></li><li class="depth-1"><a href="#14-computer-fundamentals--cơ-chế-hoạt-động" data-for="14-computer-fundamentals--cơ-chế-hoạt-động">1.4 Computer Fundamentals — Cơ Chế Hoạt Động</a></li><li class="depth-2"><a href="#cpu--cách-đọc-metrics-đúng" data-for="cpu--cách-đọc-metrics-đúng">CPU — Cách Đọc Metrics Đúng</a></li><li class="depth-2"><a href="#memory--tại-sao-available--free" data-for="memory--tại-sao-available--free">Memory — Tại Sao available > free?</a></li><li class="depth-2"><a href="#networking--tcp-vs-udp-cơ-chế-bắt-tay" data-for="networking--tcp-vs-udp-cơ-chế-bắt-tay">Networking — TCP vs UDP: Cơ Chế Bắt Tay</a></li><li class="depth-2"><a href="#ports--tại-sao-những-con-số-này" data-for="ports--tại-sao-những-con-số-này">Ports — Tại Sao Những Con Số Này?</a></li><li class="depth-1"><a href="#15-yaml--cơ-chế-parse-và-lỗi-phổ-biến" data-for="15-yaml--cơ-chế-parse-và-lỗi-phổ-biến">1.5 YAML — Cơ Chế Parse và Lỗi Phổ Biến</a></li><li class="depth-2"><a href="#tại-sao-yaml-dùng-spaces-thay-tabs" data-for="tại-sao-yaml-dùng-spaces-thay-tabs">Tại sao YAML dùng spaces thay tabs?</a></li><li class="depth-1"><a href="#16-câu-hỏi-thường-gặp-với-giải-thích-tại-sao" data-for="16-câu-hỏi-thường-gặp-với-giải-thích-tại-sao">1.6 Câu Hỏi Thường Gặp (Với Giải Thích Tại Sao)</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/datadog/datadog_fundamentals_full/readme" class="internal">Datadog Fundamentals Certification — Bộ Tài Liệu Ôn Thi Đầy Đủ</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

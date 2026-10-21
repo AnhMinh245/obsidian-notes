@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>7.4. Storage Workflows - Luồng Provisioning &amp; Lifecycle</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="7.4. Storage Workflows - Luồng Provisioning &amp; Lifecycle"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="7.4. Storage Workflows - Luồng Provisioning &amp; Lifecycle"/><meta name="twitter:description" content="7.4."/><meta property="og:description" content="7.4."/><meta property="og:image:alt" content="7.4."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/07-storage/04-storage-workflows"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/07-storage/04-storage-workflows"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="7.4."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/k8s/07-storage/04-storage-workflows" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-153" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-153" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/">K8S</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/07-storage/">07-storage</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>7.4. Storage Workflows - Luồng Provisioning &amp; Lifecycle</a></div></nav><h1 class="article-title">7.4. Storage Workflows - Luồng Provisioning &amp; Lifecycle</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/k8s" class="internal internal-link tag-link">domain/k8s</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-09T17:00:00.000Z">10 thg 4, 2026</time><span>10 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="74-storage-workflows---luồng-provisioning--lifecycle">7.4. Storage Workflows - Luồng Provisioning &amp; Lifecycle<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#74-storage-workflows---luồng-provisioning--lifecycle" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>Chi tiết cách storage được provision, attach, mount, và reclaim trong Kubernetes</p>
+</blockquote>
+<hr/>
+<h2 id="-mục-tiêu-học">🎯 Mục Tiêu Học<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mục-tiêu-học" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau khi học xong phần này, bạn sẽ:</p>
+<ul>
+<li>✅ Phân biệt <strong>Static vs Dynamic provisioning</strong> qua flow diagram</li>
+<li>✅ Trace được <strong>CSI plugin lifecycle</strong> (Provision → Attach → Mount)</li>
+<li>✅ Hiểu <strong>Reclaim policy</strong> impact qua visual workflow</li>
+<li>✅ Nắm rõ <strong>StatefulSet + VolumeClaimTemplate</strong> auto-provisioning</li>
+<li>✅ Hiểu <strong>Volume Expansion</strong> workflow và limitations</li>
+</ul>
+<hr/>
+<h2 id="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-quy-tắc-màu-sắc-diagram" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Quy tắc màu nhất quán </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>💙 <strong>Xanh dương</strong> <code>#3498db</code> — PVC, user-facing objects</li>
+<li>💚 <strong>Xanh lá</strong> <code>#27ae60</code> — PV Bound, success</li>
+<li>🧡 <strong>Cam</strong> <code>#f39c12</code> — Pending, provisioning</li>
+<li>❤️ <strong>Đỏ</strong> <code>#e74c3c</code> — Failed, data loss warning</li>
+<li>💜 <strong>Tím</strong> <code>#9b59b6</code> — StorageClass, CSI, provisioner</li>
+<li>⬜ <strong>Xám</strong> <code>#95a5a6</code> — Released, infrastructure</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-1-static-provisioning">🔄 Workflow 1: Static Provisioning<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-1-static-provisioning" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Admin tạo PV trước → Dev tạo PVC → Kubernetes bind</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant Admin as 👨‍🔧 Admin\n    participant API as 🔀 API Server\n    participant PVC as ⚙️ PV Controller\n    participant Dev as 👨‍💻 Developer\n    participant KL as 🔧 kubelet\n\n    Note over Admin: Phase 1: Admin prepares storage\n\n    Admin->>Admin: Create actual storage&lt;br/>(AWS EBS, NFS share, etc.)\n    Admin->>API: Create PV (100Gi, RWO,&lt;br/>storageClass: manual)\n    API->>API: Save PV (status: Available)\n\n    Note over PVC: 👁️ Watch: PV available&lt;br/>but no matching PVC yet\n\n    Note over Dev: Phase 2: Developer requests storage\n\n    Dev->>API: Create PVC (50Gi, RWO,&lt;br/>storageClass: manual)\n    API->>API: Save PVC (status: Pending)\n\n    Note over PVC: 👁️ Watch: New PVC!&lt;br/>Search for matching PV...\n\n    PVC->>PVC: Match criteria:&lt;br/>✅ accessModes match (RWO)&lt;br/>✅ capacity ≥ request (100 ≥ 50)&lt;br/>✅ storageClass match (manual)&lt;br/>✅ PV is Available\n\n    PVC->>API: Bind PVC ↔ PV\n    Note over API: PV: Available → Bound&lt;br/>PVC: Pending → Bound&lt;br/>⚠️ 1:1 binding (100Gi reserved,&lt;br/>even though PVC only needs 50Gi!)\n\n    Note over Dev: Phase 3: Use in Pod\n\n    Dev->>API: Create Pod with PVC reference\n    KL->>KL: Attach volume to Node\n    KL->>KL: Format filesystem (if first use)\n    KL->>KL: Mount to container path\n    Note over KL: ✅ Container sees&lt;br/>/data mounted and ready!&quot;">sequenceDiagram
+    autonumber
+    participant Admin as 👨‍🔧 Admin
+    participant API as 🔀 API Server
+    participant PVC as ⚙️ PV Controller
+    participant Dev as 👨‍💻 Developer
+    participant KL as 🔧 kubelet
+
+    Note over Admin: Phase 1: Admin prepares storage
+
+    Admin->>Admin: Create actual storage&lt;br/>(AWS EBS, NFS share, etc.)
+    Admin->>API: Create PV (100Gi, RWO,&lt;br/>storageClass: manual)
+    API->>API: Save PV (status: Available)
+
+    Note over PVC: 👁️ Watch: PV available&lt;br/>but no matching PVC yet
+
+    Note over Dev: Phase 2: Developer requests storage
+
+    Dev->>API: Create PVC (50Gi, RWO,&lt;br/>storageClass: manual)
+    API->>API: Save PVC (status: Pending)
+
+    Note over PVC: 👁️ Watch: New PVC!&lt;br/>Search for matching PV...
+
+    PVC->>PVC: Match criteria:&lt;br/>✅ accessModes match (RWO)&lt;br/>✅ capacity ≥ request (100 ≥ 50)&lt;br/>✅ storageClass match (manual)&lt;br/>✅ PV is Available
+
+    PVC->>API: Bind PVC ↔ PV
+    Note over API: PV: Available → Bound&lt;br/>PVC: Pending → Bound&lt;br/>⚠️ 1:1 binding (100Gi reserved,&lt;br/>even though PVC only needs 50Gi!)
+
+    Note over Dev: Phase 3: Use in Pod
+
+    Dev->>API: Create Pod with PVC reference
+    KL->>KL: Attach volume to Node
+    KL->>KL: Format filesystem (if first use)
+    KL->>KL: Mount to container path
+    Note over KL: ✅ Container sees&lt;br/>/data mounted and ready!
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="-workflow-2-dynamic-provisioning-storageclass">🔄 Workflow 2: Dynamic Provisioning (StorageClass)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-2-dynamic-provisioning-storageclass" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Dev tạo PVC → StorageClass auto-creates PV → Bind</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant Dev as 👨‍💻 Developer\n    participant API as 🔀 API Server\n    participant PVC as ⚙️ PV Controller\n    participant SC as 💜 StorageClass&lt;br/>Provisioner\n    participant CLOUD as ☁️ Cloud API&lt;br/>(AWS/GCP/Azure)\n    participant KL as 🔧 kubelet\n\n    Dev->>API: Create PVC&lt;br/>storageClass: gp3&lt;br/>size: 50Gi\n\n    API->>API: Save PVC (status: Pending)\n\n    Note over PVC: 👁️ Watch: New PVC!&lt;br/>No existing PV matches...&lt;br/>BUT StorageClass \&quot;gp3\&quot; has provisioner!\n\n    PVC->>SC: Trigger dynamic provisioning\n\n    SC->>CLOUD: Create 50Gi volume&lt;br/>(API: aws ec2 create-volume&lt;br/>type=gp3, size=50)\n    CLOUD-->>SC: Volume ID: vol-abc123\n\n    SC->>API: Create PV object&lt;br/>capacity: 50Gi&lt;br/>volumeHandle: vol-abc123&lt;br/>claimRef → PVC\n\n    PVC->>API: Bind PVC ↔ PV\n    Note over API: ✅ PV auto-created!&lt;br/>PV: Bound&lt;br/>PVC: Bound\n\n    Dev->>API: Create Pod with PVC\n    KL->>CLOUD: Attach vol-abc123 to Node\n    KL->>KL: Format ext4 + Mount\n    Note over KL: ✅ Ready!&quot;">sequenceDiagram
+    autonumber
+    participant Dev as 👨‍💻 Developer
+    participant API as 🔀 API Server
+    participant PVC as ⚙️ PV Controller
+    participant SC as 💜 StorageClass&lt;br/>Provisioner
+    participant CLOUD as ☁️ Cloud API&lt;br/>(AWS/GCP/Azure)
+    participant KL as 🔧 kubelet
+
+    Dev->>API: Create PVC&lt;br/>storageClass: gp3&lt;br/>size: 50Gi
+
+    API->>API: Save PVC (status: Pending)
+
+    Note over PVC: 👁️ Watch: New PVC!&lt;br/>No existing PV matches...&lt;br/>BUT StorageClass &quot;gp3&quot; has provisioner!
+
+    PVC->>SC: Trigger dynamic provisioning
+
+    SC->>CLOUD: Create 50Gi volume&lt;br/>(API: aws ec2 create-volume&lt;br/>type=gp3, size=50)
+    CLOUD-->>SC: Volume ID: vol-abc123
+
+    SC->>API: Create PV object&lt;br/>capacity: 50Gi&lt;br/>volumeHandle: vol-abc123&lt;br/>claimRef → PVC
+
+    PVC->>API: Bind PVC ↔ PV
+    Note over API: ✅ PV auto-created!&lt;br/>PV: Bound&lt;br/>PVC: Bound
+
+    Dev->>API: Create Pod with PVC
+    KL->>CLOUD: Attach vol-abc123 to Node
+    KL->>KL: Format ext4 + Mount
+    Note over KL: ✅ Ready!
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="static-vs-dynamic--visual-comparison">Static vs Dynamic — Visual Comparison<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#static-vs-dynamic--visual-comparison" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph \&quot;Static Provisioning\&quot;\n        S_ADMIN[\&quot;👨‍🔧 Admin\&quot;] -->|\&quot;1. Create PV&lt;br/>(manual)\&quot;| S_PV[\&quot;PV&lt;br/>Available\&quot;]\n        S_DEV[\&quot;👨‍💻 Developer\&quot;] -->|\&quot;2. Create PVC\&quot;| S_PVC[\&quot;PVC&lt;br/>Pending\&quot;]\n        S_PV &amp; S_PVC -->|\&quot;3. Bind\&quot;| S_BOUND[\&quot;PV ↔ PVC&lt;br/>Bound ✅\&quot;]\n    end\n\n    subgraph \&quot;Dynamic Provisioning\&quot;\n        D_DEV[\&quot;👨‍💻 Developer\&quot;] -->|\&quot;1. Create PVC&lt;br/>(+ StorageClass)\&quot;| D_PVC[\&quot;PVC&lt;br/>Pending\&quot;]\n        D_PVC -->|\&quot;2. Trigger\&quot;| D_SC[\&quot;StorageClass&lt;br/>Provisioner\&quot;]\n        D_SC -->|\&quot;3. Auto-create\&quot;| D_PV[\&quot;PV&lt;br/>auto-created\&quot;]\n        D_PVC &amp; D_PV -->|\&quot;4. Bind\&quot;| D_BOUND[\&quot;PV ↔ PVC&lt;br/>Bound ✅\&quot;]\n    end\n\n    style S_ADMIN fill:#f39c12,stroke:#d68910,color:#fff\n    style S_PV fill:#27ae60,stroke:#1e8449,color:#fff\n    style D_SC fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style D_PV fill:#27ae60,stroke:#1e8449,color:#fff\n    style S_BOUND fill:#27ae60,stroke:#1e8449,color:#fff\n    style D_BOUND fill:#27ae60,stroke:#1e8449,color:#fff&quot;">graph TD
+    subgraph &quot;Static Provisioning&quot;
+        S_ADMIN[&quot;👨‍🔧 Admin&quot;] -->|&quot;1. Create PV&lt;br/>(manual)&quot;| S_PV[&quot;PV&lt;br/>Available&quot;]
+        S_DEV[&quot;👨‍💻 Developer&quot;] -->|&quot;2. Create PVC&quot;| S_PVC[&quot;PVC&lt;br/>Pending&quot;]
+        S_PV &amp; S_PVC -->|&quot;3. Bind&quot;| S_BOUND[&quot;PV ↔ PVC&lt;br/>Bound ✅&quot;]
+    end
+
+    subgraph &quot;Dynamic Provisioning&quot;
+        D_DEV[&quot;👨‍💻 Developer&quot;] -->|&quot;1. Create PVC&lt;br/>(+ StorageClass)&quot;| D_PVC[&quot;PVC&lt;br/>Pending&quot;]
+        D_PVC -->|&quot;2. Trigger&quot;| D_SC[&quot;StorageClass&lt;br/>Provisioner&quot;]
+        D_SC -->|&quot;3. Auto-create&quot;| D_PV[&quot;PV&lt;br/>auto-created&quot;]
+        D_PVC &amp; D_PV -->|&quot;4. Bind&quot;| D_BOUND[&quot;PV ↔ PVC&lt;br/>Bound ✅&quot;]
+    end
+
+    style S_ADMIN fill:#f39c12,stroke:#d68910,color:#fff
+    style S_PV fill:#27ae60,stroke:#1e8449,color:#fff
+    style D_SC fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style D_PV fill:#27ae60,stroke:#1e8449,color:#fff
+    style S_BOUND fill:#27ae60,stroke:#1e8449,color:#fff
+    style D_BOUND fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Dynamic Provisioning = Best Practice cho Production </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>Admin chỉ cần setup StorageClass <strong>1 lần</strong></li>
+<li>Developer tự create PVC → PV tự động tạo</li>
+<li>Không cần admin can thiệp cho mỗi PVC request</li>
+<li>Phù hợp với <strong>self-service</strong> model</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-3-csi-volume-lifecycle-attach--mount--unmount">🔄 Workflow 3: CSI Volume Lifecycle (Attach → Mount → Unmount)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-3-csi-volume-lifecycle-attach--mount--unmount" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Full lifecycle khi Pod được schedule đến Node và sử dụng PVC</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    subgraph \&quot;Phase 1: Provision\&quot;\n        CREATE_PVC[\&quot;Dev: Create PVC\&quot;] --> SC_PROV[\&quot;StorageClass Provisioner:&lt;br/>CreateVolume()\&quot;]\n        SC_PROV --> CLOUD_VOL[\&quot;Cloud: Volume created&lt;br/>vol-abc123\&quot;]\n        CLOUD_VOL --> PV_CREATED[\&quot;PV created + Bound\&quot;]\n    end\n\n    subgraph \&quot;Phase 2: Attach (Node-level)\&quot;\n        POD_SCHED[\&quot;Pod scheduled to Node-1\&quot;] --> ATTACH[\&quot;CSI Controller:&lt;br/>ControllerPublishVolume()&lt;br/>&lt;i>Attach disk to Node VM&lt;/i>\&quot;]\n        ATTACH --> ATTACHED[\&quot;Volume attached&lt;br/>to Node-1&lt;br/>/dev/xvdf\&quot;]\n    end\n\n    subgraph \&quot;Phase 3: Mount (Pod-level)\&quot;\n        ATTACHED --> FORMAT{\&quot;First time&lt;br/>use?\&quot;}\n        FORMAT -->|\&quot;Yes\&quot;| MKFS[\&quot;NodeStageVolume():&lt;br/>mkfs.ext4 /dev/xvdf\&quot;]\n        FORMAT -->|\&quot;No\&quot;| FSCK[\&quot;fsck if needed\&quot;]\n        MKFS &amp; FSCK --> MOUNT[\&quot;NodePublishVolume():&lt;br/>mount → /var/lib/kubelet/pods/&lt;br/>  pod-uid/volumes/...\&quot;]\n        MOUNT --> BIND[\&quot;Bind mount to&lt;br/>container path:&lt;br/>/data\&quot;]\n    end\n\n    subgraph \&quot;Phase 4: Use\&quot;\n        BIND --> USE[\&quot;📦 Container&lt;br/>reads/writes /data ✅\&quot;]\n    end\n\n    subgraph \&quot;Phase 5: Cleanup (Pod deleted)\&quot;\n        USE -.-> UNMOUNT[\&quot;NodeUnpublishVolume():&lt;br/>unmount from Pod\&quot;]\n        UNMOUNT --> UNSTAGE[\&quot;NodeUnstageVolume():&lt;br/>unmount from Node\&quot;]\n        UNSTAGE --> DETACH[\&quot;ControllerUnpublishVolume():&lt;br/>Detach disk from Node\&quot;]\n        DETACH --> RECLAIM{\&quot;Reclaim&lt;br/>Policy?\&quot;}\n    end\n\n    style CREATE_PVC fill:#3498db,stroke:#2980b9,color:#fff\n    style SC_PROV fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style ATTACHED fill:#f39c12,stroke:#d68910,color:#fff\n    style USE fill:#27ae60,stroke:#1e8449,color:#fff\n    style DETACH fill:#95a5a6,stroke:#7f8c8d,color:#fff&quot;">flowchart TD
+    subgraph &quot;Phase 1: Provision&quot;
+        CREATE_PVC[&quot;Dev: Create PVC&quot;] --> SC_PROV[&quot;StorageClass Provisioner:&lt;br/>CreateVolume()&quot;]
+        SC_PROV --> CLOUD_VOL[&quot;Cloud: Volume created&lt;br/>vol-abc123&quot;]
+        CLOUD_VOL --> PV_CREATED[&quot;PV created + Bound&quot;]
+    end
+
+    subgraph &quot;Phase 2: Attach (Node-level)&quot;
+        POD_SCHED[&quot;Pod scheduled to Node-1&quot;] --> ATTACH[&quot;CSI Controller:&lt;br/>ControllerPublishVolume()&lt;br/>&lt;i>Attach disk to Node VM&lt;/i>&quot;]
+        ATTACH --> ATTACHED[&quot;Volume attached&lt;br/>to Node-1&lt;br/>/dev/xvdf&quot;]
+    end
+
+    subgraph &quot;Phase 3: Mount (Pod-level)&quot;
+        ATTACHED --> FORMAT{&quot;First time&lt;br/>use?&quot;}
+        FORMAT -->|&quot;Yes&quot;| MKFS[&quot;NodeStageVolume():&lt;br/>mkfs.ext4 /dev/xvdf&quot;]
+        FORMAT -->|&quot;No&quot;| FSCK[&quot;fsck if needed&quot;]
+        MKFS &amp; FSCK --> MOUNT[&quot;NodePublishVolume():&lt;br/>mount → /var/lib/kubelet/pods/&lt;br/>  pod-uid/volumes/...&quot;]
+        MOUNT --> BIND[&quot;Bind mount to&lt;br/>container path:&lt;br/>/data&quot;]
+    end
+
+    subgraph &quot;Phase 4: Use&quot;
+        BIND --> USE[&quot;📦 Container&lt;br/>reads/writes /data ✅&quot;]
+    end
+
+    subgraph &quot;Phase 5: Cleanup (Pod deleted)&quot;
+        USE -.-> UNMOUNT[&quot;NodeUnpublishVolume():&lt;br/>unmount from Pod&quot;]
+        UNMOUNT --> UNSTAGE[&quot;NodeUnstageVolume():&lt;br/>unmount from Node&quot;]
+        UNSTAGE --> DETACH[&quot;ControllerUnpublishVolume():&lt;br/>Detach disk from Node&quot;]
+        DETACH --> RECLAIM{&quot;Reclaim&lt;br/>Policy?&quot;}
+    end
+
+    style CREATE_PVC fill:#3498db,stroke:#2980b9,color:#fff
+    style SC_PROV fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style ATTACHED fill:#f39c12,stroke:#d68910,color:#fff
+    style USE fill:#27ae60,stroke:#1e8449,color:#fff
+    style DETACH fill:#95a5a6,stroke:#7f8c8d,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>CSI = Container Storage Interface </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>CSI là standard interface cho storage drivers trong K8s:</p>
+<ul>
+<li><strong>CSI Controller</strong> (centralized): Provision, Attach, Detach, Delete</li>
+<li><strong>CSI Node</strong> (per-node): Format, Mount, Unmount</li>
+<li>Mỗi cloud provider implement CSI driver riêng (EBS CSI, GCE PD CSI, Azure Disk CSI)</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-4-reclaim-policies--impact-flow">🔄 Workflow 4: Reclaim Policies — Impact Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-4-reclaim-policies--impact-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: PVC bị xoá — chuyện gì xảy ra với PV và data?</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    DELETE_PVC[\&quot;🗑️ kubectl delete pvc my-pvc\&quot;] --> PV_STATUS[\&quot;PV status: Bound → Released\&quot;]\n\n    PV_STATUS --> POLICY{\&quot;persistentVolumeReclaimPolicy?\&quot;}\n\n    POLICY -->|\&quot;Retain\&quot;| RETAIN_PV[\&quot;PV status: Released&lt;br/>Data: ✅ INTACT&lt;br/>Storage: ✅ EXISTS\&quot;]\n    RETAIN_PV --> ADMIN_ACTION[\&quot;👨‍🔧 Admin must manually:&lt;br/>1. Backup data if needed&lt;br/>2. Delete PV object&lt;br/>3. Optionally cleanup disk&lt;br/>4. Recreate PV for reuse\&quot;]\n    ADMIN_ACTION --> REUSE[\&quot;PV Available again&lt;br/>(or create new PV)\&quot;]\n\n    POLICY -->|\&quot;Delete\&quot;| DELETE_PV[\&quot;PV: AUTO-DELETED&lt;br/>Storage: AUTO-DELETED&lt;br/>(EBS volume deleted!)\&quot;]\n    DELETE_PV --> GONE[\&quot;💀 Data GONE FOREVER!&lt;br/>No recovery possible!\&quot;]\n\n    POLICY -->|\&quot;Recycle&lt;br/>(deprecated)\&quot;| RECYCLE[\&quot;PV: rm -rf /volume/*&lt;br/>Then status: Available\&quot;]\n    RECYCLE --> AVAILABLE[\&quot;PV ready for&lt;br/>new PVC binding\&quot;]\n\n    style DELETE_PVC fill:#e74c3c,stroke:#c0392b,color:#fff\n    style RETAIN_PV fill:#27ae60,stroke:#1e8449,color:#fff\n    style REUSE fill:#27ae60,stroke:#1e8449,color:#fff\n    style GONE fill:#e74c3c,stroke:#c0392b,color:#fff\n    style RECYCLE fill:#f39c12,stroke:#d68910,color:#fff&quot;">flowchart TD
+    DELETE_PVC[&quot;🗑️ kubectl delete pvc my-pvc&quot;] --> PV_STATUS[&quot;PV status: Bound → Released&quot;]
+
+    PV_STATUS --> POLICY{&quot;persistentVolumeReclaimPolicy?&quot;}
+
+    POLICY -->|&quot;Retain&quot;| RETAIN_PV[&quot;PV status: Released&lt;br/>Data: ✅ INTACT&lt;br/>Storage: ✅ EXISTS&quot;]
+    RETAIN_PV --> ADMIN_ACTION[&quot;👨‍🔧 Admin must manually:&lt;br/>1. Backup data if needed&lt;br/>2. Delete PV object&lt;br/>3. Optionally cleanup disk&lt;br/>4. Recreate PV for reuse&quot;]
+    ADMIN_ACTION --> REUSE[&quot;PV Available again&lt;br/>(or create new PV)&quot;]
+
+    POLICY -->|&quot;Delete&quot;| DELETE_PV[&quot;PV: AUTO-DELETED&lt;br/>Storage: AUTO-DELETED&lt;br/>(EBS volume deleted!)&quot;]
+    DELETE_PV --> GONE[&quot;💀 Data GONE FOREVER!&lt;br/>No recovery possible!&quot;]
+
+    POLICY -->|&quot;Recycle&lt;br/>(deprecated)&quot;| RECYCLE[&quot;PV: rm -rf /volume/*&lt;br/>Then status: Available&quot;]
+    RECYCLE --> AVAILABLE[&quot;PV ready for&lt;br/>new PVC binding&quot;]
+
+    style DELETE_PVC fill:#e74c3c,stroke:#c0392b,color:#fff
+    style RETAIN_PV fill:#27ae60,stroke:#1e8449,color:#fff
+    style REUSE fill:#27ae60,stroke:#1e8449,color:#fff
+    style GONE fill:#e74c3c,stroke:#c0392b,color:#fff
+    style RECYCLE fill:#f39c12,stroke:#d68910,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Production Rules </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>Production data</strong>: ALWAYS use <code>Retain</code> → admin controls data lifecycle</li>
+<li><strong>Dev/test environments</strong>: <code>Delete</code> OK → auto-cleanup saves cost</li>
+<li><strong>NEVER</strong> assume data survives PVC deletion with <code>Delete</code> policy!</li>
+<li>Dynamic provisioning default: Usually <code>Delete</code> ← <strong>Cẩn thận!</strong></li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-5-statefulset--volumeclaimtemplate">🔄 Workflow 5: StatefulSet + VolumeClaimTemplate<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-5-statefulset--volumeclaimtemplate" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: StatefulSet tạo PVC riêng cho mỗi Pod</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant SSC as ⚙️ StatefulSet&lt;br/>Controller\n    participant API as 🔀 API Server\n    participant SC as 💜 StorageClass\n    participant KL as 🔧 kubelet\n\n    Note over SSC: StatefulSet: replicas=3&lt;br/>volumeClaimTemplates:&lt;br/>  name: data, 10Gi\n\n    rect rgb(200, 230, 200)\n        Note over SSC: Pod-0 creation\n        SSC->>API: Create PVC: data-postgres-0 (10Gi)\n        SC->>SC: Dynamic provision PV-0\n        API->>API: Bind PVC-0 ↔ PV-0\n        SSC->>API: Create Pod: postgres-0\n        KL->>KL: Mount PV-0 → postgres-0:/data\n    end\n\n    rect rgb(200, 220, 240)\n        Note over SSC: Pod-1 creation\n        SSC->>API: Create PVC: data-postgres-1 (10Gi)\n        SC->>SC: Dynamic provision PV-1\n        API->>API: Bind PVC-1 ↔ PV-1\n        SSC->>API: Create Pod: postgres-1\n        KL->>KL: Mount PV-1 → postgres-1:/data\n    end\n\n    rect rgb(220, 200, 240)\n        Note over SSC: Pod-2 creation\n        SSC->>API: Create PVC: data-postgres-2 (10Gi)\n        SC->>SC: Dynamic provision PV-2\n        API->>API: Bind PVC-2 ↔ PV-2\n        SSC->>API: Create Pod: postgres-2\n        KL->>KL: Mount PV-2 → postgres-2:/data\n    end\n\n    Note over SSC: ✅ Each Pod has its OWN PVC + PV!&quot;">sequenceDiagram
+    autonumber
+    participant SSC as ⚙️ StatefulSet&lt;br/>Controller
+    participant API as 🔀 API Server
+    participant SC as 💜 StorageClass
+    participant KL as 🔧 kubelet
+
+    Note over SSC: StatefulSet: replicas=3&lt;br/>volumeClaimTemplates:&lt;br/>  name: data, 10Gi
+
+    rect rgb(200, 230, 200)
+        Note over SSC: Pod-0 creation
+        SSC->>API: Create PVC: data-postgres-0 (10Gi)
+        SC->>SC: Dynamic provision PV-0
+        API->>API: Bind PVC-0 ↔ PV-0
+        SSC->>API: Create Pod: postgres-0
+        KL->>KL: Mount PV-0 → postgres-0:/data
+    end
+
+    rect rgb(200, 220, 240)
+        Note over SSC: Pod-1 creation
+        SSC->>API: Create PVC: data-postgres-1 (10Gi)
+        SC->>SC: Dynamic provision PV-1
+        API->>API: Bind PVC-1 ↔ PV-1
+        SSC->>API: Create Pod: postgres-1
+        KL->>KL: Mount PV-1 → postgres-1:/data
+    end
+
+    rect rgb(220, 200, 240)
+        Note over SSC: Pod-2 creation
+        SSC->>API: Create PVC: data-postgres-2 (10Gi)
+        SC->>SC: Dynamic provision PV-2
+        API->>API: Bind PVC-2 ↔ PV-2
+        SSC->>API: Create Pod: postgres-2
+        KL->>KL: Mount PV-2 → postgres-2:/data
+    end
+
+    Note over SSC: ✅ Each Pod has its OWN PVC + PV!
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="statefulset-storage-identity">StatefulSet Storage Identity<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#statefulset-storage-identity" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    SS[\&quot;📦 StatefulSet: postgres&lt;br/>replicas: 3\&quot;] --> P0 &amp; P1 &amp; P2\n\n    subgraph \&quot;Pod-0 (always same storage)\&quot;\n        P0[\&quot;postgres-0\&quot;] --> PVC0[\&quot;PVC: data-postgres-0\&quot;]\n        PVC0 --> PV0[\&quot;PV: pvc-aaa&lt;br/>vol-001 (10Gi)\&quot;]\n    end\n\n    subgraph \&quot;Pod-1\&quot;\n        P1[\&quot;postgres-1\&quot;] --> PVC1[\&quot;PVC: data-postgres-1\&quot;]\n        PVC1 --> PV1[\&quot;PV: pvc-bbb&lt;br/>vol-002 (10Gi)\&quot;]\n    end\n\n    subgraph \&quot;Pod-2\&quot;\n        P2[\&quot;postgres-2\&quot;] --> PVC2[\&quot;PVC: data-postgres-2\&quot;]\n        PVC2 --> PV2[\&quot;PV: pvc-ccc&lt;br/>vol-003 (10Gi)\&quot;]\n    end\n\n    style SS fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style P0 fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style P1 fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style P2 fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style PVC0 fill:#3498db,stroke:#2980b9,color:#fff\n    style PVC1 fill:#3498db,stroke:#2980b9,color:#fff\n    style PVC2 fill:#3498db,stroke:#2980b9,color:#fff\n    style PV0 fill:#27ae60,stroke:#1e8449,color:#fff\n    style PV1 fill:#27ae60,stroke:#1e8449,color:#fff\n    style PV2 fill:#27ae60,stroke:#1e8449,color:#fff&quot;">graph TD
+    SS[&quot;📦 StatefulSet: postgres&lt;br/>replicas: 3&quot;] --> P0 &amp; P1 &amp; P2
+
+    subgraph &quot;Pod-0 (always same storage)&quot;
+        P0[&quot;postgres-0&quot;] --> PVC0[&quot;PVC: data-postgres-0&quot;]
+        PVC0 --> PV0[&quot;PV: pvc-aaa&lt;br/>vol-001 (10Gi)&quot;]
+    end
+
+    subgraph &quot;Pod-1&quot;
+        P1[&quot;postgres-1&quot;] --> PVC1[&quot;PVC: data-postgres-1&quot;]
+        PVC1 --> PV1[&quot;PV: pvc-bbb&lt;br/>vol-002 (10Gi)&quot;]
+    end
+
+    subgraph &quot;Pod-2&quot;
+        P2[&quot;postgres-2&quot;] --> PVC2[&quot;PVC: data-postgres-2&quot;]
+        PVC2 --> PV2[&quot;PV: pvc-ccc&lt;br/>vol-003 (10Gi)&quot;]
+    end
+
+    style SS fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style P0 fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style P1 fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style P2 fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style PVC0 fill:#3498db,stroke:#2980b9,color:#fff
+    style PVC1 fill:#3498db,stroke:#2980b9,color:#fff
+    style PVC2 fill:#3498db,stroke:#2980b9,color:#fff
+    style PV0 fill:#27ae60,stroke:#1e8449,color:#fff
+    style PV1 fill:#27ae60,stroke:#1e8449,color:#fff
+    style PV2 fill:#27ae60,stroke:#1e8449,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>StatefulSet + Storage Rules </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ol>
+<li><strong>PVC per Pod</strong>: Mỗi Pod có PVC riêng naming convention <code>&lt;template-name>-&lt;pod-name></code></li>
+<li><strong>Scale down ≠ delete PVC</strong>: Scale 3→1, PVC-1 và PVC-2 vẫn tồn tại!</li>
+<li><strong>Scale up = reuse PVC</strong>: Scale 1→3, postgres-1 re-attach PVC-1 (data vẫn còn!)</li>
+<li><strong>Delete StatefulSet</strong>: PVCs vẫn tồn tại — phải xoá manual nếu cần</li>
+</ol>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-6-volume-expansion">🔄 Workflow 6: Volume Expansion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-6-volume-expansion" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: PVC cần thêm dung lượng 10Gi → 50Gi</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    REQUEST[\&quot;👨‍💻 kubectl edit pvc my-pvc&lt;br/>spec.resources.requests.storage: 50Gi\&quot;] --> CHECK{\&quot;StorageClass&lt;br/>allowVolumeExpansion&lt;br/>= true?\&quot;}\n\n    CHECK -->|\&quot;❌ false\&quot;| DENIED[\&quot;❌ Expansion denied&lt;br/>Must use StorageClass with&lt;br/>allowVolumeExpansion: true\&quot;]\n\n    CHECK -->|\&quot;✅ true\&quot;| EXPAND_PV[\&quot;CSI Controller:&lt;br/>ControllerExpandVolume()&lt;br/>Cloud API: resize vol to 50Gi\&quot;]\n\n    EXPAND_PV --> EXPAND_FS{\&quot;Volume type&lt;br/>supports online&lt;br/>expansion?\&quot;}\n\n    EXPAND_FS -->|\&quot;Yes (EBS, GCE PD)\&quot;| ONLINE[\&quot;kubelet: NodeExpandVolume()&lt;br/>resize2fs /dev/xvdf&lt;br/>(online, no downtime!)\&quot;]\n\n    EXPAND_FS -->|\&quot;No\&quot;| OFFLINE[\&quot;⚠️ Need Pod restart&lt;br/>Delete Pod → Recreate&lt;br/>kubelet expands FS on mount\&quot;]\n\n    ONLINE --> DONE[\&quot;✅ PVC: 50Gi&lt;br/>Container sees 50Gi at /data\&quot;]\n    OFFLINE --> DONE\n\n    style REQUEST fill:#3498db,stroke:#2980b9,color:#fff\n    style DENIED fill:#e74c3c,stroke:#c0392b,color:#fff\n    style ONLINE fill:#27ae60,stroke:#1e8449,color:#fff\n    style DONE fill:#27ae60,stroke:#1e8449,color:#fff\n    style OFFLINE fill:#f39c12,stroke:#d68910,color:#fff&quot;">flowchart TD
+    REQUEST[&quot;👨‍💻 kubectl edit pvc my-pvc&lt;br/>spec.resources.requests.storage: 50Gi&quot;] --> CHECK{&quot;StorageClass&lt;br/>allowVolumeExpansion&lt;br/>= true?&quot;}
+
+    CHECK -->|&quot;❌ false&quot;| DENIED[&quot;❌ Expansion denied&lt;br/>Must use StorageClass with&lt;br/>allowVolumeExpansion: true&quot;]
+
+    CHECK -->|&quot;✅ true&quot;| EXPAND_PV[&quot;CSI Controller:&lt;br/>ControllerExpandVolume()&lt;br/>Cloud API: resize vol to 50Gi&quot;]
+
+    EXPAND_PV --> EXPAND_FS{&quot;Volume type&lt;br/>supports online&lt;br/>expansion?&quot;}
+
+    EXPAND_FS -->|&quot;Yes (EBS, GCE PD)&quot;| ONLINE[&quot;kubelet: NodeExpandVolume()&lt;br/>resize2fs /dev/xvdf&lt;br/>(online, no downtime!)&quot;]
+
+    EXPAND_FS -->|&quot;No&quot;| OFFLINE[&quot;⚠️ Need Pod restart&lt;br/>Delete Pod → Recreate&lt;br/>kubelet expands FS on mount&quot;]
+
+    ONLINE --> DONE[&quot;✅ PVC: 50Gi&lt;br/>Container sees 50Gi at /data&quot;]
+    OFFLINE --> DONE
+
+    style REQUEST fill:#3498db,stroke:#2980b9,color:#fff
+    style DENIED fill:#e74c3c,stroke:#c0392b,color:#fff
+    style ONLINE fill:#27ae60,stroke:#1e8449,color:#fff
+    style DONE fill:#27ae60,stroke:#1e8449,color:#fff
+    style OFFLINE fill:#f39c12,stroke:#d68910,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Volume Expansion Limitations </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>✅ <strong>Expand</strong>: PVC size can ONLY increase (10Gi → 50Gi)</li>
+<li>❌ <strong>Shrink</strong>: CANNOT decrease PVC size (50Gi → 10Gi)</li>
+<li>StorageClass MUST have <code>allowVolumeExpansion: true</code></li>
+<li>Some CSI drivers support online expansion, some need Pod restart</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-tổng-hợp-storage-decision-matrix">📊 Tổng Hợp: Storage Decision Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tổng-hợp-storage-decision-matrix" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Scenario</th><th style="text-align:center;">Volume Type</th><th style="text-align:center;">Provisioning</th><th style="text-align:center;">Access Mode</th><th style="text-align:center;">Reclaim</th></tr></thead><tbody><tr><td style="text-align:left;">Pod temp data</td><td style="text-align:center;"><code>emptyDir</code></td><td style="text-align:center;">N/A</td><td style="text-align:center;">N/A</td><td style="text-align:center;">Pod dies = data gone</td></tr><tr><td style="text-align:left;">DB (single Pod)</td><td style="text-align:center;">Block (EBS)</td><td style="text-align:center;">Dynamic</td><td style="text-align:center;">RWO</td><td style="text-align:center;">Retain</td></tr><tr><td style="text-align:left;">Shared uploads</td><td style="text-align:center;">NFS / CephFS</td><td style="text-align:center;">Dynamic</td><td style="text-align:center;">RWX</td><td style="text-align:center;">Retain</td></tr><tr><td style="text-align:left;">Node logs</td><td style="text-align:center;"><code>hostPath</code></td><td style="text-align:center;">N/A</td><td style="text-align:center;">N/A</td><td style="text-align:center;">Data on Node</td></tr><tr><td style="text-align:left;">StatefulSet DB</td><td style="text-align:center;">Block</td><td style="text-align:center;">Dynamic (VCT)</td><td style="text-align:center;">RWO</td><td style="text-align:center;">Retain</td></tr><tr><td style="text-align:left;">Dev environment</td><td style="text-align:center;">Any</td><td style="text-align:center;">Dynamic</td><td style="text-align:center;">RWO</td><td style="text-align:center;">Delete</td></tr><tr><td style="text-align:left;">Config files</td><td style="text-align:center;">ConfigMap</td><td style="text-align:center;">N/A</td><td style="text-align:center;">ROX</td><td style="text-align:center;">N/A</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-troubleshooting-storage">🔧 Troubleshooting Storage<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-troubleshooting-storage" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="common-issues--solutions">Common Issues &amp; Solutions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-issues--solutions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Symptom</th><th style="text-align:left;">Likely Cause</th><th style="text-align:left;">Debug Command</th><th style="text-align:left;">Fix</th></tr></thead><tbody><tr><td style="text-align:left;">PVC stuck <code>Pending</code></td><td style="text-align:left;">No PV matches or no default StorageClass</td><td style="text-align:left;"><code>kubectl describe pvc &lt;name></code> → Events</td><td style="text-align:left;">Create matching PV or set default SC</td></tr><tr><td style="text-align:left;">PVC Pending + <code>no persistent volumes available</code></td><td style="text-align:left;">StorageClass provisioner misconfigured</td><td style="text-align:left;"><code>kubectl get sc</code> + <code>kubectl describe sc &lt;name></code></td><td style="text-align:left;">Check provisioner exists and is running</td></tr><tr><td style="text-align:left;">Pod stuck <code>ContainerCreating</code></td><td style="text-align:left;">Volume attach/mount timeout</td><td style="text-align:left;"><code>kubectl describe pod &lt;name></code> → Events</td><td style="text-align:left;">Check CSI driver, Node permissions</td></tr><tr><td style="text-align:left;"><code>FailedMount</code> / <code>FailedAttachVolume</code></td><td style="text-align:left;">Volume already attached to another Node (RWO)</td><td style="text-align:left;"><code>kubectl get pv &lt;name> -o yaml</code></td><td style="text-align:left;">Delete old Pod first (RWO = 1 Node only)</td></tr><tr><td style="text-align:left;">Data lost after PVC delete</td><td style="text-align:left;"><code>reclaimPolicy: Delete</code> on StorageClass</td><td style="text-align:left;"><code>kubectl get sc &lt;name> -o yaml</code></td><td style="text-align:left;">Change to Retain for production</td></tr><tr><td style="text-align:left;">Volume expansion not working</td><td style="text-align:left;">StorageClass <code>allowVolumeExpansion: false</code></td><td style="text-align:left;"><code>kubectl get sc &lt;name> -o yaml</code></td><td style="text-align:left;">Update SC or create new one with expansion</td></tr><tr><td style="text-align:left;">StatefulSet PVC not reattaching</td><td style="text-align:left;">PVC name mismatch after template change</td><td style="text-align:left;"><code>kubectl get pvc -l app=&lt;name></code></td><td style="text-align:left;">PVC names must match <code>&lt;template>-&lt;pod></code> format</td></tr></tbody></table></div>
+<h3 id="volume-snapshot--backup">Volume Snapshot &amp; Backup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#volume-snapshot--backup" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Volume Snapshot (CSI-based)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">apiVersion:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> snapshot.storage.k8s.io/v1</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kind:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> VolumeSnapshot</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">metadata:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">  name:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> db-snapshot-20260410</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">spec:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">  volumeSnapshotClassName:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> csi-snapclass</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">  source</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    persistentVolumeClaimName:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> data-postgres-0</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Velero backup (application-level)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Install: helm install velero vmware-tanzu/velero</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">velero</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> backup</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> create</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> db-backup</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --include-namespaces</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> production</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">velero</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> restore</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> create</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --from-backup</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> db-backup</span></span></code></pre></figure>
+<hr/>
+<h2 id="-cross-references">📎 Cross-References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-cross-references" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Topic</th><th style="text-align:left;">Link</th></tr></thead><tbody><tr><td style="text-align:left;">StatefulSet &amp; VolumeClaimTemplate workload</td><td style="text-align:left;"><a href="../../.././04-workloads/06-workload-workflows" class="internal internal-link alias" data-slug="04-workloads/06-workload-workflows">4.6. Workload Workflows</a></td></tr><tr><td style="text-align:left;">ConfigMap/Secret as volumes</td><td style="text-align:left;"><a href="../../.././06-configuration/04-config-workflows" class="internal internal-link alias" data-slug="06-configuration/04-config-workflows">6.4. Config Workflows</a></td></tr><tr><td style="text-align:left;">PV access from Pods (networking)</td><td style="text-align:left;"><a href="../../.././05-networking/04-networking-workflows" class="internal internal-link alias" data-slug="05-networking/04-networking-workflows">5.4. Networking Workflows</a></td></tr><tr><td style="text-align:left;">Architecture: PV Controller flow</td><td style="text-align:left;"><a href="../../.././02-architecture/04-component-workflows" class="internal internal-link alias" data-slug="02-architecture/04-component-workflows">2.4. Component Workflows</a></td></tr><tr><td style="text-align:left;">RBAC for PVC operations</td><td style="text-align:left;"><a href="../../.././09-security/04-security-workflows" class="internal internal-link alias" data-slug="09-security/04-security-workflows">9.4. Security Workflows</a></td></tr></tbody></table></div>
+<hr/>
+<h2 id="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kiểm-tra-hiểu-biết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="câu-1-dynamic-vs-static">Câu 1: Dynamic vs Static<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-1-dynamic-vs-static" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> Team muốn mỗi developer tự tạo PVC cho test database (10Gi mỗi người). Nên dùng Static hay Dynamic provisioning?</p>
+<details>
+<summary>Xem đáp án</summary>
+<p><strong>Dynamic Provisioning!</strong></p>
+<ul>
+<li>Admin setup StorageClass 1 lần (ví dụ: <code>storageClass: standard</code>)</li>
+<li>Mỗi developer tự tạo PVC → PV auto-create</li>
+<li>Không cần admin approve mỗi request</li>
+<li>Cost-efficient: volume chỉ tạo khi cần</li>
+</ul>
+<p>Static provisioning không phù hợp vì admin phải pre-create PV cho mỗi developer → không scalable.</p>
+</details>
+<h3 id="câu-2-reclaim-policy-incident">Câu 2: Reclaim Policy Incident<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-2-reclaim-policy-incident" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> Production database PVC bị xoá nhầm. StorageClass có <code>reclaimPolicy: Delete</code>. Chuyện gì xảy ra? Có recover được không?</p>
+<details>
+<summary>Xem đáp án</summary>
+<p><strong>Thảm hoạ!</strong></p>
+<ol>
+<li>PVC deleted → PV auto-deleted</li>
+<li>PV deleted → underlying storage (EBS volume) deleted</li>
+<li><strong>Data GONE FOREVER!</strong> Không thể recover!</li>
+</ol>
+<p><strong>Prevention:</strong></p>
+<ul>
+<li>Production StorageClass: <code>reclaimPolicy: Retain</code></li>
+<li>Enable Volume snapshots (backup before delete)</li>
+<li>RBAC: Restrict PVC delete permission in production namespace</li>
+<li>Use <code>kubectl diff</code> trước khi <code>kubectl delete</code></li>
+</ul>
+</details>
+<h3 id="câu-3-statefulset-scale-down">Câu 3: StatefulSet Scale Down<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-3-statefulset-scale-down" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> <code>StatefulSet</code> redis (3 replicas) scale xuống 1. Rồi scale lên 3 lại. Data có mất không?</p>
+<details>
+<summary>Xem đáp án</summary>
+<p><strong>Data KHÔNG mất!</strong></p>
+<p>Scale 3 → 1:</p>
+<ul>
+<li>Pod redis-2 deleted, Pod redis-1 deleted</li>
+<li>PVC <code>data-redis-2</code> và <code>data-redis-1</code> <strong>KHÔNG bị xoá</strong></li>
+<li>PV vẫn Bound (với PVC, dù Pod không còn)</li>
+</ul>
+<p>Scale 1 → 3:</p>
+<ul>
+<li>Pod redis-1 created → re-attach <code>data-redis-1</code> → data vẫn còn!</li>
+<li>Pod redis-2 created → re-attach <code>data-redis-2</code> → data vẫn còn!</li>
+</ul>
+<p>→ StatefulSet preserve storage qua scale events — đây là designed behavior!</p>
+</details>
+<hr/>
+<h2 id="-tiếp-theo">🚀 Tiếp Theo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tiếp-theo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Bạn đã hiểu toàn bộ storage lifecycle trong Kubernetes!</p>
+<p><strong>Next:</strong> <a href="../../.././08-high-availability/readme" class="internal internal-link alias" data-slug="08-high-availability/readme">Phần 8: High Availability →</a></p>
+<hr/>
+<p><a href="../../../02---areas/k8s/07-storage/03-storage-classes" class="internal internal-link alias" data-slug="02---areas/k8s/07-storage/03-storage-classes">⬅️ 7.3. StorageClass</a> | <a href="../../.././readme" class="internal internal-link alias" data-slug="readme">🏠 Mục Lục Chính</a> | <a href="../../../readme" class="internal internal-link alias" data-slug="readme">📂 Phần 7: Storage</a> | <a href="../../.././08-high-availability/readme" class="internal internal-link alias" data-slug="08-high-availability/readme">➡️ Phần 8: HA &amp; Scaling</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-153" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#74-storage-workflows---luồng-provisioning--lifecycle" data-for="74-storage-workflows---luồng-provisioning--lifecycle">7.4. Storage Workflows - Luồng Provisioning &amp; Lifecycle</a></li><li class="depth-1"><a href="#-mục-tiêu-học" data-for="-mục-tiêu-học">🎯 Mục Tiêu Học</a></li><li class="depth-1"><a href="#-quy-tắc-màu-sắc-diagram" data-for="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram</a></li><li class="depth-1"><a href="#-workflow-1-static-provisioning" data-for="-workflow-1-static-provisioning">🔄 Workflow 1: Static Provisioning</a></li><li class="depth-1"><a href="#-workflow-2-dynamic-provisioning-storageclass" data-for="-workflow-2-dynamic-provisioning-storageclass">🔄 Workflow 2: Dynamic Provisioning (StorageClass)</a></li><li class="depth-2"><a href="#static-vs-dynamic--visual-comparison" data-for="static-vs-dynamic--visual-comparison">Static vs Dynamic — Visual Comparison</a></li><li class="depth-1"><a href="#-workflow-3-csi-volume-lifecycle-attach--mount--unmount" data-for="-workflow-3-csi-volume-lifecycle-attach--mount--unmount">🔄 Workflow 3: CSI Volume Lifecycle (Attach → Mount → Unmount)</a></li><li class="depth-1"><a href="#-workflow-4-reclaim-policies--impact-flow" data-for="-workflow-4-reclaim-policies--impact-flow">🔄 Workflow 4: Reclaim Policies — Impact Flow</a></li><li class="depth-1"><a href="#-workflow-5-statefulset--volumeclaimtemplate" data-for="-workflow-5-statefulset--volumeclaimtemplate">🔄 Workflow 5: StatefulSet + VolumeClaimTemplate</a></li><li class="depth-2"><a href="#statefulset-storage-identity" data-for="statefulset-storage-identity">StatefulSet Storage Identity</a></li><li class="depth-1"><a href="#-workflow-6-volume-expansion" data-for="-workflow-6-volume-expansion">🔄 Workflow 6: Volume Expansion</a></li><li class="depth-1"><a href="#-tổng-hợp-storage-decision-matrix" data-for="-tổng-hợp-storage-decision-matrix">📊 Tổng Hợp: Storage Decision Matrix</a></li><li class="depth-1"><a href="#-troubleshooting-storage" data-for="-troubleshooting-storage">🔧 Troubleshooting Storage</a></li><li class="depth-2"><a href="#common-issues--solutions" data-for="common-issues--solutions">Common Issues &amp; Solutions</a></li><li class="depth-2"><a href="#volume-snapshot--backup" data-for="volume-snapshot--backup">Volume Snapshot &amp; Backup</a></li><li class="depth-1"><a href="#-cross-references" data-for="-cross-references">📎 Cross-References</a></li><li class="depth-1"><a href="#-kiểm-tra-hiểu-biết" data-for="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết</a></li><li class="depth-2"><a href="#câu-1-dynamic-vs-static" data-for="câu-1-dynamic-vs-static">Câu 1: Dynamic vs Static</a></li><li class="depth-2"><a href="#câu-2-reclaim-policy-incident" data-for="câu-2-reclaim-policy-incident">Câu 2: Reclaim Policy Incident</a></li><li class="depth-2"><a href="#câu-3-statefulset-scale-down" data-for="câu-3-statefulset-scale-down">Câu 3: StatefulSet Scale Down</a></li><li class="depth-1"><a href="#-tiếp-theo" data-for="-tiếp-theo">🚀 Tiếp Theo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/k8s/07-storage/readme" class="internal">Phần 7: Storage - Persistent Data</a></li><li><a href="../../../02---areas/k8s/readme" class="internal">Kubernetes Learning Guide - Hướng Dẫn Học Kubernetes Từ Đầu</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

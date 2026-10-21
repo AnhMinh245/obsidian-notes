@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>8.6 – Auto Scaling Group (ASG)</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="8.6 – Auto Scaling Group (ASG)"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="8.6 – Auto Scaling Group (ASG)"/><meta name="twitter:description" content="← 8. High Availability &amp; Scalability 8.6 – Auto Scaling Group (ASG) Cách đọc note này: ASG luôn đi kèm ELB trong kiến trúc thi."/><meta property="og:description" content="← 8. High Availability &amp; Scalability 8.6 – Auto Scaling Group (ASG) Cách đọc note này: ASG luôn đi kèm ELB trong kiến trúc thi."/><meta property="og:image:alt" content="← 8. High Availability &amp; Scalability 8.6 – Auto Scaling Group (ASG) Cách đọc note này: ASG luôn đi kèm ELB trong kiến trúc thi."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.6---auto-scaling-group"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.6---auto-scaling-group"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="← 8. High Availability &amp; Scalability 8.6 – Auto Scaling Group (ASG) Cách đọc note này: ASG luôn đi kèm ELB trong kiến trúc thi."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.6---auto-scaling-group" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-60" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-60" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/">08 - High Availability &amp; Scalability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>8.6 – Auto Scaling Group (ASG)</a></div></nav><h1 class="article-title">8.6 – Auto Scaling Group (ASG)</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">ASG</span><span class="note-properties-separator">, </span><span class="note-properties-text">Auto Scaling Group</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-09-12T17:00:00.000Z">13 thg 9, 2026</time><span>6 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.0---ha--and--scalability-index" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.0---ha--and--scalability-index">← 8. High Availability &amp; Scalability</a></p>
+<h1 id="86--auto-scaling-group-asg">8.6 – Auto Scaling Group (ASG)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#86--auto-scaling-group-asg" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> ASG luôn đi kèm ELB trong kiến trúc thi. Trọng tâm: 3 thông số Min/Desired/Max, 5 loại Scaling Policy (Target Tracking là mặc định), và Cooldown Period.</p>
+</blockquote>
+<h2 id="asg-là-gì">ASG là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#asg-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Auto Scaling Group (ASG)</strong> là dịch vụ tự động <strong>thêm (scale-out) hoặc bớt (scale-in) EC2 instances</strong> dựa trên tải ứng dụng thực tế.</p>
+<p>ASG đảm bảo số lượng EC2 <strong>luôn nằm trong ngưỡng Min – Desired – Max</strong> bạn đặt, và:</p>
+<ul>
+<li>Tự đăng ký/deregister instance với Load Balancer.</li>
+<li>Tự tạo lại instance khi instance cũ unhealthy hoặc bị terminate.</li>
+<li><strong>ASG miễn phí — bạn chỉ trả tiền EC2 được tạo ra.</strong></li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    CW[\&quot;CloudWatch Alarm&lt;br/>(CPU > 70%)\&quot;] -->|\&quot;trigger\&quot;| ASG[\&quot;Auto Scaling Group\&quot;]\n    ASG -->|\&quot;scale-out\&quot;| EC1[\&quot;EC2 #1\&quot;]\n    ASG -->|\&quot;scale-out\&quot;| EC2[\&quot;EC2 #2\&quot;]\n    ASG -->|\&quot;scale-out\&quot;| EC3[\&quot;EC2 #3 (mới)\&quot;]\n    LB[\&quot;Load Balancer\&quot;] --> EC1\n    LB --> EC2\n    LB --> EC3\n    ASG -.->|\&quot;auto register\&quot;| LB&quot;">graph LR
+    CW[&quot;CloudWatch Alarm&lt;br/>(CPU > 70%)&quot;] -->|&quot;trigger&quot;| ASG[&quot;Auto Scaling Group&quot;]
+    ASG -->|&quot;scale-out&quot;| EC1[&quot;EC2 #1&quot;]
+    ASG -->|&quot;scale-out&quot;| EC2[&quot;EC2 #2&quot;]
+    ASG -->|&quot;scale-out&quot;| EC3[&quot;EC2 #3 (mới)&quot;]
+    LB[&quot;Load Balancer&quot;] --> EC1
+    LB --> EC2
+    LB --> EC3
+    ASG -.->|&quot;auto register&quot;| LB
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h2 id="ba-thông-số-quan-trọng-nhất">Ba thông số quan trọng nhất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ba-thông-số-quan-trọng-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tham số</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>Minimum Capacity</strong></td><td>Số instance tối thiểu phải chạy (luôn đảm bảo)</td></tr><tr><td><strong>Desired Capacity</strong></td><td>Số instance ASG muốn duy trì — ASG tự scale để đạt số này</td></tr><tr><td><strong>Maximum Capacity</strong></td><td>Số instance tối đa được phép tạo</td></tr></tbody></table></div>
+<p><strong>Ví dụ:</strong> Min = 1, Desired = 2, Max = 4</p>
+<ul>
+<li>Bình thường → 2 EC2 chạy.</li>
+<li>Traffic tăng → có thể scale đến 4.</li>
+<li>Luôn có ít nhất 1 instance.</li>
+</ul>
+<p><img src="../../../.././../../attachments/pasted-image-20260913004152.png" alt width="auto" height="auto"/></p>
+<h2 id="launch-template--bản-thiết-kế-ec2">Launch Template — bản thiết kế EC2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#launch-template--bản-thiết-kế-ec2" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>ASG cần biết <strong>cách tạo EC2 mới</strong> → dùng <strong>Launch Template</strong> (Launch Configuration đã deprecated).</p>
+<p>Launch Template chứa:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thành phần</th><th>Mô tả</th></tr></thead><tbody><tr><td>AMI</td><td>Base image cho EC2</td></tr><tr><td>Instance Type</td><td>t3.micro, m5.large…</td></tr><tr><td>EBS Volumes</td><td>Root volume, data volume</td></tr><tr><td>EC2 User Data</td><td>Script chạy lần đầu</td></tr><tr><td>Security Groups</td><td>Firewall rules</td></tr><tr><td>SSH Key Pair</td><td>Để kết nối SSH</td></tr><tr><td>IAM Role</td><td>Quyền cho EC2 truy cập AWS services</td></tr><tr><td>Network + Subnets</td><td>VPC, subnet cho mỗi AZ</td></tr><tr><td>Load Balancer / Target Group</td><td>Tự đăng ký khi launch</td></tr></tbody></table></div>
+<h2 id="asg-kết-hợp-với-load-balancer">ASG kết hợp với Load Balancer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#asg-kết-hợp-với-load-balancer" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Khi ASG gắn với ALB/NLB:</p>
+<ul>
+<li>Mọi instance mới <strong>tự động</strong> đăng ký vào target group.</li>
+<li>LB dùng health check để kiểm tra.</li>
+<li>Instance unhealthy → ASG tự <strong>terminate và tạo mới</strong>.</li>
+<li>Scale-in → LB + ASG phối hợp <strong>Deregistration Delay</strong> để tránh mất request.</li>
+</ul>
+<h2 id="cloudwatch-alarms--nền-tảng-của-dynamic-scaling">CloudWatch Alarms — nền tảng của Dynamic Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloudwatch-alarms--nền-tảng-của-dynamic-scaling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>ASG scale dựa trên <strong>CloudWatch metrics</strong> qua alarm:</p>
+<ol>
+<li>CloudWatch theo dõi metric (Avg CPU, NetworkIn, request count…).</li>
+<li>Metric vượt threshold → Alarm kích hoạt.</li>
+<li>Alarm gọi Scaling Policy → scale-out hoặc scale-in.</li>
+</ol>
+<p><em>Metric như Average CPU được tính trên <strong>tất cả instance trong ASG</strong>, không phải từng instance.</em></p>
+<h2 id="5-loại-scaling-policies">5 Loại Scaling Policies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-loại-scaling-policies" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-target-tracking-scaling--phổ-biến-nhất">1. Target Tracking Scaling — phổ biến nhất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-target-tracking-scaling--phổ-biến-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hoạt động như <strong>thermostat</strong>: bạn chỉ đặt target, ASG tự điều chỉnh để đạt.</p>
+<pre><code>Ví dụ: &quot;Duy trì Average CPU = 50%&quot;
+→ ASG tự thêm/bớt EC2 để giữ CPU ≈ 50%
+</code></pre>
+<p><strong>Ưu điểm:</strong> Đơn giản nhất, thông minh, ít cấu hình. <strong>Target Tracking có built-in cooldown riêng</strong>, không dùng default cooldown.</p>
+<h3 id="2-step-scaling">2. Step Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-step-scaling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Scale theo <strong>nhiều ngưỡng</strong> tùy mức độ vi phạm:</p>
+<pre><code>CPU > 70% → +1 EC2
+CPU > 85% → +3 EC2 (scale mạnh hơn)
+CPU &lt; 30% → -1 EC2
+</code></pre>
+<p>Phù hợp ứng dụng có mức tải dao động mạnh, cần kiểm soát chi tiết.</p>
+<h3 id="3-simple-scaling-cũ-ít-dùng">3. Simple Scaling (cũ, ít dùng)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-simple-scaling-cũ-ít-dùng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi alarm kích hoạt → thêm đúng X instance và chờ cooldown.</p>
+<pre><code>CPU > 70% → +2 EC2, chờ 300s
+</code></pre>
+<p>Đơn giản nhưng dễ xung đột với cooldown, không linh hoạt.</p>
+<h3 id="4-scheduled-scaling">4. Scheduled Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-scheduled-scaling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Scale theo <strong>lịch cố định</strong> — khi biết chắc thời điểm cao điểm/thấp điểm.</p>
+<pre><code>Tăng min capacity = 10 vào 17:00 thứ 6 hàng tuần
+Giảm min capacity = 2 vào 22:00 thứ 6
+</code></pre>
+<h3 id="5-predictive-scaling">5. Predictive Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-predictive-scaling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AWS dùng <strong>machine learning</strong> để phân tích dữ liệu lịch sử và <strong>dự đoán tải tương lai</strong> → scale trước khi tải tăng.</p>
+<p>Dùng cho workload ổn định theo mẫu (web traffic 9h–17h giờ làm việc).</p>
+<h2 id="bảng-so-sánh-5-scaling-policies">Bảng so sánh 5 Scaling Policies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-so-sánh-5-scaling-policies" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Cách hoạt động</th><th>Ưu</th><th>Nhược</th><th>Khi dùng</th></tr></thead><tbody><tr><td><strong>Target Tracking</strong></td><td>Giữ metric ở target</td><td>Đơn giản, thông minh</td><td>Ít tùy biến</td><td>Mặc định cho hầu hết app</td></tr><tr><td><strong>Step Scaling</strong></td><td>Scale theo nhiều ngưỡng</td><td>Kiểm soát tốt</td><td>Cấu hình phức tạp</td><td>Tải dao động mạnh</td></tr><tr><td><strong>Simple Scaling</strong></td><td>1 alarm → 1 action</td><td>Đơn giản</td><td>Dễ xung đột cooldown</td><td>Legacy, ít dùng</td></tr><tr><td><strong>Scheduled Scaling</strong></td><td>Scale theo lịch</td><td>Tối ưu giờ cao điểm</td><td>Không phản ứng realtime</td><td>Biết trước pattern</td></tr><tr><td><strong>Predictive Scaling</strong></td><td>Dự đoán trước bằng ML</td><td>Proactive, zero wait</td><td>Cần dữ liệu lịch sử</td><td>Pattern ổn định</td></tr></tbody></table></div>
+<h2 id="các-metrics-tốt-để-scaling">Các Metrics tốt để Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-metrics-tốt-để-scaling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Metric</th><th>Ý nghĩa</th><th>Use case</th></tr></thead><tbody><tr><td><strong>CPUUtilization</strong></td><td>CPU trung bình toàn ASG</td><td>App compute-heavy</td></tr><tr><td><strong>RequestCountPerTarget</strong></td><td>Request trung bình/EC2</td><td>Web app dùng ALB</td></tr><tr><td><strong>Average NetworkIn/Out</strong></td><td>Băng thông trung bình</td><td>App network-heavy</td></tr><tr><td><strong>Custom Metrics</strong></td><td>Tự push vào CloudWatch</td><td>Queue depth (SQS), job count</td></tr></tbody></table></div>
+<p><img src="../../../.././../../attachments/pasted-image-20260913004153.png" alt width="auto" height="auto"/></p>
+<p><em>Ảnh gốc: <code>RequestCountPerTarget</code> là metric hay dùng nhất cho ALB+ASG — Target Value = 3 nghĩa là ASG cố giữ trung bình 3 request/instance, tự scale-out khi vượt.</em></p>
+<h2 id="cooldown-period">Cooldown Period<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cooldown-period" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Cooldown</strong> là khoảng thời gian ASG <strong>đợi sau khi scale</strong> trước khi thực hiện scaling tiếp theo — để metrics ổn định, tránh scale liên tục.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thông tin</th><th>Giá trị</th></tr></thead><tbody><tr><td>Default cooldown</td><td><strong>300 giây (5 phút)</strong></td></tr><tr><td>Target Tracking</td><td>Có <strong>built-in cooldown riêng</strong> — bỏ qua default cooldown</td></tr><tr><td>Step/Simple Scaling</td><td>Dùng <strong>default cooldown</strong></td></tr></tbody></table></div>
+<p><strong>Tip:</strong> Dùng AMI đã pre-configured để EC2 boot nhanh → giảm cooldown.</p>
+<h2 id="health-checks-trong-asg">Health Checks trong ASG<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#health-checks-trong-asg" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>ASG có 2 loại health check:</p>
+<ul>
+<li><strong>EC2 Status Check</strong> — kiểm tra tình trạng EC2 (hardware/software).</li>
+<li><strong>ELB Health Check</strong> — kiểm tra theo định nghĩa health check của Target Group.</li>
+</ul>
+<p>Nếu instance unhealthy → ASG <strong>terminate và tạo instance mới</strong> để giữ Desired capacity.</p>
+<h2 id="bảng-từ-khoá-đề-thi">Bảng từ khoá đề thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bảng-từ-khoá-đề-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Từ khoá trong đề</th><th>Chọn</th></tr></thead><tbody><tr><td>”Chỉ đặt 1 target (vd CPU 50%), ASG tự lo phần còn lại”</td><td><strong>Target Tracking Scaling</strong></td></tr><tr><td>”Scale mạnh/nhẹ tuỳ mức độ vi phạm ngưỡng”</td><td><strong>Step Scaling</strong></td></tr><tr><td>”Biết trước thời điểm cao điểm (17h thứ 6)“</td><td><strong>Scheduled Scaling</strong></td></tr><tr><td>”Dùng ML để dự đoán tải và scale trước”</td><td><strong>Predictive Scaling</strong></td></tr><tr><td>”Instance unhealthy”</td><td>ASG tự <strong>terminate &amp; replace</strong>, không cần thao tác thủ công</td></tr><tr><td>”Launch Configuration vs Launch Template”</td><td><strong>Launch Template</strong> — Launch Configuration đã deprecated</td></tr></tbody></table></div>
+<p>Xem thêm domain-based: <a href="../../../.././../aws-saa-c03/domain-2---resilient-architectures/2.2---auto-scaling" class="internal internal-link alias" data-slug="aws-saa-c03/domain-2---resilient-architectures/2.2---auto-scaling">2.2 – Auto Scaling</a>.</p>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Target Tracking</strong> dễ nhất và phổ biến nhất — bỏ qua default cooldown.</li>
+<li><strong>Step Scaling</strong> kiểm soát tốt hơn Simple Scaling vì có nhiều ngưỡng.</li>
+<li>Cooldown mặc định = <strong>300 giây</strong> — Target Tracking <strong>không dùng</strong> cooldown mặc định.</li>
+<li>ASG tự <strong>terminate và replace</strong> instance unhealthy — bạn không cần làm thủ công.</li>
+<li>ASG <strong>miễn phí</strong> — chỉ tính tiền EC2 instances.</li>
+<li><strong>Predictive Scaling</strong> dùng ML để scale trước — keyword đề thi về proactive scaling.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>ASG + ALB là combo cốt lõi của kiến trúc web scalable + HA trên AWS.</li>
+<li>Target Tracking là policy mặc định tốt nhất cho hầu hết trường hợp.</li>
+<li>Nhớ cooldown: Target Tracking có riêng, Simple/Step dùng default 300s.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>ASG Scaling Policies so sánh 5 loại (Target Tracking, Step, Simple, Scheduled, Predictive)</li>
+<li>ASG + CloudWatch Alarms — flow hoạt động</li>
+<li>ASG Cooldown Period — khi nào áp dụng</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-60" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#86--auto-scaling-group-asg" data-for="86--auto-scaling-group-asg">8.6 – Auto Scaling Group (ASG)</a></li><li class="depth-1"><a href="#asg-là-gì" data-for="asg-là-gì">ASG là gì?</a></li><li class="depth-1"><a href="#ba-thông-số-quan-trọng-nhất" data-for="ba-thông-số-quan-trọng-nhất">Ba thông số quan trọng nhất</a></li><li class="depth-1"><a href="#launch-template--bản-thiết-kế-ec2" data-for="launch-template--bản-thiết-kế-ec2">Launch Template — bản thiết kế EC2</a></li><li class="depth-1"><a href="#asg-kết-hợp-với-load-balancer" data-for="asg-kết-hợp-với-load-balancer">ASG kết hợp với Load Balancer</a></li><li class="depth-1"><a href="#cloudwatch-alarms--nền-tảng-của-dynamic-scaling" data-for="cloudwatch-alarms--nền-tảng-của-dynamic-scaling">CloudWatch Alarms — nền tảng của Dynamic Scaling</a></li><li class="depth-1"><a href="#5-loại-scaling-policies" data-for="5-loại-scaling-policies">5 Loại Scaling Policies</a></li><li class="depth-2"><a href="#1-target-tracking-scaling--phổ-biến-nhất" data-for="1-target-tracking-scaling--phổ-biến-nhất">1. Target Tracking Scaling — phổ biến nhất</a></li><li class="depth-2"><a href="#2-step-scaling" data-for="2-step-scaling">2. Step Scaling</a></li><li class="depth-2"><a href="#3-simple-scaling-cũ-ít-dùng" data-for="3-simple-scaling-cũ-ít-dùng">3. Simple Scaling (cũ, ít dùng)</a></li><li class="depth-2"><a href="#4-scheduled-scaling" data-for="4-scheduled-scaling">4. Scheduled Scaling</a></li><li class="depth-2"><a href="#5-predictive-scaling" data-for="5-predictive-scaling">5. Predictive Scaling</a></li><li class="depth-1"><a href="#bảng-so-sánh-5-scaling-policies" data-for="bảng-so-sánh-5-scaling-policies">Bảng so sánh 5 Scaling Policies</a></li><li class="depth-1"><a href="#các-metrics-tốt-để-scaling" data-for="các-metrics-tốt-để-scaling">Các Metrics tốt để Scaling</a></li><li class="depth-1"><a href="#cooldown-period" data-for="cooldown-period">Cooldown Period</a></li><li class="depth-1"><a href="#health-checks-trong-asg" data-for="health-checks-trong-asg">Health Checks trong ASG</a></li><li class="depth-1"><a href="#bảng-từ-khoá-đề-thi" data-for="bảng-từ-khoá-đề-thi">Bảng từ khoá đề thi</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.0---ha--and--scalability-index" class="internal">8. High Availability &amp; Scalability – Index</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.7---tại-sao-alb-dùng-target-groups" class="internal">8.7 – Tại sao ALB phải thông qua Target Groups để đến EC2?</a></li><li><a href="../../../../02---areas/cloud/saa-c03-stephane-maarek/29---more-solutions-architecture" class="internal">29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

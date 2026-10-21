@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>01.3 - Domain Controller - Trái tim của AD</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="01.3 - Domain Controller - Trái tim của AD"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="01.3 - Domain Controller - Trái tim của AD"/><meta name="twitter:description" content="Domain Controller - Trái tim của AD Tóm tắt nhanh Domain Controller (DC) là máy chủ chạy AD DS role, lưu trữ bản sao đầy đủ của AD database và xử lý authentication/authorization NTDS.DIT là file database chính (ESE engine), chứa 3 partition: Schema, Configuration, Domain — cùng Application Partition..."/><meta property="og:description" content="Domain Controller - Trái tim của AD Tóm tắt nhanh Domain Controller (DC) là máy chủ chạy AD DS role, lưu trữ bản sao đầy đủ của AD database và xử lý authentication/authorization NTDS.DIT là file database chính (ESE engine), chứa 3 partition: Schema, Configuration, Domain — cùng Application Partition..."/><meta property="og:image:alt" content="Domain Controller - Trái tim của AD Tóm tắt nhanh Domain Controller (DC) là máy chủ chạy AD DS role, lưu trữ bản sao đầy đủ của AD database và xử lý authentication/authorization NTDS.DIT là file database chính (ESE engine), chứa 3 partition: Schema, Configuration, Domain — cùng Application Partition..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Domain Controller - Trái tim của AD Tóm tắt nhanh Domain Controller (DC) là máy chủ chạy AD DS role, lưu trữ bản sao đầy đủ của AD database và xử lý authentication/authorization NTDS.DIT là file database chính (ESE engine), chứa 3 partition: Schema, Configuration, Domain — cùng Application Partition..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-469" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-469" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/">Windows Servers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/">AD Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/">01 - Nền tảng</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>01.3 - Domain Controller - Trái tim của AD</a></div></nav><h1 class="article-title">01.3 - Domain Controller - Trái tim của AD</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/windows-server" class="internal internal-link tag-link">domain/windows-server</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">DC</span><span class="note-properties-separator">, </span><span class="note-properties-text">Domain Controller</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>14 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="domain-controller---trái-tim-của-ad">Domain Controller - Trái tim của AD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#domain-controller---trái-tim-của-ad" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tóm-tắt-nhanh">Tóm tắt nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Domain Controller (DC) là máy chủ chạy AD DS role, lưu trữ bản sao đầy đủ của AD database và xử lý authentication/authorization</li>
+<li>NTDS.DIT là file database chính (ESE engine), chứa 3 partition: Schema, Configuration, Domain — cùng Application Partitions</li>
+<li>SYSVOL chứa GPO files và scripts, replicate giữa các DC bằng DFS-R</li>
+<li>AD dùng mô hình <strong>multi-master replication</strong> — mọi DC đều read-write (trừ RODC)</li>
+<li>Xác thực chủ yếu qua <strong>Kerberos v5</strong> (ticket-based), truy vấn directory qua <strong>LDAP</strong></li>
+<li>DC là <strong>critical infrastructure</strong> — mỗi domain cần ít nhất 2 DC, placement ảnh hưởng trực tiếp đến user experience</li>
+</ul>
+<h2 id="dc-là-gì">DC là gì<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dc-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Domain Controller là máy chủ Windows Server đã được <strong>promote</strong> (cài đặt AD DS role và chạy <code>dcpromo</code> hoặc Server Manager wizard) để trở thành thành viên quản lý của Active Directory domain.</p>
+<blockquote>
+<p><strong>Tương tự thực tế</strong>: DC giống như <strong>trụ sở UBND quận</strong> — nơi xác nhận danh tính (CCCD), cấp giấy phép (permissions), lưu trữ hồ sơ (database), và đồng bộ thông tin với các quận khác (replication). Mỗi quận cần ít nhất 1 trụ sở, nhưng có 2 trụ sở thì tốt hơn (high availability).</p>
+</blockquote>
+<h3 id="vai-trò-chính-của-dc">Vai trò chính của DC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vai-trò-chính-của-dc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Vai trò</th><th>Mô tả</th><th>Khi nào thực hiện</th></tr></thead><tbody><tr><td><strong>Authentication</strong></td><td>Xác thực danh tính user/computer khi logon (Kerberos/NTLM)</td><td>Mỗi lần user logon, unlock, access resource</td></tr><tr><td><strong>Authorization</strong></td><td>Cung cấp thông tin group membership để kiểm tra quyền truy cập</td><td>Khi user truy cập file, folder, application</td></tr><tr><td><strong>Directory Services</strong></td><td>Lưu trữ và phục vụ truy vấn LDAP về objects trong AD</td><td>Khi admin tìm user, app query AD</td></tr><tr><td><strong>Replication</strong></td><td>Đồng bộ thay đổi với các DC khác trong domain/forest</td><td>Liên tục — intra-site mỗi 15s, inter-site theo schedule</td></tr><tr><td><strong>Group Policy</strong></td><td>Phân phối GPO settings đến clients thông qua SYSVOL</td><td>Mỗi khi client refresh GPO (mặc định 90 phút)</td></tr><tr><td><strong>DNS</strong></td><td>Thường kiêm DNS server cho AD-integrated DNS zones</td><td>Mỗi DNS query từ client</td></tr><tr><td><strong>Time Source</strong></td><td>PDC Emulator cung cấp time sync cho domain</td><td>Kerberos yêu cầu clock skew &lt; 5 phút</td></tr></tbody></table></div>
+<h3 id="quá-trình-promote-dc">Quá trình Promote DC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quá-trình-promote-dc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    start[\&quot;Windows Server&lt;br/>(Member Server)\&quot;]\n    install[\&quot;Install AD DS Role&lt;br/>Server Manager or PowerShell\&quot;]\n    promote[\&quot;Run Promote Wizard&lt;br/>(dcpromo before 2012)\&quot;]\n    \n    decision{\&quot;New domain&lt;br/>or existing domain?\&quot;}\n    \n    newForest[\&quot;Create new Forest&lt;br/>Forest Root Domain&lt;br/>New Schema, new NTDS.DIT\&quot;]\n    newDomain[\&quot;Create Child Domain&lt;br/>New domain partition&lt;br/>Automatic trust\&quot;]\n    addDC[\&quot;Add DC to existing domain&lt;br/>Replicate NTDS.DIT from other DC&lt;br/>Replicate SYSVOL\&quot;]\n    \n    result[\&quot;Domain Controller ready&lt;br/>AD DS service running&lt;br/>NTDS.DIT populated&lt;br/>SYSVOL shared, DNS replicated\&quot;]\n    \n    start --> install\n    install --> promote\n    promote --> decision\n    decision -->|\&quot;New Forest\&quot;| newForest\n    decision -->|\&quot;Child Domain\&quot;| newDomain\n    decision -->|\&quot;Additional DC\&quot;| addDC\n    newForest --> result\n    newDomain --> result\n    addDC --> result&quot;">graph TD
+    start[&quot;Windows Server&lt;br/>(Member Server)&quot;]
+    install[&quot;Install AD DS Role&lt;br/>Server Manager or PowerShell&quot;]
+    promote[&quot;Run Promote Wizard&lt;br/>(dcpromo before 2012)&quot;]
+    
+    decision{&quot;New domain&lt;br/>or existing domain?&quot;}
+    
+    newForest[&quot;Create new Forest&lt;br/>Forest Root Domain&lt;br/>New Schema, new NTDS.DIT&quot;]
+    newDomain[&quot;Create Child Domain&lt;br/>New domain partition&lt;br/>Automatic trust&quot;]
+    addDC[&quot;Add DC to existing domain&lt;br/>Replicate NTDS.DIT from other DC&lt;br/>Replicate SYSVOL&quot;]
+    
+    result[&quot;Domain Controller ready&lt;br/>AD DS service running&lt;br/>NTDS.DIT populated&lt;br/>SYSVOL shared, DNS replicated&quot;]
+    
+    start --> install
+    install --> promote
+    promote --> decision
+    decision -->|&quot;New Forest&quot;| newForest
+    decision -->|&quot;Child Domain&quot;| newDomain
+    decision -->|&quot;Additional DC&quot;| addDC
+    newForest --> result
+    newDomain --> result
+    addDC --> result
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h2 id="kiến-trúc-dc">Kiến trúc DC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kiến-trúc-dc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph dc[\&quot;Domain Controller\&quot;]\n        direction TB\n        adds[\&quot;AD DS Service&lt;br/>ntdsa.dll\&quot;]\n        \n        subgraph ntds[\&quot;NTDS.DIT Database\&quot;]\n            schema[\&quot;Schema Partition\&quot;]\n            config[\&quot;Configuration Partition\&quot;]\n            dompart[\&quot;Domain Partition\&quot;]\n            apppart[\&quot;Application Partitions\&quot;]\n        end\n        \n        subgraph sysvol[\&quot;SYSVOL Share\&quot;]\n            gpofiles[\&quot;GPO Files&lt;br/>Registry.pol, Scripts\&quot;]\n            scripts[\&quot;Logon/Logoff Scripts\&quot;]\n            policies[\&quot;Policies folder\&quot;]\n        end\n\n        kdc[\&quot;Kerberos KDC\&quot;]\n        ldapsvc[\&quot;LDAP Service&lt;br/>Port 389/636\&quot;]\n        dnssvc[\&quot;DNS Server\&quot;]\n        repleng[\&quot;Replication Engine\&quot;]\n        sam[\&quot;SAM / LSA\&quot;]\n    end\n\n    client[\&quot;Client PC\&quot;] -->|\&quot;Kerberos auth\&quot;| kdc\n    client -->|\&quot;LDAP query\&quot;| ldapsvc\n    client -->|\&quot;DNS lookup\&quot;| dnssvc\n    client -->|\&quot;GPO download\&quot;| sysvol\n\n    adds --> ntds\n    adds --> kdc\n    adds --> ldapsvc\n    adds --> repleng\n    repleng -->|\&quot;DRS protocol\&quot;| otherDC[\&quot;Other DCs\&quot;]&quot;">graph TD
+    subgraph dc[&quot;Domain Controller&quot;]
+        direction TB
+        adds[&quot;AD DS Service&lt;br/>ntdsa.dll&quot;]
+        
+        subgraph ntds[&quot;NTDS.DIT Database&quot;]
+            schema[&quot;Schema Partition&quot;]
+            config[&quot;Configuration Partition&quot;]
+            dompart[&quot;Domain Partition&quot;]
+            apppart[&quot;Application Partitions&quot;]
+        end
+        
+        subgraph sysvol[&quot;SYSVOL Share&quot;]
+            gpofiles[&quot;GPO Files&lt;br/>Registry.pol, Scripts&quot;]
+            scripts[&quot;Logon/Logoff Scripts&quot;]
+            policies[&quot;Policies folder&quot;]
+        end
+
+        kdc[&quot;Kerberos KDC&quot;]
+        ldapsvc[&quot;LDAP Service&lt;br/>Port 389/636&quot;]
+        dnssvc[&quot;DNS Server&quot;]
+        repleng[&quot;Replication Engine&quot;]
+        sam[&quot;SAM / LSA&quot;]
+    end
+
+    client[&quot;Client PC&quot;] -->|&quot;Kerberos auth&quot;| kdc
+    client -->|&quot;LDAP query&quot;| ldapsvc
+    client -->|&quot;DNS lookup&quot;| dnssvc
+    client -->|&quot;GPO download&quot;| sysvol
+
+    adds --> ntds
+    adds --> kdc
+    adds --> ldapsvc
+    adds --> repleng
+    repleng -->|&quot;DRS protocol&quot;| otherDC[&quot;Other DCs&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h2 id="ntdsdit-database">NTDS.DIT Database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ntdsdit-database" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tổng-quan">Tổng quan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-quan" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>NTDS.DIT</strong> = NT Directory Services - Directory Information Tree</li>
+<li>Đường dẫn mặc định: <code>%SystemRoot%\NTDS\ntds.dit</code></li>
+<li>Engine: <strong>ESE (Extensible Storage Engine)</strong> — cùng engine với Exchange Server database</li>
+<li>Kèm theo transaction logs (<code>edb*.log</code>) để đảm bảo ACID compliance</li>
+<li>Checkpoint file (<code>edb.chk</code>) theo dõi log nào đã commit vào database</li>
+</ul>
+<h3 id="cấu-trúc-nội-bộ-ntdsdit-ese-database">Cấu trúc nội bộ NTDS.DIT (ESE Database)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cấu-trúc-nội-bộ-ntdsdit-ese-database" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>NTDS.DIT sử dụng ESE (Extensible Storage Engine), hay còn gọi là JET Blue. Hiểu cấu trúc bên trong giúp troubleshoot và sizing:</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph ese[\&quot;ESE Database Engine\&quot;]\n        direction TB\n        pages[\&quot;Database Pages&lt;br/>Before 2025: 8KB/page&lt;br/>Server 2025: 32KB/page\&quot;]\n        \n        subgraph tables[\&quot;Main Tables (Hidden)\&quot;]\n            datatable[\&quot;datatable&lt;br/>Each object = 1 row&lt;br/>Each attribute = 1 column\&quot;]\n            linktable[\&quot;link_table&lt;br/>Relationships between objects&lt;br/>(group membership, manager...)\&quot;]\n            sdtable[\&quot;sd_table&lt;br/>Security Descriptors&lt;br/>(ACLs of objects)\&quot;]\n        end\n        \n        subgraph logs[\&quot;Transaction Logs\&quot;]\n            edblog[\&quot;edb.log (10MB)&lt;br/>Current transaction log\&quot;]\n            edblogN[\&quot;edbNNNNN.log&lt;br/>Previous logs\&quot;]\n            edbchk[\&quot;edb.chk&lt;br/>Checkpoint file\&quot;]\n        end\n    end\n\n    write[\&quot;Write changes\&quot;] --> edblog\n    edblog -->|\&quot;Commit\&quot;| pages\n    edbchk -->|\&quot;Track commit progress\&quot;| edblog&quot;">graph TD
+    subgraph ese[&quot;ESE Database Engine&quot;]
+        direction TB
+        pages[&quot;Database Pages&lt;br/>Before 2025: 8KB/page&lt;br/>Server 2025: 32KB/page&quot;]
+        
+        subgraph tables[&quot;Main Tables (Hidden)&quot;]
+            datatable[&quot;datatable&lt;br/>Each object = 1 row&lt;br/>Each attribute = 1 column&quot;]
+            linktable[&quot;link_table&lt;br/>Relationships between objects&lt;br/>(group membership, manager...)&quot;]
+            sdtable[&quot;sd_table&lt;br/>Security Descriptors&lt;br/>(ACLs of objects)&quot;]
+        end
+        
+        subgraph logs[&quot;Transaction Logs&quot;]
+            edblog[&quot;edb.log (10MB)&lt;br/>Current transaction log&quot;]
+            edblogN[&quot;edbNNNNN.log&lt;br/>Previous logs&quot;]
+            edbchk[&quot;edb.chk&lt;br/>Checkpoint file&quot;]
+        end
+    end
+
+    write[&quot;Write changes&quot;] --> edblog
+    edblog -->|&quot;Commit&quot;| pages
+    edbchk -->|&quot;Track commit progress&quot;| edblog
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h4 id="chi-tiết-các-bảng-chính">Chi tiết các bảng chính<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chi-tiết-các-bảng-chính" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Bảng</th><th>Nội dung</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>datatable</strong></td><td>Mỗi AD object = 1 row. Mỗi Schema attribute = 1 column. Bao gồm cả tombstoned objects</td><td>User <code>nguyenvana</code> có row với columns: <code>sAMAccountName</code>, <code>userPrincipalName</code>, <code>pwdLastSet</code>…</td></tr><tr><td><strong>link_table</strong></td><td>Quan hệ forward/back link giữa objects</td><td><code>member</code> (forward link) ↔ <code>memberOf</code> (back link): User A là member của Group B</td></tr><tr><td><strong>sd_table</strong></td><td>Security Descriptors được deduplicated — nhiều objects có cùng SD chỉ lưu 1 bản</td><td>1000 users cùng OU có cùng permissions → chỉ 1 SD entry</td></tr><tr><td><strong>sd_prop</strong></td><td>Queue cho Security Descriptor Propagation — khi thay đổi SD của OU, cần propagate xuống objects con</td><td>Thay đổi permission OU: IT → tất cả objects bên trong cập nhật</td></tr></tbody></table></div>
+<h4 id="database-sizing">Database sizing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#database-sizing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Trước Server 2025</strong>: page size 8KB — giới hạn hiệu quả khoảng vài trăm triệu objects</li>
+<li><strong>Server 2025</strong>: page size <strong>32KB</strong> — hỗ trợ 2+ tỷ objects, giảm IO overhead</li>
+<li><strong>Kích thước thực tế</strong>: khoảng <strong>1 KB per user object</strong> (đơn giản) đến 5-10 KB (với nhiều attributes populated)</li>
+<li><strong>Ước tính</strong>: 10.000 users ≈ 50-100 MB NTDS.DIT (tuỳ complexity)</li>
+<li><strong>Defragmentation</strong>: <code>ntdsutil</code> có thể offline defrag — thu nhỏ file, cải thiện performance</li>
+</ul>
+<h3 id="các-partition-trong-ntdsdit">Các Partition trong NTDS.DIT<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-partition-trong-ntdsdit" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Partition</th><th>Phạm vi replicate</th><th>Nội dung</th><th>Ghi được từ</th></tr></thead><tbody><tr><td><strong>Schema</strong></td><td>Toàn forest (mọi DC)</td><td>Định nghĩa classes và attributes cho mọi object type</td><td>Chỉ Schema Master</td></tr><tr><td><strong>Configuration</strong></td><td>Toàn forest (mọi DC)</td><td>Sites, subnets, site links, replication topology, services</td><td>Mọi DC</td></tr><tr><td><strong>Domain</strong></td><td>Chỉ trong cùng domain</td><td>Users, computers, groups, OUs, GPO links — dữ liệu chính</td><td>DC trong domain (trừ RODC)</td></tr><tr><td><strong>Application</strong></td><td>Tuỳ cấu hình</td><td>DNS zones (DomainDnsZones, ForestDnsZones), custom data</td><td>Tuỳ cấu hình</td></tr></tbody></table></div>
+<ul>
+<li>Schema và Configuration <strong>giống nhau trên mọi DC</strong> trong forest</li>
+<li>Domain partition <strong>chỉ có trên DC của domain đó</strong> — DC ở <code>corp.example.com</code> không chứa domain data của <code>sales.example.com</code></li>
+<li>Application partition linh hoạt: có thể replicate theo scope tuỳ chỉnh</li>
+</ul>
+<h3 id="transaction-log-và-recovery">Transaction Log và Recovery<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#transaction-log-và-recovery" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>ESE dùng <strong>Write-Ahead Logging (WAL)</strong>: ghi vào log trước, commit vào database sau</li>
+<li>Nếu DC crash giữa chừng → khi khởi động lại, ESE <strong>replay log</strong> để đưa database về trạng thái consistent</li>
+<li><strong>Circular logging</strong> mặc định TẮT cho NTDS.DIT — logs giữ lại cho recovery</li>
+<li><strong>Backup</strong> tạo snapshot consistent của NTDS.DIT + logs — cần dùng Windows Server Backup hoặc tool hỗ trợ VSS</li>
+</ul>
+<h2 id="sysvol">SYSVOL<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sysvol" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="sysvol-chứa-gì">SYSVOL chứa gì<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sysvol-chứa-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Group Policy Templates (GPT)</strong>: mỗi GPO có 1 folder trong <code>SYSVOL\domain\Policies\{GUID}\</code>
+<ul>
+<li><code>Machine\Registry.pol</code> — registry settings cho Computer Configuration</li>
+<li><code>User\Registry.pol</code> — registry settings cho User Configuration</li>
+<li>Scripts (startup/shutdown, logon/logoff)</li>
+<li>Admx/adml files (nếu Central Store được cấu hình)</li>
+</ul>
+</li>
+<li><strong>Logon scripts</strong>: nếu user profile chỉ định logon script</li>
+<li><strong>NETLOGON share</strong>: alias trỏ vào <code>SYSVOL\domain\Scripts\</code></li>
+</ul>
+<h3 id="replication-của-sysvol">Replication của SYSVOL<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#replication-của-sysvol" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>FRS (File Replication Service)</strong>: cơ chế cũ (NT → Server 2003 R2), đã deprecated
+<ul>
+<li>Single-threaded, không reliable, không delta replication</li>
+</ul>
+</li>
+<li><strong>DFS-R (Distributed File System Replication)</strong>: cơ chế hiện đại (Server 2008+)
+<ul>
+<li>Delta replication: chỉ replicate phần thay đổi, tiết kiệm bandwidth</li>
+<li>Remote Differential Compression (RDC) — compress changes hiệu quả</li>
+<li>Multi-threaded, parallel replication</li>
+<li>Migration từ FRS sang DFS-R là <strong>bắt buộc</strong> với functional level 2008+</li>
+</ul>
+</li>
+</ul>
+<h3 id="sysvol-troubleshooting-concepts">SYSVOL Troubleshooting Concepts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sysvol-troubleshooting-concepts" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Vấn đề</th><th>Triệu chứng</th><th>Nguyên nhân phổ biến</th></tr></thead><tbody><tr><td>GPO không áp cho client</td><td>Client logon nhưng settings không apply</td><td>SYSVOL share không accessible, DFS-R lag</td></tr><tr><td>SYSVOL share missing</td><td><code>net share</code> không thấy SYSVOL/NETLOGON</td><td>DFS-R service dừng, hoặc SYSVOL not ready</td></tr><tr><td>GPO inconsistent giữa các DC</td><td>User nhận settings khác nhau tuỳ DC</td><td>DFS-R conflict, file version mismatch</td></tr><tr><td>SYSVOL quá lớn</td><td>Disk space warning trên DC</td><td>Scripts/files lớn đặt trong SYSVOL thay vì DFS share</td></tr></tbody></table></div>
+<ul>
+<li><strong>Kiểm tra SYSVOL health</strong>: <code>dcdiag /test:sysvolcheck</code>, <code>dfsrdiag pollad</code></li>
+<li><strong>DFS-R conflict</strong>: khi 2 admin sửa cùng GPO file trên 2 DC → DFS-R giữ 1 bản, move bản kia vào <code>ConflictAndDeleted</code> folder</li>
+<li><strong>Best practice</strong>: luôn edit GPO từ <strong>1 DC duy nhất</strong> (thường là PDC Emulator) để tránh conflict</li>
+</ul>
+<h2 id="multi-master-replication">Multi-Master Replication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#multi-master-replication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="nguyên-lý">Nguyên lý<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nguyên-lý" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Mọi DC đều có thể nhận ghi (write)</strong> — không còn mô hình PDC/BDC như NT4</li>
+<li>Thay đổi trên DC-A sẽ <strong>replicate</strong> sang DC-B, DC-C… tự động</li>
+<li>Conflict resolution dựa trên:
+<ul>
+<li><strong>Timestamp</strong>: thay đổi mới nhất thắng (last-writer-wins) — clock accuracy quan trọng</li>
+<li><strong>Version number</strong>: mỗi attribute có version, tăng mỗi lần sửa — version cao hơn thắng</li>
+<li><strong>USN (Update Sequence Number)</strong>: số tuần tự trên mỗi DC để track changes — local per DC</li>
+</ul>
+</li>
+</ul>
+<h3 id="ngoại-lệ-fsmo-roles">Ngoại lệ: FSMO Roles<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ngoại-lệ-fsmo-roles" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Dù là multi-master, một số operations <strong>chỉ nên thực hiện trên 1 DC</strong> để tránh conflict:
+<ul>
+<li><strong>Schema Master</strong>: quản lý thay đổi Schema (1 per forest)</li>
+<li><strong>Domain Naming Master</strong>: thêm/xoá domain (1 per forest)</li>
+<li><strong>PDC Emulator</strong>: password changes ưu tiên, time sync, GPO editor, account lockout (1 per domain)</li>
+<li><strong>RID Master</strong>: cấp phát RID pools cho SID generation (1 per domain)</li>
+<li><strong>Infrastructure Master</strong>: cập nhật cross-domain references (1 per domain)</li>
+</ul>
+</li>
+<li>Chi tiết xem <a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></li>
+</ul>
+<h3 id="rodc--read-only-domain-controller">RODC — Read-Only Domain Controller<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rodc--read-only-domain-controller" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>DC đặc biệt chỉ chứa <strong>bản sao read-only</strong> của AD database</li>
+<li>Dùng cho branch office có bảo mật vật lý yếu</li>
+<li>Không cache passwords mặc định — phải cấu hình Password Replication Policy</li>
+<li>Chi tiết xem <a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller">03.3 - RODC - Read-Only Domain Controller</a></li>
+</ul>
+<h2 id="nguyên-lý-xác-thực--kerberos">Nguyên lý xác thực — Kerberos<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nguyên-lý-xác-thực--kerberos" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="kerberos-authentication-flow">Kerberos Authentication Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kerberos-authentication-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant Client\n    participant KDC as \&quot;DC / KDC&lt;br/>(Key Distribution Center)\&quot;\n    participant Server as \&quot;Resource Server&lt;br/>(File/Web/SQL)\&quot;\n\n    Note over KDC: KDC has 2 services:&lt;br/>AS (Authentication Service)&lt;br/>TGS (Ticket Granting Service)\n\n    rect rgb(230, 245, 255)\n        Note over Client, KDC: Step 1 - Authentication (AS Exchange)\n        Client->>KDC: AS-REQ: \&quot;I am user@corp.example.com\&quot;&lt;br/>Timestamp encrypted with user password hash\n        KDC->>KDC: Verify password hash&lt;br/>in NTDS.DIT\n        KDC->>Client: AS-REP: TGT (Ticket Granting Ticket)&lt;br/>Encrypted with KRBTGT account key&lt;br/>+ Session Key\n    end\n\n    rect rgb(255, 245, 230)\n        Note over Client, KDC: Step 2 - Service Ticket (TGS Exchange)\n        Client->>KDC: TGS-REQ: TGT + \&quot;I want to access FileServer\&quot;&lt;br/>SPN: cifs/fileserver.corp.example.com\n        KDC->>KDC: Verify TGT&lt;br/>Lookup SPN in AD\n        KDC->>Client: TGS-REP: Service Ticket&lt;br/>Encrypted with service account key\n    end\n\n    rect rgb(230, 255, 230)\n        Note over Client, Server: Step 3 - Application (AP Exchange)\n        Client->>Server: AP-REQ: Service Ticket + Authenticator\n        Server->>Server: Decrypt ticket with service key&lt;br/>Verify authenticator\n        Server->>Client: AP-REP: Access Granted&lt;br/>+ Session established\n    end&quot;">sequenceDiagram
+    participant Client
+    participant KDC as &quot;DC / KDC&lt;br/>(Key Distribution Center)&quot;
+    participant Server as &quot;Resource Server&lt;br/>(File/Web/SQL)&quot;
+
+    Note over KDC: KDC has 2 services:&lt;br/>AS (Authentication Service)&lt;br/>TGS (Ticket Granting Service)
+
+    rect rgb(230, 245, 255)
+        Note over Client, KDC: Step 1 - Authentication (AS Exchange)
+        Client->>KDC: AS-REQ: &quot;I am user@corp.example.com&quot;&lt;br/>Timestamp encrypted with user password hash
+        KDC->>KDC: Verify password hash&lt;br/>in NTDS.DIT
+        KDC->>Client: AS-REP: TGT (Ticket Granting Ticket)&lt;br/>Encrypted with KRBTGT account key&lt;br/>+ Session Key
+    end
+
+    rect rgb(255, 245, 230)
+        Note over Client, KDC: Step 2 - Service Ticket (TGS Exchange)
+        Client->>KDC: TGS-REQ: TGT + &quot;I want to access FileServer&quot;&lt;br/>SPN: cifs/fileserver.corp.example.com
+        KDC->>KDC: Verify TGT&lt;br/>Lookup SPN in AD
+        KDC->>Client: TGS-REP: Service Ticket&lt;br/>Encrypted with service account key
+    end
+
+    rect rgb(230, 255, 230)
+        Note over Client, Server: Step 3 - Application (AP Exchange)
+        Client->>Server: AP-REQ: Service Ticket + Authenticator
+        Server->>Server: Decrypt ticket with service key&lt;br/>Verify authenticator
+        Server->>Client: AP-REP: Access Granted&lt;br/>+ Session established
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="các-khái-niệm-kerberos-quan-trọng">Các khái niệm Kerberos quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-khái-niệm-kerberos-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>TGT (Ticket Granting Ticket)</strong>: “vé vào cổng” — chứng minh user đã xác thực thành công, dùng để xin Service Ticket mà không cần nhập lại password
+<ul>
+<li>Lifetime mặc định: <strong>10 giờ</strong>, renewable <strong>7 ngày</strong></li>
+<li>Chứa: user identity, group memberships, session key, timestamps</li>
+<li>Encrypted bằng KRBTGT account key — chỉ KDC mới decrypt được</li>
+</ul>
+</li>
+<li><strong>Service Ticket</strong>: “vé vào phòng” — cho phép truy cập 1 service cụ thể
+<ul>
+<li>Lifetime = TGT lifetime hoặc service setting, tuỳ cái nào ngắn hơn</li>
+<li>Encrypted bằng key của service account — chỉ service đó mới decrypt được</li>
+</ul>
+</li>
+<li><strong>KDC (Key Distribution Center)</strong>: chạy trên mỗi DC, gồm AS và TGS
+<ul>
+<li>Mỗi DC trong domain đều là KDC — client dùng DC gần nhất (cùng site)</li>
+</ul>
+</li>
+<li><strong>KRBTGT account</strong>: service account đặc biệt, key của nó dùng để mã hoá TGT
+<ul>
+<li>Compromise account này = compromise toàn domain (<strong>Golden Ticket attack</strong>)</li>
+<li><strong>Password reset</strong> cần thực hiện 2 lần, cách nhau ít nhất 10 giờ (> TGT lifetime)</li>
+</ul>
+</li>
+<li><strong>SPN (Service Principal Name)</strong>: định danh duy nhất cho service
+<ul>
+<li>Format: <code>service/hostname:port</code></li>
+<li>Ví dụ: <code>cifs/fileserver.corp.example.com</code>, <code>MSSQLSvc/sqlserver.corp.example.com:1433</code></li>
+<li>Duplicate SPN → Kerberos authentication fail cho service đó</li>
+</ul>
+</li>
+</ul>
+<h3 id="kerberos-ticket-lifetime-và-renewal">Kerberos Ticket Lifetime và Renewal<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kerberos-ticket-lifetime-và-renewal" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Setting</th><th>Mặc định</th><th>Vị trí cấu hình</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td>TGT Lifetime</td><td>10 giờ</td><td>Default Domain Policy</td><td>Sau 10 giờ, TGT hết hạn, cần renew hoặc xin TGT mới</td></tr><tr><td>TGT Renewal</td><td>7 ngày</td><td>Default Domain Policy</td><td>TGT có thể renew trong 7 ngày, sau đó phải xác thực lại</td></tr><tr><td>Service Ticket Lifetime</td><td>10 giờ</td><td>Default Domain Policy</td><td>Service Ticket có thể dùng 10 giờ</td></tr><tr><td>Clock Skew Tolerance</td><td>5 phút</td><td>Default Domain Policy</td><td>Nếu clock lệch > 5 phút → Kerberos fail</td></tr></tbody></table></div>
+<h3 id="kerberos-delegation-overview">Kerberos Delegation Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kerberos-delegation-overview" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Unconstrained Delegation</strong>: service có thể impersonate user đến <strong>bất kỳ service nào</strong> — nguy hiểm, tránh dùng</li>
+<li><strong>Constrained Delegation</strong>: service chỉ impersonate user đến <strong>danh sách services chỉ định</strong> — an toàn hơn</li>
+<li><strong>Resource-Based Constrained Delegation (RBCD)</strong>: resource server tự quyết ai được impersonate đến mình — an toàn nhất, khuyến nghị từ Server 2012+</li>
+<li>Delegation cần thiết cho multi-tier applications (ví dụ: Web Server → SQL Server, dùng identity của user)</li>
+</ul>
+<h3 id="fallback-ntlm">Fallback: NTLM<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fallback-ntlm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Khi Kerberos không khả dụng (truy cập bằng IP thay vì hostname, hệ thống legacy), AD fallback về <strong>NTLM</strong></li>
+<li>NTLM yếu hơn Kerberos: không mutual authentication, dễ bị relay attack, không hỗ trợ delegation mạnh</li>
+<li><strong>NTLM v1</strong>: rất yếu, không nên dùng. <strong>NTLM v2</strong>: tốt hơn nhưng vẫn kém Kerberos</li>
+<li>Best practice: <strong>disable NTLM</strong> nếu có thể, hoặc audit NTLM usage trước khi disable
+<ul>
+<li>Dùng GPO: <code>Network security: Restrict NTLM: Audit NTLM authentication in this domain</code></li>
+<li>Sau khi audit clean → enforce restrict</li>
+</ul>
+</li>
+</ul>
+<h2 id="ldap-interface">LDAP Interface<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ldap-interface" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tổng-quan-ldap">Tổng quan LDAP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tổng-quan-ldap" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>LDAP (Lightweight Directory Access Protocol)</strong>: giao thức tiêu chuẩn để truy vấn và chỉnh sửa directory</li>
+<li>Ports:
+<ul>
+<li><strong>389</strong>: LDAP (plaintext hoặc STARTTLS)</li>
+<li><strong>636</strong>: LDAPS (LDAP over SSL/TLS)</li>
+<li><strong>3268</strong>: Global Catalog LDAP</li>
+<li><strong>3269</strong>: Global Catalog LDAPS</li>
+</ul>
+</li>
+</ul>
+<h3 id="ldap-operations-cơ-bản">LDAP Operations cơ bản<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ldap-operations-cơ-bản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Operation</th><th>Mô tả</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>Bind</strong></td><td>Xác thực với directory (simple bind hoặc SASL)</td><td>App kết nối AD để query</td></tr><tr><td><strong>Search</strong></td><td>Tìm kiếm objects theo filter — phổ biến nhất</td><td>Tìm users trong OU: IT</td></tr><tr><td><strong>Add</strong></td><td>Tạo object mới</td><td>Tạo user account</td></tr><tr><td><strong>Modify</strong></td><td>Sửa attributes của object</td><td>Đổi email, phone number</td></tr><tr><td><strong>Delete</strong></td><td>Xoá object</td><td>Xoá computer account</td></tr><tr><td><strong>ModifyDN</strong></td><td>Đổi tên hoặc move object</td><td>Move user sang OU khác</td></tr></tbody></table></div>
+<h3 id="ldap-search-cơ-bản">LDAP Search cơ bản<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ldap-search-cơ-bản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Base DN</strong>: điểm bắt đầu tìm kiếm, ví dụ <code>DC=corp,DC=example,DC=com</code></li>
+<li><strong>Scope</strong>: <code>Base</code> (chỉ base object), <code>OneLevel</code> (con trực tiếp), <code>Subtree</code> (tất cả bên dưới)</li>
+<li><strong>Filter</strong>: biểu thức lọc, ví dụ <code>(&amp;(objectClass=user)(department=IT))</code></li>
+<li><strong>LDAP signing</strong>: bắt buộc từ Server 2025 mặc định — encrypt LDAP traffic để chống man-in-the-middle</li>
+</ul>
+<h2 id="dc-sizing-và-placement">DC Sizing và Placement<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dc-sizing-và-placement" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="sizing-guidelines">Sizing Guidelines<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sizing-guidelines" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thành phần</th><th>Khuyến nghị tối thiểu</th><th>Production (>5000 users)</th></tr></thead><tbody><tr><td><strong>CPU</strong></td><td>2 cores</td><td>4-8 cores (NUMA-aware từ Server 2025)</td></tr><tr><td><strong>RAM</strong></td><td>4 GB</td><td>16-32 GB (đủ chứa toàn bộ NTDS.DIT trong RAM)</td></tr><tr><td><strong>Disk — OS</strong></td><td>60 GB SSD</td><td>100 GB SSD</td></tr><tr><td><strong>Disk — NTDS</strong></td><td>20 GB SSD</td><td>Separate volume, SSD, RAID-1</td></tr><tr><td><strong>Disk — Logs</strong></td><td>10 GB SSD</td><td>Separate volume từ NTDS (performance)</td></tr><tr><td><strong>Network</strong></td><td>1 Gbps</td><td>1-10 Gbps (tuỳ replication traffic)</td></tr></tbody></table></div>
+<h3 id="placement-strategy">Placement Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#placement-strategy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tình huống</th><th>Số DC khuyến nghị</th><th>Lý do</th></tr></thead><tbody><tr><td>HQ (>500 users)</td><td><strong>3+ DC</strong> (ít nhất 2 GC)</td><td>High availability, load balancing</td></tr><tr><td>Branch office (50-500 users)</td><td><strong>2 DC</strong> (hoặc 1 DC + 1 RODC)</td><td>HA cho site, RODC nếu security yếu</td></tr><tr><td>Branch office (&lt;50 users)</td><td><strong>1 RODC</strong> hoặc <strong>0 DC</strong> (dùng VPN + WAN)</td><td>Tiết kiệm hardware, security tốt hơn</td></tr><tr><td>Cloud/DMZ</td><td><strong>RODC</strong></td><td>Read-only, không expose full AD</td></tr><tr><td>Disaster Recovery site</td><td><strong>1-2 DC</strong></td><td>Standby, replicate liên tục</td></tr></tbody></table></div>
+<h3 id="dc-nên-chạy-virtual-hay-physical">DC nên chạy Virtual hay Physical?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dc-nên-chạy-virtual-hay-physical" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Yếu tố</th><th>Physical</th><th>Virtual</th></tr></thead><tbody><tr><td>Performance</td><td>Tốt nhất</td><td>Tốt nếu host có đủ resources</td></tr><tr><td>HA</td><td>Cần cluster riêng</td><td>Dùng HA của hypervisor (vMotion, Live Migration)</td></tr><tr><td>Snapshot/Restore</td><td>Không áp dụng</td><td><strong>Cẩn thận</strong>: restore snapshot cũ → USN rollback → replication hỏng</td></tr><tr><td>Trend</td><td>Đang giảm</td><td><strong>Trend chính</strong> — hầu hết DC chạy VM từ Server 2012+ (virtualization-safe)</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Lưu ý quan trọng</strong>: Từ Server 2012, AD hỗ trợ <strong>VM-GenerationID</strong> — phát hiện snapshot restore và tự xử lý USN rollback. Tuy nhiên, <strong>không nên</strong> dùng hypervisor snapshot thay backup — luôn dùng Windows Server Backup hoặc tool hỗ trợ AD-aware backup.</p>
+</blockquote>
+<h2 id="câu-hỏi-thường-gặp">Câu hỏi thường gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-thường-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dc-có-thể-chạy-thêm-role-khác-không">DC có thể chạy thêm role khác không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dc-có-thể-chạy-thêm-role-khác-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Không khuyến nghị</strong> — DC là critical infrastructure, nên isolate</li>
+<li>Ngoại trừ: <strong>DNS Server</strong> (gần như bắt buộc trên DC) và <strong>DHCP</strong> (chấp nhận được cho tổ chức nhỏ)</li>
+<li><strong>Tuyệt đối không</strong>: File Server, SQL Server, IIS, Exchange trên DC</li>
+</ul>
+<h3 id="nếu-dc-chết-chuyện-gì-xảy-ra">Nếu DC chết, chuyện gì xảy ra?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nếu-dc-chết-chuyện-gì-xảy-ra" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nếu còn DC khác trong domain → clients tự chuyển sang DC khác (via DNS SRV records)</li>
+<li>Nếu DC chết giữ FSMO role → cần <strong>seize role</strong> trên DC còn lại</li>
+<li>Nếu <strong>tất cả DC chết</strong> → domain mất hoàn toàn (chỉ recover từ backup)</li>
+</ul>
+<h3 id="dùng-windows-server-core-hay-desktop-experience-cho-dc">Dùng Windows Server Core hay Desktop Experience cho DC?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dùng-windows-server-core-hay-desktop-experience-cho-dc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Server Core</strong>: khuyến nghị — ít attack surface, ít patches, ít reboot</li>
+<li><strong>Desktop Experience</strong>: dễ quản lý hơn cho admin mới — nhưng tốn resources và có nhiều vectors attack hơn</li>
+<li><strong>Trend</strong>: dùng Core + quản lý remote bằng RSAT/Windows Admin Center</li>
+</ul>
+<h2 id="lưu-ý-quan-trọng">Lưu ý quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Mỗi domain nên có ít nhất 2 DC</strong> — để đảm bảo high availability. Nếu chỉ có 1 DC và nó chết = mất toàn bộ authentication</li>
+<li><strong>DC không nên chạy workload khác</strong> (application server, database) — DC là critical infrastructure, cần isolate</li>
+<li><strong>KRBTGT password</strong> cần được reset định kỳ (2 lần, cách nhau ít nhất 10 giờ) để giảm rủi ro Golden Ticket</li>
+<li><strong>NTDS.DIT chứa password hashes</strong> — nếu ai lấy được file này + SYSTEM hive = có thể crack mọi password trong domain</li>
+<li><strong>LDAP signing và channel binding</strong> nên bật bắt buộc để chống LDAP relay attacks — Server 2025 bật mặc định</li>
+<li><strong>Luôn đặt NTDS.DIT và transaction logs trên volumes riêng</strong> — tách khỏi OS volume cho performance và recovery</li>
+</ul>
+<h2 id="liên-kết">Liên kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#liên-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.2---domain---đơn-vị-quản-lý-cốt-lõi" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.2---domain---đơn-vị-quản-lý-cốt-lõi">01.2 - Domain - Đơn vị quản lý cốt lõi</a> — domain structure mà DC phục vụ</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication">01.6 - Global Catalog và Sites - Tìm kiếm và Replication</a> — GC role trên DC, Sites và replication</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller">03.3 - RODC - Read-Only Domain Controller</a> — biến thể read-only của DC</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory">01.7 - DNS trong Active Directory</a> — DC thường kiêm DNS server</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.4---tree-và-forest---cấu-trúc-phân-cấp-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.4---tree-và-forest---cấu-trúc-phân-cấp-ad">01.4 - Tree và Forest - Cấu trúc phân cấp AD</a> — DC nằm trong forest/tree như thế nào</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt">03.1 - FSMO Roles - 5 vai trò chủ chốt</a> — 5 FSMO roles chạy trên DC cụ thể</li>
+<li><a href="../../../../moc---windows-server-ad-2025" class="internal internal-link alias" data-slug="moc---windows-server-ad-2025">MOC - Windows Server AD 2025</a></li>
+</ul>
+<h2 id="tham-khảo">Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc786438(v=ws.10)" class="external external-link">What is a Domain Controller — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview" class="external external-link">How Kerberos Authentication Works — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ldap/lightweight-directory-access-protocol-ldap-api" class="external external-link">LDAP Overview — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/virtualizing-domain-controllers" class="external external-link">Virtualizing Domain Controllers — Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-419" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#domain-controller---trái-tim-của-ad" data-for="domain-controller---trái-tim-của-ad">Domain Controller - Trái tim của AD</a></li><li class="depth-1"><a href="#tóm-tắt-nhanh" data-for="tóm-tắt-nhanh">Tóm tắt nhanh</a></li><li class="depth-1"><a href="#dc-là-gì" data-for="dc-là-gì">DC là gì</a></li><li class="depth-2"><a href="#vai-trò-chính-của-dc" data-for="vai-trò-chính-của-dc">Vai trò chính của DC</a></li><li class="depth-2"><a href="#quá-trình-promote-dc" data-for="quá-trình-promote-dc">Quá trình Promote DC</a></li><li class="depth-1"><a href="#kiến-trúc-dc" data-for="kiến-trúc-dc">Kiến trúc DC</a></li><li class="depth-1"><a href="#ntdsdit-database" data-for="ntdsdit-database">NTDS.DIT Database</a></li><li class="depth-2"><a href="#tổng-quan" data-for="tổng-quan">Tổng quan</a></li><li class="depth-2"><a href="#cấu-trúc-nội-bộ-ntdsdit-ese-database" data-for="cấu-trúc-nội-bộ-ntdsdit-ese-database">Cấu trúc nội bộ NTDS.DIT (ESE Database)</a></li><li class="depth-2"><a href="#các-partition-trong-ntdsdit" data-for="các-partition-trong-ntdsdit">Các Partition trong NTDS.DIT</a></li><li class="depth-2"><a href="#transaction-log-và-recovery" data-for="transaction-log-và-recovery">Transaction Log và Recovery</a></li><li class="depth-1"><a href="#sysvol" data-for="sysvol">SYSVOL</a></li><li class="depth-2"><a href="#sysvol-chứa-gì" data-for="sysvol-chứa-gì">SYSVOL chứa gì</a></li><li class="depth-2"><a href="#replication-của-sysvol" data-for="replication-của-sysvol">Replication của SYSVOL</a></li><li class="depth-2"><a href="#sysvol-troubleshooting-concepts" data-for="sysvol-troubleshooting-concepts">SYSVOL Troubleshooting Concepts</a></li><li class="depth-1"><a href="#multi-master-replication" data-for="multi-master-replication">Multi-Master Replication</a></li><li class="depth-2"><a href="#nguyên-lý" data-for="nguyên-lý">Nguyên lý</a></li><li class="depth-2"><a href="#ngoại-lệ-fsmo-roles" data-for="ngoại-lệ-fsmo-roles">Ngoại lệ: FSMO Roles</a></li><li class="depth-2"><a href="#rodc--read-only-domain-controller" data-for="rodc--read-only-domain-controller">RODC — Read-Only Domain Controller</a></li><li class="depth-1"><a href="#nguyên-lý-xác-thực--kerberos" data-for="nguyên-lý-xác-thực--kerberos">Nguyên lý xác thực — Kerberos</a></li><li class="depth-2"><a href="#kerberos-authentication-flow" data-for="kerberos-authentication-flow">Kerberos Authentication Flow</a></li><li class="depth-2"><a href="#các-khái-niệm-kerberos-quan-trọng" data-for="các-khái-niệm-kerberos-quan-trọng">Các khái niệm Kerberos quan trọng</a></li><li class="depth-2"><a href="#kerberos-ticket-lifetime-và-renewal" data-for="kerberos-ticket-lifetime-và-renewal">Kerberos Ticket Lifetime và Renewal</a></li><li class="depth-2"><a href="#kerberos-delegation-overview" data-for="kerberos-delegation-overview">Kerberos Delegation Overview</a></li><li class="depth-2"><a href="#fallback-ntlm" data-for="fallback-ntlm">Fallback: NTLM</a></li><li class="depth-1"><a href="#ldap-interface" data-for="ldap-interface">LDAP Interface</a></li><li class="depth-2"><a href="#tổng-quan-ldap" data-for="tổng-quan-ldap">Tổng quan LDAP</a></li><li class="depth-2"><a href="#ldap-operations-cơ-bản" data-for="ldap-operations-cơ-bản">LDAP Operations cơ bản</a></li><li class="depth-2"><a href="#ldap-search-cơ-bản" data-for="ldap-search-cơ-bản">LDAP Search cơ bản</a></li><li class="depth-1"><a href="#dc-sizing-và-placement" data-for="dc-sizing-và-placement">DC Sizing và Placement</a></li><li class="depth-2"><a href="#sizing-guidelines" data-for="sizing-guidelines">Sizing Guidelines</a></li><li class="depth-2"><a href="#placement-strategy" data-for="placement-strategy">Placement Strategy</a></li><li class="depth-2"><a href="#dc-nên-chạy-virtual-hay-physical" data-for="dc-nên-chạy-virtual-hay-physical">DC nên chạy Virtual hay Physical?</a></li><li class="depth-1"><a href="#câu-hỏi-thường-gặp" data-for="câu-hỏi-thường-gặp">Câu hỏi thường gặp</a></li><li class="depth-2"><a href="#dc-có-thể-chạy-thêm-role-khác-không" data-for="dc-có-thể-chạy-thêm-role-khác-không">DC có thể chạy thêm role khác không?</a></li><li class="depth-2"><a href="#nếu-dc-chết-chuyện-gì-xảy-ra" data-for="nếu-dc-chết-chuyện-gì-xảy-ra">Nếu DC chết, chuyện gì xảy ra?</a></li><li class="depth-2"><a href="#dùng-windows-server-core-hay-desktop-experience-cho-dc" data-for="dùng-windows-server-core-hay-desktop-experience-cho-dc">Dùng Windows Server Core hay Desktop Experience cho DC?</a></li><li class="depth-1"><a href="#lưu-ý-quan-trọng" data-for="lưu-ý-quan-trọng">Lưu ý quan trọng</a></li><li class="depth-1"><a href="#liên-kết" data-for="liên-kết">Liên kết</a></li><li class="depth-1"><a href="#tham-khảo" data-for="tham-khảo">Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.1---active-directory---tổng-quan-và-kiến-trúc" class="internal">01.1 - Active Directory - Tổng quan và kiến trúc</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.2---domain---đơn-vị-quản-lý-cốt-lõi" class="internal">01.2 - Domain - Đơn vị quản lý cốt lõi</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.5---trust-relationships---quan-hệ-tin-tưởng" class="internal">01.5 - Trust Relationships - Quan hệ tin tưởng</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication" class="internal">01.6 - Global Catalog và Sites - Tìm kiếm và Replication</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory" class="internal">01.7 - DNS trong Active Directory</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal">02.1 - AD DS - Active Directory Domain Services</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.2---ad-cs---certificate-services-và-pki" class="internal">02.2 - AD CS - Certificate Services và PKI</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.1---fsmo-roles---5-vai-trò-chủ-chốt" class="internal">03.1 - FSMO Roles - 5 vai trò chủ chốt</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level" class="internal">03.2 - Schema và Functional Level</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.3---rodc---read-only-domain-controller" class="internal">03.3 - RODC - Read-Only Domain Controller</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers" class="internal">04.1 - Triển khai Additional Domain Controllers</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server" class="internal">04.2 - Chuyển đổi FSMO và Certificate Server</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.3---chuyển-đổi-ứng-dụng-và-dns" class="internal">04.3 - Chuyển đổi ứng dụng và DNS</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal">04.5 - Kiểm thử toàn diện</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

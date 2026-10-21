@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>21 – Databases in AWS: chọn đúng database cho từng bài toán</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="21 – Databases in AWS: chọn đúng database cho từng bài toán"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="21 – Databases in AWS: chọn đúng database cho từng bài toán"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 21 – Databases in AWS: chọn đúng database cho từng bài toán Cách đọc note này: Đây là bài tổng hợp &amp; so sánh, không dạy chi tiết từng dịch vụ."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 21 – Databases in AWS: chọn đúng database cho từng bài toán Cách đọc note này: Đây là bài tổng hợp &amp; so sánh, không dạy chi tiết từng dịch vụ."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 21 – Databases in AWS: chọn đúng database cho từng bài toán Cách đọc note này: Đây là bài tổng hợp &amp; so sánh, không dạy chi tiết từng dịch vụ."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/21---databases-in-aws"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/21---databases-in-aws"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 21 – Databases in AWS: chọn đúng database cho từng bài toán Cách đọc note này: Đây là bài tổng hợp &amp; so sánh, không dạy chi tiết từng dịch vụ."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/21---databases-in-aws" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-89" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-89" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>21 – Databases in AWS: chọn đúng database cho từng bài toán</a></div></nav><h1 class="article-title">21 – Databases in AWS: chọn đúng database cho từng bài toán</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/database" class="internal internal-link tag-link">domain/database</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Databases in AWS</span><span class="note-properties-separator">, </span><span class="note-properties-text">Choosing the Right Database</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon DocumentDB</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon Neptune</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon Keyspaces</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon Timestream</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon QLDB</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-08-11T17:00:00.000Z">12 thg 8, 2026</time><span>15 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="21--databases-in-aws-chọn-đúng-database-cho-từng-bài-toán">21 – Databases in AWS: chọn đúng database cho từng bài toán<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21--databases-in-aws-chọn-đúng-database-cho-từng-bài-toán" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> Đây là bài <strong>tổng hợp &amp; so sánh</strong>, không dạy chi tiết từng dịch vụ. Mục tiêu duy nhất: <strong>nhìn requirement → chọn đúng database</strong>. Đọc theo mạch: (1) Khung câu hỏi để chọn → (2) Bản đồ các loại database → (3) Tóm tắt từng dịch vụ → (4) Bảng từ khoá đề thi.</p>
+<p><strong>Đây là một trong những bài “ăn điểm” nhất của SAA-C03</strong> — đề thi liên tục hỏi “database nào phù hợp nhất?”. Phần §12 (từ khoá → dịch vụ) là phần đáng thuộc nhất trong cả note.</p>
+</blockquote>
+<hr/>
+<h2 id="1-khung-câu-hỏi-để-chọn-đúng-database">1. Khung câu hỏi để chọn đúng database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-khung-câu-hỏi-để-chọn-đúng-database" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>AWS có <strong>rất nhiều</strong> managed database. Trước khi chọn, trả lời 7 nhóm câu hỏi sau:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>#</th><th>Nhóm câu hỏi</th><th>Cần làm rõ</th></tr></thead><tbody><tr><td>1</td><td><strong>Workload</strong></td><td>Đọc nhiều, ghi nhiều, hay cân bằng? Throughput bao nhiêu? Có thay đổi/dao động trong ngày không? Có cần scale không?</td></tr><tr><td>2</td><td><strong>Dữ liệu</strong></td><td>Lưu bao nhiêu, lưu bao lâu? Có tăng trưởng không? Kích thước trung bình mỗi object? Truy cập theo cách nào?</td></tr><tr><td>3</td><td><strong>Độ bền (durability)</strong></td><td>Đây có phải <strong>source of truth</strong> không? Mất dữ liệu thì hậu quả thế nào?</td></tr><tr><td>4</td><td><strong>Hiệu năng</strong></td><td>Yêu cầu latency? Bao nhiêu user đồng thời?</td></tr><tr><td>5</td><td><strong>Mô hình dữ liệu</strong></td><td>Query kiểu gì? Có <strong>join</strong> không? Structured hay semi-structured?</td></tr><tr><td>6</td><td><strong>Schema</strong></td><td>Schema chặt hay cần linh hoạt? Có cần reporting? Có cần search? → <strong>RDBMS hay NoSQL</strong>?</td></tr><tr><td>7</td><td><strong>Chi phí license</strong></td><td>Đang trả tiền license (Oracle, SQL Server)? Có nên chuyển sang <strong>cloud-native</strong> như Aurora?</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Mẹo làm bài thi:</strong> đề bài luôn cài sẵn đáp án qua <strong>3 từ khoá</strong>: (1) mô hình dữ liệu (join / JSON / graph / time-series), (2) yêu cầu vận hành (serverless / managed / scale), (3) ràng buộc (latency / chi phí / không đổi code). Đọc đề là gạch chân 3 thứ đó.</p>
+</blockquote>
+<hr/>
+<h2 id="2-bản-đồ-các-loại-database-trên-aws">2. Bản đồ các loại database trên AWS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-bản-đồ-các-loại-database-trên-aws" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Dịch vụ</th><th>Đặc trưng nhận diện</th></tr></thead><tbody><tr><td><strong>RDBMS</strong> (SQL / OLTP)</td><td><strong>RDS</strong>, <strong>Aurora</strong></td><td>Rất mạnh về <strong>join</strong>, transaction, schema chặt</td></tr><tr><td><strong>NoSQL</strong> (không join, không SQL)</td><td><strong>DynamoDB</strong> (~JSON), <strong>ElastiCache</strong> (key/value), <strong>Neptune</strong> (graph), <strong>DocumentDB</strong> (MongoDB), <strong>Keyspaces</strong> (Cassandra)</td><td>Schema linh hoạt, scale ngang</td></tr><tr><td><strong>Object Store</strong></td><td><strong>S3</strong> (object lớn), <strong>Glacier</strong> (backup / archive)</td><td>Lưu file, không phải database truy vấn</td></tr><tr><td><strong>Data Warehouse</strong> (SQL Analytics / BI)</td><td><strong>Redshift</strong> (OLAP), <strong>Athena</strong>, <strong>EMR</strong></td><td>Phân tích khối lượng lớn, không phải OLTP</td></tr><tr><td><strong>Search</strong></td><td><strong>OpenSearch</strong> (JSON)</td><td>Tìm kiếm <strong>full-text</strong>, dữ liệu phi cấu trúc</td></tr><tr><td><strong>Graph</strong></td><td><strong>Amazon Neptune</strong></td><td>Thể hiện <strong>quan hệ</strong> giữa các dữ liệu</td></tr><tr><td><strong>Ledger</strong></td><td><strong>Amazon QLDB</strong> (Quantum Ledger Database)</td><td>Sổ cái <strong>bất biến</strong>, có thể kiểm chứng bằng mật mã</td></tr><tr><td><strong>Time series</strong></td><td><strong>Amazon Timestream</strong></td><td>Dữ liệu theo <strong>thời gian</strong> (IoT, metrics)</td></tr></tbody></table></div>
+<blockquote>
+<p>Nhóm <strong>Redshift / Athena / EMR / OpenSearch</strong> được nói kỹ ở phần <strong>Data &amp; Analytics</strong> (bài sau) — ở đây chỉ cần nhận diện đúng loại.</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    Start[\&quot;Cần lưu dữ liệu gì?\&quot;] --> Q1{\&quot;Có quan hệ,&lt;br/>cần JOIN và transaction?\&quot;}\n    Q1 -->|\&quot;Có\&quot;| RDBMS[\&quot;RDS hoặc Aurora\&quot;]\n    Q1 -->|\&quot;Không\&quot;| Q2{\&quot;Dữ liệu dạng gì?\&quot;}\n    Q2 -->|\&quot;File / object lớn\&quot;| S3[\&quot;Amazon S3\&quot;]\n    Q2 -->|\&quot;Key-value, cần ms\&quot;| DDB[\&quot;DynamoDB\&quot;]\n    Q2 -->|\&quot;Key-value, cần sub-ms\&quot;| EC[\&quot;ElastiCache\&quot;]\n    Q2 -->|\&quot;JSON kiểu MongoDB\&quot;| DocDB[\&quot;DocumentDB\&quot;]\n    Q2 -->|\&quot;Quan hệ mạng lưới\&quot;| Nep[\&quot;Neptune\&quot;]\n    Q2 -->|\&quot;Cassandra CQL\&quot;| Keys[\&quot;Keyspaces\&quot;]\n    Q2 -->|\&quot;Theo thời gian\&quot;| TS[\&quot;Timestream\&quot;]\n    Q2 -->|\&quot;Sổ cái bất biến\&quot;| QLDB[\&quot;QLDB\&quot;]\n    Q2 -->|\&quot;Full-text search\&quot;| OS[\&quot;OpenSearch\&quot;]\n    Q2 -->|\&quot;Phân tích BI\&quot;| RS[\&quot;Redshift / Athena\&quot;]&quot;">graph TD
+    Start[&quot;Cần lưu dữ liệu gì?&quot;] --> Q1{&quot;Có quan hệ,&lt;br/>cần JOIN và transaction?&quot;}
+    Q1 -->|&quot;Có&quot;| RDBMS[&quot;RDS hoặc Aurora&quot;]
+    Q1 -->|&quot;Không&quot;| Q2{&quot;Dữ liệu dạng gì?&quot;}
+    Q2 -->|&quot;File / object lớn&quot;| S3[&quot;Amazon S3&quot;]
+    Q2 -->|&quot;Key-value, cần ms&quot;| DDB[&quot;DynamoDB&quot;]
+    Q2 -->|&quot;Key-value, cần sub-ms&quot;| EC[&quot;ElastiCache&quot;]
+    Q2 -->|&quot;JSON kiểu MongoDB&quot;| DocDB[&quot;DocumentDB&quot;]
+    Q2 -->|&quot;Quan hệ mạng lưới&quot;| Nep[&quot;Neptune&quot;]
+    Q2 -->|&quot;Cassandra CQL&quot;| Keys[&quot;Keyspaces&quot;]
+    Q2 -->|&quot;Theo thời gian&quot;| TS[&quot;Timestream&quot;]
+    Q2 -->|&quot;Sổ cái bất biến&quot;| QLDB[&quot;QLDB&quot;]
+    Q2 -->|&quot;Full-text search&quot;| OS[&quot;OpenSearch&quot;]
+    Q2 -->|&quot;Phân tích BI&quot;| RS[&quot;Redshift / Athena&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="3-amazon-rds--quan-hệ-có-quản-lý">3. Amazon RDS — quan hệ có quản lý<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-amazon-rds--quan-hệ-có-quản-lý" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khía cạnh</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Engine</strong></td><td>PostgreSQL, MySQL, Oracle, SQL Server, DB2, MariaDB, <strong>RDS Custom</strong></td></tr><tr><td><strong>Provisioning</strong></td><td>Bạn chọn <strong>instance size</strong> + <strong>EBS volume type &amp; size</strong></td></tr><tr><td><strong>Storage</strong></td><td>Có <strong>auto-scaling</strong> cho storage</td></tr><tr><td><strong>HA &amp; scale đọc</strong></td><td><strong>Read Replicas</strong> và <strong>Multi-AZ</strong></td></tr><tr><td><strong>Security</strong></td><td>IAM, Security Groups, KMS, <strong>SSL in transit</strong></td></tr><tr><td><strong>Backup</strong></td><td><strong>Automated Backup</strong> + Point-in-Time Restore <strong>tới 35 ngày</strong></td></tr><tr><td><strong>Backup dài hạn</strong></td><td><strong>Manual DB Snapshot</strong></td></tr><tr><td><strong>Maintenance</strong></td><td>Có lịch bảo trì do AWS quản lý — <strong>có downtime</strong></td></tr><tr><td><strong>Auth</strong></td><td>Hỗ trợ <strong>IAM Authentication</strong>, tích hợp <strong>Secrets Manager</strong></td></tr><tr><td><strong>RDS Custom</strong></td><td>Cho phép <strong>truy cập và tuỳ biến instance nền</strong> — chỉ <strong>Oracle &amp; SQL Server</strong></td></tr></tbody></table></div>
+<p><strong>Use case:</strong> lưu dữ liệu quan hệ (RDBMS / OLTP), chạy SQL query, transaction.</p>
+<blockquote>
+<p><strong>RDS Custom</strong> hay ra thi ở tình huống: <em>“cần SSH vào OS, cài agent hoặc patch tuỳ chỉnh cho Oracle/SQL Server nhưng vẫn muốn managed”</em> → <strong>RDS Custom</strong> (RDS thường <strong>không</strong> cho truy cập OS).</p>
+</blockquote>
+<hr/>
+<h2 id="4-amazon-aurora--bản-cloud-native-của-rds">4. Amazon Aurora — bản cloud-native của RDS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-amazon-aurora--bản-cloud-native-của-rds" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khía cạnh</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Tương thích</strong></td><td>API của <strong>PostgreSQL / MySQL</strong> — <strong>tách rời storage và compute</strong></td></tr><tr><td><strong>Storage</strong></td><td>Dữ liệu lưu <strong>6 bản sao trên 3 AZ</strong> — highly available, <strong>self-healing</strong>, <strong>auto-scaling</strong></td></tr><tr><td><strong>Compute</strong></td><td>Cluster nhiều DB instance qua nhiều AZ, <strong>auto-scaling Read Replicas</strong></td></tr><tr><td><strong>Cluster endpoint</strong></td><td><strong>Custom endpoint</strong> riêng cho <strong>writer</strong> và <strong>reader</strong></td></tr><tr><td><strong>Security / monitoring / maintenance</strong></td><td>Giống hệt RDS</td></tr><tr><td><strong>Aurora Serverless</strong></td><td>Cho workload <strong>không dự đoán được / gián đoạn</strong> — <strong>không cần capacity planning</strong></td></tr><tr><td><strong>Aurora Global</strong></td><td>Tới <strong>16 Read Instance</strong> mỗi region, replication storage <strong>&lt; 1 giây</strong></td></tr><tr><td><strong>Aurora Machine Learning</strong></td><td>Chạy ML bằng <strong>SageMaker &amp; Comprehend</strong> ngay trên Aurora</td></tr><tr><td><strong>Aurora Database Cloning</strong></td><td>Tạo cluster mới từ cluster có sẵn — <strong>nhanh hơn restore snapshot</strong></td></tr></tbody></table></div>
+<p><strong>Use case:</strong> giống RDS, nhưng <strong>ít bảo trì hơn / linh hoạt hơn / hiệu năng cao hơn / nhiều tính năng hơn</strong>.</p>
+<h3 id="41-rds-vs-aurora--chọn-cái-nào">4.1 RDS vs Aurora — chọn cái nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-rds-vs-aurora--chọn-cái-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th><strong>RDS</strong></th><th><strong>Aurora</strong></th></tr></thead><tbody><tr><td>Engine</td><td>6 engine (kể cả Oracle, SQL Server, DB2)</td><td>Chỉ <strong>PostgreSQL / MySQL</strong></td></tr><tr><td>Storage</td><td>EBS, phải chọn size</td><td><strong>Tự grow</strong>, 6 bản sao / 3 AZ</td></tr><tr><td>Hiệu năng</td><td>Chuẩn</td><td><strong>Cao hơn</strong> (~3–5 lần MySQL)</td></tr><tr><td>Read Replica</td><td>Tối đa 5 (MySQL)</td><td>Tối đa <strong>15</strong>, auto-scaling</td></tr><tr><td>Failover</td><td>Vài chục giây – vài phút</td><td><strong>&lt; 30 giây</strong></td></tr><tr><td>Chi phí</td><td>Rẻ hơn</td><td>Đắt hơn ~20% nhưng thường <strong>hiệu quả hơn/đơn vị hiệu năng</strong></td></tr><tr><td>Chọn khi</td><td>Cần engine cụ thể, tối ưu chi phí</td><td>Cần hiệu năng, HA cao, ít vận hành</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Aurora Database Cloning</strong> dùng cơ chế <strong>copy-on-write</strong> → tạo bản clone gần như tức thì mà không tốn gấp đôi storage. Đề thi hỏi <em>“tạo môi trường test từ production nhanh nhất”</em> → <strong>Aurora Cloning</strong>, không phải restore snapshot.</p>
+</blockquote>
+<hr/>
+<h2 id="5-amazon-elasticache--cache-in-memory">5. Amazon ElastiCache — cache in-memory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-amazon-elasticache--cache-in-memory" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khía cạnh</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Engine</strong></td><td>Managed <strong>Redis / Memcached</strong> (mô hình cung cấp giống RDS nhưng cho cache)</td></tr><tr><td><strong>Bản chất</strong></td><td><strong>In-memory data store</strong>, latency <strong>sub-millisecond</strong></td></tr><tr><td><strong>Provisioning</strong></td><td>Chọn instance type (vd <code>cache.m6g.large</code>)</td></tr><tr><td><strong>Scale &amp; HA</strong></td><td>Hỗ trợ <strong>Clustering (Redis)</strong>, <strong>Multi-AZ</strong>, <strong>Read Replicas</strong> (sharding)</td></tr><tr><td><strong>Security</strong></td><td>IAM, Security Groups, KMS, <strong>Redis Auth</strong></td></tr><tr><td><strong>Backup</strong></td><td>Backup / Snapshot / Point-in-time restore</td></tr><tr><td><strong>Maintenance</strong></td><td>Có lịch bảo trì do AWS quản lý</td></tr><tr><td><strong>Nhược điểm</strong></td><td><strong>Phải sửa code ứng dụng</strong> mới dùng được</td></tr></tbody></table></div>
+<p><strong>Use case:</strong> key/value store, <strong>đọc nhiều ghi ít</strong>, cache kết quả query DB, lưu <strong>session data</strong> cho website. <strong>Không dùng được SQL.</strong></p>
+<h3 id="51-redis-vs-memcached">5.1 Redis vs Memcached<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-redis-vs-memcached" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Redis</strong></th><th><strong>Memcached</strong></th></tr></thead><tbody><tr><td>Dữ liệu</td><td>Nhiều kiểu (list, set, sorted set…)</td><td>Chỉ key/value đơn giản</td></tr><tr><td>Persistence</td><td><strong>Có</strong> (AOF/snapshot)</td><td><strong>Không</strong></td></tr><tr><td>Replication / HA</td><td><strong>Có</strong> (Multi-AZ, failover)</td><td><strong>Không</strong></td></tr><tr><td>Multi-threaded</td><td>Không</td><td><strong>Có</strong></td></tr><tr><td>Dùng khi</td><td>Cần HA, persistence, cấu trúc dữ liệu phong phú</td><td>Cần cache thuần, đơn giản, multi-thread</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Mẹo nhớ:</strong> <strong>Redis = Reliable</strong> (HA + persistence). <strong>Memcached = Multi-threaded</strong> nhưng “mất là mất”.</p>
+</blockquote>
+<hr/>
+<h2 id="6-amazon-dynamodb--nosql-serverless">6. Amazon DynamoDB — NoSQL serverless<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-amazon-dynamodb--nosql-serverless" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khía cạnh</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Bản chất</strong></td><td>Công nghệ <strong>độc quyền AWS</strong>, NoSQL <strong>serverless</strong> managed, latency <strong>millisecond</strong></td></tr><tr><td><strong>Capacity</strong></td><td><strong>Provisioned</strong> (có thể bật auto-scaling) hoặc <strong>On-demand</strong></td></tr><tr><td><strong>Thay thế ElastiCache</strong></td><td>Dùng được làm key/value store (vd lưu <strong>session data</strong> kèm <strong>TTL</strong>)</td></tr><tr><td><strong>HA</strong></td><td>Highly Available, <strong>Multi-AZ mặc định</strong>; <strong>read và write tách rời</strong>; có <strong>transaction</strong></td></tr><tr><td><strong>Cache</strong></td><td><strong>DAX</strong> cluster cho read cache — latency <strong>microsecond</strong></td></tr><tr><td><strong>Security</strong></td><td>IAM lo cả security, authentication, authorization</td></tr><tr><td><strong>Event Processing</strong></td><td><strong>DynamoDB Streams</strong> → Lambda, hoặc <strong>Kinesis Data Streams</strong></td></tr><tr><td><strong>Global Table</strong></td><td>Thiết lập <strong>active-active</strong> đa region</td></tr><tr><td><strong>Backup</strong></td><td>Tự động <strong>tới 35 ngày</strong> với <strong>PITR</strong> (restore ra <strong>table mới</strong>), hoặc on-demand backup</td></tr><tr><td><strong>S3</strong></td><td><strong>Export to S3 không tốn RCU</strong> (trong cửa sổ PITR); <strong>import từ S3 không tốn WCU</strong></td></tr><tr><td><strong>Schema</strong></td><td>Rất tiện để <strong>thay đổi schema nhanh</strong></td></tr></tbody></table></div>
+<p><strong>Use case:</strong> phát triển ứng dụng <strong>serverless</strong> (document nhỏ, cỡ <strong>hàng trăm KB</strong>), <strong>distributed serverless cache</strong>.</p>
+<blockquote>
+<p>Chi tiết đầy đủ về DynamoDB (DAX, Streams, Global Tables, TTL, PITR) xem <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/19---serverless#7-amazon-dynamodb--nosql-serverless" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/19---serverless">§19 Serverless</a>.</p>
+</blockquote>
+<h3 id="61-dynamodb-vs-elasticache-cho-session-store">6.1 DynamoDB vs ElastiCache cho session store<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-dynamodb-vs-elasticache-cho-session-store" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>DynamoDB</strong></th><th><strong>ElastiCache</strong></th></tr></thead><tbody><tr><td>Latency</td><td>Millisecond</td><td><strong>Sub-millisecond</strong></td></tr><tr><td>Vận hành</td><td><strong>Serverless</strong>, không quản lý gì</td><td>Phải chọn &amp; quản lý instance</td></tr><tr><td>Bền vững</td><td>Lưu trên disk, bền</td><td>In-memory (Redis có persistence tuỳ chọn)</td></tr><tr><td>Tự hết hạn</td><td><strong>TTL</strong> có sẵn</td><td>TTL của Redis</td></tr><tr><td>Chọn khi</td><td>Muốn serverless, không muốn quản lý node</td><td>Cần latency thấp nhất tuyệt đối</td></tr></tbody></table></div>
+<hr/>
+<h2 id="7-amazon-s3--keyvalue-store-cho-object">7. Amazon S3 — key/value store cho object<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-amazon-s3--keyvalue-store-cho-object" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khía cạnh</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Bản chất</strong></td><td>Là <strong>key/value store cho object</strong></td></tr><tr><td><strong>Phù hợp</strong></td><td>Object <strong>lớn</strong>; <strong>không</strong> tối ưu cho rất nhiều object nhỏ</td></tr><tr><td><strong>Scale</strong></td><td>Serverless, scale <strong>vô hạn</strong>; object tối đa <strong>5 TB</strong>; có <strong>versioning</strong></td></tr><tr><td><strong>Tiers</strong></td><td>S3 Standard, S3 Infrequent Access, S3 Intelligent-Tiering, S3 Glacier + <strong>lifecycle policy</strong></td></tr><tr><td><strong>Tính năng</strong></td><td>Versioning, Encryption, Replication, MFA-Delete, Access Logs…</td></tr><tr><td><strong>Security</strong></td><td>IAM, Bucket Policies, ACL, Access Points, Object Lambda, CORS, Object Lock / Vault Lock</td></tr><tr><td><strong>Encryption</strong></td><td>SSE-S3, SSE-KMS, SSE-C, client-side, <strong>TLS in transit</strong>, default encryption</td></tr><tr><td><strong>Batch</strong></td><td><strong>S3 Batch Operations</strong>, liệt kê file bằng <strong>S3 Inventory</strong></td></tr><tr><td><strong>Performance</strong></td><td><strong>Multi-part upload</strong>, <strong>S3 Transfer Acceleration</strong>, <strong>S3 Select</strong></td></tr><tr><td><strong>Automation</strong></td><td><strong>S3 Event Notifications</strong> → SNS, SQS, Lambda, EventBridge</td></tr></tbody></table></div>
+<p><strong>Use case:</strong> static file, key/value store cho file lớn, hosting website tĩnh.</p>
+<blockquote>
+<p><strong>Ghi chú sửa số liệu:</strong> object tối đa của S3 là <strong>5 TB</strong> (không phải 50 TB). Kèm theo: một lần <code>PUT</code> đơn lẻ tối đa <strong>5 GB</strong> → file lớn hơn <strong>bắt buộc dùng multi-part upload</strong>.</p>
+<p>Chi tiết S3 xem <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.0---s3-introduction-index" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/12---amazon-s3-introduction/12.0---s3-introduction-index">§12</a>, <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/13---advanced-amazon-s3/13.0---advanced-s3-index" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/13---advanced-amazon-s3/13.0---advanced-s3-index">§13</a>, <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/14---amazon-s3-security/14.0---s3-security-index" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/14---amazon-s3-security/14.0---s3-security-index">§14</a>.</p>
+</blockquote>
+<hr/>
+<h2 id="8-amazon-documentdb--aurora-cho-mongodb">8. Amazon DocumentDB — “Aurora cho MongoDB”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-amazon-documentdb--aurora-cho-mongodb" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Aurora là <strong>bản AWS triển khai</strong> của PostgreSQL / MySQL → <strong>DocumentDB là điều tương tự cho MongoDB</strong> (một NoSQL database)</li>
+<li>MongoDB dùng để <strong>lưu, query và index dữ liệu JSON</strong></li>
+<li><strong>Khái niệm triển khai tương tự Aurora</strong></li>
+<li><strong>Fully managed</strong>, highly available với replication qua <strong>3 AZ</strong></li>
+<li>Storage <strong>tự tăng theo bước 10 GB</strong></li>
+<li>Tự scale tới workload <strong>hàng triệu request/giây</strong></li>
+</ul>
+<blockquote>
+<p><strong>Nhận diện đề thi:</strong> thấy chữ <strong>“MongoDB”</strong> hoặc <strong>“MongoDB-compatible”</strong> → đáp án là <strong>DocumentDB</strong>. Đừng chọn DynamoDB (DynamoDB không tương thích MongoDB API).</p>
+</blockquote>
+<hr/>
+<h2 id="9-amazon-neptune--graph-database">9. Amazon Neptune — graph database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-amazon-neptune--graph-database" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="91-tổng-quan">9.1 Tổng quan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#91-tổng-quan" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Fully managed graph database</strong></li>
+<li>Dataset dạng graph kinh điển: <strong>mạng xã hội</strong>
+<ul>
+<li>User có bạn bè; Post có comment; Comment có like từ user; User share và like post…</li>
+</ul>
+</li>
+<li><strong>Highly available qua 3 AZ</strong>, tới <strong>15 read replica</strong></li>
+<li>Xây dựng ứng dụng làm việc với <strong>dataset liên kết dày đặc</strong> (highly connected) — tối ưu cho các <strong>query phức tạp và khó</strong></li>
+<li>Lưu tới <strong>hàng tỷ quan hệ</strong>, query graph với latency <strong>milliseconds</strong></li>
+<li><strong>Use case:</strong> knowledge graph (Wikipedia), <strong>phát hiện gian lận (fraud detection)</strong>, <strong>recommendation engine</strong>, mạng xã hội</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260812135344.png" alt width="530" height="auto"/></p>
+<blockquote>
+<p><strong>Vì sao không dùng RDS cho graph?</strong> Vì query kiểu “bạn của bạn của bạn” trong SQL cần <strong>nhiều tầng JOIN đệ quy</strong> → cực chậm khi dữ liệu lớn. Neptune được thiết kế riêng để duyệt quan hệ nên chỉ mất mili giây.</p>
+</blockquote>
+<h3 id="92-neptune-streams">9.2 Neptune Streams<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#92-neptune-streams" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Chuỗi <strong>có thứ tự, real-time</strong> của <strong>mọi thay đổi</strong> trên dữ liệu graph</li>
+<li>Thay đổi có sẵn <strong>ngay sau khi ghi</strong></li>
+<li><strong>Không trùng lặp, thứ tự chặt chẽ</strong> (no duplicates, strict order)</li>
+<li>Dữ liệu stream truy cập qua <strong>HTTP REST API</strong></li>
+<li><strong>Use case:</strong>
+<ul>
+<li>Gửi thông báo khi có thay đổi nhất định</li>
+<li><strong>Đồng bộ</strong> dữ liệu graph sang data store khác (vd <strong>S3, OpenSearch, ElastiCache</strong>)</li>
+<li><strong>Replicate dữ liệu qua region</strong> trong Neptune</li>
+</ul>
+</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260812135409.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p>So với <strong>DynamoDB Streams</strong> (24 giờ retention, ordered): Neptune Streams cũng ordered và không duplicate, nhưng truy cập qua <strong>REST API</strong> thay vì trigger Lambda trực tiếp.</p>
+</blockquote>
+<hr/>
+<h2 id="10-amazon-keyspaces--managed-apache-cassandra">10. Amazon Keyspaces — managed Apache Cassandra<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-amazon-keyspaces--managed-apache-cassandra" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Apache Cassandra</strong> là NoSQL phân tán mã nguồn mở</li>
+<li>Keyspaces = dịch vụ database <strong>tương thích Cassandra</strong>, do AWS quản lý</li>
+<li><strong>Serverless</strong>, scalable, highly available, fully managed</li>
+<li><strong>Tự động scale table</strong> lên/xuống theo traffic của ứng dụng</li>
+<li>Table được <strong>replicate 3 lần</strong> qua nhiều AZ</li>
+<li>Dùng <strong>Cassandra Query Language (CQL)</strong></li>
+<li>Latency <strong>single-digit millisecond</strong> ở mọi quy mô, <strong>hàng nghìn request/giây</strong></li>
+<li>Capacity: <strong>On-demand</strong> hoặc <strong>Provisioned + auto-scaling</strong></li>
+<li>Có <strong>encryption</strong>, backup, <strong>PITR tới 35 ngày</strong></li>
+<li><strong>Use case:</strong> lưu thông tin <strong>thiết bị IoT</strong>, <strong>dữ liệu time-series</strong>…</li>
+</ul>
+<blockquote>
+<p><strong>Nhận diện đề thi:</strong> thấy <strong>“Cassandra”</strong> hoặc <strong>“CQL”</strong> → <strong>Amazon Keyspaces</strong>. (Giống pattern: MongoDB → DocumentDB, Redis → ElastiCache.)</p>
+</blockquote>
+<hr/>
+<h2 id="11-amazon-timestream--time-series-database">11. Amazon Timestream — time series database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-amazon-timestream--time-series-database" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Fully managed</strong>, nhanh, scalable, <strong>serverless</strong> time series database</li>
+<li>Tự động scale up/down để điều chỉnh capacity</li>
+<li>Lưu và phân tích <strong>hàng nghìn tỷ event mỗi ngày</strong></li>
+<li><strong>Nhanh hơn hàng nghìn lần</strong> và <strong>rẻ bằng 1/10</strong> so với relational database (cho bài toán time-series)</li>
+<li><strong>Scheduled queries</strong>, multi-measure records, <strong>tương thích SQL</strong></li>
+<li><strong>Phân tầng lưu trữ (storage tiering)</strong>: dữ liệu <strong>gần đây giữ trong memory</strong>, dữ liệu <strong>lịch sử chuyển sang storage tối ưu chi phí</strong></li>
+<li>Có sẵn <strong>hàm phân tích time-series</strong> (giúp nhận diện pattern gần real-time)</li>
+<li><strong>Encryption</strong> cả in transit và at rest</li>
+<li><strong>Use case:</strong> ứng dụng <strong>IoT</strong>, ứng dụng vận hành (operational), <strong>real-time analytics</strong></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260812135451.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Nhận diện đề thi:</strong> đề nhắc <strong>“time series”</strong>, <strong>“IoT sensor data theo thời gian”</strong>, <strong>“metrics theo thời gian”</strong> → <strong>Timestream</strong>. Nếu đề nhắc IoT nhưng nhấn vào <strong>key/value tra cứu theo device</strong> → nghiêng về <strong>DynamoDB</strong> hoặc <strong>Keyspaces</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="12-amazon-qldb--ledger-database">12. Amazon QLDB — ledger database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-amazon-qldb--ledger-database" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>QLDB = Quantum Ledger Database</strong> — sổ cái do AWS quản lý</li>
+<li>Ghi lại <strong>lịch sử thay đổi đầy đủ, bất biến (immutable)</strong> và <strong>kiểm chứng được bằng mật mã (cryptographically verifiable)</strong></li>
+<li>Không thể sửa hay xoá bản ghi đã có — chỉ <strong>append</strong> thêm</li>
+<li><strong>Use case:</strong> hệ thống tài chính, hồ sơ y tế, chuỗi cung ứng — nơi cần <strong>audit trail không thể giả mạo</strong></li>
+</ul>
+<blockquote>
+<p><strong>QLDB vs Amazon Managed Blockchain:</strong> QLDB có <strong>một cơ quan trung tâm sở hữu sổ cái</strong> (centralized); Managed Blockchain dành cho trường hợp <strong>nhiều bên không tin nhau</strong> cùng ghi vào sổ (decentralized). Đề bài có chữ “nhiều tổ chức/đối tác cùng tham gia, phi tập trung” → Managed Blockchain; “một công ty cần audit log bất biến” → QLDB.</p>
+<p><strong>Lưu ý thực tế:</strong> AWS đã thông báo <strong>ngừng hỗ trợ QLDB</strong> (end of support 31/07/2025) và khuyến nghị chuyển sang Aurora PostgreSQL. Kiến thức này vẫn có thể xuất hiện trong đề SAA-C03 bản cũ — nên nhớ khái niệm, nhưng <strong>không dùng cho thiết kế mới</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="13-nhóm-analytics--nhận-diện-nhanh-chi-tiết-ở-bài-sau">13. Nhóm Analytics — nhận diện nhanh (chi tiết ở bài sau)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-nhóm-analytics--nhận-diện-nhanh-chi-tiết-ở-bài-sau" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dịch vụ</th><th>Là gì</th><th>Nhận diện</th></tr></thead><tbody><tr><td><strong>Redshift</strong></td><td>Data warehouse <strong>OLAP</strong></td><td>”Data warehouse”, “BI”, “phân tích petabyte”, “SQL trên dữ liệu lịch sử”</td></tr><tr><td><strong>Athena</strong></td><td>Query <strong>SQL trực tiếp trên S3</strong>, serverless</td><td>”Query dữ liệu trong S3 mà không cần load”, “serverless, trả theo query”</td></tr><tr><td><strong>EMR</strong></td><td>Cụm <strong>Hadoop / Spark</strong> managed</td><td>”Hadoop”, “Spark”, “big data processing”</td></tr><tr><td><strong>OpenSearch</strong></td><td><strong>Full-text search</strong> trên JSON</td><td>”Tìm kiếm toàn văn”, “log analytics”, “search bất kỳ trường nào”</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Phân biệt cốt lõi OLTP vs OLAP:</strong> <strong>OLTP</strong> (RDS/Aurora/DynamoDB) = nhiều giao dịch nhỏ, nhanh, real-time. <strong>OLAP</strong> (Redshift) = ít query nhưng quét khối lượng dữ liệu khổng lồ để phân tích. Đề bài có “report”, “dashboard BI”, “phân tích lịch sử” → <strong>OLAP</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="14-so-sánh--chọn-đáp-án-thi">14. So sánh &amp; chọn đáp án thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-so-sánh--chọn-đáp-án-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="141-bảng-từ-khoá--dịch-vụ-phần-quan-trọng-nhất">14.1 Bảng từ khoá → dịch vụ (phần quan trọng nhất)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#141-bảng-từ-khoá--dịch-vụ-phần-quan-trọng-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Từ khoá trong đề bài</th><th>Chọn</th></tr></thead><tbody><tr><td>Join, transaction, schema chặt, SQL</td><td><strong>RDS</strong></td></tr><tr><td>Như RDS nhưng cần hiệu năng cao, HA cao, ít bảo trì</td><td><strong>Aurora</strong></td></tr><tr><td>Cần truy cập/tuỳ biến OS của Oracle hay SQL Server</td><td><strong>RDS Custom</strong></td></tr><tr><td>Workload <strong>không dự đoán được</strong>, không muốn capacity planning</td><td><strong>Aurora Serverless</strong></td></tr><tr><td>Đọc/ghi ở nhiều region, dữ liệu <strong>quan hệ</strong></td><td><strong>Aurora Global Database</strong> (ghi ở primary)</td></tr><tr><td>Tạo môi trường test từ prod <strong>nhanh nhất</strong></td><td><strong>Aurora Database Cloning</strong></td></tr><tr><td>Cache in-memory, <strong>sub-millisecond</strong>, chấp nhận sửa code</td><td><strong>ElastiCache</strong></td></tr><tr><td>Cache cần HA + persistence</td><td><strong>ElastiCache Redis</strong></td></tr><tr><td>Cache thuần, đơn giản, multi-threaded</td><td><strong>ElastiCache Memcached</strong></td></tr><tr><td>NoSQL serverless, millisecond, không muốn quản lý gì</td><td><strong>DynamoDB</strong></td></tr><tr><td>Cache DynamoDB <strong>không sửa code</strong>, microsecond</td><td><strong>DynamoDB DAX</strong></td></tr><tr><td>Đọc <strong>và ghi</strong> ở nhiều region, dữ liệu <strong>NoSQL</strong></td><td><strong>DynamoDB Global Tables</strong></td></tr><tr><td>Lưu session data serverless, tự hết hạn</td><td><strong>DynamoDB + TTL</strong></td></tr><tr><td>File lớn, static content, lưu vô hạn</td><td><strong>Amazon S3</strong></td></tr><tr><td>Archive / backup dài hạn giá rẻ</td><td><strong>S3 Glacier</strong></td></tr><tr><td><strong>MongoDB</strong> / MongoDB-compatible</td><td><strong>DocumentDB</strong></td></tr><tr><td><strong>Graph</strong>, mạng xã hội, fraud detection, recommendation</td><td><strong>Amazon Neptune</strong></td></tr><tr><td><strong>Cassandra</strong> / CQL</td><td><strong>Amazon Keyspaces</strong></td></tr><tr><td><strong>Time series</strong>, IoT metrics theo thời gian</td><td><strong>Amazon Timestream</strong></td></tr><tr><td>Sổ cái <strong>bất biến</strong>, audit trail kiểm chứng bằng mật mã, <strong>một chủ sở hữu</strong></td><td><strong>Amazon QLDB</strong></td></tr><tr><td>Nhiều bên <strong>không tin nhau</strong> cùng ghi sổ, phi tập trung</td><td><strong>Managed Blockchain</strong></td></tr><tr><td><strong>Full-text search</strong>, tìm theo bất kỳ trường nào</td><td><strong>OpenSearch</strong></td></tr><tr><td>Data warehouse, BI, phân tích <strong>OLAP</strong></td><td><strong>Redshift</strong></td></tr><tr><td>Query SQL <strong>trực tiếp trên S3</strong>, serverless</td><td><strong>Athena</strong></td></tr><tr><td>Hadoop / Spark</td><td><strong>EMR</strong></td></tr></tbody></table></div>
+<h3 id="142-ba-cặp-cực-dễ-nhầm">14.2 Ba cặp cực dễ nhầm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#142-ba-cặp-cực-dễ-nhầm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cặp</th><th>Cách phân biệt</th></tr></thead><tbody><tr><td><strong>DynamoDB</strong> vs <strong>DocumentDB</strong></td><td>DynamoDB = NoSQL <strong>độc quyền AWS</strong>, key/value + document. DocumentDB = tương thích <strong>MongoDB API</strong>. Đề nhắc “MongoDB” → DocumentDB.</td></tr><tr><td><strong>ElastiCache</strong> vs <strong>DynamoDB (+ DAX)</strong></td><td>ElastiCache cần <strong>sửa code</strong> và quản lý node, đổi lại <strong>sub-ms</strong>. DynamoDB + DAX <strong>không sửa code</strong>, serverless.</td></tr><tr><td><strong>Timestream</strong> vs <strong>DynamoDB</strong> cho IoT</td><td>Đề nhấn “phân tích <strong>theo thời gian</strong>, tìm pattern, trillion event/ngày” → Timestream. Đề nhấn “tra cứu theo <code>deviceId</code>, ghi/đọc nhanh” → DynamoDB.</td></tr></tbody></table></div>
+<h3 id="143-số-liệu-cần-thuộc">14.3 Số liệu cần thuộc<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#143-số-liệu-cần-thuộc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dịch vụ</th><th>Con số</th></tr></thead><tbody><tr><td>RDS / DynamoDB / Keyspaces</td><td>PITR <strong>tới 35 ngày</strong></td></tr><tr><td>Aurora storage</td><td><strong>6 bản sao</strong> trên <strong>3 AZ</strong></td></tr><tr><td>Aurora Global</td><td><strong>16 Read Instance</strong>/region, replication <strong>&lt; 1 giây</strong></td></tr><tr><td>Neptune</td><td><strong>3 AZ</strong>, tới <strong>15 read replica</strong></td></tr><tr><td>DocumentDB</td><td><strong>3 AZ</strong>, storage tăng theo bước <strong>10 GB</strong></td></tr><tr><td>Keyspaces</td><td>Replicate <strong>3 lần</strong> qua nhiều AZ</td></tr><tr><td>S3</td><td>Object tối đa <strong>5 TB</strong>; single PUT tối đa <strong>5 GB</strong></td></tr><tr><td>DynamoDB</td><td>Item tối đa <strong>400 KB</strong></td></tr><tr><td>ElastiCache</td><td>Latency <strong>sub-millisecond</strong></td></tr><tr><td>DynamoDB / Keyspaces</td><td>Latency <strong>single-digit millisecond</strong></td></tr><tr><td>DAX</td><td>Latency <strong>microsecond</strong></td></tr></tbody></table></div>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Chọn database = đọc ra <strong>mô hình dữ liệu</strong> trước, rồi mới tới scale/latency/chi phí.</li>
+<li><strong>RDS</strong> cho quan hệ chuẩn; <strong>Aurora</strong> khi cần hiệu năng/HA cao hơn (6 bản sao / 3 AZ, failover &lt; 30s, tới 15 read replica).</li>
+<li><strong>RDS Custom</strong> = engine Oracle/SQL Server + quyền truy cập OS.</li>
+<li><strong>Aurora Serverless</strong> cho workload thất thường; <strong>Aurora Cloning</strong> để tạo môi trường test cực nhanh (copy-on-write).</li>
+<li><strong>ElastiCache</strong> sub-ms nhưng <strong>phải sửa code</strong>; Redis (HA + persistence) vs Memcached (multi-threaded, không persistence).</li>
+<li><strong>DynamoDB</strong> serverless, Multi-AZ mặc định, PITR 35 ngày, export S3 <strong>không tốn RCU</strong> / import <strong>không tốn WCU</strong>.</li>
+<li><strong>S3</strong> object tối đa <strong>5 TB</strong>, single PUT <strong>5 GB</strong> → file lớn phải multi-part upload.</li>
+<li><strong>DocumentDB = MongoDB</strong>, <strong>Keyspaces = Cassandra</strong>, <strong>Neptune = graph</strong>, <strong>Timestream = time series</strong>, <strong>QLDB = ledger bất biến</strong>.</li>
+<li><strong>QLDB</strong> (một chủ sở hữu, immutable) ≠ <strong>Managed Blockchain</strong> (nhiều bên phi tập trung).</li>
+<li>Neptune Streams: ordered, <strong>không duplicate</strong>, truy cập qua <strong>HTTP REST API</strong>.</li>
+<li>Timestream có <strong>storage tiering</strong>: memory cho dữ liệu mới, storage rẻ cho dữ liệu cũ.</li>
+<li><strong>OLTP</strong> (RDS/Aurora/DynamoDB) ≠ <strong>OLAP</strong> (Redshift) — đề nhắc “BI/report/phân tích lịch sử” là OLAP.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Bài này về bản chất là <strong>bảng tra cứu</strong>, không phải bài lý thuyết — giá trị nằm ở việc map <strong>từ khoá đề bài → dịch vụ</strong>, học thuộc §14.1 là ăn điểm.</li>
+<li>Có một pattern rất rõ: AWS làm <strong>bản managed cho từng công nghệ open-source phổ biến</strong> — MongoDB → DocumentDB, Cassandra → Keyspaces, Redis → ElastiCache, PostgreSQL/MySQL → Aurora, Elasticsearch → OpenSearch. Nhớ cặp “open-source ↔ dịch vụ AWS” là giải quyết được nửa số câu hỏi.</li>
+<li>Cạm bẫy hay gặp nhất: chọn <strong>DynamoDB</strong> cho mọi thứ NoSQL. Đọc kỹ — nếu đề nhắc MongoDB/Cassandra/graph/time-series thì DynamoDB là <strong>đáp án sai</strong>.</li>
+<li>Số liệu cần thuộc nằm gọn ở §14.3 — ôn nhanh trước khi thi.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Khung 7 câu hỏi chọn database trên AWS</li>
+<li>RDS vs Aurora (so sánh chọn lựa)</li>
+<li>RDS Custom (truy cập OS cho Oracle/SQL Server)</li>
+<li>ElastiCache Redis vs Memcached</li>
+<li>DynamoDB vs ElastiCache cho session store</li>
+<li>Amazon DocumentDB (MongoDB-compatible)</li>
+<li>Amazon Neptune + Neptune Streams</li>
+<li>Amazon Keyspaces (Cassandra-compatible)</li>
+<li>Amazon Timestream (time series + storage tiering)</li>
+<li>Amazon QLDB vs Managed Blockchain</li>
+<li>OLTP vs OLAP trên AWS</li>
+<li>Bảng từ khoá đề thi → database service</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-89" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#21--databases-in-aws-chọn-đúng-database-cho-từng-bài-toán" data-for="21--databases-in-aws-chọn-đúng-database-cho-từng-bài-toán">21 – Databases in AWS: chọn đúng database cho từng bài toán</a></li><li class="depth-1"><a href="#1-khung-câu-hỏi-để-chọn-đúng-database" data-for="1-khung-câu-hỏi-để-chọn-đúng-database">1. Khung câu hỏi để chọn đúng database</a></li><li class="depth-1"><a href="#2-bản-đồ-các-loại-database-trên-aws" data-for="2-bản-đồ-các-loại-database-trên-aws">2. Bản đồ các loại database trên AWS</a></li><li class="depth-1"><a href="#3-amazon-rds--quan-hệ-có-quản-lý" data-for="3-amazon-rds--quan-hệ-có-quản-lý">3. Amazon RDS — quan hệ có quản lý</a></li><li class="depth-1"><a href="#4-amazon-aurora--bản-cloud-native-của-rds" data-for="4-amazon-aurora--bản-cloud-native-của-rds">4. Amazon Aurora — bản cloud-native của RDS</a></li><li class="depth-2"><a href="#41-rds-vs-aurora--chọn-cái-nào" data-for="41-rds-vs-aurora--chọn-cái-nào">4.1 RDS vs Aurora — chọn cái nào?</a></li><li class="depth-1"><a href="#5-amazon-elasticache--cache-in-memory" data-for="5-amazon-elasticache--cache-in-memory">5. Amazon ElastiCache — cache in-memory</a></li><li class="depth-2"><a href="#51-redis-vs-memcached" data-for="51-redis-vs-memcached">5.1 Redis vs Memcached</a></li><li class="depth-1"><a href="#6-amazon-dynamodb--nosql-serverless" data-for="6-amazon-dynamodb--nosql-serverless">6. Amazon DynamoDB — NoSQL serverless</a></li><li class="depth-2"><a href="#61-dynamodb-vs-elasticache-cho-session-store" data-for="61-dynamodb-vs-elasticache-cho-session-store">6.1 DynamoDB vs ElastiCache cho session store</a></li><li class="depth-1"><a href="#7-amazon-s3--keyvalue-store-cho-object" data-for="7-amazon-s3--keyvalue-store-cho-object">7. Amazon S3 — key/value store cho object</a></li><li class="depth-1"><a href="#8-amazon-documentdb--aurora-cho-mongodb" data-for="8-amazon-documentdb--aurora-cho-mongodb">8. Amazon DocumentDB — “Aurora cho MongoDB”</a></li><li class="depth-1"><a href="#9-amazon-neptune--graph-database" data-for="9-amazon-neptune--graph-database">9. Amazon Neptune — graph database</a></li><li class="depth-2"><a href="#91-tổng-quan" data-for="91-tổng-quan">9.1 Tổng quan</a></li><li class="depth-2"><a href="#92-neptune-streams" data-for="92-neptune-streams">9.2 Neptune Streams</a></li><li class="depth-1"><a href="#10-amazon-keyspaces--managed-apache-cassandra" data-for="10-amazon-keyspaces--managed-apache-cassandra">10. Amazon Keyspaces — managed Apache Cassandra</a></li><li class="depth-1"><a href="#11-amazon-timestream--time-series-database" data-for="11-amazon-timestream--time-series-database">11. Amazon Timestream — time series database</a></li><li class="depth-1"><a href="#12-amazon-qldb--ledger-database" data-for="12-amazon-qldb--ledger-database">12. Amazon QLDB — ledger database</a></li><li class="depth-1"><a href="#13-nhóm-analytics--nhận-diện-nhanh-chi-tiết-ở-bài-sau" data-for="13-nhóm-analytics--nhận-diện-nhanh-chi-tiết-ở-bài-sau">13. Nhóm Analytics — nhận diện nhanh (chi tiết ở bài sau)</a></li><li class="depth-1"><a href="#14-so-sánh--chọn-đáp-án-thi" data-for="14-so-sánh--chọn-đáp-án-thi">14. So sánh &amp; chọn đáp án thi</a></li><li class="depth-2"><a href="#141-bảng-từ-khoá--dịch-vụ-phần-quan-trọng-nhất" data-for="141-bảng-từ-khoá--dịch-vụ-phần-quan-trọng-nhất">14.1 Bảng từ khoá → dịch vụ (phần quan trọng nhất)</a></li><li class="depth-2"><a href="#142-ba-cặp-cực-dễ-nhầm" data-for="142-ba-cặp-cực-dễ-nhầm">14.2 Ba cặp cực dễ nhầm</a></li><li class="depth-2"><a href="#143-số-liệu-cần-thuộc" data-for="143-số-liệu-cần-thuộc">14.3 Số liệu cần thuộc</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/22---data--and--analytics" class="internal">22 – Data &amp; Analytics: Athena, Redshift, OpenSearch, EMR, Glue, MSK</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/26---aws-security--and--encryption" class="internal">26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

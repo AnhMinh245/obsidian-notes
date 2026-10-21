@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>02.3 - DHCP - Kiến trúc và nguyên lý</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="02.3 - DHCP - Kiến trúc và nguyên lý"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="02.3 - DHCP - Kiến trúc và nguyên lý"/><meta name="twitter:description" content="DHCP - Kiến trúc và nguyên lý Tóm tắt nhanh DHCP tự động cấp phát IP address và network configuration cho clients, loại bỏ quản lý IP thủ công ở quy mô lớn Quy trình cấp phát cơ bản: DORA (Discover → Offer → Request → Acknowledge) — 4 bước broadcast-based DHCP Failover hỗ trợ 2 mode: Hot Standby (pr..."/><meta property="og:description" content="DHCP - Kiến trúc và nguyên lý Tóm tắt nhanh DHCP tự động cấp phát IP address và network configuration cho clients, loại bỏ quản lý IP thủ công ở quy mô lớn Quy trình cấp phát cơ bản: DORA (Discover → Offer → Request → Acknowledge) — 4 bước broadcast-based DHCP Failover hỗ trợ 2 mode: Hot Standby (pr..."/><meta property="og:image:alt" content="DHCP - Kiến trúc và nguyên lý Tóm tắt nhanh DHCP tự động cấp phát IP address và network configuration cho clients, loại bỏ quản lý IP thủ công ở quy mô lớn Quy trình cấp phát cơ bản: DORA (Discover → Offer → Request → Acknowledge) — 4 bước broadcast-based DHCP Failover hỗ trợ 2 mode: Hot Standby (pr..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.3---dhcp---kiến-trúc-và-nguyên-lý"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.3---dhcp---kiến-trúc-và-nguyên-lý"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="DHCP - Kiến trúc và nguyên lý Tóm tắt nhanh DHCP tự động cấp phát IP address và network configuration cho clients, loại bỏ quản lý IP thủ công ở quy mô lớn Quy trình cấp phát cơ bản: DORA (Discover → Offer → Request → Acknowledge) — 4 bước broadcast-based DHCP Failover hỗ trợ 2 mode: Hot Standby (pr..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.3---dhcp---kiến-trúc-và-nguyên-lý" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-476" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-476" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/">Windows Servers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/">AD Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/">02 - Dịch vụ hạ tầng</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>02.3 - DHCP - Kiến trúc và nguyên lý</a></div></nav><h1 class="article-title">02.3 - DHCP - Kiến trúc và nguyên lý</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/windows-server" class="internal internal-link tag-link">domain/windows-server</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">DHCP</span><span class="note-properties-separator">, </span><span class="note-properties-text">Dynamic Host Configuration Protocol</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>21 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="dhcp---kiến-trúc-và-nguyên-lý">DHCP - Kiến trúc và nguyên lý<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcp---kiến-trúc-và-nguyên-lý" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tóm-tắt-nhanh">Tóm tắt nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>DHCP tự động cấp phát IP address và network configuration cho clients, loại bỏ quản lý IP thủ công ở quy mô lớn</li>
+<li>Quy trình cấp phát cơ bản: <strong>DORA</strong> (Discover → Offer → Request → Acknowledge) — 4 bước broadcast-based</li>
+<li>DHCP Failover hỗ trợ 2 mode: <strong>Hot Standby</strong> (primary/secondary) và <strong>Load Balance</strong> (chia tải 50/50)</li>
+<li>Trong môi trường AD, DHCP server phải được <strong>authorized</strong> — cơ chế chống rogue server cấp sai IP</li>
+<li><strong>DHCPv6</strong> hoạt động khác fundamental so với DHCPv4, tương tác với SLAAC/RA</li>
+<li>DHCP security (starvation, rogue server, snooping) là mối quan tâm quan trọng trong enterprise</li>
+</ul>
+<h2 id="tại-sao-cần-dhcp">Tại sao cần DHCP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tại-sao-cần-dhcp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Tưởng tượng bạn quản lý tòa nhà 500 phòng — nếu phải đánh số phòng thủ công, ghi sổ ai ở phòng nào, đổi số phòng khi ai chuyển đi → chaos. DHCP tự động hoá toàn bộ quy trình này cho IP addresses.</p>
+<ul>
+<li>Gán IP <strong>thủ công</strong> gây ra:
+<ul>
+<li><strong>Xung đột IP</strong> (2 máy cùng IP) — lỗi phổ biến nhất, cực khó debug khi mạng lớn</li>
+<li><strong>Khó scale</strong>: 500 máy = 500 lần cấu hình, mỗi lần risk nhập sai</li>
+<li><strong>Khó thay đổi</strong>: đổi DNS server = sửa trên từng máy một</li>
+<li><strong>Khó track</strong>: ai đang dùng IP nào? → spreadsheet quản lý IP = nightmare</li>
+<li><strong>Human error</strong>: gõ sai subnet mask = máy mất kết nối mà không rõ nguyên nhân</li>
+</ul>
+</li>
+<li>DHCP giải quyết <strong>tất cả</strong> vấn đề trên bằng cấp phát tập trung, tự động, có thời hạn (lease)
+<ul>
+<li>Thêm 100 máy mới? DHCP tự cấp IP — zero manual work</li>
+<li>Đổi DNS server? Sửa 1 chỗ trên DHCP → tất cả clients nhận config mới khi renew lease</li>
+</ul>
+</li>
+</ul>
+<h2 id="nguyên-lý-hoạt-động---dora">Nguyên lý hoạt động - DORA<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nguyên-lý-hoạt-động---dora" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant Client\n    participant DHCPServer as \&quot;DHCP Server\&quot;\n\n    Note over Client: Client has no IP&lt;br/>Uses 0.0.0.0 as source\n\n    Client->>DHCPServer: 1. DHCPDISCOVER&lt;br/>Broadcast 255.255.255.255&lt;br/>Src: 0.0.0.0, MAC address\n\n    DHCPServer->>DHCPServer: Find available IP&lt;br/>in scope\n\n    DHCPServer-->>Client: 2. DHCPOFFER&lt;br/>Proposed IP + Subnet + Options&lt;br/>Broadcast or Unicast\n\n    Note over Client: Client may receive&lt;br/>multiple Offers from multiple servers\n\n    Client->>DHCPServer: 3. DHCPREQUEST&lt;br/>Broadcast: selects specific Offer&lt;br/>Includes Server Identifier\n\n    Note over DHCPServer: Other servers see&lt;br/>Request not selecting them&lt;br/>withdraw their Offer\n\n    DHCPServer-->>Client: 4. DHCPACK&lt;br/>Confirms IP assignment&lt;br/>Full configuration\n\n    Note over Client: Client configures IP&lt;br/>Starts Lease Timer&quot;">sequenceDiagram
+    participant Client
+    participant DHCPServer as &quot;DHCP Server&quot;
+
+    Note over Client: Client has no IP&lt;br/>Uses 0.0.0.0 as source
+
+    Client->>DHCPServer: 1. DHCPDISCOVER&lt;br/>Broadcast 255.255.255.255&lt;br/>Src: 0.0.0.0, MAC address
+
+    DHCPServer->>DHCPServer: Find available IP&lt;br/>in scope
+
+    DHCPServer-->>Client: 2. DHCPOFFER&lt;br/>Proposed IP + Subnet + Options&lt;br/>Broadcast or Unicast
+
+    Note over Client: Client may receive&lt;br/>multiple Offers from multiple servers
+
+    Client->>DHCPServer: 3. DHCPREQUEST&lt;br/>Broadcast: selects specific Offer&lt;br/>Includes Server Identifier
+
+    Note over DHCPServer: Other servers see&lt;br/>Request not selecting them&lt;br/>withdraw their Offer
+
+    DHCPServer-->>Client: 4. DHCPACK&lt;br/>Confirms IP assignment&lt;br/>Full configuration
+
+    Note over Client: Client configures IP&lt;br/>Starts Lease Timer
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Chi tiết từng bước</strong>:</p>
+<ol>
+<li><strong>DISCOVER</strong> — Client broadcast (destination <code>255.255.255.255</code>, source <code>0.0.0.0</code>)
+<ul>
+<li>Chứa: Client MAC address, hostname, requested lease time, previous IP (nếu có)</li>
+<li><strong>XID</strong> (Transaction ID) — random number để match request với response</li>
+<li>Client gửi trên port <strong>68</strong> (DHCP client), server listen trên port <strong>67</strong> (DHCP server)</li>
+</ul>
+</li>
+<li><strong>OFFER</strong> — Server đề xuất IP address
+<ul>
+<li>IP chưa bị commit — server chỉ tạm “reserve” trong vài giây chờ client chọn</li>
+<li>Nếu nhiều server cùng offer → client thường chọn offer <strong>đến trước</strong></li>
+<li>Server kiểm tra IP availability: có thể ping trước khi offer (nếu Conflict Detection bật)</li>
+</ul>
+</li>
+<li><strong>REQUEST</strong> — Client chọn offer, broadcast để tất cả server biết
+<ul>
+<li>Chứa <strong>Server Identifier</strong> option (IP của server được chọn) — option 54</li>
+<li>Các server không được chọn → release offered IP về pool</li>
+<li>REQUEST là broadcast vì client vẫn chưa có IP hợp lệ</li>
+</ul>
+</li>
+<li><strong>ACK</strong> — Server xác nhận, commit lease vào database
+<ul>
+<li>Chứa đầy đủ: IP, subnet mask, default gateway, DNS servers, lease duration, tất cả options</li>
+<li>Client nhận ACK → bind IP address → bắt đầu lease timer</li>
+</ul>
+</li>
+</ol>
+<h3 id="lease-lifecycle">Lease Lifecycle<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lease-lifecycle" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    T0[\&quot;T=0&lt;br/>Lease starts&lt;br/>Client uses IP\&quot;] --> T1[\&quot;T1 = 50%&lt;br/>RENEWAL&lt;br/>Unicast REQUEST&lt;br/>to original server\&quot;]\n    T1 -->|\&quot;Server responds ACK\&quot;| T0\n    T1 -->|\&quot;Server not responding\&quot;| T2[\&quot;T2 = 87.5%&lt;br/>REBINDING&lt;br/>Broadcast REQUEST&lt;br/>any server can respond\&quot;]\n    T2 -->|\&quot;Server responds ACK\&quot;| T0\n    T2 -->|\&quot;No response\&quot;| T100[\&quot;T = 100%&lt;br/>LEASE EXPIRED&lt;br/>Release IP&lt;br/>Restart DORA\&quot;]\n\n    style T0 fill:#27ae60,stroke:#333,color:#fff\n    style T1 fill:#f39c12,stroke:#333,color:#fff\n    style T2 fill:#e67e22,stroke:#333,color:#fff\n    style T100 fill:#e74c3c,stroke:#333,color:#fff&quot;">flowchart LR
+    T0[&quot;T=0&lt;br/>Lease starts&lt;br/>Client uses IP&quot;] --> T1[&quot;T1 = 50%&lt;br/>RENEWAL&lt;br/>Unicast REQUEST&lt;br/>to original server&quot;]
+    T1 -->|&quot;Server responds ACK&quot;| T0
+    T1 -->|&quot;Server not responding&quot;| T2[&quot;T2 = 87.5%&lt;br/>REBINDING&lt;br/>Broadcast REQUEST&lt;br/>any server can respond&quot;]
+    T2 -->|&quot;Server responds ACK&quot;| T0
+    T2 -->|&quot;No response&quot;| T100[&quot;T = 100%&lt;br/>LEASE EXPIRED&lt;br/>Release IP&lt;br/>Restart DORA&quot;]
+
+    style T0 fill:#27ae60,stroke:#333,color:#fff
+    style T1 fill:#f39c12,stroke:#333,color:#fff
+    style T2 fill:#e67e22,stroke:#333,color:#fff
+    style T100 fill:#e74c3c,stroke:#333,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thời điểm</th><th>Sự kiện</th><th>Hành vi</th></tr></thead><tbody><tr><td><strong>T=0</strong></td><td>Lease bắt đầu</td><td>Client sử dụng IP</td></tr><tr><td><strong>T1 = 50%</strong></td><td>Renewal attempt</td><td>Client gửi <strong>DHCPREQUEST</strong> unicast đến DHCP server gốc</td></tr><tr><td>Server respond</td><td>DHCPACK → reset lease</td><td>Timer restart từ đầu</td></tr><tr><td>Server không respond</td><td>Chờ đến T2</td><td>Client vẫn giữ IP, thử lại sau</td></tr><tr><td><strong>T2 = 87.5%</strong></td><td>Rebinding attempt</td><td>Client <strong>broadcast</strong> DHCPREQUEST — bất kỳ DHCP server nào cũng có thể respond</td></tr><tr><td>Server respond</td><td>DHCPACK → reset lease</td><td></td></tr><tr><td><strong>T = 100%</strong></td><td>Lease hết hạn</td><td>Client <strong>phải</strong> release IP, quay lại DORA từ đầu</td></tr></tbody></table></div>
+<ul>
+<li>Client cũng gửi DHCPREQUEST khi <strong>reboot</strong> — xin lại IP cũ (nếu lease chưa hết)
+<ul>
+<li>Server kiểm tra: IP vẫn available cho MAC này? Nếu có → ACK, nếu không → NAK</li>
+</ul>
+</li>
+<li><strong>DHCPRELEASE</strong> — client chủ động trả IP trước khi hết hạn
+<ul>
+<li>Ít xảy ra tự động, thường do admin chạy <code>ipconfig /release</code></li>
+<li>Lưu ý: DHCPRELEASE là unicast — chỉ gửi đến server, không broadcast</li>
+</ul>
+</li>
+<li><strong>DHCPDECLINE</strong> — client phát hiện IP bị trùng (ARP check sau khi nhận ACK) → từ chối, server đánh dấu IP là <strong>BAD_ADDRESS</strong></li>
+<li><strong>DHCPNAK</strong> — server từ chối request (client xin IP không thuộc scope hiện tại, vd sau khi move sang subnet khác)</li>
+</ul>
+<hr/>
+<h2 id="dhcp-server-architecture">DHCP Server Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcp-server-architecture" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="scope">Scope<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scope" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Scope</strong> = 1 dải IP cho 1 subnet — đơn vị cấp phát cơ bản nhất</li>
+<li>Định nghĩa: IP range, subnet mask, lease duration, exclusion ranges, options</li>
+<li><strong>1 scope = 1 subnet</strong> — không thể 1 scope phục vụ 2 subnet khác nhau</li>
+<li>Scope phải được <strong>Activate</strong> mới bắt đầu cấp phát</li>
+<li>Mỗi scope có riêng: statistics (used/available), exclusions, reservations, options</li>
+</ul>
+<h3 id="superscope">Superscope<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#superscope" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nhóm nhiều scope lại thành 1 đơn vị quản lý</li>
+<li>Use case chính: <strong>multinetting</strong> — 1 physical segment có nhiều logical subnet
+<ul>
+<li>Ví dụ: VLAN 10 chạy cả <code>10.1.1.0/24</code> và <code>10.1.2.0/24</code> — khi scope 1 hết IP, cấp từ scope 2</li>
+</ul>
+</li>
+<li>Superscope giúp DHCP server cấp IP từ scope nào còn trống</li>
+<li>Không phổ biến — multinetting thường là dấu hiệu cần re-design network</li>
+</ul>
+<h3 id="exclusion-ranges">Exclusion Ranges<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exclusion-ranges" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Dải IP <strong>loại trừ</strong> khỏi pool — server sẽ không cấp các IP này</li>
+<li>Dùng cho: default gateway, switches, printers, servers có IP tĩnh nằm trong subnet range</li>
+<li>Ví dụ: scope <code>10.1.1.0/24</code>, exclusion <code>10.1.1.1 - 10.1.1.20</code> → chỉ cấp từ <code>.21</code> trở đi</li>
+<li>Best practice: exclusion ở đầu hoặc cuối range, tránh rải rác → dễ quản lý</li>
+</ul>
+<h3 id="reservations">Reservations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#reservations" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>MAC → IP binding</strong> — đảm bảo device cụ thể luôn nhận IP cố định qua DHCP</li>
+<li>Kết hợp ưu điểm: IP cố định (như static) + quản lý tập trung (như DHCP options)</li>
+<li>Use case: printers, IP phones, servers cần IP ổn định nhưng vẫn muốn quản lý DHCP centrally</li>
+<li>Reservation vẫn đi qua quy trình DORA — client vẫn phải request, server đối chiếu MAC → trả reserved IP</li>
+<li>Reservation có thể có <strong>options riêng</strong> — override scope options cho device cụ thể</li>
+</ul>
+<h3 id="dhcp-options">DHCP Options<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcp-options" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Các tuỳ chọn network configuration gửi kèm theo lease:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Code</th><th>Tên</th><th>Mô tả</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>003</strong></td><td>Router</td><td>Default gateway</td><td>10.1.1.1</td></tr><tr><td><strong>006</strong></td><td>DNS Servers</td><td>Danh sách DNS server</td><td>10.0.0.10, 10.0.0.11</td></tr><tr><td><strong>015</strong></td><td>Domain Name</td><td>DNS suffix cho client</td><td>corp.local</td></tr><tr><td><strong>044</strong></td><td>WINS/NBNS Servers</td><td>NetBIOS name server (legacy)</td><td>10.0.0.15</td></tr><tr><td><strong>046</strong></td><td>WINS/NBT Node Type</td><td>NetBIOS resolution order</td><td>0x08 (H-node)</td></tr><tr><td><strong>051</strong></td><td>Lease Time</td><td>Override lease duration</td><td>691200 (8 days)</td></tr><tr><td><strong>066</strong></td><td>Boot Server Host Name</td><td>TFTP server cho PXE boot</td><td>pxe.corp.local</td></tr><tr><td><strong>067</strong></td><td>Bootfile Name</td><td>Boot file cho PXE</td><td>boot\x64\wdsnbp.com</td></tr><tr><td><strong>150</strong></td><td>TFTP Server Address</td><td>Cisco IP Phone provisioning</td><td>10.0.0.20</td></tr><tr><td><strong>252</strong></td><td>WPAD</td><td>Web Proxy Auto-Discovery</td><td><a href="http://wpad.corp.local/wpad.dat" class="external external-link">http://wpad.corp.local/wpad.dat<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></td></tr></tbody></table></div>
+<h3 id="option-hierarchy">Option Hierarchy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-hierarchy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Options có thể set ở nhiều level — level cụ thể hơn <strong>ghi đè</strong> level chung hơn:</li>
+</ul>
+<pre><code>Server Options (mac dinh cho tat ca scope)
+  |-- Scope Options (override server options cho scope nay)
+       |-- Reservation Options (override scope options cho device nay)
+            |-- Class Options (override theo vendor/user class)
+</code></pre>
+<h3 id="option-classes">Option Classes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-classes" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="vendor-class">Vendor Class<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vendor-class" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Options theo <strong>hãng thiết bị</strong> — server nhận diện vendor từ option 60 trong DISCOVER</li>
+<li>Ví dụ thực tế:
+<ul>
+<li><code>Microsoft Options</code> — vendor class mặc định cho Windows clients</li>
+<li><code>Cisco IP Phone</code> — send TFTP server, VLAN info cho IP phones</li>
+<li>Tạo custom class: <code>netsh dhcp server add class &quot;CustomDevice&quot; &quot;My devices&quot; &quot;&quot; 1</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="user-class">User Class<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#user-class" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Options theo <strong>nhóm tuỳ chỉnh</strong> do admin define</li>
+<li>Client tự declare thuộc class nào: <code>ipconfig /setclassid &quot;Ethernet&quot; &quot;VoIP&quot;</code></li>
+<li>Use case:
+<ul>
+<li>Class “Laptop” → lease ngắn 4 giờ (di chuyển nhiều)</li>
+<li>Class “Desktop” → lease dài 8 ngày (cố định)</li>
+<li>Class “VoIP” → DNS server khác, gateway khác cho voice VLAN</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="dhcp-failover">DHCP Failover<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcp-failover" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph HotStandby[\&quot;Hot Standby Mode\&quot;]\n        Primary[\&quot;Primary Server&lt;br/>Active - serves 100% leases\&quot;]\n        Secondary[\&quot;Secondary Server&lt;br/>Standby - serves only when&lt;br/>Primary is down\&quot;]\n        Primary &lt;-->|\&quot;Replication&lt;br/>Lease database\&quot;| Secondary\n    end\n\n    subgraph LoadBalance[\&quot;Load Balance Mode\&quot;]\n        Server1[\&quot;Server 1&lt;br/>Serves 50% leases\&quot;]\n        Server2[\&quot;Server 2&lt;br/>Serves 50% leases\&quot;]\n        Server1 &lt;-->|\&quot;Replication&lt;br/>Lease database\&quot;| Server2\n    end\n\n    subgraph Clients[\&quot;Clients\&quot;]\n        C1[\&quot;Client A\&quot;]\n        C2[\&quot;Client B\&quot;]\n        C3[\&quot;Client C\&quot;]\n    end\n\n    C1 --> Primary\n    C2 --> Server1\n    C3 --> Server2&quot;">graph LR
+    subgraph HotStandby[&quot;Hot Standby Mode&quot;]
+        Primary[&quot;Primary Server&lt;br/>Active - serves 100% leases&quot;]
+        Secondary[&quot;Secondary Server&lt;br/>Standby - serves only when&lt;br/>Primary is down&quot;]
+        Primary &lt;-->|&quot;Replication&lt;br/>Lease database&quot;| Secondary
+    end
+
+    subgraph LoadBalance[&quot;Load Balance Mode&quot;]
+        Server1[&quot;Server 1&lt;br/>Serves 50% leases&quot;]
+        Server2[&quot;Server 2&lt;br/>Serves 50% leases&quot;]
+        Server1 &lt;-->|&quot;Replication&lt;br/>Lease database&quot;| Server2
+    end
+
+    subgraph Clients[&quot;Clients&quot;]
+        C1[&quot;Client A&quot;]
+        C2[&quot;Client B&quot;]
+        C3[&quot;Client C&quot;]
+    end
+
+    C1 --> Primary
+    C2 --> Server1
+    C3 --> Server2
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="hot-standby-mode">Hot Standby Mode<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hot-standby-mode" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Primary</strong> xử lý 100% DHCP requests trong điều kiện bình thường</li>
+<li><strong>Secondary</strong> nhận bản sao lease database qua replication — passive cho đến khi cần</li>
+<li>Khi Primary down → Secondary chờ hết <strong>MCLT</strong> rồi bắt đầu cấp lease</li>
+<li>Configurable: bao nhiêu % address pool dự trữ cho standby (mặc định 5%)
+<ul>
+<li>5% = secondary có thể cấp 5% pool ngay lập tức, không cần chờ MCLT cho 5% này</li>
+</ul>
+</li>
+<li>Use case: central site + branch site — branch server làm standby cho central DHCP</li>
+</ul>
+<h3 id="load-balance-mode">Load Balance Mode<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#load-balance-mode" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Cả 2 server đều <strong>active</strong>, chia tải theo tỉ lệ (mặc định 50/50, configurable 60/40, 70/30…)</li>
+<li>Phân chia dựa trên <strong>MAC address hash</strong> — đảm bảo cùng client luôn đến cùng server
+<ul>
+<li>Hash deterministic: client A luôn đến server 1, client B luôn đến server 2</li>
+</ul>
+</li>
+<li>Nếu 1 server down → server còn lại tự nhận 100% sau khi hết MCLT</li>
+<li>Use case: 2 DHCP server cùng site, cần HA + load distribution</li>
+</ul>
+<h3 id="mclt---maximum-client-lead-time">MCLT - Maximum Client Lead Time<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mclt---maximum-client-lead-time" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Khoảng thời gian <strong>chờ</strong> trước khi partner server nhận quyền cấp lease cho IP thuộc server kia</li>
+<li>Mặc định: <strong>1 giờ</strong></li>
+<li>Mục đích: tránh 2 server cùng cấp 1 IP trong thời gian transition (split-brain prevention)</li>
+<li>Trong Load Balance: khi 1 server down, server còn lại chỉ cấp lease với duration = MCLT cho đến khi admin set Partner Down state</li>
+<li><strong>Auto State Switchover Interval</strong> — thời gian chờ trước khi tự động chuyển sang Partner Down (mặc định: disabled — cần admin can thiệp)</li>
+</ul>
+<h3 id="partner-states">Partner States<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#partner-states" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>State</th><th>Mô tả</th><th>Action cần</th></tr></thead><tbody><tr><td><strong>Normal</strong></td><td>Cả 2 server communicate bình thường</td><td>None</td></tr><tr><td><strong>Communication Interrupted</strong></td><td>Mất liên lạc, chưa biết partner sống/chết</td><td>Mỗi server cấp cho phần IP của mình, lease duration = MCLT</td></tr><tr><td><strong>Partner Down</strong></td><td>Admin xác nhận partner đã down</td><td>Server còn lại nhận toàn bộ scope. <strong>Set thủ công</strong> trên server active</td></tr><tr><td><strong>Recover</strong></td><td>Partner quay lại</td><td>Đồng bộ lease database, chuyển về Normal</td></tr><tr><td><strong>Recover Wait</strong></td><td>Chờ MCLT sau khi partner quay lại</td><td>Tự động, không cần can thiệp</td></tr></tbody></table></div>
+<hr/>
+<h2 id="dhcp-relay-agent">DHCP Relay Agent<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcp-relay-agent" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="vấn-đề">Vấn đề<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vấn-đề" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>DHCPDISCOVER là <strong>broadcast</strong> — broadcast không đi qua router (giới hạn trong Layer 2 segment)</li>
+<li>Subnet không có DHCP server → client không thể tìm server</li>
+<li>Không thể đặt DHCP server trên mỗi subnet — tốn tiền, phức tạp</li>
+</ul>
+<h3 id="giải-pháp-relay-agent-ip-helper-address">Giải pháp: Relay Agent (ip helper-address)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#giải-pháp-relay-agent-ip-helper-address" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant Client as \&quot;Client&lt;br/>Subnet 10.1.1.0/24\&quot;\n    participant Router as \&quot;Router / Relay Agent&lt;br/>ip helper-address 10.0.0.5\&quot;\n    participant DHCP as \&quot;DHCP Server&lt;br/>10.0.0.5\&quot;\n\n    Client->>Router: 1. DHCPDISCOVER&lt;br/>Broadcast on local subnet\n\n    Router->>Router: 2. Receives broadcast&lt;br/>Sets GIADDR = 10.1.1.1&lt;br/>Converts to unicast\n\n    Router->>DHCP: 3. Forward DHCPDISCOVER&lt;br/>Unicast to 10.0.0.5&lt;br/>GIADDR = 10.1.1.1\n\n    DHCP->>DHCP: 4. Based on GIADDR&lt;br/>selects scope 10.1.1.0/24&lt;br/>Allocates IP from that scope\n\n    DHCP-->>Router: 5. DHCPOFFER&lt;br/>Unicast to Relay Agent\n\n    Router-->>Client: 6. DHCPOFFER&lt;br/>Broadcast on client subnet\n\n    Note over Client,DHCP: REQUEST and ACK&lt;br/>follow same path via Relay&quot;">sequenceDiagram
+    participant Client as &quot;Client&lt;br/>Subnet 10.1.1.0/24&quot;
+    participant Router as &quot;Router / Relay Agent&lt;br/>ip helper-address 10.0.0.5&quot;
+    participant DHCP as &quot;DHCP Server&lt;br/>10.0.0.5&quot;
+
+    Client->>Router: 1. DHCPDISCOVER&lt;br/>Broadcast on local subnet
+
+    Router->>Router: 2. Receives broadcast&lt;br/>Sets GIADDR = 10.1.1.1&lt;br/>Converts to unicast
+
+    Router->>DHCP: 3. Forward DHCPDISCOVER&lt;br/>Unicast to 10.0.0.5&lt;br/>GIADDR = 10.1.1.1
+
+    DHCP->>DHCP: 4. Based on GIADDR&lt;br/>selects scope 10.1.1.0/24&lt;br/>Allocates IP from that scope
+
+    DHCP-->>Router: 5. DHCPOFFER&lt;br/>Unicast to Relay Agent
+
+    Router-->>Client: 6. DHCPOFFER&lt;br/>Broadcast on client subnet
+
+    Note over Client,DHCP: REQUEST and ACK&lt;br/>follow same path via Relay
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Trường GIADDR</strong> (Gateway IP Address):</p>
+<ul>
+<li>Relay Agent điền IP address của <strong>interface nhận broadcast</strong> vào GIADDR</li>
+<li>DHCP server đọc GIADDR → biết client thuộc <strong>subnet nào</strong> → chọn scope phù hợp</li>
+<li>Nếu không có scope match GIADDR → server <strong>không thể cấp IP</strong>, ignore request</li>
+<li>GIADDR là cơ chế quan trọng nhất trong multi-subnet DHCP — hiểu sai GIADDR = cấu hình sai toàn bộ</li>
+</ul>
+<h3 id="ví-dụ-thực-tế---multi-vlan-enterprise">Ví dụ thực tế - Multi-VLAN Enterprise<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ví-dụ-thực-tế---multi-vlan-enterprise" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph DC[\&quot;Data Center\&quot;]\n        DHCP[\&quot;DHCP Server 10.0.0.5&lt;br/>Scope 1: 10.1.0.0/24 VLAN 10&lt;br/>Scope 2: 10.2.0.0/24 VLAN 20&lt;br/>Scope 3: 10.3.0.0/24 VLAN 30\&quot;]\n    end\n\n    subgraph Floor1[\&quot;Floor 1 - VLAN 10\&quot;]\n        R1[\&quot;Router Interface&lt;br/>10.1.0.1&lt;br/>ip helper 10.0.0.5\&quot;]\n        PC1[\&quot;Floor 1 PCs&lt;br/>10.1.0.x\&quot;]\n    end\n\n    subgraph Floor2[\&quot;Floor 2 - VLAN 20\&quot;]\n        R2[\&quot;Router Interface&lt;br/>10.2.0.1&lt;br/>ip helper 10.0.0.5\&quot;]\n        PC2[\&quot;Floor 2 PCs&lt;br/>10.2.0.x\&quot;]\n    end\n\n    subgraph Floor3[\&quot;Floor 3 - VLAN 30\&quot;]\n        R3[\&quot;Router Interface&lt;br/>10.3.0.1&lt;br/>ip helper 10.0.0.5\&quot;]\n        PC3[\&quot;Floor 3 PCs&lt;br/>10.3.0.x\&quot;]\n    end\n\n    PC1 --> R1\n    PC2 --> R2\n    PC3 --> R3\n    R1 -->|\&quot;GIADDR=10.1.0.1\&quot;| DHCP\n    R2 -->|\&quot;GIADDR=10.2.0.1\&quot;| DHCP\n    R3 -->|\&quot;GIADDR=10.3.0.1\&quot;| DHCP&quot;">graph TD
+    subgraph DC[&quot;Data Center&quot;]
+        DHCP[&quot;DHCP Server 10.0.0.5&lt;br/>Scope 1: 10.1.0.0/24 VLAN 10&lt;br/>Scope 2: 10.2.0.0/24 VLAN 20&lt;br/>Scope 3: 10.3.0.0/24 VLAN 30&quot;]
+    end
+
+    subgraph Floor1[&quot;Floor 1 - VLAN 10&quot;]
+        R1[&quot;Router Interface&lt;br/>10.1.0.1&lt;br/>ip helper 10.0.0.5&quot;]
+        PC1[&quot;Floor 1 PCs&lt;br/>10.1.0.x&quot;]
+    end
+
+    subgraph Floor2[&quot;Floor 2 - VLAN 20&quot;]
+        R2[&quot;Router Interface&lt;br/>10.2.0.1&lt;br/>ip helper 10.0.0.5&quot;]
+        PC2[&quot;Floor 2 PCs&lt;br/>10.2.0.x&quot;]
+    end
+
+    subgraph Floor3[&quot;Floor 3 - VLAN 30&quot;]
+        R3[&quot;Router Interface&lt;br/>10.3.0.1&lt;br/>ip helper 10.0.0.5&quot;]
+        PC3[&quot;Floor 3 PCs&lt;br/>10.3.0.x&quot;]
+    end
+
+    PC1 --> R1
+    PC2 --> R2
+    PC3 --> R3
+    R1 -->|&quot;GIADDR=10.1.0.1&quot;| DHCP
+    R2 -->|&quot;GIADDR=10.2.0.1&quot;| DHCP
+    R3 -->|&quot;GIADDR=10.3.0.1&quot;| DHCP
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Key points</strong>:</p>
+<ul>
+<li>1 DHCP server phục vụ tất cả VLANs qua Relay Agent</li>
+<li>Mỗi router interface có <code>ip helper-address 10.0.0.5</code></li>
+<li>DHCP server chọn scope dựa trên GIADDR:
+<ul>
+<li>GIADDR = 10.1.0.1 → scope 10.1.0.0/24</li>
+<li>GIADDR = 10.2.0.1 → scope 10.2.0.0/24</li>
+<li>GIADDR = 10.3.0.1 → scope 10.3.0.0/24</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="dhcpv6">DHCPv6<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcpv6" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dhcpv4-vs-dhcpv6--khác-biệt-fundamental">DHCPv4 vs DHCPv6 — Khác biệt fundamental<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcpv4-vs-dhcpv6--khác-biệt-fundamental" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>IPv6 có cơ chế cấp phát địa chỉ riêng (<strong>SLAAC</strong>) không cần DHCP. DHCPv6 bổ sung, không thay thế.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặc điểm</th><th>DHCPv4</th><th>DHCPv6</th></tr></thead><tbody><tr><td><strong>Broadcast</strong></td><td>Dùng broadcast (255.255.255.255)</td><td>Dùng multicast (ff02::1:2)</td></tr><tr><td><strong>Port</strong></td><td>Client 68, Server 67</td><td>Client 546, Server 547</td></tr><tr><td><strong>MAC to IP</strong></td><td>Server gán IP dựa trên MAC</td><td>DUID (DHCP Unique Identifier) thay cho MAC</td></tr><tr><td><strong>Default gateway</strong></td><td>DHCP option 003</td><td><strong>KHÔNG</strong> qua DHCPv6 — chỉ qua RA (Router Advertisement)</td></tr><tr><td><strong>Address assignment</strong></td><td>Chỉ DHCP</td><td>SLAAC, DHCPv6 Stateful, DHCPv6 Stateless, hoặc kết hợp</td></tr></tbody></table></div>
+<h3 id="slaac-và-dhcpv6-interaction">SLAAC và DHCPv6 interaction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#slaac-và-dhcpv6-interaction" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    RA[\&quot;Router Advertisement&lt;br/>from Default Gateway\&quot;] --> Check{\&quot;RA Flags?\&quot;}\n    Check -->|\&quot;M=0, O=0\&quot;| SLAAC[\&quot;SLAAC only&lt;br/>Client generates IPv6&lt;br/>from prefix + EUI-64/random\&quot;]\n    Check -->|\&quot;M=0, O=1\&quot;| Stateless[\&quot;SLAAC + DHCPv6 Stateless&lt;br/>Client generates IPv6&lt;br/>DHCPv6 provides DNS, domain\&quot;]\n    Check -->|\&quot;M=1\&quot;| Stateful[\&quot;DHCPv6 Stateful&lt;br/>DHCPv6 server assigns IPv6&lt;br/>similar to DHCPv4\&quot;]\n\n    style SLAAC fill:#27ae60,stroke:#333,color:#fff\n    style Stateless fill:#f39c12,stroke:#333,color:#fff\n    style Stateful fill:#3498db,stroke:#333,color:#fff&quot;">flowchart TD
+    RA[&quot;Router Advertisement&lt;br/>from Default Gateway&quot;] --> Check{&quot;RA Flags?&quot;}
+    Check -->|&quot;M=0, O=0&quot;| SLAAC[&quot;SLAAC only&lt;br/>Client generates IPv6&lt;br/>from prefix + EUI-64/random&quot;]
+    Check -->|&quot;M=0, O=1&quot;| Stateless[&quot;SLAAC + DHCPv6 Stateless&lt;br/>Client generates IPv6&lt;br/>DHCPv6 provides DNS, domain&quot;]
+    Check -->|&quot;M=1&quot;| Stateful[&quot;DHCPv6 Stateful&lt;br/>DHCPv6 server assigns IPv6&lt;br/>similar to DHCPv4&quot;]
+
+    style SLAAC fill:#27ae60,stroke:#333,color:#fff
+    style Stateless fill:#f39c12,stroke:#333,color:#fff
+    style Stateful fill:#3498db,stroke:#333,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Router Advertisement flags</strong>:</p>
+<ul>
+<li><strong>M flag</strong> (Managed Address Configuration) — bật = client dùng DHCPv6 để nhận IPv6 address</li>
+<li><strong>O flag</strong> (Other Configuration) — bật = client dùng DHCPv6 cho DNS, domain, NTP (nhưng tự tạo address qua SLAAC)</li>
+<li><strong>A flag</strong> (trên prefix) — bật = SLAAC allowed cho prefix này</li>
+</ul>
+<p><strong>DHCPv6 Stateful</strong> (M=1):</p>
+<ul>
+<li>DHCPv6 server cấp IPv6 address, tương tự DHCPv4</li>
+<li>Dùng <strong>IA_NA</strong> (Identity Association for Non-temporary Addresses)</li>
+<li>Server track leases, support reservations</li>
+</ul>
+<p><strong>DHCPv6 Stateless</strong> (M=0, O=1):</p>
+<ul>
+<li>Client tự tạo IPv6 address qua SLAAC</li>
+<li>DHCPv6 chỉ cung cấp: DNS servers, domain search list, NTP, SIP servers</li>
+<li>Server <strong>không track leases</strong> — chỉ cung cấp options</li>
+<li>Đơn giản hơn, phổ biến trong nhiều deployments</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>IMPORTANT</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>DHCPv6 <strong>không cung cấp default gateway</strong> — gateway luôn từ Router Advertisement. Đây là khác biệt lớn nhất so với DHCPv4 mà admin IPv4 hay quên.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="dhcp-policy-based-assignment">DHCP Policy-based Assignment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcp-policy-based-assignment" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="giới-thiệu-windows-server-2012">Giới thiệu (Windows Server 2012+)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#giới-thiệu-windows-server-2012" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>DHCP Policies cho phép cấp <strong>khác nhau</strong> (IP range, options) dựa trên <strong>điều kiện</strong> của client</li>
+<li>Điều kiện có thể dựa trên:
+<ul>
+<li><strong>MAC address prefix</strong> — 3 bytes đầu = vendor OUI (vd: Cisco, HP, Dell)</li>
+<li><strong>Client Identifier</strong> — option 61</li>
+<li><strong>Vendor Class</strong> — option 60</li>
+<li><strong>User Class</strong> — option 77</li>
+<li><strong>FQDN</strong> — option 81</li>
+<li><strong>Relay Agent Information</strong> — option 82 (circuit ID, remote ID)</li>
+</ul>
+</li>
+</ul>
+<h3 id="use-cases-thực-tế">Use cases thực tế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#use-cases-thực-tế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Policy</th><th>Điều kiện</th><th>Action</th></tr></thead><tbody><tr><td>IP Phone policy</td><td>Vendor Class = “Cisco IP Phone”</td><td>Cấp IP từ range .200-.250, option 150 = TFTP server</td></tr><tr><td>Laptop policy</td><td>MAC prefix = Dell (00:14:22)</td><td>Lease time = 4 giờ, DNS suffix = mobile.corp.local</td></tr><tr><td>Guest policy</td><td>Relay Agent info = Guest VLAN</td><td>DNS = public DNS (8.8.8.8), no WINS</td></tr></tbody></table></div>
+<ul>
+<li>Policies evaluate theo <strong>priority order</strong> (Processing Order trong DHCP console)</li>
+<li>First match wins — client match policy đầu tiên, bỏ qua phần còn lại</li>
+<li>Client không match policy nào → nhận default scope settings</li>
+</ul>
+<hr/>
+<h2 id="dhcp-trong-active-directory">DHCP trong Active Directory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcp-trong-active-directory" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="authorization">Authorization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#authorization" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Trong domain environment, DHCP server <strong>phải</strong> được authorized trong AD mới được phép cấp IP
+<ul>
+<li>Cơ chế bảo vệ: ngăn admin cài DHCP server tự ý gây conflict IP</li>
+</ul>
+</li>
+<li>Danh sách authorized servers lưu trong: <code>CN=NetServices,CN=Services,CN=Configuration,DC=...</code></li>
+<li>Khi DHCP service khởi động:
+<ol>
+<li>Query AD để kiểm tra mình có trong danh sách authorized</li>
+<li>Nếu <strong>có</strong> → bắt đầu cấp lease bình thường</li>
+<li>Nếu <strong>không</strong> → service <strong>tự dừng</strong> cấp lease (vẫn chạy nhưng không respond DHCP requests)</li>
+</ol>
+</li>
+<li>Quyền authorize: <strong>Enterprise Admins</strong> (vì configuration partition replicate toàn forest)
+<ul>
+<li>Delegate: có thể delegate quyền authorize cho group cụ thể</li>
+</ul>
+</li>
+</ul>
+<h3 id="rogue-server-detection">Rogue Server Detection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rogue-server-detection" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>DHCP server <strong>standalone</strong> (không join domain) kiểm tra khác:
+<ul>
+<li>Gửi DHCPINFORM lên mạng</li>
+<li>Nếu nhận được response từ authorized server → tự disable (biết mình là rogue)</li>
+<li>Nếu không có authorized server trên segment → tiếp tục hoạt động (lab/workgroup)</li>
+</ul>
+</li>
+<li>Cơ chế này <strong>không hoàn hảo</strong> — thiết bị non-Windows (Linux dhcpd, rogue devices) không tuân thủ
+<ul>
+<li>Giải pháp bổ sung: <strong>DHCP snooping</strong> trên switch (xem phần Security)</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="dhcp-database-maintenance">DHCP Database Maintenance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcp-database-maintenance" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="database-engine">Database Engine<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#database-engine" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Windows DHCP dùng <strong>ESE</strong> (Extensible Storage Engine) — cùng engine như AD DS</li>
+<li>Database file: <code>%SystemRoot%\System32\dhcp\dhcp.mdb</code></li>
+<li>Transaction logs: <code>j50.log</code>, <code>j50*.log</code></li>
+</ul>
+<h3 id="backup-và-restore">Backup và Restore<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#backup-và-restore" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Automatic backup</strong>: mặc định mỗi <strong>60 phút</strong>, lưu vào <code>%SystemRoot%\System32\dhcp\backup\</code>
+<ul>
+<li>Backup đồng bộ: scope config, reservations, leases, options, policies</li>
+<li>Interval configurable qua registry: <code>BackupInterval</code> (phút)</li>
+</ul>
+</li>
+<li><strong>Manual backup</strong>: DHCP console → Right-click server → Backup → chọn folder</li>
+<li><strong>Restore</strong>: DHCP console → Right-click server → Restore → chọn backup folder
+<ul>
+<li>Restore sẽ <strong>overwrite</strong> database hiện tại → cẩn thận</li>
+</ul>
+</li>
+<li><strong>Export/Import</strong> (PowerShell):
+<ul>
+<li><code>Export-DhcpServer -File C:\dhcp-export.xml</code> — export toàn bộ config</li>
+<li><code>Import-DhcpServer -File C:\dhcp-export.xml</code> — import vào server mới</li>
+</ul>
+</li>
+</ul>
+<h3 id="database-compaction">Database Compaction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#database-compaction" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Online compaction</strong>: tự động trong quá trình hoạt động — giải phóng space bên trong file</li>
+<li><strong>Offline compaction</strong>: dùng <code>jetpack.exe</code> khi database quá lớn
+<ul>
+<li>Stop DHCP service → <code>jetpack dhcp.mdb temp.mdb</code> → Start DHCP service</li>
+<li>Hiếm khi cần trên server hiện đại — chỉ khi database > vài trăm MB</li>
+</ul>
+</li>
+</ul>
+<h3 id="database-integrity">Database Integrity<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#database-integrity" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><code>dhcploc.exe</code> — tool kiểm tra rogue DHCP servers trên mạng</li>
+<li>Event Log: <code>Microsoft-Windows-DHCP-Server/Operational</code> — theo dõi leases, errors, authorization events</li>
+<li><strong>Audit logging</strong>: mặc định BẬT — ghi log vào <code>%SystemRoot%\System32\dhcp\DhcpSrvLog-&lt;Day>.log</code>
+<ul>
+<li>Chứa: lease grants, releases, renewals, NAKs — crucial cho troubleshooting và audit</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="tích-hợp-dns-dynamic-update">Tích hợp DNS Dynamic Update<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tích-hợp-dns-dynamic-update" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="cơ-chế">Cơ chế<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cơ-chế" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>DHCP server có thể <strong>tự động cập nhật DNS</strong> thay mặt client</li>
+<li>2 loại records:
+<ul>
+<li><strong>A record</strong> (forward lookup) — hostname → IP</li>
+<li><strong>PTR record</strong> (reverse lookup) — IP → hostname</li>
+</ul>
+</li>
+<li>Tuỳ chọn trên DHCP server:
+<ul>
+<li>Luôn update cả A và PTR</li>
+<li>Chỉ update khi client yêu cầu (mặc định — option 81 FQDN)</li>
+<li>Update cho clients không hỗ trợ DDNS (Windows 9x, non-Windows devices)</li>
+</ul>
+</li>
+</ul>
+<h3 id="secure-dynamic-update">Secure Dynamic Update<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#secure-dynamic-update" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>DNS zone cấu hình <strong>Secure only</strong> → chỉ authenticated accounts mới được update</li>
+<li>DHCP server dùng <strong>computer account</strong> của mình hoặc dedicated service account để update DNS</li>
+<li>Vấn đề: nếu DHCP server tạo record → <strong>DHCP server là owner</strong> → DHCP server khác (failover partner) không có quyền update record đó
+<ul>
+<li>Đây là nguyên nhân “stale DNS records” phổ biến sau failover</li>
+</ul>
+</li>
+</ul>
+<h3 id="dnsupdateproxy-group">DnsUpdateProxy Group<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dnsupdateproxy-group" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Giải pháp cho vấn đề ownership: thêm DHCP servers vào group <strong>DnsUpdateProxy</strong></li>
+<li>Records tạo bởi members của group này <strong>không có owner</strong> (no security) → bất kỳ authenticated user nào cũng update được</li>
+<li><strong>Rủi ro bảo mật</strong>: records không có ACL protection</li>
+<li>Best practice hiện đại: cấu hình <strong>DHCP credential</strong> (dedicated service account) cho DNS update — an toàn hơn DnsUpdateProxy
+<ul>
+<li>Service account có quyền update DNS zone → cả 2 DHCP servers dùng chung account → ownership nhất quán</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="dhcp-security">DHCP Security<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcp-security" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="mối-đe-doạ-chính">Mối đe doạ chính<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mối-đe-doạ-chính" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    subgraph Threats[\&quot;DHCP Threats\&quot;]\n        Starvation[\&quot;DHCP Starvation&lt;br/>Flood DISCOVER&lt;br/>Exhaust IP pool\&quot;]\n        Rogue[\&quot;Rogue DHCP Server&lt;br/>Serves wrong IP/Gateway&lt;br/>MitM attack\&quot;]\n        Spoofing[\&quot;DHCP Spoofing&lt;br/>Forge MAC address&lt;br/>Hijack reservation\&quot;]\n    end\n\n    subgraph Mitigations[\&quot;Mitigations\&quot;]\n        Snooping[\&quot;DHCP Snooping&lt;br/>Switch-level filter&lt;br/>Only trusted ports serve DHCP\&quot;]\n        PortSec[\&quot;Port Security&lt;br/>Limit MAC per port&lt;br/>Prevent MAC flood\&quot;]\n        Auth[\&quot;AD Authorization&lt;br/>Only authorized servers&lt;br/>can serve leases\&quot;]\n        DAI[\&quot;Dynamic ARP Inspection&lt;br/>Verify ARP against&lt;br/>DHCP snooping table\&quot;]\n    end\n\n    Starvation --> PortSec\n    Starvation --> Snooping\n    Rogue --> Snooping\n    Rogue --> Auth\n    Spoofing --> PortSec\n    Spoofing --> DAI&quot;">flowchart TD
+    subgraph Threats[&quot;DHCP Threats&quot;]
+        Starvation[&quot;DHCP Starvation&lt;br/>Flood DISCOVER&lt;br/>Exhaust IP pool&quot;]
+        Rogue[&quot;Rogue DHCP Server&lt;br/>Serves wrong IP/Gateway&lt;br/>MitM attack&quot;]
+        Spoofing[&quot;DHCP Spoofing&lt;br/>Forge MAC address&lt;br/>Hijack reservation&quot;]
+    end
+
+    subgraph Mitigations[&quot;Mitigations&quot;]
+        Snooping[&quot;DHCP Snooping&lt;br/>Switch-level filter&lt;br/>Only trusted ports serve DHCP&quot;]
+        PortSec[&quot;Port Security&lt;br/>Limit MAC per port&lt;br/>Prevent MAC flood&quot;]
+        Auth[&quot;AD Authorization&lt;br/>Only authorized servers&lt;br/>can serve leases&quot;]
+        DAI[&quot;Dynamic ARP Inspection&lt;br/>Verify ARP against&lt;br/>DHCP snooping table&quot;]
+    end
+
+    Starvation --> PortSec
+    Starvation --> Snooping
+    Rogue --> Snooping
+    Rogue --> Auth
+    Spoofing --> PortSec
+    Spoofing --> DAI
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="dhcp-starvation-attack">DHCP Starvation Attack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcp-starvation-attack" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Attacker gửi hàng loạt DHCPDISCOVER với MAC address giả → chiếm hết IP pool</li>
+<li>Kết quả: legitimate clients không nhận được IP → denial of service</li>
+<li>Mitigation:
+<ul>
+<li><strong>Port Security</strong> trên switch — limit số MAC address per port (vd: max 2)</li>
+<li><strong>DHCP snooping rate limiting</strong> — giới hạn DHCP packets per second per port</li>
+</ul>
+</li>
+</ul>
+<h3 id="rogue-dhcp-server">Rogue DHCP Server<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rogue-dhcp-server" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Unauthorized DHCP server cấp IP/gateway sai → redirect traffic qua attacker (MitM)</li>
+<li>Attacker cấp gateway = IP attacker → sniff/modify tất cả traffic</li>
+<li>Mitigation:
+<ul>
+<li><strong>DHCP Snooping</strong> trên switch — chỉ allow DHCP response từ trusted ports (uplink ports)</li>
+<li><strong>AD Authorization</strong> — Windows DHCP servers phải authorized</li>
+<li><strong>802.1X</strong> — authenticate devices trước khi join network</li>
+</ul>
+</li>
+</ul>
+<h3 id="dhcp-snooping-switch-level">DHCP Snooping (switch level)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dhcp-snooping-switch-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Feature trên managed switches (Cisco, HP, Dell, etc.)</li>
+<li><strong>Trusted ports</strong>: uplink ports đến DHCP server — được phép gửi DHCPOFFER/DHCPACK</li>
+<li><strong>Untrusted ports</strong>: access ports — chỉ được gửi DHCPDISCOVER/DHCPREQUEST</li>
+<li>Snooping xây dựng <strong>DHCP snooping binding table</strong>: MAC + IP + VLAN + Port
+<ul>
+<li>Table này dùng cho Dynamic ARP Inspection (DAI) và IP Source Guard</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="ipam-integration">IPAM Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ipam-integration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ipam---ip-address-management">IPAM - IP Address Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ipam---ip-address-management" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Windows Server role (từ 2012) cung cấp <strong>central management</strong> cho DHCP và DNS</li>
+<li>IPAM giải quyết: “tôi có 50 scopes trên 5 DHCP servers — IP nào đã dùng, IP nào còn trống?”</li>
+</ul>
+<h3 id="chức-năng-chính">Chức năng chính<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chức-năng-chính" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>IP address tracking</strong></td><td>Theo dõi IP allocation across tất cả DHCP servers</td></tr><tr><td><strong>DHCP/DNS server management</strong></td><td>Quản lý tập trung nhiều DHCP/DNS servers</td></tr><tr><td><strong>IP address space utilization</strong></td><td>Reports: % used per scope, trend over time</td></tr><tr><td><strong>Audit trail</strong></td><td>Ai cấp IP nào, khi nào, cho device nào</td></tr><tr><td><strong>IP address blocks</strong></td><td>Quản lý subnets, supernets, IP ranges ở high level</td></tr></tbody></table></div>
+<h3 id="kiến-trúc">Kiến trúc<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kiến-trúc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>IPAM server discover DHCP/DNS servers trong forest qua AD</li>
+<li>Collect data qua WMI/WinRM (scheduled tasks, không agent-based)</li>
+<li>Lưu data trong SQL Server (WID cho small, SQL Server cho production)</li>
+<li>Integrate với DHCP: có thể tạo/sửa/xoá scope, reservation, policy từ IPAM console</li>
+</ul>
+<hr/>
+<h2 id="ví-dụ-thực-tế---scope-design">Ví dụ thực tế - Scope Design<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ví-dụ-thực-tế---scope-design" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="enterprise-3-sites">Enterprise 3 sites<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#enterprise-3-sites" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Site</th><th>VLANs</th><th>Scopes</th><th>DHCP Server</th><th>Lease</th></tr></thead><tbody><tr><td>HQ</td><td>VLAN 10 (Office), VLAN 20 (Voice), VLAN 30 (WiFi)</td><td>10.10.0.0/22, 10.20.0.0/24, 10.30.0.0/23</td><td>DC-HQ-01 (primary), DC-HQ-02 (load balance)</td><td>8 ngày, 8 ngày, 4 giờ</td></tr><tr><td>Branch-A</td><td>VLAN 10 (Office), VLAN 20 (Voice)</td><td>10.11.0.0/24, 10.21.0.0/24</td><td>DC-HQ-01 via relay</td><td>8 ngày, 8 ngày</td></tr><tr><td>Branch-B</td><td>VLAN 10 (Office)</td><td>10.12.0.0/24</td><td>DC-HQ-01 via relay, DC-HQ-02 hot standby</td><td>8 ngày</td></tr></tbody></table></div>
+<p><strong>Design decisions</strong>:</p>
+<ul>
+<li><strong>WiFi scope lease ngắn (4 giờ)</strong> — devices connect/disconnect thường xuyên, cần reclaim IP nhanh</li>
+<li><strong>Branch dùng relay agent</strong> — không cần DHCP server riêng tại branch, giảm quản trị</li>
+<li><strong>Voice VLAN scope riêng</strong> — option 150 (TFTP) cho IP Phone provisioning</li>
+<li><strong>HQ dùng Load Balance failover</strong> — 2 servers cùng active, chia tải 50/50</li>
+<li><strong>Branch-B dùng Hot Standby</strong> — HQ primary, DC-HQ-02 standby cho branch</li>
+</ul>
+<hr/>
+<h2 id="câu-hỏi-thường-gặp">Câu hỏi thường gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-thường-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Q: Lease duration nên đặt bao lâu?</strong><br/>
+A: Phụ thuộc tính chất mạng. Office desktop = 8 ngày (ổn định). WiFi/Guest = 4-8 giờ (nhiều devices tạm thời). VPN = 1-2 giờ (disconnect thường xuyên). Rule of thumb: lease ≥ 2x thời gian typical connection.</p>
+<p><strong>Q: DHCP failover có thể 3 servers không?</strong><br/>
+A: Không — Windows DHCP failover chỉ hỗ trợ <strong>2 servers</strong> per scope. Muốn N+1 → dùng DHCP clustering (Windows Failover Cluster) nhưng chỉ active-passive.</p>
+<p><strong>Q: Client xin IP cũ khi reboot — server có cấp lại không?</strong><br/>
+A: Nếu lease chưa hết VÀ IP chưa bị cấp cho device khác → server cấp lại cùng IP (DHCPACK). Nếu IP đã thuộc device khác → DHCPNAK → client bắt đầu DORA mới.</p>
+<p><strong>Q: Split scope 80/20 có còn dùng không?</strong><br/>
+A: Từ Windows Server 2012, DHCP Failover thay thế hoàn toàn split scope. Split scope không replicate leases → client có thể nhận duplicate IP trong edge case. Failover replicate leases → an toàn hơn.</p>
+<p><strong>Q: Reservation có tốn lease từ pool không?</strong><br/>
+A: IP trong reservation <strong>vẫn tính</strong> trong pool — nhưng nó reserved cho MAC cụ thể. Nếu device không online, IP đó idle chứ không cấp cho device khác.</p>
+<hr/>
+<h2 id="lưu-ý-quan-trọng">Lưu ý quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>CAUTION</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Scope exhaustion</strong> — khi hết IP trong scope → client không nhận được lease → mất kết nối mạng. Monitor DHCP scope utilization, alert khi >80%. Dùng IPAM hoặc SCOM monitoring.</p>
+</div>
+</blockquote>
+<ul>
+<li><strong>Lease duration tuning</strong>:
+<ul>
+<li>Mạng ổn định (office): lease dài (8 ngày) giảm DHCP traffic</li>
+<li>Mạng nhiều thiết bị tạm thời (Wi-Fi guest): lease ngắn (4-8 giờ) reclaim IP nhanh</li>
+<li>VPN: lease rất ngắn (1-2 giờ) tránh giữ IP khi disconnect</li>
+</ul>
+</li>
+<li><strong>Failover ≠ clustering</strong> — DHCP failover chỉ hoạt động giữa <strong>2 server</strong> (không phải N+1)</li>
+<li><strong>Split scope</strong> (legacy HA trước Windows 2012) — chia 80/20 giữa 2 server, không replicate lease. Failover mode thay thế hoàn toàn approach này</li>
+<li><strong>PXE boot</strong> — DHCP options 066/067 hoặc option 060 (PXEClient) cần cấu hình đúng để WDS/SCCM/MDT deployment hoạt động</li>
+<li><strong>Conflict detection</strong> — DHCP server có thể ping IP trước khi cấp (mặc định tắt, bật = thêm latency nhưng an toàn hơn). Client Windows cũng tự ARP check sau khi nhận lease</li>
+<li><strong>Backup regularly</strong> — test restore process ít nhất 1 lần/năm. DHCP database corrupt = toàn bộ network outage</li>
+</ul>
+<hr/>
+<h2 id="mối-quan-hệ-với-các-thành-phần-khác">Mối quan hệ với các thành phần khác<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mối-quan-hệ-với-các-thành-phần-khác" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>DNS</strong> tích hợp chặt chẽ qua Dynamic Update — DHCP tạo DNS records cho clients → xem <a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory">01.7 - DNS trong Active Directory</a></li>
+<li><strong>AD DS</strong> authorization yêu cầu AD → xem <a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services">02.1 - AD DS - Active Directory Domain Services</a></li>
+<li><strong>RDS</strong> deployment cần DHCP cho VDI VMs → xem <a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services">02.4 - RDS - Remote Desktop Services</a></li>
+<li><strong>Migration</strong> DHCP trong dự án nâng cấp → xem <a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration">04.4 - DHCP và RDS Migration</a></li>
+</ul>
+<hr/>
+<h2 id="liên-kết">Liên kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#liên-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory">01.7 - DNS trong Active Directory</a> — DHCP và DNS tích hợp chặt chẽ qua Dynamic Update</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services">02.1 - AD DS - Active Directory Domain Services</a> — DHCP authorization yêu cầu AD</li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration">04.4 - DHCP và RDS Migration</a> — migration DHCP trong dự án nâng cấp</li>
+<li><a href="../../../../moc---windows-server-ad-2025" class="internal internal-link alias" data-slug="moc---windows-server-ad-2025">MOC - Windows Server AD 2025</a></li>
+</ul>
+<h2 id="tham-khảo">Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/networking/technologies/dhcp/dhcp-top" class="external external-link">DHCP Overview - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/networking/technologies/dhcp/dhcp-failover" class="external external-link">DHCP Failover - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/networking/technologies/dhcp/dhcp-relay-agent" class="external external-link">DHCP Relay Agent - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/networking/technologies/dhcp/dhcp-dns-events" class="external external-link">DHCP and DNS Integration - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/networking/technologies/dhcp/dhcp-deploy-wps" class="external external-link">DHCPv6 - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/networking/technologies/ipam/ipam-top" class="external external-link">IPAM Overview - Microsoft Learn<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-426" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#dhcp---kiến-trúc-và-nguyên-lý" data-for="dhcp---kiến-trúc-và-nguyên-lý">DHCP - Kiến trúc và nguyên lý</a></li><li class="depth-1"><a href="#tóm-tắt-nhanh" data-for="tóm-tắt-nhanh">Tóm tắt nhanh</a></li><li class="depth-1"><a href="#tại-sao-cần-dhcp" data-for="tại-sao-cần-dhcp">Tại sao cần DHCP</a></li><li class="depth-1"><a href="#nguyên-lý-hoạt-động---dora" data-for="nguyên-lý-hoạt-động---dora">Nguyên lý hoạt động - DORA</a></li><li class="depth-2"><a href="#lease-lifecycle" data-for="lease-lifecycle">Lease Lifecycle</a></li><li class="depth-1"><a href="#dhcp-server-architecture" data-for="dhcp-server-architecture">DHCP Server Architecture</a></li><li class="depth-2"><a href="#scope" data-for="scope">Scope</a></li><li class="depth-2"><a href="#superscope" data-for="superscope">Superscope</a></li><li class="depth-2"><a href="#exclusion-ranges" data-for="exclusion-ranges">Exclusion Ranges</a></li><li class="depth-2"><a href="#reservations" data-for="reservations">Reservations</a></li><li class="depth-2"><a href="#dhcp-options" data-for="dhcp-options">DHCP Options</a></li><li class="depth-2"><a href="#option-hierarchy" data-for="option-hierarchy">Option Hierarchy</a></li><li class="depth-2"><a href="#option-classes" data-for="option-classes">Option Classes</a></li><li class="depth-1"><a href="#dhcp-failover" data-for="dhcp-failover">DHCP Failover</a></li><li class="depth-2"><a href="#hot-standby-mode" data-for="hot-standby-mode">Hot Standby Mode</a></li><li class="depth-2"><a href="#load-balance-mode" data-for="load-balance-mode">Load Balance Mode</a></li><li class="depth-2"><a href="#mclt---maximum-client-lead-time" data-for="mclt---maximum-client-lead-time">MCLT - Maximum Client Lead Time</a></li><li class="depth-2"><a href="#partner-states" data-for="partner-states">Partner States</a></li><li class="depth-1"><a href="#dhcp-relay-agent" data-for="dhcp-relay-agent">DHCP Relay Agent</a></li><li class="depth-2"><a href="#vấn-đề" data-for="vấn-đề">Vấn đề</a></li><li class="depth-2"><a href="#giải-pháp-relay-agent-ip-helper-address" data-for="giải-pháp-relay-agent-ip-helper-address">Giải pháp: Relay Agent (ip helper-address)</a></li><li class="depth-2"><a href="#ví-dụ-thực-tế---multi-vlan-enterprise" data-for="ví-dụ-thực-tế---multi-vlan-enterprise">Ví dụ thực tế - Multi-VLAN Enterprise</a></li><li class="depth-1"><a href="#dhcpv6" data-for="dhcpv6">DHCPv6</a></li><li class="depth-2"><a href="#dhcpv4-vs-dhcpv6--khác-biệt-fundamental" data-for="dhcpv4-vs-dhcpv6--khác-biệt-fundamental">DHCPv4 vs DHCPv6 — Khác biệt fundamental</a></li><li class="depth-2"><a href="#slaac-và-dhcpv6-interaction" data-for="slaac-và-dhcpv6-interaction">SLAAC và DHCPv6 interaction</a></li><li class="depth-1"><a href="#dhcp-policy-based-assignment" data-for="dhcp-policy-based-assignment">DHCP Policy-based Assignment</a></li><li class="depth-2"><a href="#giới-thiệu-windows-server-2012" data-for="giới-thiệu-windows-server-2012">Giới thiệu (Windows Server 2012+)</a></li><li class="depth-2"><a href="#use-cases-thực-tế" data-for="use-cases-thực-tế">Use cases thực tế</a></li><li class="depth-1"><a href="#dhcp-trong-active-directory" data-for="dhcp-trong-active-directory">DHCP trong Active Directory</a></li><li class="depth-2"><a href="#authorization" data-for="authorization">Authorization</a></li><li class="depth-2"><a href="#rogue-server-detection" data-for="rogue-server-detection">Rogue Server Detection</a></li><li class="depth-1"><a href="#dhcp-database-maintenance" data-for="dhcp-database-maintenance">DHCP Database Maintenance</a></li><li class="depth-2"><a href="#database-engine" data-for="database-engine">Database Engine</a></li><li class="depth-2"><a href="#backup-và-restore" data-for="backup-và-restore">Backup và Restore</a></li><li class="depth-2"><a href="#database-compaction" data-for="database-compaction">Database Compaction</a></li><li class="depth-2"><a href="#database-integrity" data-for="database-integrity">Database Integrity</a></li><li class="depth-1"><a href="#tích-hợp-dns-dynamic-update" data-for="tích-hợp-dns-dynamic-update">Tích hợp DNS Dynamic Update</a></li><li class="depth-2"><a href="#cơ-chế" data-for="cơ-chế">Cơ chế</a></li><li class="depth-2"><a href="#secure-dynamic-update" data-for="secure-dynamic-update">Secure Dynamic Update</a></li><li class="depth-2"><a href="#dnsupdateproxy-group" data-for="dnsupdateproxy-group">DnsUpdateProxy Group</a></li><li class="depth-1"><a href="#dhcp-security" data-for="dhcp-security">DHCP Security</a></li><li class="depth-2"><a href="#mối-đe-doạ-chính" data-for="mối-đe-doạ-chính">Mối đe doạ chính</a></li><li class="depth-2"><a href="#dhcp-starvation-attack" data-for="dhcp-starvation-attack">DHCP Starvation Attack</a></li><li class="depth-2"><a href="#rogue-dhcp-server" data-for="rogue-dhcp-server">Rogue DHCP Server</a></li><li class="depth-2"><a href="#dhcp-snooping-switch-level" data-for="dhcp-snooping-switch-level">DHCP Snooping (switch level)</a></li><li class="depth-1"><a href="#ipam-integration" data-for="ipam-integration">IPAM Integration</a></li><li class="depth-2"><a href="#ipam---ip-address-management" data-for="ipam---ip-address-management">IPAM - IP Address Management</a></li><li class="depth-2"><a href="#chức-năng-chính" data-for="chức-năng-chính">Chức năng chính</a></li><li class="depth-2"><a href="#kiến-trúc" data-for="kiến-trúc">Kiến trúc</a></li><li class="depth-1"><a href="#ví-dụ-thực-tế---scope-design" data-for="ví-dụ-thực-tế---scope-design">Ví dụ thực tế - Scope Design</a></li><li class="depth-2"><a href="#enterprise-3-sites" data-for="enterprise-3-sites">Enterprise 3 sites</a></li><li class="depth-1"><a href="#câu-hỏi-thường-gặp" data-for="câu-hỏi-thường-gặp">Câu hỏi thường gặp</a></li><li class="depth-1"><a href="#lưu-ý-quan-trọng" data-for="lưu-ý-quan-trọng">Lưu ý quan trọng</a></li><li class="depth-1"><a href="#mối-quan-hệ-với-các-thành-phần-khác" data-for="mối-quan-hệ-với-các-thành-phần-khác">Mối quan hệ với các thành phần khác</a></li><li class="depth-1"><a href="#liên-kết" data-for="liên-kết">Liên kết</a></li><li class="depth-1"><a href="#tham-khảo" data-for="tham-khảo">Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory" class="internal">01.7 - DNS trong Active Directory</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.1---ad-ds---active-directory-domain-services" class="internal">02.1 - AD DS - Active Directory Domain Services</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/02---dịch-vụ-hạ-tầng/02.4---rds---remote-desktop-services" class="internal">02.4 - RDS - Remote Desktop Services</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal">04.4 - DHCP và RDS Migration</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal">04.5 - Kiểm thử toàn diện</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

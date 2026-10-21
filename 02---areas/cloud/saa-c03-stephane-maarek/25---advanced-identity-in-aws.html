@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower Cách đọc note này: §4 dạy IAM trong một account."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower Cách đọc note này: §4 dạy IAM trong một account."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower Cách đọc note này: §4 dạy IAM trong một account."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/25---advanced-identity-in-aws"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/25---advanced-identity-in-aws"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower Cách đọc note này: §4 dạy IAM trong một account."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/25---advanced-identity-in-aws" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-93" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-93" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower</a></div></nav><h1 class="article-title">25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/security" class="internal internal-link tag-link">domain/security</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Advanced Identity AWS</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Organizations</span><span class="note-properties-separator">, </span><span class="note-properties-text">Service Control Policy</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS IAM Identity Center</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Control Tower</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-09-12T17:00:00.000Z">13 thg 9, 2026</time><span>31 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="25--advanced-identity-in-aws-organizations-scp-iam-identity-center-control-tower">25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#25--advanced-identity-in-aws-organizations-scp-iam-identity-center-control-tower" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/04---iam--and--aws-cli" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/04---iam--and--aws-cli">§4</a> dạy IAM trong <strong>một</strong> account. Bài này là phần mở rộng khi công ty có <strong>nhiều</strong> account: (1) AWS Organizations gom account lại → (2) SCP giới hạn quyền toàn account/OU → (3) các mảnh nhỏ hay quên (Tag Policy, IAM Condition, cross-account, Permission Boundary) → (4) logic đánh giá quyền tổng hợp (đây là phần hay sai nhất) → (5) IAM Identity Center = SSO cho multi-account → (6) Directory Service cho AD → (7) Control Tower = đóng gói tất cả thành sản phẩm turn-key. Đọc theo đúng thứ tự này vì mỗi phần sau đều dựa vào phần trước.</p>
+</blockquote>
+<hr/>
+<h2 id="0-vì-sao-cần-advanced-identity">0. Vì sao cần “Advanced Identity”?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#0-vì-sao-cần-advanced-identity" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>IAM cơ bản (<a href="../../../02---areas/cloud/saa-c03-stephane-maarek/04---iam--and--aws-cli" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/04---iam--and--aws-cli">§4</a>) trả lời câu hỏi: <strong>trong một account</strong>, user/role này được làm gì. Nhưng công ty thật không chỉ có một account — thường tách riêng Dev, Test, Prod, Security, Sandbox… để giảm blast radius (một account bị hack không kéo sập account khác) và dễ tách bạch chi phí.</p>
+<p>Vấn đề phát sinh: quản lý quyền cho <strong>hàng chục account</strong> bằng tay (tạo IAM user riêng ở từng account) là ác mộng. Cả chương này xoay quanh cách AWS giải quyết bài toán đó:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Vấn đề</th><th>Giải pháp</th></tr></thead><tbody><tr><td>Quản lý nhiều account, thanh toán gộp</td><td><strong>AWS Organizations</strong></td></tr><tr><td>Giới hạn quyền cho <em>cả</em> một account/OU dù IAM bên trong nói gì</td><td><strong>SCP</strong></td></tr><tr><td>Chuẩn hoá tag xuyên toàn tổ chức</td><td><strong>Tag Policies</strong></td></tr><tr><td>Account A cần dùng resource ở Account B</td><td><strong>Cross-account IAM Role / Resource-based Policy</strong></td></tr><tr><td>Giới hạn quyền tối đa của <em>một</em> user cụ thể</td><td><strong>IAM Permission Boundary</strong></td></tr><tr><td>Một chỗ login cho tất cả account + app doanh nghiệp</td><td><strong>AWS IAM Identity Center</strong></td></tr><tr><td>Công ty đã có Active Directory</td><td><strong>AWS Directory Service</strong></td></tr><tr><td>Dựng multi-account chuẩn AWS mà không tự làm từ đầu</td><td><strong>AWS Control Tower</strong></td></tr></tbody></table></div>
+<hr/>
+<h2 id="1-aws-organizations--gom-nhiều-account-về-một-mối">1. AWS Organizations — gom nhiều account về một mối<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-aws-organizations--gom-nhiều-account-về-một-mối" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-cấu-trúc-cơ-bản">1.1 Cấu trúc cơ bản<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-cấu-trúc-cơ-bản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Global service.</strong></li>
+<li><strong>Management account</strong> (trước gọi là master account): account tạo ra tổ chức, cũng là <strong>payer account</strong>.</li>
+<li><strong>Member account</strong>: các account còn lại. Một member account <strong>chỉ thuộc được một</strong> Organization tại một thời điểm.</li>
+<li><strong>Consolidated Billing</strong>: gộp hoá đơn của mọi account về một phương thức thanh toán duy nhất.</li>
+<li><strong>API tạo account tự động</strong> — dùng để tự động hoá việc “vending” account mới (nền tảng cho Control Tower Account Factory ở §10).</li>
+</ul>
+<blockquote>
+<p><strong>Lợi ích tài chính không chỉ là “gộp hoá đơn”:</strong> vì usage được <strong>cộng dồn</strong> giữa các account, tổ chức đạt các mốc <strong>volume discount</strong> (S3, EC2…) và chia sẻ <strong>Reserved Instance / Savings Plans discount</strong> nhanh hơn so với từng account tự mua riêng lẻ.</p>
+</blockquote>
+<h3 id="12-organizational-units-ou--3-cách-tổ-chức-phổ-biến">1.2 Organizational Units (OU) — 3 cách tổ chức phổ biến<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-organizational-units-ou--3-cách-tổ-chức-phổ-biến" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>OU là “thư mục” chứa account, có thể lồng nhau để phản ánh cấu trúc công ty. Slide đưa ra 3 kiểu tổ chức OU hay gặp:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Kiểu tổ chức</th><th>Logic</th></tr></thead><tbody><tr><td><strong>Theo Business Unit</strong></td><td>OU theo bộ phận kinh doanh (Sales, Retail, Finance…), mỗi bộ phận có account riêng</td></tr><tr><td><strong>Theo Environment Lifecycle</strong></td><td>OU theo môi trường (Dev, Test, Prod) — phổ biến nhất trong đề thi</td></tr><tr><td><strong>Theo Project</strong></td><td>OU theo từng dự án, mỗi dự án có account riêng cho Dev/Test/Prod của chính nó</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    Mgmt[\&quot;Management Account&lt;br/>(payer, tạo Organization)\&quot;] --> OUDev[\&quot;OU Dev\&quot;]\n    Mgmt --> OUProd[\&quot;OU Prod\&quot;]\n    Mgmt --> OUSandbox[\&quot;OU Sandbox\&quot;]\n    OUDev --> DevA[\&quot;Dev Account A\&quot;]\n    OUDev --> DevB[\&quot;Dev Account B\&quot;]\n    OUProd --> ProdA[\&quot;Prod Account A\&quot;]\n    OUProd --> ProdB[\&quot;Prod Account B\&quot;]\n    OUSandbox --> SandboxA[\&quot;Sandbox Account\&quot;]&quot;">graph TD
+    Mgmt[&quot;Management Account&lt;br/>(payer, tạo Organization)&quot;] --> OUDev[&quot;OU Dev&quot;]
+    Mgmt --> OUProd[&quot;OU Prod&quot;]
+    Mgmt --> OUSandbox[&quot;OU Sandbox&quot;]
+    OUDev --> DevA[&quot;Dev Account A&quot;]
+    OUDev --> DevB[&quot;Dev Account B&quot;]
+    OUProd --> ProdA[&quot;Prod Account A&quot;]
+    OUProd --> ProdB[&quot;Prod Account B&quot;]
+    OUSandbox --> SandboxA[&quot;Sandbox Account&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="13-vì-sao-dùng-multi-account-thay-vì-một-account-nhiều-vpc">1.3 Vì sao dùng multi-account thay vì một account nhiều VPC?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-vì-sao-dùng-multi-account-thay-vì-một-account-nhiều-vpc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Slide liệt kê các lợi ích khi tách account thay vì nhét mọi thứ vào một account nhiều VPC:</p>
+<ul>
+<li>Áp <strong>tagging standard</strong> để tính chi phí theo account/bộ phận.</li>
+<li>Bật <strong>CloudTrail</strong> trên mọi account, gom log về <strong>một S3 account trung tâm</strong> (log archive account, không ai xoá/sửa được).</li>
+<li>Gom <strong>CloudWatch Logs</strong> về một logging account trung tâm.</li>
+<li>Thiết lập <strong>cross-account role cho mục đích admin</strong> — team platform quản trị tất cả account từ một chỗ.</li>
+</ul>
+<blockquote>
+<p>Đây chính là mô hình mà <a href="../../../02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.2---aws-organizations-và-multi-account" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.2---aws-organizations-và-multi-account">1.2 - AWS Organizations và Multi-Account</a> gọi là “Security Account / Log Archive Account / Shared Services Account” — cùng một ý tưởng, chỉ khác cách đặt tên.</p>
+</blockquote>
+<p>Sơ đồ gốc từ slide (AWS Organizations — Root OU, Management Account, các OU con):</p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173850.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="2-service-control-policies-scp--iam-policy-cho-cả-account">2. Service Control Policies (SCP) — “IAM Policy cho cả account”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-service-control-policies-scp--iam-policy-cho-cả-account" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-scp-là-gì">2.1 SCP là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-scp-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>SCP là policy JSON (giống cú pháp IAM Policy) nhưng <strong>gắn vào Organization / OU / Account</strong> thay vì gắn vào user/role. Ba luật cốt lõi cần thuộc lòng:</p>
+<ol>
+<li>SCP <strong>giới hạn</strong> quyền của <strong>User và Role</strong> trong account/OU bị gắn — SCP <strong>không bao giờ cấp quyền</strong>, nó chỉ là một cái <strong>trần</strong> (ceiling).</li>
+<li>SCP <strong>không áp dụng cho Management Account</strong> — account quản lý luôn có full admin power, kể cả khi Organization gắn SCP deny mọi thứ ở root.</li>
+<li><strong>Mặc định không cho phép gì cả</strong> (giống IAM) — muốn account con làm được việc gì, phải có <strong>explicit allow</strong> đi từ root, xuyên qua <strong>mọi OU trên đường đi trực tiếp</strong>, xuống tới account đó. Chỉ cần một cấp trên đường đi <strong>không allow</strong> (hoặc <strong>deny</strong>) là bị chặn.</li>
+</ol>
+<blockquote>
+<p><strong>Vì sao SCP không áp dụng cho Management Account lại quan trọng?</strong> Vì đây là lý do AWS khuyến cáo <strong>không dùng Management Account để chạy workload</strong> — nó là account duy nhất “vô hiệu hoá” SCP, nên càng ít người dùng nó hàng ngày càng an toàn (chỉ dùng cho việc quản trị Organization).</p>
+</blockquote>
+<h3 id="22-hai-chiến-lược-viết-scp">2.2 Hai chiến lược viết SCP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-hai-chiến-lược-viết-scp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Chiến lược</th><th>Cách làm</th><th>Đặc điểm</th></tr></thead><tbody><tr><td><strong>Denylist (Blocklist)</strong></td><td>Giữ <code>FullAWSAccess</code> mặc định ở mọi cấp, chỉ thêm <code>Deny</code> cho vài action cụ thể</td><td>Dễ quản lý, phổ biến hơn — mặc định cho phép, chặn cái cần chặn</td></tr><tr><td><strong>Allowlist</strong></td><td>Gỡ <code>FullAWSAccess</code>, chỉ <code>Allow</code> đúng những service được phép dùng</td><td>Chặt hơn nhưng cực khó bảo trì — quên allow gì là account đó mất luôn service đó</td></tr></tbody></table></div>
+<h3 id="23-scp-thừa-kế-theo-cây--ví-dụ-minh-hoạ-lại-đúng-logic-trong-slide">2.3 SCP thừa kế theo cây — ví dụ minh hoạ lại đúng logic trong slide<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-scp-thừa-kế-theo-cây--ví-dụ-minh-hoạ-lại-đúng-logic-trong-slide" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Điểm hay gây nhầm nhất: <strong>hiệu lực SCP là cộng dồn theo đường đi từ root xuống account</strong>, không phải “policy gần nhất thắng”. Một Deny ở OU cha vẫn chặn account con dù account con không gắn gì thêm.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    Root[\&quot;Root OU&lt;br/>SCP: FullAWSAccess\&quot;] --> Mgmt[\&quot;Management Account&lt;br/>SCP không áp dụng\&quot;]\n    Root --> Sandbox[\&quot;Sandbox OU&lt;br/>SCP: FullAWSAccess + Deny S3\&quot;]\n    Sandbox --> AccA[\&quot;Account A&lt;br/>thêm SCP: Deny EC2\&quot;]\n    Root --> Prod[\&quot;Prod OU&lt;br/>không gắn thêm SCP\&quot;]\n    Prod --> AccE[\&quot;Account E và F\&quot;]&quot;">graph TD
+    Root[&quot;Root OU&lt;br/>SCP: FullAWSAccess&quot;] --> Mgmt[&quot;Management Account&lt;br/>SCP không áp dụng&quot;]
+    Root --> Sandbox[&quot;Sandbox OU&lt;br/>SCP: FullAWSAccess + Deny S3&quot;]
+    Sandbox --> AccA[&quot;Account A&lt;br/>thêm SCP: Deny EC2&quot;]
+    Root --> Prod[&quot;Prod OU&lt;br/>không gắn thêm SCP&quot;]
+    Prod --> AccE[&quot;Account E và F&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Account</th><th>SCP cộng dồn trên đường đi</th><th>Kết quả thực tế (còn phải cộng thêm IAM Policy bên trong account)</th></tr></thead><tbody><tr><td>Management Account</td><td>Không áp dụng</td><td>Full admin power</td></tr><tr><td>Account A (trong Sandbox)</td><td>FullAWSAccess (root) + Deny S3 (Sandbox OU) + Deny EC2 (account)</td><td>Làm được mọi thứ <strong>trừ S3 và EC2</strong>, dù IAM Policy trong account có Allow S3/EC2</td></tr><tr><td>Account E, F (trong Prod)</td><td>Chỉ FullAWSAccess (root)</td><td>Làm được mọi thứ SCP cho phép — phụ thuộc hoàn toàn vào IAM Policy bên trong</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Bẫy hay ra thi:</strong> “User có <code>AdministratorAccess</code> trong account nhưng vẫn không gọi được S3” → 99% là do <strong>SCP ở OU cha</strong> đang Deny, không phải IAM Policy sai. Đây cũng là câu trả lời chuẩn cho “làm sao cấm mọi account (kể cả root user của account đó) tắt CloudTrail” → SCP là <strong>cơ chế duy nhất</strong> chặn được cả root user của member account.</p>
+</blockquote>
+<p>Sơ đồ gốc từ slide (“SCP Hierarchy”) — đây chính xác là ví dụ gốc mà bảng trên diễn giải lại, nên đối chiếu trực tiếp với ảnh này:</p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173952.png" alt width="auto" height="auto"/></p>
+<h3 id="24-scp-vs-iam-policy--đừng-nhầm-hai-thứ">2.4 SCP vs IAM Policy — đừng nhầm hai thứ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-scp-vs-iam-policy--đừng-nhầm-hai-thứ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>SCP</th><th>IAM Policy</th></tr></thead><tbody><tr><td>Gắn vào</td><td>Organization / OU / Account</td><td>User / Group / Role</td></tr><tr><td>Có cấp quyền không</td><td><strong>Không bao giờ</strong> — chỉ là trần giới hạn</td><td><strong>Có</strong> — là nguồn cấp quyền thật</td></tr><tr><td>Ảnh hưởng root user của member account</td><td><strong>Có</strong></td><td>Không</td></tr><tr><td>Ảnh hưởng Management Account</td><td><strong>Không</strong></td><td>Có</td></tr></tbody></table></div>
+<hr/>
+<h2 id="3-tag-policies--chuẩn-hoá-tag-toàn-tổ-chức">3. Tag Policies — chuẩn hoá tag toàn tổ chức<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-tag-policies--chuẩn-hoá-tag-toàn-tổ-chức" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Một tính năng khác của AWS Organizations, dễ bị bỏ qua vì ít “kịch tính” hơn SCP nhưng vẫn ra thi:</p>
+<ul>
+<li>Định nghĩa <strong>tag key</strong> và <strong>danh sách giá trị hợp lệ</strong> được phép dùng trong toàn Organization.</li>
+<li>Mục tiêu: tag nhất quán → audit resource dễ hơn, phân loại đúng, phục vụ <strong>Cost Allocation Tags</strong> và <strong>Attribute-Based Access Control (ABAC)</strong>.</li>
+<li>Tag Policy <strong>chỉ báo cáo/ngăn thao tác tag không hợp lệ trên resource được chỉ định</strong> — <strong>không</strong> ảnh hưởng gì tới resource <strong>chưa có tag</strong>.</li>
+<li>Sinh <strong>report</strong> liệt kê resource đã tag đúng / không tuân thủ.</li>
+<li>Kết hợp <strong>EventBridge</strong> để giám sát real-time khi có tag không tuân thủ.</li>
+</ul>
+<blockquote>
+<p>Khác biệt cần nhớ: Tag Policy <strong>không chặn</strong> hành động như SCP — nó chỉ <strong>gắn cờ non-compliant</strong> và báo cáo. Muốn <em>chặn cứng</em> thao tác gắn tag sai thì phải dùng SCP với <code>Condition</code> (xem §4).</p>
+</blockquote>
+<hr/>
+<h2 id="4-iam-conditions-hay-gặp-trong-bài-multi-account">4. IAM Conditions hay gặp trong bài multi-account<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-iam-conditions-hay-gặp-trong-bài-multi-account" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Đây là các <code>Condition</code> xuất hiện lặp lại trong SCP, resource-based policy và IAM policy — thuộc để nhận diện nhanh trong đề:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Condition key</th><th>Dùng để làm gì</th></tr></thead><tbody><tr><td><code>aws:SourceIp</code></td><td>Giới hạn <strong>IP nguồn</strong> được phép gọi API</td></tr><tr><td><code>aws:RequestedRegion</code></td><td>Giới hạn <strong>region</strong> mà API được gọi tới — dùng phổ biến trong SCP để khoá account trong 1-2 region cụ thể (data sovereignty)</td></tr><tr><td><code>ec2:ResourceTag</code></td><td>Cho/chặn hành động dựa trên <strong>tag của resource</strong> (ABAC ở cấp resource)</td></tr><tr><td><code>aws:MultiFactorAuthPresent</code></td><td>Ép buộc <strong>MFA</strong> — request không kèm MFA sẽ bị deny</td></tr><tr><td><code>aws:PrincipalOrgID</code></td><td>Giới hạn truy cập chỉ cho principal <strong>thuộc cùng AWS Organization</strong> (xem §4.1)</td></tr></tbody></table></div>
+<h3 id="41-s3-permission-bucket-level-vs-object-level">4.1 S3 permission: bucket-level vs object-level<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-s3-permission-bucket-level-vs-object-level" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Chi tiết nhỏ nhưng hay bẫy trong câu hỏi IAM policy cho S3:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Action</th><th>Áp dụng lên ARN</th><th>Cấp độ</th></tr></thead><tbody><tr><td><code>s3:ListBucket</code></td><td><code>arn:aws:s3:::test</code> (bucket, không có <code>/*</code>)</td><td><strong>Bucket level</strong></td></tr><tr><td><code>s3:GetObject</code>, <code>s3:PutObject</code>, <code>s3:DeleteObject</code></td><td><code>arn:aws:s3:::test/*</code></td><td><strong>Object level</strong></td></tr></tbody></table></div>
+<blockquote>
+<p>Sai lầm thường gặp: viết policy cho <code>GetObject</code> nhưng resource lại trỏ vào ARN bucket (thiếu <code>/*</code>) → policy vô hiệu vì sai cấp.</p>
+</blockquote>
+<h3 id="42-awsprincipalorgid--chặn-truy-cập-ngoài-tổ-chức-bằng-một-dòng">4.2 <code>aws:PrincipalOrgID</code> — chặn truy cập ngoài tổ chức bằng một dòng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-awsprincipalorgid--chặn-truy-cập-ngoài-tổ-chức-bằng-một-dòng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Gắn vào <strong>bất kỳ resource-based policy nào</strong> (S3 bucket policy, KMS key policy…) để chỉ cho phép principal nào <strong>thuộc Organization</strong> của mình truy cập, bất kể principal đó tới từ account nào bên trong Organization.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;Effect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Allow&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;Principal&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;*&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;Action&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;s3:GetObject&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;arn:aws:s3:::2022-financial-data/*&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;Condition&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;StringEquals&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;aws:PrincipalOrgID&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;o-yyyyyyyyyy&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<blockquote>
+<p><strong>Lợi ích thực tế:</strong> không cần liệt kê từng Account ID trong Organization (có thể lên tới hàng trăm), chỉ cần 1 Org ID. Thêm account mới vào Organization → tự động được quyền, khỏi sửa policy.</p>
+</blockquote>
+<hr/>
+<h2 id="5-cross-account-access--hai-cách-để-account-a-dùng-resource-ở-account-b">5. Cross-Account Access — hai cách để Account A dùng resource ở Account B<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-cross-account-access--hai-cách-để-account-a-dùng-resource-ở-account-b" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-hai-pattern">5.1 Hai pattern<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-hai-pattern" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph P1[\&quot;Pattern 1 - Assume Role\&quot;]\n        direction LR\n        U1[\&quot;User Account A\&quot;] -->|\&quot;AssumeRole\&quot;| R1[\&quot;IAM Role trong Account B\&quot;]\n        R1 --> S1[\&quot;Resource Account B\&quot;]\n    end\n    subgraph P2[\&quot;Pattern 2 - Resource-based Policy\&quot;]\n        direction LR\n        U2[\&quot;User Account A\&quot;] -->|\&quot;gọi thẳng, giữ nguyên identity\&quot;| S2[\&quot;Resource Account B&lt;br/>gắn Policy cho phép Account A\&quot;]\n    end&quot;">graph LR
+    subgraph P1[&quot;Pattern 1 - Assume Role&quot;]
+        direction LR
+        U1[&quot;User Account A&quot;] -->|&quot;AssumeRole&quot;| R1[&quot;IAM Role trong Account B&quot;]
+        R1 --> S1[&quot;Resource Account B&quot;]
+    end
+    subgraph P2[&quot;Pattern 2 - Resource-based Policy&quot;]
+        direction LR
+        U2[&quot;User Account A&quot;] -->|&quot;gọi thẳng, giữ nguyên identity&quot;| S2[&quot;Resource Account B&lt;br/>gắn Policy cho phép Account A&quot;]
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th>Assume Role</th><th>Resource-based Policy</th></tr></thead><tbody><tr><td>Cách hoạt động</td><td>User “nhập vai” role ở account đích, <strong>đánh đổi</strong> quyền gốc lấy quyền của role</td><td>User <strong>giữ nguyên identity/quyền gốc</strong>, resource tự cho phép thêm principal ngoài</td></tr><tr><td>Cần đổi gì phía user</td><td>Phải gọi <code>AssumeRole</code>, đổi credential</td><td>Không cần đổi gì — API vẫn gọi bằng identity ban đầu</td></tr><tr><td>Dịch vụ hỗ trợ</td><td>Mọi dịch vụ (qua STS)</td><td>Chỉ dịch vụ có resource-based policy: <strong>S3, SNS, SQS</strong>, KMS, Lambda…</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Ví dụ slide dùng để phân biệt:</strong> User ở Account A cần <strong>quét một bảng DynamoDB ở chính Account A</strong>, rồi <strong>ghi kết quả vào S3 bucket ở Account B</strong>. Vì DynamoDB không hỗ trợ resource-based policy, user vẫn dùng quyền của chính mình để đọc DynamoDB; còn để ghi sang S3 Account B, chỉ cần <strong>S3 Bucket Policy</strong> ở Account B cho phép Account A — <strong>không cần</strong> AssumeRole. Nếu resource đích không hỗ trợ resource-based policy (ví dụ EC2), bắt buộc phải đi đường Assume Role.</p>
+</blockquote>
+<h3 id="52-eventbridge-cross-account--cross-region--chọn-role-hay-resource-policy">5.2 EventBridge cross-account / cross-region — chọn Role hay Resource Policy?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-eventbridge-cross-account--cross-region--chọn-role-hay-resource-policy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi một EventBridge Rule kích hoạt, nó cần quyền trên <strong>target</strong>. Loại quyền cần dùng phụ thuộc vào <strong>target là gì</strong>:</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Rule[\&quot;EventBridge Rule\&quot;] -->|\&quot;Resource-based Policy\&quot;| RBP[\&quot;Lambda / SNS / SQS&lt;br/>S3 Bucket / API Gateway\&quot;]\n    Rule -->|\&quot;IAM Role\&quot;| IAMT[\&quot;EC2 Auto Scaling&lt;br/>Systems Manager Run Command&lt;br/>ECS Task\&quot;]&quot;">graph LR
+    Rule[&quot;EventBridge Rule&quot;] -->|&quot;Resource-based Policy&quot;| RBP[&quot;Lambda / SNS / SQS&lt;br/>S3 Bucket / API Gateway&quot;]
+    Rule -->|&quot;IAM Role&quot;| IAMT[&quot;EC2 Auto Scaling&lt;br/>Systems Manager Run Command&lt;br/>ECS Task&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Target</th><th>Loại quyền cần gắn</th></tr></thead><tbody><tr><td>Lambda, SNS, SQS, S3, API Gateway</td><td><strong>Resource-based policy</strong> trên chính target đó (cho phép <code>events.amazonaws.com</code> hoặc rule ARN)</td></tr><tr><td>EC2 Auto Scaling, Systems Manager Run Command, ECS task</td><td><strong>IAM Role</strong> gắn cho EventBridge để nó thay mặt gọi target</td></tr></tbody></table></div>
+<blockquote>
+<p>Nhớ theo cùng logic §5.1: target nào <strong>có</strong> resource-based policy thì dùng nó (đơn giản hơn); target nào <strong>không có</strong> thì buộc phải cấp IAM Role cho rule.</p>
+</blockquote>
+<hr/>
+<h2 id="6-iam-permission-boundaries--trần-giới-hạn-cho-một-userrole">6. IAM Permission Boundaries — trần giới hạn cho <em>một</em> user/role<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-iam-permission-boundaries--trần-giới-hạn-cho-một-userrole" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Khác SCP (áp cho cả account/OU), Permission Boundary <strong>áp cho một User hoặc Role cụ thể</strong> (không áp được cho Group).</p>
+<ul>
+<li>Là một <strong>managed policy</strong> gắn vào user/role, định nghĩa <strong>quyền tối đa</strong> mà identity đó có thể có, bất kể identity policy nói gì thêm.</li>
+<li><strong>Không tự cấp quyền</strong> — công thức: <strong>Quyền thực sự = Identity Policy ∩ Permission Boundary</strong> (giao, không phải hợp).</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    IdentityPolicy[\&quot;Identity Policy&lt;br/>(quyền được gán)\&quot;] --> Intersect((\&quot;∩\&quot;))\n    Boundary[\&quot;Permission Boundary&lt;br/>(trần tối đa)\&quot;] --> Intersect\n    Intersect --> Effective[\&quot;Quyền thực sự&lt;br/>= phần giao nhau\&quot;]&quot;">graph LR
+    IdentityPolicy[&quot;Identity Policy&lt;br/>(quyền được gán)&quot;] --> Intersect((&quot;∩&quot;))
+    Boundary[&quot;Permission Boundary&lt;br/>(trần tối đa)&quot;] --> Intersect
+    Intersect --> Effective[&quot;Quyền thực sự&lt;br/>= phần giao nhau&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Use case chính (đều là kịch bản “uỷ quyền có kiểm soát”):</strong></p>
+<ul>
+<li>Cho phép admin <strong>giao việc</strong> cho non-admin — ví dụ cho phép họ tự tạo IAM user mới, nhưng chặn trần để user mới tạo ra không thể vượt quá một mức quyền nhất định.</li>
+<li>Cho developer <strong>tự gán policy cho chính mình</strong> mà không sợ họ tự leo thang thành admin — vì dù họ tự gán gì, Permission Boundary vẫn chặn ở trần.</li>
+<li>Dùng khi chỉ muốn giới hạn <strong>một user cụ thể</strong>, thay vì kéo SCP ra giới hạn <strong>cả account</strong> (SCP quá “to súng” cho nhu cầu này).</li>
+</ul>
+<blockquote>
+<p><strong>Phân biệt nhanh với SCP:</strong> SCP = trần cho <strong>account/OU</strong>. Permission Boundary = trần cho <strong>một identity</strong>. Cả hai đều chỉ giới hạn, không bao giờ cấp quyền, và <strong>có thể dùng kết hợp</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="7-iam-policy-evaluation-logic--ráp-tất-cả-các-lớp-lại">7. IAM Policy Evaluation Logic — ráp tất cả các lớp lại<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-iam-policy-evaluation-logic--ráp-tất-cả-các-lớp-lại" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Đây là phần dễ sai nhất vì đề thi thường trộn cả SCP, resource-based policy, permission boundary và identity policy trong cùng một câu hỏi. Nguyên tắc tổng quát:</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    Req[\&quot;Yêu cầu API\&quot;] --> Deny{\&quot;Có Explicit Deny ở BẤT KỲ lớp nào?&lt;br/>SCP, Resource Policy, Permission Boundary, Identity Policy\&quot;}\n    Deny -->|\&quot;Có\&quot;| D1[\&quot;DENY - Explicit Deny luôn thắng\&quot;]\n    Deny -->|\&quot;Không\&quot;| Allow{\&quot;Có Explicit Allow ở&lt;br/>Identity Policy hoặc Resource Policy?\&quot;}\n    Allow -->|\&quot;Không\&quot;| D2[\&quot;DENY - Implicit Deny mặc định\&quot;]\n    Allow -->|\&quot;Có\&quot;| Scope{\&quot;SCP và Permission Boundary&lt;br/>có cho phép hành động này không?\&quot;}\n    Scope -->|\&quot;Không\&quot;| D3[\&quot;DENY - bị chặn bởi trần SCP hoặc Boundary\&quot;]\n    Scope -->|\&quot;Có\&quot;| A1[\&quot;ALLOW\&quot;]&quot;">flowchart TD
+    Req[&quot;Yêu cầu API&quot;] --> Deny{&quot;Có Explicit Deny ở BẤT KỲ lớp nào?&lt;br/>SCP, Resource Policy, Permission Boundary, Identity Policy&quot;}
+    Deny -->|&quot;Có&quot;| D1[&quot;DENY - Explicit Deny luôn thắng&quot;]
+    Deny -->|&quot;Không&quot;| Allow{&quot;Có Explicit Allow ở&lt;br/>Identity Policy hoặc Resource Policy?&quot;}
+    Allow -->|&quot;Không&quot;| D2[&quot;DENY - Implicit Deny mặc định&quot;]
+    Allow -->|&quot;Có&quot;| Scope{&quot;SCP và Permission Boundary&lt;br/>có cho phép hành động này không?&quot;}
+    Scope -->|&quot;Không&quot;| D3[&quot;DENY - bị chặn bởi trần SCP hoặc Boundary&quot;]
+    Scope -->|&quot;Có&quot;| A1[&quot;ALLOW&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p>Diễn giải bằng lời:</p>
+<ol>
+<li><strong>Mặc định deny mọi thứ</strong> — giống IAM cơ bản.</li>
+<li><strong>Explicit Deny ở bất kỳ đâu</strong> (SCP, resource-based policy, permission boundary, identity policy) → <strong>DENY ngay lập tức</strong>, không có ngoại lệ, không policy nào cứu được.</li>
+<li>Nếu không bị deny, cần có <strong>ít nhất một Explicit Allow</strong> ở identity policy hoặc resource-based policy — thiếu thì vẫn implicit deny.</li>
+<li>Cuối cùng, hành động đó còn phải <strong>nằm trong trần</strong> của SCP (nếu có) và Permission Boundary (nếu có) — SCP/Boundary không tự allow, chỉ đóng vai trò lọc lại những gì identity policy đã allow.</li>
+</ol>
+<blockquote>
+<p><strong>Cách nhớ nhanh khi làm bài:</strong> cứ thấy admin bị deny một cách “vô lý” dù policy trong account đúng 100% → nghĩ ngay tới <strong>3 nghi phạm nằm ngoài account</strong>: SCP ở OU cha, Permission Boundary của chính user đó, hoặc Explicit Deny trong resource-based policy của resource đích.</p>
+</blockquote>
+<hr/>
+<h2 id="8-aws-iam-identity-center--sso-cho-cả-tổ-chức-lẫn-app-doanh-nghiệp">8. AWS IAM Identity Center — SSO cho cả tổ chức lẫn app doanh nghiệp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-aws-iam-identity-center--sso-cho-cả-tổ-chức-lẫn-app-doanh-nghiệp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="81-là-gì">8.1 Là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#81-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Tên cũ: <strong>AWS Single Sign-On (AWS SSO)</strong>. Giải quyết bài toán: nhân viên không cần một IAM user riêng ở từng account, chỉ cần <strong>một lần đăng nhập</strong> để truy cập:</p>
+<ul>
+<li>Mọi <strong>AWS account</strong> trong Organizations.</li>
+<li><strong>Business cloud app</strong> (Salesforce, Box, Microsoft 365…).</li>
+<li>Ứng dụng <strong>SAML 2.0</strong> tuỳ chỉnh.</li>
+<li><strong>EC2 Windows instance</strong> (đăng nhập qua SSO thay vì mật khẩu Windows cục bộ).</li>
+</ul>
+<h3 id="82-identity-provider--nguồn-user-đến-từ-đâu">8.2 Identity Provider — nguồn user đến từ đâu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#82-identity-provider--nguồn-user-đến-từ-đâu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nguồn</th><th>Ghi chú</th></tr></thead><tbody><tr><td><strong>Built-in identity store</strong></td><td>Kho user tích hợp sẵn trong IAM Identity Center</td></tr><tr><td><strong>Active Directory</strong></td><td>On-premises hoặc AWS Managed Microsoft AD (xem §9)</td></tr><tr><td><strong>3rd party IdP</strong></td><td>Okta, OneLogin… qua SAML 2.0</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    User[\&quot;Người dùng\&quot;] -->|\&quot;login\&quot;| SSO[\&quot;AWS IAM Identity Center&lt;br/>(SSO Portal)\&quot;]\n    SSO --> Org[\&quot;Tài khoản AWS trong Organization&lt;br/>qua Permission Sets\&quot;]\n    SSO --> Apps[\&quot;Business Cloud Apps&lt;br/>Salesforce, Box, Microsoft 365\&quot;]\n    SSO --> SAML[\&quot;Custom SAML 2.0 Apps\&quot;]\n    SSO --> WinEC2[\&quot;Windows EC2 Instances\&quot;]\n    Store[\&quot;Identity Store&lt;br/>built-in hoặc Active Directory\&quot;] -.-> SSO&quot;">graph LR
+    User[&quot;Người dùng&quot;] -->|&quot;login&quot;| SSO[&quot;AWS IAM Identity Center&lt;br/>(SSO Portal)&quot;]
+    SSO --> Org[&quot;Tài khoản AWS trong Organization&lt;br/>qua Permission Sets&quot;]
+    SSO --> Apps[&quot;Business Cloud Apps&lt;br/>Salesforce, Box, Microsoft 365&quot;]
+    SSO --> SAML[&quot;Custom SAML 2.0 Apps&quot;]
+    SSO --> WinEC2[&quot;Windows EC2 Instances&quot;]
+    Store[&quot;Identity Store&lt;br/>built-in hoặc Active Directory&quot;] -.-> SSO
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="83-multi-account-permissions--trái-tim-của-iam-identity-center">8.3 Multi-Account Permissions — trái tim của IAM Identity Center<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#83-multi-account-permissions--trái-tim-của-iam-identity-center" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Quản lý quyền truy cập xuyên suốt <strong>nhiều account trong Organization</strong> từ <strong>một chỗ duy nhất</strong>.</li>
+<li><strong>Permission Set</strong> = một tập hợp IAM Policy, gán cho user/group. IAM Identity Center sẽ <strong>tự sinh IAM Role tương ứng</strong> trên từng member account khi Permission Set được assign.</li>
+</ul>
+<p>Ví dụ: group <strong>Developers</strong> (gồm Bob, Alice) được gán Permission Set <strong>ReadOnlyAccess</strong> trên các account trong OU Dev, và Permission Set <strong>FullAccess</strong> trên các account trong OU Prod — không cần tạo user riêng ở từng account, cũng không cần tự viết IAM Role.</p>
+<blockquote>
+<p><strong>Ví dụ fine-grained thực tế từ slide:</strong> nhóm “Database Admins” được gán Permission Set “DB Admins” trên cả Dev Account lẫn Prod Account. Khi assign, IAM Identity Center tự tạo IAM Role tương ứng ở mỗi account, cho phép nhóm này <code>assume</code> role đó để thao tác RDS Aurora — một Permission Set, quản lý quyền trên nhiều account cùng lúc.</p>
+</blockquote>
+<p>Sơ đồ gốc từ slide (group Developers gồm Bob &amp; Alice, assign Permission Set ReadOnlyAccess/FullAccess xuống các account trong OU Dev/Prod):</p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173853.png" alt width="auto" height="auto"/></p>
+<h3 id="84-application-assignments">8.4 Application Assignments<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#84-application-assignments" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Cấp SSO cho các <strong>ứng dụng SAML 2.0</strong> của doanh nghiệp (Salesforce, Box, Microsoft 365…).</li>
+<li>Cấu hình bằng cách cung cấp <strong>URL, certificate, metadata</strong> của ứng dụng — giống thiết lập một Identity Provider bình thường, chỉ khác là IAM Identity Center đóng vai trò IdP.</li>
+</ul>
+<h3 id="85-attribute-based-access-control-abac">8.5 Attribute-Based Access Control (ABAC)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#85-attribute-based-access-control-abac" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Cấp quyền <strong>fine-grained dựa trên attribute</strong> của user (lưu trong Identity Store của IAM Identity Center) — ví dụ <code>cost center</code>, <code>title</code>, <code>locale</code>.</li>
+<li><strong>Lợi ích chính:</strong> định nghĩa policy <strong>một lần</strong> theo attribute, sau đó chỉ cần <strong>đổi giá trị attribute</strong> của user để thay đổi quyền truy cập, không phải sửa lại policy mỗi khi tổ chức thay đổi.</li>
+</ul>
+<hr/>
+<h2 id="9-aws-directory-service--khi-công-ty-đã-có-active-directory">9. AWS Directory Service — khi công ty đã có Active Directory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-aws-directory-service--khi-công-ty-đã-có-active-directory" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="91-active-directory-là-gì-kiến-thức-nền">9.1 Active Directory là gì? (kiến thức nền)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#91-active-directory-là-gì-kiến-thức-nền" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AD là dịch vụ chạy trên <strong>Windows Server có AD Domain Services</strong>, lưu một “database” các object: <strong>User Account, Computer, Printer, File Share, Security Group</strong>. Cho phép quản lý bảo mật tập trung (tạo account, gán quyền) và tổ chức object thành <strong>tree</strong>; nhiều tree gộp lại thành <strong>forest</strong>.</p>
+<h3 id="92-ba-lựa-chọn-của-aws-directory-service">9.2 Ba lựa chọn của AWS Directory Service<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#92-ba-lựa-chọn-của-aws-directory-service" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dịch vụ</th><th>Bản chất</th><th>Nối với on-prem AD?</th></tr></thead><tbody><tr><td><strong>AWS Managed Microsoft AD</strong></td><td>AD thật, chạy trên AWS, tự quản user, hỗ trợ MFA</td><td><strong>Có</strong> — thiết lập <strong>trust relationship</strong> hai chiều với AD on-prem</td></tr><tr><td><strong>AD Connector</strong></td><td>Chỉ là <strong>proxy/gateway</strong>, không lưu user — mọi request được redirect thẳng tới AD on-prem</td><td><strong>Có</strong>, nhưng user vẫn quản lý hoàn toàn ở on-prem (không đồng bộ/copy sang AWS)</td></tr><tr><td><strong>Simple AD</strong></td><td>AD-compatible directory độc lập, giá rẻ</td><td><strong>Không</strong> — không nối được với AD on-prem</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    OnPrem[\&quot;On-premises AD\&quot;] -->|\&quot;trust relationship 2 chiều\&quot;| MAD[\&quot;AWS Managed Microsoft AD\&quot;]\n    OnPrem -->|\&quot;proxy - user vẫn ở on-prem\&quot;| ADC[\&quot;AD Connector\&quot;]\n    Simple[\&quot;Simple AD&lt;br/>độc lập, không nối on-prem\&quot;]&quot;">graph LR
+    OnPrem[&quot;On-premises AD&quot;] -->|&quot;trust relationship 2 chiều&quot;| MAD[&quot;AWS Managed Microsoft AD&quot;]
+    OnPrem -->|&quot;proxy - user vẫn ở on-prem&quot;| ADC[&quot;AD Connector&quot;]
+    Simple[&quot;Simple AD&lt;br/>độc lập, không nối on-prem&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Cách chọn nhanh:</strong> cần <strong>AD thật chạy trên AWS</strong> và có thể tự quản lý user cục bộ → Managed Microsoft AD. Chỉ cần <strong>cổng chuyển tiếp</strong> vì mọi user vẫn ở on-prem, không muốn đồng bộ dữ liệu sang AWS → AD Connector. Không có AD on-prem, chỉ cần một AD nhỏ gọn độc lập cho vài ứng dụng → Simple AD.</p>
+</blockquote>
+<h3 id="93-nối-ad-với-iam-identity-center">9.3 Nối AD với IAM Identity Center<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#93-nối-ad-với-iam-identity-center" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Managed Microsoft AD</strong>: tích hợp <strong>out of the box</strong> — IAM Identity Center connect thẳng.</li>
+<li><strong>Self-managed directory (on-prem)</strong>: phải qua trung gian — tạo <strong>two-way trust relationship</strong> bằng AWS Managed Microsoft AD, hoặc dựng <strong>AD Connector</strong> làm proxy, rồi IAM Identity Center connect vào đó.</li>
+</ul>
+<hr/>
+<h2 id="10-aws-control-tower--đóng-gói-mọi-thứ-ở-trên-thành-sản-phẩm-turn-key">10. AWS Control Tower — đóng gói mọi thứ ở trên thành sản phẩm turn-key<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-aws-control-tower--đóng-gói-mọi-thứ-ở-trên-thành-sản-phẩm-turn-key" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="101-là-gì">10.1 Là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#101-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Control Tower là cách <strong>dễ nhất</strong> để dựng và <strong>quản trị liên tục</strong> một multi-account environment theo best practice của AWS — về bản chất nó <strong>xây trên AWS Organizations</strong> (dùng Organizations để tạo account) và bọc thêm tự động hoá:</p>
+<ul>
+<li>Tự động hoá việc <strong>setup môi trường</strong> chỉ trong vài cú click.</li>
+<li>Tự động hoá <strong>quản lý policy liên tục</strong> bằng <strong>Guardrail</strong>.</li>
+<li><strong>Phát hiện</strong> vi phạm policy và có thể <strong>remediate</strong> tự động.</li>
+<li><strong>Dashboard</strong> giám sát compliance tương tác.</li>
+</ul>
+<blockquote>
+<p><strong>Quan hệ với Organizations:</strong> Organizations cung cấp các “viên gạch thô” (OU, SCP, account). Control Tower là lớp <strong>turn-key</strong> phía trên, tự động lắp các viên gạch đó thành một <strong>Landing Zone</strong> hoàn chỉnh (kèm sẵn CloudTrail, Config, cấu trúc OU chuẩn) mà không phải tự tay dựng từ đầu.</p>
+</blockquote>
+<h3 id="102-guardrails--hai-loại">10.2 Guardrails — hai loại<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#102-guardrails--hai-loại" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Cơ chế nền</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>Preventive Guardrail</strong></td><td><strong>SCP</strong></td><td>Chặn hành động trước khi nó xảy ra — ví dụ giới hạn region được phép dùng trên toàn bộ account</td></tr><tr><td><strong>Detective Guardrail</strong></td><td><strong>AWS Config</strong></td><td>Không chặn, chỉ <strong>phát hiện</strong> sau khi vi phạm đã xảy ra — ví dụ phát hiện resource chưa được gắn tag</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    SCPGuard[\&quot;Preventive Guardrail&lt;br/>dùng SCP\&quot;] -->|\&quot;chặn trước\&quot;| Accounts[\&quot;Member Accounts\&quot;]\n    Config[\&quot;Detective Guardrail&lt;br/>dùng AWS Config\&quot;] -->|\&quot;giám sát liên tục\&quot;| Accounts\n    Config -->|\&quot;phát hiện NON_COMPLIANT\&quot;| SNS[\&quot;SNS thông báo Admin\&quot;]\n    SNS --> Lambda[\&quot;Lambda tự remediate&lt;br/>(ví dụ tự thêm tag còn thiếu)\&quot;]&quot;">graph LR
+    SCPGuard[&quot;Preventive Guardrail&lt;br/>dùng SCP&quot;] -->|&quot;chặn trước&quot;| Accounts[&quot;Member Accounts&quot;]
+    Config[&quot;Detective Guardrail&lt;br/>dùng AWS Config&quot;] -->|&quot;giám sát liên tục&quot;| Accounts
+    Config -->|&quot;phát hiện NON_COMPLIANT&quot;| SNS[&quot;SNS thông báo Admin&quot;]
+    SNS --> Lambda[&quot;Lambda tự remediate&lt;br/>(ví dụ tự thêm tag còn thiếu)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Phân biệt cốt lõi:</strong> Preventive = “không cho làm sai” (dùng đúng cơ chế SCP đã học ở §2 — không phải công nghệ mới). Detective = “để làm rồi mới phát hiện và báo/khắc phục” (dùng AWS Config, có thể nối Lambda để tự sửa).</p>
+</blockquote>
+<p>Sơ đồ gốc từ slide (AWS Control Tower – Guardrails):</p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173854.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="11-so-sánh--chọn-đáp-án-thi">11. So sánh &amp; chọn đáp án thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-so-sánh--chọn-đáp-án-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Từ khoá trong đề</th><th>Chọn</th></tr></thead><tbody><tr><td>Gộp billing, volume discount nhiều account</td><td><strong>AWS Organizations</strong> + Consolidated Billing</td></tr><tr><td>Cấm mọi account (kể cả root user) tắt CloudTrail</td><td><strong>SCP</strong> (Deny), gắn ở Root OU</td></tr><tr><td>User có AdministratorAccess vẫn không gọi được S3</td><td>Nghi ngờ <strong>SCP</strong> ở OU cha, hoặc <strong>Permission Boundary</strong>, hoặc <strong>Deny</strong> trong resource policy</td></tr><tr><td>Chuẩn hoá tag, audit compliance tag</td><td><strong>Tag Policies</strong></td></tr><tr><td>Chỉ cho principal trong cùng tổ chức truy cập resource</td><td><code>aws:PrincipalOrgID</code> trong resource-based policy</td></tr><tr><td>Account A cần thao tác resource ở Account B, resource hỗ trợ resource-based policy</td><td><strong>Resource-based Policy</strong> (không cần AssumeRole)</td></tr><tr><td>Account A cần thao tác resource ở Account B, resource <strong>không</strong> hỗ trợ resource-based policy (EC2…)</td><td><strong>Cross-account IAM Role</strong></td></tr><tr><td>EventBridge rule gọi Lambda/SNS/SQS làm target</td><td><strong>Resource-based policy</strong> trên target</td></tr><tr><td>EventBridge rule gọi EC2 Auto Scaling / SSM / ECS làm target</td><td><strong>IAM Role</strong> cho rule</td></tr><tr><td>Giới hạn quyền tối đa cho một user cụ thể (không phải cả account)</td><td><strong>IAM Permission Boundary</strong></td></tr><tr><td>Cho phép developer tự cấp quyền mà không tự leo thang thành admin</td><td><strong>Permission Boundary</strong> kết hợp SCP</td></tr><tr><td>Một login cho nhiều AWS account + Salesforce/Office 365</td><td><strong>AWS IAM Identity Center</strong></td></tr><tr><td>Cấp quyền theo cost center / title / locale của user</td><td><strong>ABAC trong IAM Identity Center</strong></td></tr><tr><td>Công ty đã có AD on-prem, cần AD chạy trên AWS và tự quản user</td><td><strong>AWS Managed Microsoft AD</strong></td></tr><tr><td>Chỉ cần proxy redirect về AD on-prem, không muốn copy user</td><td><strong>AD Connector</strong></td></tr><tr><td>Cần AD nhỏ gọn, không có AD on-prem</td><td><strong>Simple AD</strong></td></tr><tr><td>Dựng multi-account chuẩn AWS nhanh, có dashboard compliance</td><td><strong>AWS Control Tower</strong></td></tr><tr><td>Preventive Guardrail dùng công nghệ gì</td><td><strong>SCP</strong></td></tr><tr><td>Detective Guardrail dùng công nghệ gì</td><td><strong>AWS Config</strong></td></tr></tbody></table></div>
+<hr/>
+<h2 id="12-câu-hỏi-ôn-tập">12. Câu hỏi ôn tập<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-câu-hỏi-ôn-tập" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>5 câu hỏi thực hành, bám sát SCP, S3 permission level, IAM condition key, và EventBridge cross-target permission.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>#</th><th>Chủ đề</th><th>Đáp án đúng</th></tr></thead><tbody><tr><td>1</td><td>Chỉ cho phép service đã audit chạy ở Prod, Dev vẫn tự do</td><td>Tạo <strong>Organization + 2 OU (Prod/Dev)</strong>, gắn <strong>SCP</strong> lên Prod OU</td></tr><tr><td>2</td><td>Bucket Policy đúng nhưng dev vẫn không đọc được file</td><td>Resource phải là <strong>object-level ARN</strong> (<code>.../*</code>), không phải bucket ARN</td></tr><tr><td>3</td><td>Giới hạn service cho từng account trong Organizations</td><td><strong>AWS Organizations SCP</strong></td></tr><tr><td>4</td><td>IAM condition key giới hạn API theo region</td><td><code>aws:RequestedRegion</code></td></tr><tr><td>5</td><td>EventBridge permission cho Lambda target vs Kinesis Data Streams target</td><td><strong>Resource-based Policy</strong> (Lambda), <strong>Identity-based Policy</strong> (Kinesis)</td></tr></tbody></table></div>
+<h3 id="câu-1--chỉ-cho-phép-service-đã-audit-chạy-ở-production">Câu 1 — Chỉ cho phép service đã audit chạy ở Production<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-1--chỉ-cho-phép-service-đã-audit-chạy-ở-production" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have strong regulatory requirements to only allow fully internally audited AWS services in production. You still want to allow your teams to experiment in a development environment while services are being audited. How can you best set this up?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Provide the Dev team with a completely independent AWS account</li>
+<li>Apply a global IAM policy on your Prod account</li>
+<li>Create an AWS Organization and create two Prod and Dev OUs, then Apply an SCP on the Prod OU</li>
+<li>Create an AWS Config Rule</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Cho Dev team một account độc lập</td><td><strong>Sai</strong></td><td>Tách account cho Dev không <strong>tự động</strong> giải quyết yêu cầu chính: “chỉ cho phép service đã audit chạy ở <strong>Prod</strong>” — account Dev độc lập không kèm cơ chế nào ép Prod tuân thủ giới hạn</td></tr><tr><td>2 — Áp IAM policy toàn cục lên account Prod</td><td><strong>Sai</strong></td><td>IAM Policy chỉ gắn vào User/Group/Role <strong>bên trong</strong> account (§2.4 bảng so sánh) — admin của chính account Prod vẫn có thể sửa/gỡ policy này, không phải một <strong>trần cứng</strong> từ bên ngoài; đây chính là lý do quy định “regulatory” cần <strong>SCP</strong>, không phải IAM Policy thường</td></tr><tr><td><strong>3 — Tạo Organization + 2 OU Prod/Dev, gắn SCP lên Prod OU</strong></td><td><strong>Đúng</strong></td><td>Đúng mô hình chuẩn ở §1.2 (OU theo Environment Lifecycle) kết hợp §2: SCP gắn ở <strong>Prod OU</strong> dùng chiến lược <strong>Allowlist</strong> (§2.2) để chỉ cho phép đúng các service đã audit — SCP là <strong>trần</strong> không ai trong account (kể cả root user, §2.1) gỡ được; OU Dev không gắn SCP này nên team Dev vẫn tự do thử nghiệm</td></tr><tr><td>4 — Tạo AWS Config Rule</td><td><strong>Sai</strong></td><td>Config Rule chỉ <strong>phát hiện</strong> (detective) resource/service không tuân thủ <strong>sau khi đã dùng</strong> — không <strong>ngăn chặn trước</strong> (preventive) như yêu cầu “chỉ cho phép” của đề bài; đây chính là phân biệt Preventive vs Detective Guardrail ở §10.2</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3.</strong></p>
+<blockquote>
+<p>Câu này kiểm tra đúng 2 khái niệm nền của cả chương: <strong>OU theo Environment Lifecycle</strong> (§1.2) để tách Prod/Dev, và <strong>SCP là cơ chế preventive duy nhất</strong> áp được lên cả account (§2, §10.2) — IAM Policy (phương án 2) và Config Rule (phương án 4) đều là “mồi nhử” vì nghe hợp lý nhưng sai bản chất: một cái không phải trần cứng, một cái không ngăn chặn trước.</p>
+</blockquote>
+<h3 id="câu-2--bucket-policy-đúng-cú-pháp-nhưng-developer-vẫn-không-đọc-được-file">Câu 2 — Bucket Policy đúng cú pháp nhưng developer vẫn không đọc được file<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-2--bucket-policy-đúng-cú-pháp-nhưng-developer-vẫn-không-đọc-được-file" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You are managing the AWS account for your company, and you want to give one of the developers access to read files from an S3 bucket. You have updated the bucket policy to this, but he still can’t access the files in the bucket. What is the problem?</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;Version&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;2012-10-17&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">  &quot;Statement&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;Sid&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;AllowsRead&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;Effect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Allow&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;Principal&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">      &quot;AWS&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;arn:aws:iam::123456789012:user/Dave&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;Action&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;s3:GetObject&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="punctuation">    &quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;arn:aws:s3:::static-files-bucket-xxx&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  }]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Everything is okay, he just needs to logout and login again</li>
+<li>The bucket does not contain any files yet</li>
+<li>You should change the resource to <code>arn:aws:s3:::static-files-bucket-xxx/*</code>, because this is an object-level permission</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Không có vấn đề gì, chỉ cần logout/login lại</td><td><strong>Sai</strong></td><td>Đây là lỗi <strong>cấu hình policy</strong>, không phải cache session — logout/login không đổi được nội dung ARN sai trong policy</td></tr><tr><td>2 — Bucket chưa có file nào</td><td><strong>Sai</strong></td><td>Đề bài không nói gì về việc bucket rỗng; và dù bucket có rỗng, <strong>triệu chứng vẫn không đổi</strong> vì bản chất lỗi nằm ở policy, không phải dữ liệu</td></tr><tr><td><strong>3 — Đổi resource thành <code>.../*</code> vì đây là object-level permission</strong></td><td><strong>Đúng</strong></td><td>Đúng bảng phân biệt ở §4.1: <code>s3:GetObject</code> là <strong>object-level action</strong>, bắt buộc ARN phải có <code>/*</code>. Policy hiện tại trỏ vào <code>arn:aws:s3:::static-files-bucket-xxx</code> — đây là <strong>bucket-level ARN</strong> (thiếu <code>/*</code>), đúng loại ARN cho <code>s3:ListBucket</code>, sai loại cho <code>s3:GetObject</code></td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3.</strong></p>
+<blockquote>
+<p>Đây là ví dụ áp dụng trực tiếp “sai lầm thường gặp” đã ghi ở §4.1: <em>“viết policy cho <code>GetObject</code> nhưng resource lại trỏ vào ARN bucket (thiếu <code>/*</code>) → policy vô hiệu vì sai cấp.”</em> Effect/Principal/Action trong policy đều đúng — chỉ riêng ARN sai cấp khiến cả statement vô hiệu với action object-level.</p>
+</blockquote>
+<h3 id="câu-3--giới-hạn-service-cho-từng-account-trong-organizations">Câu 3 — Giới hạn service cho từng account trong Organizations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-3--giới-hạn-service-cho-từng-account-trong-organizations" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have 5 AWS Accounts that you manage using AWS Organizations. You want to restrict access to certain AWS services in each account. How should you do that?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Using IAM Roles</li>
+<li>Using AWS Organizations SCP</li>
+<li>Using AWS Config</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Dùng IAM Roles</td><td><strong>Sai</strong></td><td>IAM Role chỉ định nghĩa quyền cho <strong>một identity cụ thể</strong> bên trong <strong>một account</strong> (§4 - IAM &amp; AWS CLI) — không phải công cụ để giới hạn <strong>service ở cấp account</strong>, và phải cấu hình lặp lại thủ công cho từng account trong số 5 account, không có cơ chế quản lý tập trung</td></tr><tr><td><strong>2 — Dùng AWS Organizations SCP</strong></td><td><strong>Đúng</strong></td><td>Đúng định nghĩa cốt lõi ở §2: SCP gắn vào <strong>Organization/OU/Account</strong>, giới hạn quyền của <strong>mọi User và Role</strong> trong account đó — quản lý tập trung từ Organization, áp được đồng loạt hoặc riêng lẻ cho 5 account mà không cần sửa IAM bên trong từng account</td></tr><tr><td>3 — Dùng AWS Config</td><td><strong>Sai</strong></td><td>Config chỉ <strong>phát hiện</strong> cấu hình/service không tuân thủ sau khi đã xảy ra (Detective, §10.2) — không <strong>giới hạn/ngăn chặn</strong> được việc dùng service ngay từ đầu</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — AWS Organizations SCP.</strong></p>
+<blockquote>
+<p>Từ khoá nhận diện: “restrict access to certain AWS services” ở <strong>cấp account</strong>, quản lý <strong>tập trung</strong> qua Organizations → luôn luôn là SCP, đúng dòng đầu tiên trong bảng “So sánh &amp; chọn đáp án thi” ở §11 (áp dụng ngược cho việc restrict service thay vì chỉ cấm CloudTrail).</p>
+</blockquote>
+<h3 id="câu-4--iam-condition-key-giới-hạn-api-theo-region">Câu 4 — IAM condition key giới hạn API theo region<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-4--iam-condition-key-giới-hạn-api-theo-region" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Which of the following IAM condition key you can use only to allow API calls to a specified AWS region?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li><code>aws:RequiredRegion</code></li>
+<li><code>aws:SourceRegion</code></li>
+<li><code>aws:InitialRegion</code></li>
+<li><code>aws:RequestedRegion</code></li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — <code>aws:RequiredRegion</code></td><td><strong>Sai</strong></td><td>Không tồn tại — tên nghe hợp lý nhưng không phải condition key thật của AWS</td></tr><tr><td>2 — <code>aws:SourceRegion</code></td><td><strong>Sai</strong></td><td>Không tồn tại dưới tên này trong danh sách global condition key chuẩn</td></tr><tr><td>3 — <code>aws:InitialRegion</code></td><td><strong>Sai</strong></td><td>Không tồn tại — cùng kiểu đặt tên gây nhiễu như 2 phương án trên</td></tr><tr><td><strong>4 — <code>aws:RequestedRegion</code></strong></td><td><strong>Đúng</strong></td><td>Đúng condition key thật đã liệt kê ở §4: <em>“Giới hạn <strong>region</strong> mà API được gọi tới — dùng phổ biến trong SCP để khoá account trong 1-2 region cụ thể (data sovereignty)”</em></td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 4 — <code>aws:RequestedRegion</code>.</strong></p>
+<blockquote>
+<p>Bẫy kinh điển: 3 phương án sai đều là tên <strong>hợp lý về ngữ nghĩa</strong> (Required/Source/Initial Region) nhưng <strong>không tồn tại</strong> trong AWS — chỉ có cách duy nhất để chắc chắn là nhớ đúng tên thật <code>aws:RequestedRegion</code> đã ghi ở bảng §4, không suy luận theo cảm tính ngôn ngữ tự nhiên.</p>
+</blockquote>
+<h3 id="câu-5--eventbridge-permission-lambda-target-vs-kinesis-data-streams-target">Câu 5 — EventBridge permission: Lambda target vs Kinesis Data Streams target<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-5--eventbridge-permission-lambda-target-vs-kinesis-data-streams-target" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>When configuring permissions for EventBridge to configure a Lambda function as a target you should use ……………………. but when you want to configure a Kinesis Data Streams as a target you should use …………………..</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Identity-Based Policy, Resource-based Policy</li>
+<li>Resource-Based Policy, Identity-based Policy</li>
+<li>Identity-Based Policy, Identity-Based Policy</li>
+<li>Resource-based Policy, Resource-based Policy</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Identity trước, Resource sau</td><td><strong>Sai</strong></td><td>Ngược thứ tự đúng — Lambda <strong>có</strong> resource-based policy, Kinesis thì <strong>không</strong></td></tr><tr><td><strong>2 — Resource-based Policy (Lambda), Identity-based Policy (Kinesis)</strong></td><td><strong>Đúng</strong></td><td>Đúng bảng ở §5.2: <strong>Lambda</strong> thuộc nhóm target <strong>có</strong> resource-based policy → gắn thẳng resource-based policy cho phép <code>events.amazonaws.com</code> invoke; <strong>Kinesis Data Streams</strong> thuộc nhóm target <strong>không có</strong> resource-based policy → EventBridge Rule phải dùng <strong>IAM Role</strong> (identity-based policy) để thay mặt gọi vào Kinesis</td></tr><tr><td>3 — Cả hai đều Identity-based</td><td><strong>Sai</strong></td><td>Sai với Lambda — Lambda <strong>có hỗ trợ</strong> resource-based policy nên không cần đi vòng qua IAM Role</td></tr><tr><td>4 — Cả hai đều Resource-based</td><td><strong>Sai</strong></td><td>Sai với Kinesis — Kinesis Data Streams <strong>không hỗ trợ</strong> resource-based policy, không thể gắn policy thẳng lên nó</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2.</strong></p>
+<blockquote>
+<p>Đúng logic đã nhấn mạnh ở §5.2: <em>“target nào có resource-based policy thì dùng nó (đơn giản hơn); target nào không có thì buộc phải cấp IAM Role cho rule.”</em> Lambda nằm trong nhóm <strong>có</strong> (cùng SNS/SQS/S3/API Gateway); Kinesis Data Streams nằm trong nhóm <strong>không có</strong> (cùng EC2 Auto Scaling/SSM/ECS Task) — chỉ cần nhớ đúng 2 nhóm này ở §5.2 là trả lời được mọi biến thể câu hỏi kiểu điền khuyết như trên.</p>
+</blockquote>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>SCP không áp dụng cho Management Account</strong>, mặc định <strong>deny tất cả</strong>, cần <strong>explicit allow từ root xuyên suốt mọi OU trên đường đi</strong> — thiếu một mắt xích là bị chặn.</li>
+<li>SCP là cơ chế <strong>duy nhất</strong> chặn được cả <strong>root user của member account</strong> — dấu hiệu nhận biết câu hỏi cần SCP.</li>
+<li>SCP <strong>chỉ giới hạn, không bao giờ cấp quyền</strong> — công thức quyền thực sự luôn là phần <strong>giao (intersection)</strong>, không phải hợp.</li>
+<li>Phân biệt phạm vi: <strong>SCP = account/OU</strong>, <strong>Permission Boundary = một user/role cụ thể</strong>, <strong>Tag Policy = chuẩn hoá + báo cáo tag (không chặn cứng)</strong>.</li>
+<li><code>s3:ListBucket</code> là <strong>bucket-level</strong> (ARN không có <code>/*</code>); <code>GetObject/PutObject/DeleteObject</code> là <strong>object-level</strong> (ARN có <code>/*</code>) — sai cấp là policy vô hiệu.</li>
+<li><code>aws:PrincipalOrgID</code> trong resource-based policy = cách gọn nhất để giới hạn truy cập “chỉ cho ai trong tổ chức của tôi”, khỏi liệt kê từng Account ID.</li>
+<li>Cross-account: nếu resource đích <strong>hỗ trợ resource-based policy</strong> (S3, SNS, SQS…) thì dùng nó — <strong>user giữ nguyên identity</strong>. Nếu <strong>không hỗ trợ</strong> (EC2…) thì bắt buộc <strong>Assume Role</strong> — <strong>user đánh đổi</strong> quyền gốc lấy quyền của role.</li>
+<li>EventBridge cross-account/region: target có resource-based policy (Lambda, SNS, SQS, S3, API Gateway) → gắn <strong>resource-based policy</strong>; target không có (EC2 ASG, SSM, ECS) → gắn <strong>IAM Role</strong> cho rule.</li>
+<li>Evaluation logic tổng quát: <strong>Explicit Deny ở bất kỳ lớp nào (SCP, resource policy, boundary, identity policy) luôn thắng tuyệt đối</strong> — không có Allow nào cứu được.</li>
+<li><strong>IAM Identity Center</strong> = SSO cho AWS accounts + SAML apps + Windows EC2; <strong>Permission Set</strong> = policy bundle, tự sinh IAM Role trên từng account; <strong>ABAC</strong> đổi quyền bằng cách đổi attribute, không phải sửa policy.</li>
+<li>Directory Service: <strong>Managed Microsoft AD</strong> = AD thật + trust 2 chiều với on-prem; <strong>AD Connector</strong> = chỉ proxy, user vẫn ở on-prem; <strong>Simple AD</strong> = độc lập, không nối on-prem được.</li>
+<li><strong>Control Tower xây trên Organizations</strong>; Guardrail <strong>Preventive = SCP</strong> (chặn trước), <strong>Detective = AWS Config</strong> (phát hiện sau, có thể remediate qua SNS + Lambda).</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Bài này thực chất chỉ có <strong>hai trục</strong>: trục “giới hạn quyền toàn account/OU” (Organizations → SCP → Control Tower Guardrail) và trục “định danh xuyên account” (Cross-account Role/Policy → IAM Identity Center → Directory Service). Tách hai trục này ra thì bớt rối hẳn.</li>
+<li>Chỗ tôi hay nhầm nhất trước khi viết note này: tưởng SCP hoạt động như “policy gần nhất thắng” giống một số hệ thống khác — thực ra nó là <strong>cộng dồn theo đường đi</strong>, deny ở bất kỳ tầng nào trên đường đi đều thắng, bất kể tầng dưới nói gì.</li>
+<li>Permission Boundary và SCP dễ lẫn vì cùng công thức “chỉ giới hạn, không cấp quyền” — nhớ bằng phạm vi: Boundary nhắm vào <strong>một identity</strong>, SCP nhắm vào <strong>một account/OU</strong>.</li>
+<li>Đối chiếu với <a href="../../../02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.2---aws-organizations-và-multi-account" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.2---aws-organizations-và-multi-account">1.2 - AWS Organizations và Multi-Account</a> thì thấy phần SCP evaluation ở đó và slide Stephane khớp nhau; phần IAM Identity Center + Directory Service trong slide Stephane chi tiết hơn <a href="../../../02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.1---iam---identity-and-access-management" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.1---iam---identity-and-access-management">1.1 - IAM - Identity and Access Management</a> nên note này bổ sung thêm được nhiều.</li>
+<li>Bộ 5 câu ôn tập ở §12 lặp lại đúng 2 bẫy cốt lõi của chương: <strong>(a)</strong> SCP là <strong>preventive</strong> (trần cứng, không ai trong account gỡ được) trong khi IAM Policy/Config Rule chỉ là identity-level hoặc detective — nghe “hợp lý” nhưng sai bản chất cơ chế; <strong>(b)</strong> phân loại target <strong>có/không có resource-based policy</strong> (S3 GetObject cần ARN <code>/*</code>, EventBridge Lambda vs Kinesis) quyết định dùng resource-based policy hay phải đi vòng qua identity-based policy/IAM Role.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>SCP Inheritance &amp; Evaluation Logic (root → OU → account, explicit allow bắt buộc)</li>
+<li>SCP không áp dụng cho Management Account</li>
+<li>Denylist vs Allowlist strategy cho SCP</li>
+<li>Tag Policies trong AWS Organizations</li>
+<li><code>aws:PrincipalOrgID</code> — giới hạn resource-based policy theo Organization</li>
+<li>S3 bucket-level vs object-level permission (ListBucket vs GetObject)</li>
+<li>Cross-account: Assume Role vs Resource-based Policy (đánh đổi quyền vs giữ nguyên quyền)</li>
+<li>EventBridge cross-account/cross-region: Resource-based Policy vs IAM Role theo loại target</li>
+<li>IAM Permission Boundary = Identity Policy ∩ Boundary</li>
+<li>IAM Policy Evaluation Logic đầy đủ (SCP + Resource Policy + Boundary + Identity Policy)</li>
+<li>AWS IAM Identity Center — Permission Sets &amp; Multi-Account Permissions</li>
+<li>ABAC trong IAM Identity Center</li>
+<li>AWS Managed Microsoft AD vs AD Connector vs Simple AD</li>
+<li>AWS Control Tower Guardrails (Preventive = SCP, Detective = AWS Config)</li>
+<li>Bộ 5 câu ôn tập Advanced Identity — SCP preventive vs IAM/Config, resource-based vs identity-based policy theo loại target</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-93" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#25--advanced-identity-in-aws-organizations-scp-iam-identity-center-control-tower" data-for="25--advanced-identity-in-aws-organizations-scp-iam-identity-center-control-tower">25 – Advanced Identity in AWS: Organizations, SCP, IAM Identity Center, Control Tower</a></li><li class="depth-1"><a href="#0-vì-sao-cần-advanced-identity" data-for="0-vì-sao-cần-advanced-identity">0. Vì sao cần “Advanced Identity”?</a></li><li class="depth-1"><a href="#1-aws-organizations--gom-nhiều-account-về-một-mối" data-for="1-aws-organizations--gom-nhiều-account-về-một-mối">1. AWS Organizations — gom nhiều account về một mối</a></li><li class="depth-2"><a href="#11-cấu-trúc-cơ-bản" data-for="11-cấu-trúc-cơ-bản">1.1 Cấu trúc cơ bản</a></li><li class="depth-2"><a href="#12-organizational-units-ou--3-cách-tổ-chức-phổ-biến" data-for="12-organizational-units-ou--3-cách-tổ-chức-phổ-biến">1.2 Organizational Units (OU) — 3 cách tổ chức phổ biến</a></li><li class="depth-2"><a href="#13-vì-sao-dùng-multi-account-thay-vì-một-account-nhiều-vpc" data-for="13-vì-sao-dùng-multi-account-thay-vì-một-account-nhiều-vpc">1.3 Vì sao dùng multi-account thay vì một account nhiều VPC?</a></li><li class="depth-1"><a href="#2-service-control-policies-scp--iam-policy-cho-cả-account" data-for="2-service-control-policies-scp--iam-policy-cho-cả-account">2. Service Control Policies (SCP) — “IAM Policy cho cả account”</a></li><li class="depth-2"><a href="#21-scp-là-gì" data-for="21-scp-là-gì">2.1 SCP là gì?</a></li><li class="depth-2"><a href="#22-hai-chiến-lược-viết-scp" data-for="22-hai-chiến-lược-viết-scp">2.2 Hai chiến lược viết SCP</a></li><li class="depth-2"><a href="#23-scp-thừa-kế-theo-cây--ví-dụ-minh-hoạ-lại-đúng-logic-trong-slide" data-for="23-scp-thừa-kế-theo-cây--ví-dụ-minh-hoạ-lại-đúng-logic-trong-slide">2.3 SCP thừa kế theo cây — ví dụ minh hoạ lại đúng logic trong slide</a></li><li class="depth-2"><a href="#24-scp-vs-iam-policy--đừng-nhầm-hai-thứ" data-for="24-scp-vs-iam-policy--đừng-nhầm-hai-thứ">2.4 SCP vs IAM Policy — đừng nhầm hai thứ</a></li><li class="depth-1"><a href="#3-tag-policies--chuẩn-hoá-tag-toàn-tổ-chức" data-for="3-tag-policies--chuẩn-hoá-tag-toàn-tổ-chức">3. Tag Policies — chuẩn hoá tag toàn tổ chức</a></li><li class="depth-1"><a href="#4-iam-conditions-hay-gặp-trong-bài-multi-account" data-for="4-iam-conditions-hay-gặp-trong-bài-multi-account">4. IAM Conditions hay gặp trong bài multi-account</a></li><li class="depth-2"><a href="#41-s3-permission-bucket-level-vs-object-level" data-for="41-s3-permission-bucket-level-vs-object-level">4.1 S3 permission: bucket-level vs object-level</a></li><li class="depth-2"><a href="#42-awsprincipalorgid--chặn-truy-cập-ngoài-tổ-chức-bằng-một-dòng" data-for="42-awsprincipalorgid--chặn-truy-cập-ngoài-tổ-chức-bằng-một-dòng">4.2 aws:PrincipalOrgID — chặn truy cập ngoài tổ chức bằng một dòng</a></li><li class="depth-1"><a href="#5-cross-account-access--hai-cách-để-account-a-dùng-resource-ở-account-b" data-for="5-cross-account-access--hai-cách-để-account-a-dùng-resource-ở-account-b">5. Cross-Account Access — hai cách để Account A dùng resource ở Account B</a></li><li class="depth-2"><a href="#51-hai-pattern" data-for="51-hai-pattern">5.1 Hai pattern</a></li><li class="depth-2"><a href="#52-eventbridge-cross-account--cross-region--chọn-role-hay-resource-policy" data-for="52-eventbridge-cross-account--cross-region--chọn-role-hay-resource-policy">5.2 EventBridge cross-account / cross-region — chọn Role hay Resource Policy?</a></li><li class="depth-1"><a href="#6-iam-permission-boundaries--trần-giới-hạn-cho-một-userrole" data-for="6-iam-permission-boundaries--trần-giới-hạn-cho-một-userrole">6. IAM Permission Boundaries — trần giới hạn cho một user/role</a></li><li class="depth-1"><a href="#7-iam-policy-evaluation-logic--ráp-tất-cả-các-lớp-lại" data-for="7-iam-policy-evaluation-logic--ráp-tất-cả-các-lớp-lại">7. IAM Policy Evaluation Logic — ráp tất cả các lớp lại</a></li><li class="depth-1"><a href="#8-aws-iam-identity-center--sso-cho-cả-tổ-chức-lẫn-app-doanh-nghiệp" data-for="8-aws-iam-identity-center--sso-cho-cả-tổ-chức-lẫn-app-doanh-nghiệp">8. AWS IAM Identity Center — SSO cho cả tổ chức lẫn app doanh nghiệp</a></li><li class="depth-2"><a href="#81-là-gì" data-for="81-là-gì">8.1 Là gì?</a></li><li class="depth-2"><a href="#82-identity-provider--nguồn-user-đến-từ-đâu" data-for="82-identity-provider--nguồn-user-đến-từ-đâu">8.2 Identity Provider — nguồn user đến từ đâu</a></li><li class="depth-2"><a href="#83-multi-account-permissions--trái-tim-của-iam-identity-center" data-for="83-multi-account-permissions--trái-tim-của-iam-identity-center">8.3 Multi-Account Permissions — trái tim của IAM Identity Center</a></li><li class="depth-2"><a href="#84-application-assignments" data-for="84-application-assignments">8.4 Application Assignments</a></li><li class="depth-2"><a href="#85-attribute-based-access-control-abac" data-for="85-attribute-based-access-control-abac">8.5 Attribute-Based Access Control (ABAC)</a></li><li class="depth-1"><a href="#9-aws-directory-service--khi-công-ty-đã-có-active-directory" data-for="9-aws-directory-service--khi-công-ty-đã-có-active-directory">9. AWS Directory Service — khi công ty đã có Active Directory</a></li><li class="depth-2"><a href="#91-active-directory-là-gì-kiến-thức-nền" data-for="91-active-directory-là-gì-kiến-thức-nền">9.1 Active Directory là gì? (kiến thức nền)</a></li><li class="depth-2"><a href="#92-ba-lựa-chọn-của-aws-directory-service" data-for="92-ba-lựa-chọn-của-aws-directory-service">9.2 Ba lựa chọn của AWS Directory Service</a></li><li class="depth-2"><a href="#93-nối-ad-với-iam-identity-center" data-for="93-nối-ad-với-iam-identity-center">9.3 Nối AD với IAM Identity Center</a></li><li class="depth-1"><a href="#10-aws-control-tower--đóng-gói-mọi-thứ-ở-trên-thành-sản-phẩm-turn-key" data-for="10-aws-control-tower--đóng-gói-mọi-thứ-ở-trên-thành-sản-phẩm-turn-key">10. AWS Control Tower — đóng gói mọi thứ ở trên thành sản phẩm turn-key</a></li><li class="depth-2"><a href="#101-là-gì" data-for="101-là-gì">10.1 Là gì?</a></li><li class="depth-2"><a href="#102-guardrails--hai-loại" data-for="102-guardrails--hai-loại">10.2 Guardrails — hai loại</a></li><li class="depth-1"><a href="#11-so-sánh--chọn-đáp-án-thi" data-for="11-so-sánh--chọn-đáp-án-thi">11. So sánh &amp; chọn đáp án thi</a></li><li class="depth-1"><a href="#12-câu-hỏi-ôn-tập" data-for="12-câu-hỏi-ôn-tập">12. Câu hỏi ôn tập</a></li><li class="depth-2"><a href="#câu-1--chỉ-cho-phép-service-đã-audit-chạy-ở-production" data-for="câu-1--chỉ-cho-phép-service-đã-audit-chạy-ở-production">Câu 1 — Chỉ cho phép service đã audit chạy ở Production</a></li><li class="depth-2"><a href="#câu-2--bucket-policy-đúng-cú-pháp-nhưng-developer-vẫn-không-đọc-được-file" data-for="câu-2--bucket-policy-đúng-cú-pháp-nhưng-developer-vẫn-không-đọc-được-file">Câu 2 — Bucket Policy đúng cú pháp nhưng developer vẫn không đọc được file</a></li><li class="depth-2"><a href="#câu-3--giới-hạn-service-cho-từng-account-trong-organizations" data-for="câu-3--giới-hạn-service-cho-từng-account-trong-organizations">Câu 3 — Giới hạn service cho từng account trong Organizations</a></li><li class="depth-2"><a href="#câu-4--iam-condition-key-giới-hạn-api-theo-region" data-for="câu-4--iam-condition-key-giới-hạn-api-theo-region">Câu 4 — IAM condition key giới hạn API theo region</a></li><li class="depth-2"><a href="#câu-5--eventbridge-permission-lambda-target-vs-kinesis-data-streams-target" data-for="câu-5--eventbridge-permission-lambda-target-vs-kinesis-data-streams-target">Câu 5 — EventBridge permission: Lambda target vs Kinesis Data Streams target</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/04---iam--and--aws-cli" class="internal">4. IAM &amp; AWS CLI</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>04.1 - Triển khai Additional Domain Controllers</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="04.1 - Triển khai Additional Domain Controllers"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="04.1 - Triển khai Additional Domain Controllers"/><meta name="twitter:description" content="AD 2025 - Triển khai Additional Domain Controllers Tóm tắt nhanh Triển khai 8 DC mới chạy Windows Server 2025 phân bổ đều 4 site: ROOT (2), MB (2), MN (2), TW (2) Mỗi DC chạy AD DS + DNS tích hợp, tất cả đều là Global Catalog (best practice cho single-domain forest) Thiết kế site topology theo mô hì..."/><meta property="og:description" content="AD 2025 - Triển khai Additional Domain Controllers Tóm tắt nhanh Triển khai 8 DC mới chạy Windows Server 2025 phân bổ đều 4 site: ROOT (2), MB (2), MN (2), TW (2) Mỗi DC chạy AD DS + DNS tích hợp, tất cả đều là Global Catalog (best practice cho single-domain forest) Thiết kế site topology theo mô hì..."/><meta property="og:image:alt" content="AD 2025 - Triển khai Additional Domain Controllers Tóm tắt nhanh Triển khai 8 DC mới chạy Windows Server 2025 phân bổ đều 4 site: ROOT (2), MB (2), MN (2), TW (2) Mỗi DC chạy AD DS + DNS tích hợp, tất cả đều là Global Catalog (best practice cho single-domain forest) Thiết kế site topology theo mô hì..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="AD 2025 - Triển khai Additional Domain Controllers Tóm tắt nhanh Triển khai 8 DC mới chạy Windows Server 2025 phân bổ đều 4 site: ROOT (2), MB (2), MN (2), TW (2) Mỗi DC chạy AD DS + DNS tích hợp, tất cả đều là Global Catalog (best practice cho single-domain forest) Thiết kế site topology theo mô hì..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.1---triển-khai-additional-domain-controllers" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-482" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-482" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/">Windows Servers</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/">AD Theory</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/">04 - Nâng cấp và chuyển đổi</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>04.1 - Triển khai Additional Domain Controllers</a></div></nav><h1 class="article-title">04.1 - Triển khai Additional Domain Controllers</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/windows-server" class="internal internal-link tag-link">domain/windows-server</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">DC Deployment 2025</span><span class="note-properties-separator">, </span><span class="note-properties-text">Triển khai DC bổ sung</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-17T17:00:00.000Z">18 thg 6, 2026</time><span>18 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="ad-2025---triển-khai-additional-domain-controllers">AD 2025 - Triển khai Additional Domain Controllers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ad-2025---triển-khai-additional-domain-controllers" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="tóm-tắt-nhanh">Tóm tắt nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tóm-tắt-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Triển khai <strong>8 DC mới</strong> chạy Windows Server 2025 phân bổ đều 4 site: ROOT (2), MB (2), MN (2), TW (2)</li>
+<li>Mỗi DC chạy <strong>AD DS + DNS</strong> tích hợp, tất cả đều là <strong>Global Catalog</strong> (best practice cho single-domain forest)</li>
+<li>Thiết kế site topology theo mô hình <strong>hub-and-spoke</strong> với ROOT là hub — tối ưu cho quản trị tập trung</li>
+<li>DC Promotion có thể dùng <strong>Network Replication</strong> (mặc định) hoặc <strong>Install from Media (IFM)</strong> tuỳ điều kiện WAN</li>
+<li>Promote <strong>từng DC một</strong> theo thứ tự: ROOT site trước → MB → MN → TW</li>
+</ul>
+<hr/>
+<h2 id="kiến-trúc-triển-khai">Kiến trúc triển khai<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kiến-trúc-triển-khai" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phân-bổ-dc-theo-site">Phân bổ DC theo site<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phân-bổ-dc-theo-site" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Site</th><th>Số DC</th><th>Tên DC (gợi ý)</th><th>Vai trò</th><th>Global Catalog</th><th>Số user ước tính</th><th>Vai trò đặc biệt</th></tr></thead><tbody><tr><td>ROOT</td><td>2</td><td>DC2025-ROOT-01, DC2025-ROOT-02</td><td>AD DS + DNS</td><td>Có</td><td>Lớn nhất (trung tâm)</td><td>FSMO holder, CA host</td></tr><tr><td>MB (Miền Bắc)</td><td>2</td><td>DC2025-MB-01, DC2025-MB-02</td><td>AD DS + DNS</td><td>Có</td><td>Trung bình</td><td>Branch authentication</td></tr><tr><td>MN (Miền Nam)</td><td>2</td><td>DC2025-MN-01, DC2025-MN-02</td><td>AD DS + DNS</td><td>Có</td><td>Trung bình</td><td>Branch authentication</td></tr><tr><td>TW (Trung ương)</td><td>2</td><td>DC2025-TW-01, DC2025-TW-02</td><td>AD DS + DNS</td><td>Có</td><td>Nhỏ-trung bình</td><td>Admin site</td></tr></tbody></table></div>
+<h3 id="dc-naming-convention--best-practices">DC Naming Convention — Best Practices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dc-naming-convention--best-practices" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Tên DC nên <strong>truyền tải thông tin hữu ích</strong> khi đọc, theo format:</p>
+<pre><code>DC&lt;OS_Year>-&lt;Site>-&lt;Sequence>
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thành phần</th><th>Ý nghĩa</th><th>Ví dụ</th></tr></thead><tbody><tr><td><code>DC</code></td><td>Prefix chỉ role Domain Controller</td><td>Cố định</td></tr><tr><td><code>2025</code></td><td>OS version year — biết ngay DC chạy OS gì</td><td>2025</td></tr><tr><td><code>ROOT/MB/MN/TW</code></td><td>Site code — biết DC thuộc site nào</td><td>ROOT</td></tr><tr><td><code>01/02</code></td><td>Sequence number — phân biệt các DC trong cùng site</td><td>01</td></tr></tbody></table></div>
+<p><strong>Những điều nên tránh khi đặt tên DC</strong>:</p>
+<ul>
+<li><strong>Tên quá chung</strong>: <code>SERVER01</code>, <code>DC01</code> — không biết site hay OS version</li>
+<li><strong>Tên quá dài</strong>: <code>DOMAINCONTROLLER-HANOI-FLOOR3-RACK2</code> — khó gõ, dễ sai</li>
+<li><strong>Tên chứa ký tự đặc biệt</strong>: dấu gạch dưới <code>_</code>, dấu chấm <code>.</code> — có thể gây issue DNS</li>
+<li><strong>Tên thay đổi theo chức năng hiện tại</strong>: <code>FSMO-DC</code> — khi transfer FSMO sang DC khác, tên trở nên sai lệch</li>
+</ul>
+<h3 id="lý-do-2-dc-mỗi-site">Lý do 2 DC mỗi site<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lý-do-2-dc-mỗi-site" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Redundancy</strong>: nếu 1 DC fail, site vẫn có DC còn lại phục vụ authentication — user không bị ảnh hưởng</li>
+<li><strong>Load balancing</strong>: client tự động phân tải LDAP query và Kerberos authentication giữa 2 DC trong site</li>
+<li><strong>Replication partner</strong>: intra-site replication giữa 2 DC đảm bảo data consistency nhanh (15 giây notification)</li>
+<li><strong>Maintenance window</strong>: có thể patch/reboot từng DC mà không mất dịch vụ authentication cho site</li>
+<li><strong>Single DC = single point of failure</strong>: nếu DC duy nhất trong site fail → user không logon được, GPO không apply</li>
+</ul>
+<h3 id="cân-nhắc-user-population-cho-sizing">Cân nhắc user population cho sizing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cân-nhắc-user-population-cho-sizing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Số user tại mỗi site ảnh hưởng đến sizing DC:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>User Population</th><th>DC Sizing</th><th>RAM đề xuất</th><th>Ghi chú</th></tr></thead><tbody><tr><td>&lt; 500 users</td><td>Nhỏ</td><td>8 GB</td><td>AD database nhỏ, query load thấp</td></tr><tr><td>500 - 2000 users</td><td>Trung bình</td><td>16 GB</td><td>Đảm bảo NTDS.dit nằm trong RAM cache</td></tr><tr><td>2000 - 10000 users</td><td>Lớn</td><td>32 GB+</td><td>High query load, nhiều Group Policy</td></tr><tr><td>> 10000 users</td><td>Rất lớn</td><td>64 GB+</td><td>Cân nhắc thêm DC hoặc RODC</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph siteROOT[\&quot;Site ROOT - Hub\&quot;]\n        R1[\&quot;DC2025-ROOT-01&lt;br/>AD DS + DNS + GC&lt;br/>FSMO Roles\&quot;]\n        R2[\&quot;DC2025-ROOT-02&lt;br/>AD DS + DNS + GC\&quot;]\n        R1 &lt;-->|\&quot;Intra-site&lt;br/>15 sec\&quot;| R2\n    end\n\n    subgraph siteMB[\&quot;Site MB - North\&quot;]\n        MB1[\&quot;DC2025-MB-01&lt;br/>AD DS + DNS + GC\&quot;]\n        MB2[\&quot;DC2025-MB-02&lt;br/>AD DS + DNS + GC\&quot;]\n        MB1 &lt;-->|\&quot;Intra-site&lt;br/>15 sec\&quot;| MB2\n    end\n\n    subgraph siteMN[\&quot;Site MN - South\&quot;]\n        MN1[\&quot;DC2025-MN-01&lt;br/>AD DS + DNS + GC\&quot;]\n        MN2[\&quot;DC2025-MN-02&lt;br/>AD DS + DNS + GC\&quot;]\n        MN1 &lt;-->|\&quot;Intra-site&lt;br/>15 sec\&quot;| MN2\n    end\n\n    subgraph siteTW[\&quot;Site TW - Central\&quot;]\n        TW1[\&quot;DC2025-TW-01&lt;br/>AD DS + DNS + GC\&quot;]\n        TW2[\&quot;DC2025-TW-02&lt;br/>AD DS + DNS + GC\&quot;]\n        TW1 &lt;-->|\&quot;Intra-site&lt;br/>15 sec\&quot;| TW2\n    end\n\n    R1 &lt;-->|\&quot;Inter-site&lt;br/>Site Link\&quot;| MB1\n    R1 &lt;-->|\&quot;Inter-site&lt;br/>Site Link\&quot;| MN1\n    R1 &lt;-->|\&quot;Inter-site&lt;br/>Site Link\&quot;| TW1&quot;">graph TD
+    subgraph siteROOT[&quot;Site ROOT - Hub&quot;]
+        R1[&quot;DC2025-ROOT-01&lt;br/>AD DS + DNS + GC&lt;br/>FSMO Roles&quot;]
+        R2[&quot;DC2025-ROOT-02&lt;br/>AD DS + DNS + GC&quot;]
+        R1 &lt;-->|&quot;Intra-site&lt;br/>15 sec&quot;| R2
+    end
+
+    subgraph siteMB[&quot;Site MB - North&quot;]
+        MB1[&quot;DC2025-MB-01&lt;br/>AD DS + DNS + GC&quot;]
+        MB2[&quot;DC2025-MB-02&lt;br/>AD DS + DNS + GC&quot;]
+        MB1 &lt;-->|&quot;Intra-site&lt;br/>15 sec&quot;| MB2
+    end
+
+    subgraph siteMN[&quot;Site MN - South&quot;]
+        MN1[&quot;DC2025-MN-01&lt;br/>AD DS + DNS + GC&quot;]
+        MN2[&quot;DC2025-MN-02&lt;br/>AD DS + DNS + GC&quot;]
+        MN1 &lt;-->|&quot;Intra-site&lt;br/>15 sec&quot;| MN2
+    end
+
+    subgraph siteTW[&quot;Site TW - Central&quot;]
+        TW1[&quot;DC2025-TW-01&lt;br/>AD DS + DNS + GC&quot;]
+        TW2[&quot;DC2025-TW-02&lt;br/>AD DS + DNS + GC&quot;]
+        TW1 &lt;-->|&quot;Intra-site&lt;br/>15 sec&quot;| TW2
+    end
+
+    R1 &lt;-->|&quot;Inter-site&lt;br/>Site Link&quot;| MB1
+    R1 &lt;-->|&quot;Inter-site&lt;br/>Site Link&quot;| MN1
+    R1 &lt;-->|&quot;Inter-site&lt;br/>Site Link&quot;| TW1
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="thiết-kế-site-topology">Thiết kế Site Topology<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#thiết-kế-site-topology" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ad-sites-and-services--cấu-hình">AD Sites and Services — Cấu hình<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ad-sites-and-services--cấu-hình" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi <strong>AD Site</strong> đại diện cho một vị trí địa lý với kết nối mạng tốt (thường là LAN). Site quyết định:</p>
+<ul>
+<li><strong>DC selection cho authentication</strong>: client ưu tiên authenticate với DC trong cùng site — giảm latency và WAN traffic</li>
+<li><strong>Replication traffic routing</strong>: inter-site replication đi theo site link, có schedule và throttle — tránh saturate WAN</li>
+<li><strong>DFS namespace referral</strong>: DFS client ưu tiên server trong cùng site trước khi dùng server ở site khác</li>
+<li><strong>Service discovery</strong>: DNS SRV records chứa site-specific entries → client tìm đúng DC trong site</li>
+</ul>
+<h3 id="subnet-to-site-mapping">Subnet-to-Site Mapping<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#subnet-to-site-mapping" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi subnet IP <strong>phải</strong> được gán vào đúng site. Nếu client không thuộc subnet nào → AD chọn site gần nhất dựa trên site link cost → <strong>không tối ưu, tăng latency</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Subnet (ví dụ)</th><th>Site</th><th>Mô tả</th><th>VLAN (ví dụ)</th></tr></thead><tbody><tr><td>10.1.0.0/16</td><td>ROOT</td><td>Mạng trung tâm chính</td><td>VLAN 10-19</td></tr><tr><td>10.2.0.0/16</td><td>MB</td><td>Mạng chi nhánh Bắc</td><td>VLAN 20-29</td></tr><tr><td>10.3.0.0/16</td><td>MN</td><td>Mạng chi nhánh Nam</td><td>VLAN 30-39</td></tr><tr><td>10.4.0.0/16</td><td>TW</td><td>Mạng hành chính trung ương</td><td>VLAN 40-49</td></tr></tbody></table></div>
+<p><strong>Lưu ý quan trọng</strong>:</p>
+<ul>
+<li>Subnet mapping phải <strong>chính xác và đầy đủ</strong> — subnet thiếu = client bị assign sai site = authenticate qua WAN = chậm</li>
+<li>Khi thêm VLAN/subnet mới trong tương lai → <strong>luôn cập nhật AD Sites and Services</strong></li>
+<li>Dùng <code>/16</code> hay <code>/24</code> tuỳ thực tế — quan trọng là <strong>mọi IP range phải nằm trong một subnet mapping</strong></li>
+</ul>
+<h3 id="site-link-design">Site Link Design<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#site-link-design" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Site link định nghĩa <strong>kết nối logic</strong> giữa các site cho replication. Các tham số quan trọng:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Site Link</th><th>Cost</th><th>Interval (phút)</th><th>Schedule</th><th>Bandwidth ước tính</th></tr></thead><tbody><tr><td>ROOT ↔ MB</td><td>100</td><td>15</td><td>24/7</td><td>100 Mbps WAN</td></tr><tr><td>ROOT ↔ MN</td><td>100</td><td>15</td><td>24/7</td><td>100 Mbps WAN</td></tr><tr><td>ROOT ↔ TW</td><td>50</td><td>15</td><td>24/7</td><td>1 Gbps LAN (gần)</td></tr></tbody></table></div>
+<ul>
+<li><strong>Cost</strong>: số càng thấp = ưu tiên cao hơn. ROOT ↔ TW cost thấp hơn vì gần nhau hơn hoặc có bandwidth cao hơn</li>
+<li><strong>Interval</strong>: tần suất replication inter-site — Microsoft cho phép tối thiểu 15 phút, mặc định 180 phút. Nên set 15 phút nếu WAN đủ tốt</li>
+<li><strong>Schedule</strong>: khung giờ cho phép replication — mặc định 24/7, có thể restrict nếu WAN share với traffic khác</li>
+</ul>
+<h3 id="replication-topology-hub-and-spoke-vs-full-mesh">Replication Topology: Hub-and-Spoke vs Full Mesh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#replication-topology-hub-and-spoke-vs-full-mesh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph hubSpoke[\&quot;Hub-and-Spoke - Selected\&quot;]\n        ROOT_h[\&quot;ROOT&lt;br/>Hub\&quot;] --> MB_h[\&quot;MB\&quot;]\n        ROOT_h --> MN_h[\&quot;MN\&quot;]\n        ROOT_h --> TW_h[\&quot;TW\&quot;]\n    end\n\n    subgraph fullMesh[\&quot;Full Mesh - Not needed\&quot;]\n        ROOT_f[\&quot;ROOT\&quot;] &lt;--> MB_f[\&quot;MB\&quot;]\n        ROOT_f &lt;--> MN_f[\&quot;MN\&quot;]\n        ROOT_f &lt;--> TW_f[\&quot;TW\&quot;]\n        MB_f &lt;--> MN_f\n        MB_f &lt;--> TW_f\n        MN_f &lt;--> TW_f\n    end&quot;">graph LR
+    subgraph hubSpoke[&quot;Hub-and-Spoke - Selected&quot;]
+        ROOT_h[&quot;ROOT&lt;br/>Hub&quot;] --> MB_h[&quot;MB&quot;]
+        ROOT_h --> MN_h[&quot;MN&quot;]
+        ROOT_h --> TW_h[&quot;TW&quot;]
+    end
+
+    subgraph fullMesh[&quot;Full Mesh - Not needed&quot;]
+        ROOT_f[&quot;ROOT&quot;] &lt;--> MB_f[&quot;MB&quot;]
+        ROOT_f &lt;--> MN_f[&quot;MN&quot;]
+        ROOT_f &lt;--> TW_f[&quot;TW&quot;]
+        MB_f &lt;--> MN_f
+        MB_f &lt;--> TW_f
+        MN_f &lt;--> TW_f
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Lý do chọn Hub-and-Spoke</strong>:</p>
+<ul>
+<li>4 site là quy mô nhỏ-trung bình — full mesh tạo overhead không cần thiết (6 site links thay vì 3)</li>
+<li>ROOT là trung tâm, tất cả WAN link đều đi qua ROOT — topology logic phản ánh topology vật lý</li>
+<li>Dễ quản trị: chỉ cần 3 site link thay vì 6, troubleshoot đơn giản hơn</li>
+<li>KCC (Knowledge Consistency Checker) tự tối ưu replication path trong mỗi mô hình</li>
+</ul>
+<p><strong>Khi nào nên Full Mesh</strong>:</p>
+<ul>
+<li>Khi các site có <strong>direct WAN link</strong> với nhau (không qua hub) — ví dụ MB có link trực tiếp đến MN</li>
+<li>Khi cần giảm replication latency giữa branch sites — hub-spoke tạo extra hop</li>
+<li>Khi ROOT site có bandwidth hạn chế, không muốn transit traffic qua ROOT</li>
+</ul>
+<hr/>
+<h2 id="network-requirements-cho-ad-replication">Network Requirements cho AD Replication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#network-requirements-cho-ad-replication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="bandwidth-requirements">Bandwidth Requirements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bandwidth-requirements" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AD replication traffic phụ thuộc vào:</p>
+<ul>
+<li><strong>Số lượng change/ngày</strong>: mỗi user logon, password change, GPO update đều tạo replication traffic</li>
+<li><strong>AD database size</strong>: initial replication (khi promote DC mới) replicate toàn bộ database</li>
+<li><strong>Number of partitions</strong>: Schema, Configuration, Domain, DomainDnsZones, ForestDnsZones</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại traffic</th><th>Bandwidth ước tính</th><th>Ghi chú</th></tr></thead><tbody><tr><td>Initial replication (promote mới)</td><td>50-500 MB (tùy AD size)</td><td>Chỉ xảy ra 1 lần khi promote — dùng IFM nếu AD lớn</td></tr><tr><td>Ongoing replication (daily)</td><td>1-10 MB/giờ</td><td>Tùy tần suất thay đổi, số user</td></tr><tr><td>SYSVOL replication (DFS-R)</td><td>1-50 MB mỗi lần GPO change</td><td>Phụ thuộc số/kích thước GPO</td></tr><tr><td>DNS zone replication</td><td>Minimal</td><td>AD-integrated DNS replicate cùng AD replication</td></tr></tbody></table></div>
+<h3 id="latency-requirements">Latency Requirements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#latency-requirements" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại kết nối</th><th>Latency tối đa đề xuất</th><th>Impact nếu vượt</th></tr></thead><tbody><tr><td>Intra-site (giữa DC trong cùng site)</td><td>&lt; 1 ms</td><td>Replication delay, DFS-R lag</td></tr><tr><td>Inter-site (giữa ROOT và branch)</td><td>&lt; 100 ms</td><td>Replication interval compensate, nhưng user authentication không nên qua inter-site link</td></tr><tr><td>Client → DC trong site</td><td>&lt; 10 ms</td><td>Authentication latency, GPO application</td></tr></tbody></table></div>
+<h3 id="firewall-port-requirements-cho-ad-replication">Firewall Port Requirements cho AD Replication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#firewall-port-requirements-cho-ad-replication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đây là bước hay bị bỏ sót</strong> — nếu firewall chặn port cần thiết, DC promote sẽ fail hoặc replication sẽ lỗi.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Port</th><th>Protocol</th><th>Service</th><th>Hướng</th><th>Ghi chú</th></tr></thead><tbody><tr><td>53</td><td>TCP/UDP</td><td>DNS</td><td>Bi-directional</td><td>Bắt buộc — DC dùng DNS để tìm partner</td></tr><tr><td>88</td><td>TCP/UDP</td><td>Kerberos</td><td>Bi-directional</td><td>Authentication giữa DCs</td></tr><tr><td>135</td><td>TCP</td><td>RPC Endpoint Mapper</td><td>Bi-directional</td><td>Entry point cho RPC services</td></tr><tr><td>389</td><td>TCP/UDP</td><td>LDAP</td><td>Bi-directional</td><td>AD replication, LDAP queries</td></tr><tr><td>445</td><td>TCP</td><td>SMB</td><td>Bi-directional</td><td>SYSVOL replication, file sharing</td></tr><tr><td>636</td><td>TCP</td><td>LDAPS</td><td>Bi-directional</td><td>Secure LDAP (nếu enforce)</td></tr><tr><td>3268</td><td>TCP</td><td>Global Catalog</td><td>Bi-directional</td><td>GC queries</td></tr><tr><td>3269</td><td>TCP</td><td>Global Catalog SSL</td><td>Bi-directional</td><td>Secure GC queries</td></tr><tr><td>5722</td><td>TCP</td><td>DFS-R</td><td>Bi-directional</td><td>SYSVOL DFS-R replication</td></tr><tr><td>9389</td><td>TCP</td><td>AD Web Services</td><td>Bi-directional</td><td>PowerShell AD module</td></tr><tr><td>49152-65535</td><td>TCP</td><td>RPC Dynamic Ports</td><td>Bi-directional</td><td>RPC dynamic range — <strong>quan trọng nhất, hay bị chặn</strong></td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Tip</strong>: nếu firewall không cho phép mở toàn bộ dynamic port range, có thể restrict RPC port range qua registry: <code>HKLM\SYSTEM\CurrentControlSet\Services\NTDS\Parameters\TCP/IP Port</code> — gán 1 port cố định cho AD replication.</p>
+</blockquote>
+<h3 id="dc-trong-dmz--có-nên-không">DC trong DMZ — Có nên không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dc-trong-dmz--có-nên-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Không nên đặt DC trong DMZ</strong> vì:</p>
+<ul>
+<li>DC chứa toàn bộ AD database (password hash, security policies) — exposed trong DMZ = rủi ro bảo mật cực cao</li>
+<li>Thay vào đó: dùng <strong>RODC</strong> trong DMZ (nếu cần AD auth tại DMZ), hoặc dùng <strong>AD FS proxy / Web Application Proxy</strong></li>
+<li>Trong kiến trúc đích của dự án này: DC nằm trong <strong>internal network</strong>, RDS Gateway trong DMZ xử lý external access</li>
+</ul>
+<hr/>
+<h2 id="dc-promotion--quy-trình-chi-tiết">DC Promotion — Quy trình chi tiết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dc-promotion--quy-trình-chi-tiết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="prerequisites-trước-khi-promote">Prerequisites trước khi Promote<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#prerequisites-trước-khi-promote" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    A[\&quot;Check DNS resolution&lt;br/>Resolve domain FQDN\&quot;] --> B{\&quot;DNS OK?\&quot;}\n    B -->|No| B1[\&quot;Fix DNS:&lt;br/>Point DNS to current DC\&quot;]\n    B -->|Yes| C[\&quot;Check network connectivity&lt;br/>Ping current DC + port test\&quot;]\n    B1 --> A\n\n    C --> D{\&quot;Network OK?&lt;br/>Ports open?\&quot;}\n    D -->|No| D1[\&quot;Fix network:&lt;br/>Routing, firewall&lt;br/>Open AD ports\&quot;]\n    D -->|Yes| E[\&quot;Verify credentials&lt;br/>Domain Admin + Enterprise Admin\&quot;]\n    D1 --> C\n\n    E --> F{\&quot;Schema extended?\&quot;}\n    F -->|No| F1[\&quot;Run adprep /forestprep&lt;br/>adprep /domainprep\&quot;]\n    F -->|Yes| G[\&quot;Choose method:&lt;br/>Network Replication or IFM\&quot;]\n    F1 --> F\n\n    G --> H[\&quot;Promote DC&lt;br/>Install AD DS Role\&quot;]\n    H --> I[\&quot;Verify replication&lt;br/>repadmin /replsummary\&quot;]\n    I --> J[\&quot;Verify DNS SRV records&lt;br/>dcdiag /test:dns\&quot;]\n    J --> K[\&quot;Verify SYSVOL share&lt;br/>net share SYSVOL\&quot;]\n\n    style F1 fill:#fff3cd,stroke:#ffc107&quot;">flowchart TD
+    A[&quot;Check DNS resolution&lt;br/>Resolve domain FQDN&quot;] --> B{&quot;DNS OK?&quot;}
+    B -->|No| B1[&quot;Fix DNS:&lt;br/>Point DNS to current DC&quot;]
+    B -->|Yes| C[&quot;Check network connectivity&lt;br/>Ping current DC + port test&quot;]
+    B1 --> A
+
+    C --> D{&quot;Network OK?&lt;br/>Ports open?&quot;}
+    D -->|No| D1[&quot;Fix network:&lt;br/>Routing, firewall&lt;br/>Open AD ports&quot;]
+    D -->|Yes| E[&quot;Verify credentials&lt;br/>Domain Admin + Enterprise Admin&quot;]
+    D1 --> C
+
+    E --> F{&quot;Schema extended?&quot;}
+    F -->|No| F1[&quot;Run adprep /forestprep&lt;br/>adprep /domainprep&quot;]
+    F -->|Yes| G[&quot;Choose method:&lt;br/>Network Replication or IFM&quot;]
+    F1 --> F
+
+    G --> H[&quot;Promote DC&lt;br/>Install AD DS Role&quot;]
+    H --> I[&quot;Verify replication&lt;br/>repadmin /replsummary&quot;]
+    I --> J[&quot;Verify DNS SRV records&lt;br/>dcdiag /test:dns&quot;]
+    J --> K[&quot;Verify SYSVOL share&lt;br/>net share SYSVOL&quot;]
+
+    style F1 fill:#fff3cd,stroke:#ffc107
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="network-replication-vs-install-from-media-ifm">Network Replication vs Install from Media (IFM)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#network-replication-vs-install-from-media-ifm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>Network Replication</th><th>Install from Media (IFM)</th></tr></thead><tbody><tr><td>Cách hoạt động</td><td>DC mới replicate toàn bộ AD database qua mạng từ partner DC</td><td>Dùng file ntds.dit đã export (IFM media), chỉ replicate delta changes</td></tr><tr><td>Phù hợp khi</td><td>LAN/WAN tốt (> 10 Mbps), AD database nhỏ-trung bình (&lt; 500 MB)</td><td>WAN chậm (&lt; 10 Mbps), AD database lớn (> 1 GB), hoặc promote nhiều DC cùng lúc</td></tr><tr><td>Ưu điểm</td><td>Đơn giản, không cần chuẩn bị thêm, luôn có data mới nhất</td><td>Giảm traffic WAN đáng kể (chỉ replicate delta), promote nhanh hơn</td></tr><tr><td>Nhược điểm</td><td>Tốn bandwidth nếu database lớn, promote chậm qua WAN</td><td>Cần tạo IFM media trước (<code>ntdsutil</code>), data có thể outdated</td></tr><tr><td>Bảo mật</td><td>Dữ liệu replicate qua RPC encrypted</td><td>File IFM chứa password hash — <strong>phải bảo vệ nghiêm ngặt</strong>, xoá sau khi dùng</td></tr><tr><td>Thời gian promote</td><td>30 phút - vài giờ (tùy WAN và DB size)</td><td>10-30 phút (chỉ delta)</td></tr></tbody></table></div>
+<h4 id="khi-nào-chọn-ifm--decision-framework">Khi nào chọn IFM — Decision Framework<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-nào-chọn-ifm--decision-framework" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    START[\&quot;Promote DC moi\&quot;] --> Q1{\&quot;AD database&lt;br/>lon hon 500 MB?\&quot;}\n    Q1 -->|Khong| NET[\&quot;Dung Network Replication&lt;br/>Don gian, du nhanh\&quot;]\n    Q1 -->|Co| Q2{\&quot;WAN bandwidth&lt;br/>toi site dich?\&quot;}\n    Q2 -->|\&quot;> 50 Mbps\&quot;| NET\n    Q2 -->|\&quot;&lt; 50 Mbps\&quot;| IFM[\&quot;Dung Install from Media&lt;br/>Giam WAN traffic\&quot;]\n    Q2 -->|\&quot;&lt; 10 Mbps\&quot;| IFM_MUST[\&quot;BAT BUOC dung IFM&lt;br/>WAN qua cham\&quot;]\n\n    IFM --> NOTE1[\&quot;Tao IFM media tren DC&lt;br/>gan nhat voi site dich\&quot;]\n    IFM_MUST --> NOTE1\n    NOTE1 --> NOTE2[\&quot;Copy IFM media toi&lt;br/>server moi qua USB/offline\&quot;]\n    NOTE2 --> NOTE3[\&quot;Promote voi IFM option&lt;br/>Chi replicate delta\&quot;]\n\n    style NET fill:#e8f5e9,stroke:#4caf50\n    style IFM fill:#fff3e0,stroke:#ff9800\n    style IFM_MUST fill:#ffcccc,stroke:#cc0000&quot;">flowchart TD
+    START[&quot;Promote DC moi&quot;] --> Q1{&quot;AD database&lt;br/>lon hon 500 MB?&quot;}
+    Q1 -->|Khong| NET[&quot;Dung Network Replication&lt;br/>Don gian, du nhanh&quot;]
+    Q1 -->|Co| Q2{&quot;WAN bandwidth&lt;br/>toi site dich?&quot;}
+    Q2 -->|&quot;> 50 Mbps&quot;| NET
+    Q2 -->|&quot;&lt; 50 Mbps&quot;| IFM[&quot;Dung Install from Media&lt;br/>Giam WAN traffic&quot;]
+    Q2 -->|&quot;&lt; 10 Mbps&quot;| IFM_MUST[&quot;BAT BUOC dung IFM&lt;br/>WAN qua cham&quot;]
+
+    IFM --> NOTE1[&quot;Tao IFM media tren DC&lt;br/>gan nhat voi site dich&quot;]
+    IFM_MUST --> NOTE1
+    NOTE1 --> NOTE2[&quot;Copy IFM media toi&lt;br/>server moi qua USB/offline&quot;]
+    NOTE2 --> NOTE3[&quot;Promote voi IFM option&lt;br/>Chi replicate delta&quot;]
+
+    style NET fill:#e8f5e9,stroke:#4caf50
+    style IFM fill:#fff3e0,stroke:#ff9800
+    style IFM_MUST fill:#ffcccc,stroke:#cc0000
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Trong dự án này</strong>: với 4 site và WAN quality trung bình, <strong>Network Replication</strong> là lựa chọn mặc định. Chỉ dùng IFM nếu AD database lớn hoặc WAN link đến MB/MN quá chậm.</p>
+<h3 id="quy-trình-promote-từng-bước-logic">Quy trình Promote từng bước (logic)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quy-trình-promote-từng-bước-logic" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Cài đặt OS</strong>: Windows Server 2025 với đúng hostname theo naming convention, IP tĩnh, DNS trỏ về DC hiện tại trong cùng site</li>
+<li><strong>Join Domain</strong>: server join vào domain hiện tại (vẫn là member server) — xác nhận join thành công</li>
+<li><strong>Install AD DS Role</strong>: thêm role AD DS (chưa promote) — kiểm tra prerequisites</li>
+<li><strong>Promote</strong>: chạy promotion wizard — chọn “Additional Domain Controller in existing domain”
+<ul>
+<li>Chỉ định site cho DC mới (phải khớp subnet mapping)</li>
+<li>Chọn DSRM password (phải ghi nhớ — cần khi boot vào Directory Services Restore Mode)</li>
+<li>Chọn database path, log path, SYSVOL path (đặt trên disk riêng nếu có)</li>
+</ul>
+</li>
+<li><strong>DNS Integration</strong>: chọn cài DNS role, AD-integrated zone tự replicate sang</li>
+<li><strong>GC Designation</strong>: đánh dấu DC này là Global Catalog</li>
+<li><strong>SYSVOL Replication</strong>: DFS-R replicate SYSVOL từ DC hiện tại — cần chờ SYSVOL ready trước khi DC phục vụ client</li>
+<li><strong>Verification</strong>: xác nhận replication health, DNS SRV records, SYSVOL share accessible</li>
+</ol>
+<h3 id="thứ-tự-promote-dc">Thứ tự Promote DC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#thứ-tự-promote-dc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Quan trọng</strong>: promote từng DC một, xác nhận healthy trước khi promote DC tiếp.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thứ tự</th><th>DC</th><th>Site</th><th>Lý do thứ tự</th></tr></thead><tbody><tr><td>1</td><td>DC2025-ROOT-01</td><td>ROOT</td><td>ROOT là hub site, promote đầu tiên. DC này sẽ nhận FSMO roles sau</td></tr><tr><td>2</td><td>DC2025-ROOT-02</td><td>ROOT</td><td>Hoàn thiện redundancy cho ROOT site trước</td></tr><tr><td>3</td><td>DC2025-MB-01</td><td>MB</td><td>Branch site — promote sau khi ROOT stable</td></tr><tr><td>4</td><td>DC2025-MB-02</td><td>MB</td><td>Hoàn thiện redundancy cho MB</td></tr><tr><td>5</td><td>DC2025-MN-01</td><td>MN</td><td>Branch site tiếp theo</td></tr><tr><td>6</td><td>DC2025-MN-02</td><td>MN</td><td>Hoàn thiện redundancy cho MN</td></tr><tr><td>7</td><td>DC2025-TW-01</td><td>TW</td><td>Branch site cuối</td></tr><tr><td>8</td><td>DC2025-TW-02</td><td>TW</td><td>Hoàn thiện redundancy cho TW</td></tr></tbody></table></div>
+<hr/>
+<h2 id="dns-integration-trên-dc-mới">DNS Integration trên DC mới<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-integration-trên-dc-mới" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ad-integrated-dns-zone-replication">AD-Integrated DNS Zone Replication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ad-integrated-dns-zone-replication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi DC mới được promote với DNS role, DNS zone data tự động replicate:</p>
+<ul>
+<li><strong>Forward Lookup Zone</strong> (domain.local) tự động replicate từ DC hiện tại — tất cả record</li>
+<li><strong>Reverse Lookup Zone</strong> tự động replicate (nếu là AD-integrated, không phải file-based)</li>
+<li><strong>Replication scope</strong> cho DNS zone data:</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Application Partition</th><th>Scope</th><th>Mô tả</th></tr></thead><tbody><tr><td><code>DomainDnsZones</code></td><td>Tất cả DC có DNS role trong <strong>domain</strong></td><td>Chứa forward/reverse zone cho domain</td></tr><tr><td><code>ForestDnsZones</code></td><td>Tất cả DC có DNS role trong <strong>forest</strong></td><td>Chứa <code>_msdcs</code> zone cho forest-wide services</td></tr></tbody></table></div>
+<h4 id="dns-zone-replication-scope--chọn-scope-phù-hợp">DNS Zone Replication Scope — Chọn scope phù hợp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-zone-replication-scope--chọn-scope-phù-hợp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Khi tạo DNS zone mới hoặc review zone hiện tại, cần chọn replication scope:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Option</th><th>Replicate đến</th><th>Khi nào dùng</th></tr></thead><tbody><tr><td>All DNS servers in forest</td><td>Mọi DC + DNS trong forest</td><td>Forest-wide zone (ví dụ <code>_msdcs</code>)</td></tr><tr><td>All DNS servers in domain</td><td>Mọi DC + DNS trong domain</td><td>Domain zone (phổ biến nhất)</td></tr><tr><td>All DCs in domain</td><td>Mọi DC trong domain (kể cả không có DNS role)</td><td>Legacy, tương thích</td></tr><tr><td>Custom partition</td><td>DC trong custom partition chỉ định</td><td>Zone đặc biệt, selective replication</td></tr></tbody></table></div>
+<p><strong>Khuyến nghị cho dự án này</strong>: dùng <strong>“All DNS servers in domain”</strong> cho forward/reverse zone. Dùng <strong>“All DNS servers in forest”</strong> cho <code>_msdcs</code> zone (mặc định).</p>
+<h3 id="dns-records-quan-trọng">DNS Records quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-records-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mỗi DC mới <strong>tự động</strong> đăng ký các SRV record khi service Netlogon start:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Record</th><th>Ý nghĩa</th><th>Tại sao quan trọng</th></tr></thead><tbody><tr><td><code>_ldap._tcp.dc._msdcs.&lt;domain></code></td><td>Tìm DC qua LDAP</td><td>Client dùng để locate DC cho authentication</td></tr><tr><td><code>_kerberos._tcp.dc._msdcs.&lt;domain></code></td><td>Tìm KDC cho Kerberos</td><td>Client dùng để tìm Kerberos KDC</td></tr><tr><td><code>_gc._tcp.&lt;forest></code></td><td>Tìm Global Catalog server</td><td>Client dùng cho GC queries (port 3268)</td></tr><tr><td><code>_ldap._tcp.&lt;site>._sites.dc._msdcs.&lt;domain></code></td><td>Tìm DC trong specific site</td><td>Client ưu tiên DC trong cùng site</td></tr><tr><td><code>_kerberos._tcp.&lt;site>._sites.dc._msdcs.&lt;domain></code></td><td>Tìm KDC trong site</td><td>Kerberos client tìm KDC local</td></tr></tbody></table></div>
+<p><strong>Nếu SRV records không register</strong>: restart service <code>Netlogon</code> trên DC mới, hoặc chạy <code>nltest /dsregdns</code>. Kiểm tra bằng <code>dcdiag /test:dns</code>.</p>
+<h3 id="dns-delegation-và-forwarder">DNS Delegation và Forwarder<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-delegation-và-forwarder" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nếu có DNS zone delegation (child domain hoặc subdomain) → cần cập nhật NS record trỏ về DC 2025</li>
+<li>Conditional forwarder: cần review và cập nhật nếu trỏ về DC cũ → đổi sang IP DC mới</li>
+<li>Forwarder cho external DNS (internet): cấu hình trên mỗi DC mới — trỏ đến ISP DNS hoặc public DNS (8.8.8.8, 1.1.1.1)</li>
+<li><strong>Đừng quên</strong>: nếu DC mới trong site branch, DNS client settings trên DC mới nên trỏ <strong>về chính nó (127.0.0.1) + DC partner trong site</strong> — không trỏ về DC cũ</li>
+</ul>
+<hr/>
+<h2 id="sysvol-replication--dfs-r">SYSVOL Replication — DFS-R<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sysvol-replication--dfs-r" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="sysvol-là-gì-và-tại-sao-quan-trọng">SYSVOL là gì và tại sao quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sysvol-là-gì-và-tại-sao-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>SYSVOL (System Volume) chứa:</p>
+<ul>
+<li><strong>Group Policy Objects (GPO)</strong>: policy files, scripts liên kết</li>
+<li><strong>Login/logoff scripts</strong>: scripts chạy khi user logon/logoff</li>
+<li><strong>Netlogon share</strong>: chứa các files chia sẻ qua <code>\\domain\NETLOGON</code></li>
+</ul>
+<p>SYSVOL phải <strong>đồng bộ giữa tất cả DC</strong> — nếu SYSVOL không sync, GPO sẽ khác nhau giữa các DC → inconsistent policy.</p>
+<h3 id="dfs-r-initial-replication-cho-dc-mới">DFS-R Initial Replication cho DC mới<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dfs-r-initial-replication-cho-dc-mới" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi DC mới được promote, DFS-R bắt đầu replicate SYSVOL:</p>
+<ol>
+<li><strong>Initial sync</strong>: DC mới download toàn bộ SYSVOL content từ replication partner</li>
+<li><strong>State</strong>: SYSVOL state trải qua các giai đoạn: <code>Initial sync → Ready</code></li>
+<li><strong>SYSVOL share</strong>: chỉ share khi state = Ready — DC mới <strong>không phục vụ GPO</strong> cho đến khi SYSVOL ready</li>
+<li><strong>Thời gian</strong>: phụ thuộc kích thước SYSVOL và network speed — thường 5-30 phút</li>
+</ol>
+<p><strong>Kiểm tra SYSVOL DFS-R status</strong>:</p>
+<ul>
+<li>Event Viewer → <code>Applications and Services Logs → DFS Replication</code></li>
+<li>Event ID 4602: DFS-R initialized SYSVOL</li>
+<li>Event ID 2218: DFS-R finished initial replication</li>
+<li>Nếu SYSVOL không ready sau 1 giờ → check DFS-R service, network connectivity, firewall port 5722</li>
+</ul>
+<h3 id="troubleshooting-sysvol-issues-phổ-biến">Troubleshooting SYSVOL issues phổ biến<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#troubleshooting-sysvol-issues-phổ-biến" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Vấn đề</th><th>Triệu chứng</th><th>Giải pháp</th></tr></thead><tbody><tr><td>SYSVOL share không xuất hiện</td><td><code>net share</code> không thấy SYSVOL</td><td>Chờ DFS-R initial sync hoàn tất; check Event ID 4602</td></tr><tr><td>GPO không consistent</td><td>GPO khác nhau giữa DC</td><td>Check DFS-R replication status; <code>dfsrdiag pollad</code></td></tr><tr><td>DFS-R journal wrap</td><td>Event ID 4012</td><td>Perform authoritative/non-authoritative sync</td></tr><tr><td>SYSVOL size quá lớn</td><td>Initial sync rất chậm</td><td>Dọn dẹp old GPO, scripts không dùng</td></tr></tbody></table></div>
+<hr/>
+<h2 id="global-catalog-placement">Global Catalog Placement<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#global-catalog-placement" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tất-cả-dc-đều-là-gc--modern-best-practice">Tất cả DC đều là GC — Modern Best Practice<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tất-cả-dc-đều-là-gc--modern-best-practice" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Trong <strong>single-domain forest</strong>, việc đặt tất cả DC là GC là best practice vì:</p>
+<ul>
+<li><strong>Không tốn thêm tài nguyên</strong>: GC trong single-domain chứa <strong>cùng dữ liệu</strong> với AD database — không có partial attribute set từ domain khác</li>
+<li><strong>Tăng performance</strong>: mọi LDAP query trên port 3268 đều phục vụ locally → client không cần liên hệ GC ở site khác</li>
+<li><strong>Universal Group Membership caching</strong>: UGM có sẵn tại mọi DC → logon nhanh hơn, đặc biệt quan trọng cho cross-site scenarios</li>
+<li><strong>Microsoft khuyến nghị</strong>: từ Server 2008+, best practice là tất cả DC = GC trong single-domain environment</li>
+<li><strong>Simplicity</strong>: không cần quản lý “DC nào là GC, DC nào không” — đồng nhất</li>
+</ul>
+<h3 id="khi-nào-không-nên-tất-cả-gc">Khi nào KHÔNG nên tất cả GC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khi-nào-không-nên-tất-cả-gc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Chỉ áp dụng trong <strong>multi-domain forest</strong>:</p>
+<ul>
+<li><strong>Multi-domain forest</strong>: GC chứa partial attribute set từ <strong>tất cả domain</strong> trong forest → DB size tăng đáng kể</li>
+<li><strong>Infrastructure Master constraint</strong>: trong multi-domain, Infrastructure Master <strong>không nên</strong> là GC (trừ khi tất cả DC đều là GC) — nếu IM là GC, IM sẽ không update phantom objects</li>
+<li><strong>Bandwidth concern</strong>: GC replication nhiều hơn regular DC trong multi-domain — mỗi domain thêm replication traffic</li>
+<li><strong>Trong dự án này</strong>: single-domain forest → <strong>tất cả DC = GC</strong> là correct choice</li>
+</ul>
+<hr/>
+<h2 id="sizing-và-hardware-lý-thuyết">Sizing và Hardware (lý thuyết)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sizing-và-hardware-lý-thuyết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="các-yếu-tố-quyết-định-sizing">Các yếu tố quyết định sizing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-yếu-tố-quyết-định-sizing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Số lượng object</strong>: user, computer, group — quyết định AD database size (ntds.dit)</li>
+<li><strong>Query load</strong>: authentication/phút, LDAP query/phút — quyết định CPU và RAM</li>
+<li><strong>Replication traffic</strong>: phụ thuộc tần suất thay đổi và số DC partner — quyết định network</li>
+<li><strong>DNS query load</strong>: nếu DC kiêm DNS (như trong dự án này) — thêm load cho DNS resolution</li>
+<li><strong>Các service khác</strong>: nếu DC kiêm CA hoặc DHCP — thêm resource overhead</li>
+</ul>
+<h3 id="nguyên-tắc-sizing">Nguyên tắc sizing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nguyên-tắc-sizing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thành phần</th><th>Khuyến nghị tối thiểu</th><th>Best Practice</th><th>Ghi chú</th></tr></thead><tbody><tr><td>CPU</td><td>2+ core</td><td>4 core</td><td>Tăng theo query load. DC chủ yếu dùng single-thread cho LDAP</td></tr><tr><td>RAM</td><td>8 GB+</td><td>16 GB+</td><td>AD cache hiệu quả khi <strong>toàn bộ NTDS.dit nằm trong RAM</strong></td></tr><tr><td>Disk - OS</td><td>SSD, 80 GB+</td><td>Tách riêng volume</td><td>OS và system files, pagefile</td></tr><tr><td>Disk - NTDS</td><td>SSD, tách riêng</td><td>Dedicated volume</td><td>AD database (ntds.dit) — I/O intensive</td></tr><tr><td>Disk - Logs</td><td>SSD, tách riêng</td><td>Dedicated volume</td><td>AD transaction logs — sequential write</td></tr><tr><td>Disk - SYSVOL</td><td>Có thể chung với OS</td><td>Separate nếu GPO nhiều</td><td>Group Policy objects, scripts</td></tr><tr><td>Network</td><td>1 Gbps+</td><td>Dual NIC (redundancy)</td><td>Đặc biệt cho inter-site replication</td></tr></tbody></table></div>
+<h3 id="khuyến-nghị-cho-vm-dc">Khuyến nghị cho VM DC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#khuyến-nghị-cho-vm-dc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Không snapshot</strong> VM chạy DC — gây <strong>USN rollback</strong> → replication failure nghiêm trọng. Snapshot khác với backup: backup biết khôi phục invocation ID, snapshot không</li>
+<li>Dùng <strong>VM Generation 2</strong> trên Hyper-V hoặc tương đương trên VMware (UEFI, Secure Boot)</li>
+<li><strong>Time sync</strong>: VM DC nên lấy time từ <strong>AD hierarchy</strong> (NT5DS), <strong>không</strong> từ hypervisor host. Disable VMware Tools time sync / Hyper-V time sync integration service</li>
+<li><strong>Tách vDisk</strong>: NTDS.dit và logs nên nằm trên vDisk riêng — tách I/O pattern</li>
+<li><strong>Không dùng dynamic disk/thin provisioning</strong> cho volume chứa NTDS — performance concern</li>
+<li><strong>Resource reservation</strong>: set CPU/RAM reservation cho VM DC — tránh bị overcommit ảnh hưởng AD performance</li>
+</ul>
+<hr/>
+<h2 id="câu-hỏi-thường-gặp">Câu hỏi thường gặp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-hỏi-thường-gặp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="q-promote-8-dc-cùng-lúc-có-được-không">Q: Promote 8 DC cùng lúc có được không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-promote-8-dc-cùng-lúc-có-được-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>A</strong>: <strong>Không nên</strong>. Promote từng DC một vì:</p>
+<ul>
+<li>Mỗi DC mới cần replicate toàn bộ AD database → nhiều DC cùng lúc tạo replication storm</li>
+<li>Nếu có issue (DNS, network, schema) → dễ isolate vấn đề khi promote từng DC</li>
+<li>KCC cần thời gian tính toán replication topology mới sau mỗi DC mới</li>
+</ul>
+<h3 id="q-dns-trên-dc-mới-nên-trỏ-về-đâu">Q: DNS trên DC mới nên trỏ về đâu?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-dns-trên-dc-mới-nên-trỏ-về-đâu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>A</strong>: <strong>Trước khi promote</strong>: DNS trỏ về DC cũ (để resolve domain và join). <strong>Sau khi promote</strong>: DNS trỏ về chính nó (127.0.0.1) làm primary, DC partner trong site làm secondary. <strong>Không để DC trỏ DNS về chính nó trước khi promote</strong> — vì chưa có DNS zone data.</p>
+<h3 id="q-dc-mới-join-domain-rồi-promote-hay-promote-luôn">Q: DC mới join domain rồi promote hay promote luôn?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#q-dc-mới-join-domain-rồi-promote-hay-promote-luôn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>A</strong>: <strong>Join domain trước</strong> (thành member server), rồi mới install AD DS role và promote. Đây là quy trình chuẩn cho Additional DC. Promote “from scratch” (new forest/domain) chỉ dùng khi tạo forest/domain mới.</p>
+<hr/>
+<h2 id="lưu-ý-quan-trọng">Lưu ý quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lưu-ý-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Promote từng DC một</strong> — không promote 8 DC cùng lúc. Promote xong 1, xác nhận replication healthy (<code>repadmin /replsummary</code>), rồi mới promote tiếp</li>
+<li><strong>Thứ tự promote</strong>: ROOT site trước (vì là hub), sau đó MB, MN, TW — đảm bảo hub có DC mới trước branch</li>
+<li><strong>DNS circular dependency</strong>: DC mới cần DNS để join domain, nhưng DNS nằm trên DC cũ. Giải pháp: trỏ DNS của DC mới về DC cũ trước, sau promote sẽ tự có DNS</li>
+<li><strong>Firewall ports</strong>: kiểm tra tất cả port trong bảng trên đã mở giữa các site <strong>trước khi bắt đầu promote</strong></li>
+<li><strong>Repadmin monitoring</strong>: sau mỗi lần promote, chạy <code>repadmin /replsummary</code> và <code>repadmin /showrepl</code> để xác nhận không có lỗi</li>
+<li><strong>SYSVOL wait</strong>: đợi SYSVOL DFS-R sync hoàn tất trước khi coi DC mới là “ready” — check Event ID 4602 và 2218</li>
+<li><strong>Time sync</strong>: sau promote, verify time sync chain: PDC Emulator → external NTP, other DCs → PDC, clients → local DC</li>
+</ul>
+<hr/>
+<h2 id="liên-kết">Liên kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#liên-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.3---domain-controller---trái-tim-của-ad">01.3 - Domain Controller - Trái tim của AD</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.6---global-catalog-và-sites---tìm-kiếm-và-replication">01.6 - Global Catalog và Sites - Tìm kiếm và Replication</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/01---nền-tảng/01.7---dns-trong-active-directory">01.7 - DNS trong Active Directory</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/03---vận-hành-nâng-cao/03.2---schema-và-functional-level">03.2 - Schema và Functional Level</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server">04.2 - Chuyển đổi FSMO và Certificate Server</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.3---chuyển-đổi-ứng-dụng-và-dns" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.3---chuyển-đổi-ứng-dụng-và-dns">04.3 - Chuyển đổi ứng dụng và DNS</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration">04.4 - DHCP và RDS Migration</a></li>
+<li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal internal-link alias" data-slug="02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện">04.5 - Kiểm thử toàn diện</a></li>
+<li><a href="../../../../moc---windows-server-ad-2025" class="internal internal-link alias" data-slug="moc---windows-server-ad-2025">MOC - Windows Server AD 2025</a></li>
+</ul>
+<hr/>
+<h2 id="tham-khảo">Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-active-directory-domain-services--level-100-" class="external external-link">Install Active Directory Domain Services<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/understanding-active-directory-site-topology" class="external external-link">Understanding Active Directory Site Topology<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/planning-global-catalog-server-placement" class="external external-link">Global Catalog Placement<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-a-replica-windows-server-2012-domain-controller-in-an-existing-domain--level-200-#install-from-media" class="external external-link">Install from Media (IFM)<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/config-firewall-for-ad-domains-and-trusts" class="external external-link">AD Replication Port Requirements<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-server/storage/dfs-replication/migrate-sysvol-to-dfsr" class="external external-link">DFS-R SYSVOL Migration<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-432" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#ad-2025---triển-khai-additional-domain-controllers" data-for="ad-2025---triển-khai-additional-domain-controllers">AD 2025 - Triển khai Additional Domain Controllers</a></li><li class="depth-1"><a href="#tóm-tắt-nhanh" data-for="tóm-tắt-nhanh">Tóm tắt nhanh</a></li><li class="depth-1"><a href="#kiến-trúc-triển-khai" data-for="kiến-trúc-triển-khai">Kiến trúc triển khai</a></li><li class="depth-2"><a href="#phân-bổ-dc-theo-site" data-for="phân-bổ-dc-theo-site">Phân bổ DC theo site</a></li><li class="depth-2"><a href="#dc-naming-convention--best-practices" data-for="dc-naming-convention--best-practices">DC Naming Convention — Best Practices</a></li><li class="depth-2"><a href="#lý-do-2-dc-mỗi-site" data-for="lý-do-2-dc-mỗi-site">Lý do 2 DC mỗi site</a></li><li class="depth-2"><a href="#cân-nhắc-user-population-cho-sizing" data-for="cân-nhắc-user-population-cho-sizing">Cân nhắc user population cho sizing</a></li><li class="depth-1"><a href="#thiết-kế-site-topology" data-for="thiết-kế-site-topology">Thiết kế Site Topology</a></li><li class="depth-2"><a href="#ad-sites-and-services--cấu-hình" data-for="ad-sites-and-services--cấu-hình">AD Sites and Services — Cấu hình</a></li><li class="depth-2"><a href="#subnet-to-site-mapping" data-for="subnet-to-site-mapping">Subnet-to-Site Mapping</a></li><li class="depth-2"><a href="#site-link-design" data-for="site-link-design">Site Link Design</a></li><li class="depth-2"><a href="#replication-topology-hub-and-spoke-vs-full-mesh" data-for="replication-topology-hub-and-spoke-vs-full-mesh">Replication Topology: Hub-and-Spoke vs Full Mesh</a></li><li class="depth-1"><a href="#network-requirements-cho-ad-replication" data-for="network-requirements-cho-ad-replication">Network Requirements cho AD Replication</a></li><li class="depth-2"><a href="#bandwidth-requirements" data-for="bandwidth-requirements">Bandwidth Requirements</a></li><li class="depth-2"><a href="#latency-requirements" data-for="latency-requirements">Latency Requirements</a></li><li class="depth-2"><a href="#firewall-port-requirements-cho-ad-replication" data-for="firewall-port-requirements-cho-ad-replication">Firewall Port Requirements cho AD Replication</a></li><li class="depth-2"><a href="#dc-trong-dmz--có-nên-không" data-for="dc-trong-dmz--có-nên-không">DC trong DMZ — Có nên không?</a></li><li class="depth-1"><a href="#dc-promotion--quy-trình-chi-tiết" data-for="dc-promotion--quy-trình-chi-tiết">DC Promotion — Quy trình chi tiết</a></li><li class="depth-2"><a href="#prerequisites-trước-khi-promote" data-for="prerequisites-trước-khi-promote">Prerequisites trước khi Promote</a></li><li class="depth-2"><a href="#network-replication-vs-install-from-media-ifm" data-for="network-replication-vs-install-from-media-ifm">Network Replication vs Install from Media (IFM)</a></li><li class="depth-2"><a href="#quy-trình-promote-từng-bước-logic" data-for="quy-trình-promote-từng-bước-logic">Quy trình Promote từng bước (logic)</a></li><li class="depth-2"><a href="#thứ-tự-promote-dc" data-for="thứ-tự-promote-dc">Thứ tự Promote DC</a></li><li class="depth-1"><a href="#dns-integration-trên-dc-mới" data-for="dns-integration-trên-dc-mới">DNS Integration trên DC mới</a></li><li class="depth-2"><a href="#ad-integrated-dns-zone-replication" data-for="ad-integrated-dns-zone-replication">AD-Integrated DNS Zone Replication</a></li><li class="depth-2"><a href="#dns-records-quan-trọng" data-for="dns-records-quan-trọng">DNS Records quan trọng</a></li><li class="depth-2"><a href="#dns-delegation-và-forwarder" data-for="dns-delegation-và-forwarder">DNS Delegation và Forwarder</a></li><li class="depth-1"><a href="#sysvol-replication--dfs-r" data-for="sysvol-replication--dfs-r">SYSVOL Replication — DFS-R</a></li><li class="depth-2"><a href="#sysvol-là-gì-và-tại-sao-quan-trọng" data-for="sysvol-là-gì-và-tại-sao-quan-trọng">SYSVOL là gì và tại sao quan trọng</a></li><li class="depth-2"><a href="#dfs-r-initial-replication-cho-dc-mới" data-for="dfs-r-initial-replication-cho-dc-mới">DFS-R Initial Replication cho DC mới</a></li><li class="depth-2"><a href="#troubleshooting-sysvol-issues-phổ-biến" data-for="troubleshooting-sysvol-issues-phổ-biến">Troubleshooting SYSVOL issues phổ biến</a></li><li class="depth-1"><a href="#global-catalog-placement" data-for="global-catalog-placement">Global Catalog Placement</a></li><li class="depth-2"><a href="#tất-cả-dc-đều-là-gc--modern-best-practice" data-for="tất-cả-dc-đều-là-gc--modern-best-practice">Tất cả DC đều là GC — Modern Best Practice</a></li><li class="depth-2"><a href="#khi-nào-không-nên-tất-cả-gc" data-for="khi-nào-không-nên-tất-cả-gc">Khi nào KHÔNG nên tất cả GC</a></li><li class="depth-1"><a href="#sizing-và-hardware-lý-thuyết" data-for="sizing-và-hardware-lý-thuyết">Sizing và Hardware (lý thuyết)</a></li><li class="depth-2"><a href="#các-yếu-tố-quyết-định-sizing" data-for="các-yếu-tố-quyết-định-sizing">Các yếu tố quyết định sizing</a></li><li class="depth-2"><a href="#nguyên-tắc-sizing" data-for="nguyên-tắc-sizing">Nguyên tắc sizing</a></li><li class="depth-2"><a href="#khuyến-nghị-cho-vm-dc" data-for="khuyến-nghị-cho-vm-dc">Khuyến nghị cho VM DC</a></li><li class="depth-1"><a href="#câu-hỏi-thường-gặp" data-for="câu-hỏi-thường-gặp">Câu hỏi thường gặp</a></li><li class="depth-2"><a href="#q-promote-8-dc-cùng-lúc-có-được-không" data-for="q-promote-8-dc-cùng-lúc-có-được-không">Q: Promote 8 DC cùng lúc có được không?</a></li><li class="depth-2"><a href="#q-dns-trên-dc-mới-nên-trỏ-về-đâu" data-for="q-dns-trên-dc-mới-nên-trỏ-về-đâu">Q: DNS trên DC mới nên trỏ về đâu?</a></li><li class="depth-2"><a href="#q-dc-mới-join-domain-rồi-promote-hay-promote-luôn" data-for="q-dc-mới-join-domain-rồi-promote-hay-promote-luôn">Q: DC mới join domain rồi promote hay promote luôn?</a></li><li class="depth-1"><a href="#lưu-ý-quan-trọng" data-for="lưu-ý-quan-trọng">Lưu ý quan trọng</a></li><li class="depth-1"><a href="#liên-kết" data-for="liên-kết">Liên kết</a></li><li class="depth-1"><a href="#tham-khảo" data-for="tham-khảo">Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.0---ad-2025-upgrade---tổng-quan-dự-án" class="internal">04.0 - AD 2025 Upgrade - Tổng quan dự án</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.2---chuyển-đổi-fsmo-và-certificate-server" class="internal">04.2 - Chuyển đổi FSMO và Certificate Server</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.3---chuyển-đổi-ứng-dụng-và-dns" class="internal">04.3 - Chuyển đổi ứng dụng và DNS</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.4---dhcp-và-rds-migration" class="internal">04.4 - DHCP và RDS Migration</a></li><li><a href="../../../../02---areas/windows-servers/ad-theory/04---nâng-cấp-và-chuyển-đổi/04.5---kiểm-thử-toàn-diện" class="internal">04.5 - Kiểm thử toàn diện</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

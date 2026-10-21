@@ -1,0 +1,2067 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie Cách đọc note này: Đây là section nặng nhất kỳ thi — domain Security chiếm 30% đề."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie Cách đọc note này: Đây là section nặng nhất kỳ thi — domain Security chiếm 30% đề."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie Cách đọc note này: Đây là section nặng nhất kỳ thi — domain Security chiếm 30% đề."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/26---aws-security--and--encryption"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/26---aws-security--and--encryption"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie Cách đọc note này: Đây là section nặng nhất kỳ thi — domain Security chiếm 30% đề."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/26---aws-security--and--encryption" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-94" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-94" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie</a></div></nav><h1 class="article-title">26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/security" class="internal internal-link tag-link">domain/security</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">AWS Security and Encryption</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS KMS</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Secrets Manager</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Certificate Manager</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS WAF</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Shield</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon GuardDuty</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon Inspector</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon Macie</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-09-15T17:00:00.000Z">16 thg 9, 2026</time><span>63 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="26--aws-security--encryption-kms-secrets-manager-acm-waf-shield-guardduty-macie">26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#26--aws-security--encryption-kms-secrets-manager-acm-waf-shield-guardduty-macie" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> Đây là section nặng nhất kỳ thi — domain Security chiếm <strong>30%</strong> đề. Note chia làm 2 cụm rõ ràng: <strong>(A) Encryption</strong> — làm sao dữ liệu được mã hoá và ai giữ key (KMS, Secrets Manager, SSM Parameter Store, ACM, CloudHSM); <strong>(B) Detection &amp; Protection</strong> — làm sao phát hiện/chặn tấn công (WAF, Shield, Firewall Manager, GuardDuty, Inspector, Macie). Mạch đọc: (1) 3 loại encryption → (2) KMS chi tiết → (3) client-side encryption → (4) Parameter Store &amp; Secrets Manager → (5) ACM → (6) CloudHSM → (7) WAF/Shield/Firewall Manager → (8) GuardDuty/Inspector/Macie → (9) So sánh &amp; chọn đáp án thi.</p>
+</blockquote>
+<hr/>
+<h2 id="phần-a--encryption">Phần A — Encryption<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-a--encryption" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-ba-loại-encryption-cần-phân-biệt">1. Ba loại encryption cần phân biệt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-ba-loại-encryption-cần-phân-biệt" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Câu hỏi gốc: <strong>dữ liệu đang ở đâu khi bị lộ, và ai là người mã hoá/giải mã?</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Bảo vệ lúc nào</th><th>Ai mã hoá / giải mã</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>In-transit (TLS/SSL)</strong></td><td>Đang truyền trên mạng</td><td>Client mã hoá trước gửi, server giải mã sau khi nhận</td><td>HTTPS, chống MITM</td></tr><tr><td><strong>At-rest (server-side)</strong></td><td>Đang lưu trữ</td><td><strong>AWS service</strong> mã hoá khi nhận, giải mã khi trả về; key nằm ở service (thường qua KMS)</td><td>SSE-S3, SSE-KMS trên S3/EBS/RDS</td></tr><tr><td><strong>Client-side</strong></td><td>Cả lúc truyền lẫn lưu trữ</td><td><strong>Client tự mã hoá</strong> trước khi gửi đi, server <strong>không bao giờ</strong> thấy bản rõ</td><td>AWS Encryption SDK, DynamoDB Encryption Client</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    Q1{\&quot;Bảo vệ dữ liệu ở giai đoạn nào?\&quot;}\n    Q1 -->|\&quot;Đang truyền trên mạng\&quot;| InTransit[\&quot;In-transit: TLS/HTTPS\&quot;]\n    Q1 -->|\&quot;Đang lưu trữ\&quot;| Q2{\&quot;Server có được phép&lt;br/>thấy bản rõ không?\&quot;}\n    Q2 -->|\&quot;Có, AWS service tự lo hộ\&quot;| AtRest[\&quot;At-rest: SSE (S3, EBS, RDS...) qua KMS\&quot;]\n    Q2 -->|\&quot;Không, server chỉ giữ bản mã\&quot;| ClientSide[\&quot;Client-side encryption\&quot;]&quot;">graph TD
+    Q1{&quot;Bảo vệ dữ liệu ở giai đoạn nào?&quot;}
+    Q1 -->|&quot;Đang truyền trên mạng&quot;| InTransit[&quot;In-transit: TLS/HTTPS&quot;]
+    Q1 -->|&quot;Đang lưu trữ&quot;| Q2{&quot;Server có được phép&lt;br/>thấy bản rõ không?&quot;}
+    Q2 -->|&quot;Có, AWS service tự lo hộ&quot;| AtRest[&quot;At-rest: SSE (S3, EBS, RDS...) qua KMS&quot;]
+    Q2 -->|&quot;Không, server chỉ giữ bản mã&quot;| ClientSide[&quot;Client-side encryption&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Mẹo nhớ:</strong> Bất cứ khi nào đề bài nhắc “encryption” cho một dịch vụ AWS mà không nói rõ cơ chế nào khác → <strong>95% đáp án liên quan đến KMS</strong>. KMS được tích hợp gần như mọi service (EBS, S3, RDS, SSM…) và luôn đi kèm audit trail qua CloudTrail.</p>
+</blockquote>
+<hr/>
+<h3 id="2-aws-kms-key-management-service">2. AWS KMS (Key Management Service)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-aws-kms-key-management-service" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>KMS quản lý <strong>KMS Keys</strong> (tên mới của Customer Master Key — CMK) giùm bạn: bạn <strong>không bao giờ</strong> lấy được key ở dạng plaintext ra ngoài, mọi thao tác mã hoá/giải mã đều phải gọi qua API KMS.</p>
+<h4 id="21-symmetric-vs-asymmetric-kms-key">2.1 Symmetric vs Asymmetric KMS Key<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-symmetric-vs-asymmetric-kms-key" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Symmetric (mặc định)</strong></th><th><strong>Asymmetric</strong></th></tr></thead><tbody><tr><td>Thuật toán</td><td>AES-256</td><td>RSA / ECC (cặp khoá)</td></tr><tr><td>Cơ chế</td><td>Một key duy nhất vừa encrypt vừa decrypt</td><td>Public key (encrypt) + Private key (decrypt), hoặc sign/verify</td></tr><tr><td>Truy cập key</td><td><strong>Không bao giờ</strong> lấy được key thô — phải gọi API KMS</td><td>Public key <strong>tải về được</strong>; private key vẫn không lấy được thô</td></tr><tr><td>Dùng khi</td><td>Hầu hết service AWS tích hợp KMS (EBS, S3, RDS…)</td><td>Cần mã hoá <strong>ngoài AWS</strong> bởi bên không gọi được API KMS (họ dùng public key tải về)</td></tr></tbody></table></div>
+<h4 id="22-các-loại-kms-key--chi-phí--rotation">2.2 Các loại KMS Key — chi phí &amp; rotation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-các-loại-kms-key--chi-phí--rotation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại key</th><th>Chi phí</th><th>Auto rotation</th></tr></thead><tbody><tr><td><strong>AWS Owned Key</strong></td><td>Miễn phí, không hiện trên console của bạn</td><td>AWS tự quản lý</td></tr><tr><td><strong>AWS Managed Key</strong> (<code>aws/service-name</code>, vd <code>aws/rds</code>, <code>aws/ebs</code>)</td><td>Miễn phí</td><td>Tự động, mỗi <strong>1 năm</strong></td></tr><tr><td><strong>Customer Managed Key</strong> — tạo trong KMS</td><td>**<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1/</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">a</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˊ</span></span></span></span></span></span></span><span class="mord mathnormal">n</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">∗</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mord mathnormal">h</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord latin_fallback">ı</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˊ</span></span></span></span></span></span></span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="mopen">(</span></span></span></span>0.03/10.000 lệnh gọi)</td><td>Phải <strong>tự bật</strong>; mặc định 1 năm nhưng chỉ định được <strong>chu kỳ tuỳ chỉnh 90–2.560 ngày</strong> (<code>EnableKeyRotation</code> + <code>RotationPeriodInDays</code>); cũng có thể xoay thủ công (on-demand)</td></tr><tr><td><strong>Customer Managed Key</strong> — import từ ngoài</td><td><strong>$1/tháng</strong> + phí API</td><td><strong>Chỉ xoay thủ công</strong> qua alias, không có auto rotation</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Flexible rotation period:</strong> với Customer Managed Key do chính KMS sinh key material, Automatic Rotation <strong>không còn bị khoá cứng ở 1 năm</strong> — có thể đặt chu kỳ tuỳ ý trong khoảng 90–2.560 ngày ngay khi bật <code>EnableKeyRotation</code>. Muốn đáp ứng company policy kiểu “rotate mỗi 6 tháng” chỉ cần <strong>cấu hình lại tham số này</strong>, không cần đi đường vòng tạo CMK mới + Key Alias thủ công.</p>
+</blockquote>
+<blockquote>
+<p><strong>Ví dụ nhận diện đề thi:</strong> <code>SSE-S3</code>, <code>SSE-SQS</code>, <code>SSE-DDB</code> (default) dùng <strong>AWS Owned Key</strong> — miễn phí hoàn toàn, bạn không thấy key này trong KMS console.</p>
+</blockquote>
+<h4 id="23-envelope-encryption--vì-sao-kms-mã-hoá-được-file-lớn">2.3 Envelope Encryption — vì sao KMS mã hoá được file lớn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-envelope-encryption--vì-sao-kms-mã-hoá-được-file-lớn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>KMS API <code>Encrypt</code>/<code>Decrypt</code> trực tiếp chỉ xử lý dữ liệu nhỏ (vài KB). Để mã hoá file lớn (video, backup…), AWS dùng <strong>envelope encryption</strong>: dùng KMS Key để mã hoá một <strong>Data Key</strong>, rồi dùng Data Key (plaintext) đó để mã hoá dữ liệu thật.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant App as Application\n    participant KMS as AWS KMS\n\n    Note over App,KMS: Mã hoá\n    App->>KMS: GenerateDataKey(KMS Key ID)\n    KMS-->>App: Data Key (plaintext) + Data Key (encrypted)\n    App->>App: Mã hoá Object bằng Data Key plaintext\n    App->>App: Xoá Data Key plaintext khỏi RAM\n    App->>App: Lưu Object mã hoá + Data Key (encrypted)\n\n    Note over App,KMS: Giải mã\n    App->>KMS: Decrypt(Data Key encrypted)\n    KMS-->>App: Data Key (plaintext)\n    App->>App: Giải mã Object bằng Data Key plaintext&quot;">sequenceDiagram
+    participant App as Application
+    participant KMS as AWS KMS
+
+    Note over App,KMS: Mã hoá
+    App->>KMS: GenerateDataKey(KMS Key ID)
+    KMS-->>App: Data Key (plaintext) + Data Key (encrypted)
+    App->>App: Mã hoá Object bằng Data Key plaintext
+    App->>App: Xoá Data Key plaintext khỏi RAM
+    App->>App: Lưu Object mã hoá + Data Key (encrypted)
+
+    Note over App,KMS: Giải mã
+    App->>KMS: Decrypt(Data Key encrypted)
+    KMS-->>App: Data Key (plaintext)
+    App->>App: Giải mã Object bằng Data Key plaintext
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p>Đây chính là cơ chế nền cho gần như mọi encryption at-rest trên AWS (EBS, S3 SSE-KMS…).</p>
+<h4 id="24-kms-key-policy--khác-iam-ở-chỗ-nào">2.4 KMS Key Policy — khác IAM ở chỗ nào<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-kms-key-policy--khác-iam-ở-chỗ-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>KMS Key Policy giống bucket policy của S3 nhưng <strong>quan trọng hơn</strong>: <strong>không có</strong> Key Policy cấp quyền thì <strong>không ai</strong> dùng được key, kể cả root/admin IAM.</li>
+<li><strong>Default Key Policy</strong> (khi không tự định nghĩa): cấp toàn quyền cho root user (tức toàn bộ account).</li>
+<li><strong>Custom Key Policy</strong>: định nghĩa rõ user/role nào được dùng key, ai được administer key — cần thiết cho <strong>cross-account access</strong>.</li>
+</ul>
+<blockquote>
+<p><strong>Bẫy hay gặp:</strong> IAM Policy cho phép <code>kms:Decrypt</code> nhưng Key Policy không liệt kê principal đó → vẫn <strong>AccessDenied</strong>. Phải cấp đủ ở <strong>cả hai phía</strong>.</p>
+</blockquote>
+<h4 id="25-kms-multi-region-keys">2.5 KMS Multi-Region Keys<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#25-kms-multi-region-keys" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Là các key <strong>giống hệt nhau</strong> (cùng key ID, cùng key material, cùng lịch rotation) được tạo ở nhiều region: một <strong>Primary key</strong> + các <strong>Replica key</strong>.</li>
+<li>Mã hoá ở region này, giải mã được ở region khác <strong>mà không cần</strong> gọi API cross-region hay re-encrypt.</li>
+<li><strong>Không phải</strong> một key toàn cầu duy nhất — mỗi Multi-Region key vẫn được <strong>quản lý độc lập</strong> ở từng region (xoay khoá, xoá… phải làm riêng).</li>
+<li><strong>Use case:</strong> client-side encryption cho ứng dụng đa vùng, mã hoá <strong>DynamoDB Global Tables</strong> hoặc <strong>Aurora Global Database</strong> ở cấp attribute/column (dùng DynamoDB Encryption Client / AWS Encryption SDK) — mã hoá ở region chính bằng Primary MRK, client ở region phụ giải mã bằng Replica MRK cùng ID mà <strong>không tốn round-trip</strong> sang region chính.</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260902173713.png" alt width="auto" height="auto"/></p>
+<h4 id="26-ebs-snapshot--copy-cross-region--cross-account-với-kms">2.6 EBS Snapshot — copy cross-region &amp; cross-account với KMS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#26-ebs-snapshot--copy-cross-region--cross-account-với-kms" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Cross-region:</strong> snapshot được mã hoá bằng KMS Key A (region nguồn) — khi copy sang region khác, phải <strong>re-encrypt bằng KMS Key B</strong> của region đích (mỗi region có KMS Key riêng, key không tự đi theo).</li>
+<li><strong>Cross-account:</strong>
+<ol>
+<li>Tạo snapshot, mã hoá bằng <strong>Customer Managed Key</strong> của account nguồn (không dùng AWS Managed Key — loại này <strong>không</strong> share được).</li>
+<li>Gắn <strong>Key Policy</strong> cho phép account đích dùng key.</li>
+<li>Share snapshot đã mã hoá sang account đích.</li>
+<li>Account đích copy snapshot, <strong>re-encrypt bằng CMK của chính họ</strong>.</li>
+<li>Tạo volume mới từ snapshot đã copy.</li>
+</ol>
+<ul>
+<li>IAM Role/User bên nhận cần đủ quyền: <code>DescribeKey</code>, <code>ReEncrypt*</code>, <code>CreateGrant</code>, <code>Decrypt</code>.</li>
+</ul>
+</li>
+</ul>
+<h4 id="27-s3-replication-với-sse-kms">2.7 S3 Replication với SSE-KMS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#27-s3-replication-với-sse-kms" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Theo mặc định, object không mã hoá hoặc mã hoá SSE-S3 được replicate bình thường. Nhưng với <strong>SSE-KMS</strong>, phải <strong>bật riêng</strong> tuỳ chọn replicate object mã hoá KMS:</p>
+<ul>
+<li>Chỉ định <strong>KMS Key ở bucket đích</strong> để mã hoá lại object.</li>
+<li>Sửa <strong>Key Policy</strong> của key đích cho phép replication.</li>
+<li>IAM Role của replication cần <code>kms:Decrypt</code> trên key <strong>nguồn</strong> và <code>kms:Encrypt</code> trên key <strong>đích</strong>.</li>
+<li>Nếu traffic replicate lớn có thể gặp <strong>KMS throttling</strong> → xin tăng <strong>Service Quota</strong>.</li>
+<li>Nếu dùng <strong>Multi-Region Key</strong>, S3 vẫn coi chúng là <strong>2 key độc lập</strong> — vẫn phải decrypt rồi encrypt lại, MRK không giúp bỏ qua bước này ở S3 Replication.</li>
+</ul>
+<h4 id="28-ami-sharing-cross-account-với-kms">2.8 AMI Sharing cross-account với KMS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#28-ami-sharing-cross-account-với-kms" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Khi AMI trong account nguồn được mã hoá bằng KMS Key riêng: phải (1) cấp Launch Permission cho account đích trên AMI, (2) share KMS Key đã mã hoá snapshot mà AMI tham chiếu, (3) account đích cần quyền <code>DescribeKey</code>, <code>ReEncrypt*</code>, <code>CreateGrant</code>, <code>Decrypt</code>, (4) khi launch EC2 từ AMI, account đích có thể chọn re-encrypt volume bằng KMS Key của riêng họ.</p>
+<hr/>
+<h3 id="3-client-side-encryption-aws-encryption-sdk">3. Client-side encryption: AWS Encryption SDK<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-client-side-encryption-aws-encryption-sdk" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi muốn <strong>tự mã hoá dữ liệu ở phía client</strong> trước khi gửi đi (server/database không bao giờ thấy bản rõ), AWS cung cấp:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Công cụ</th><th>Dùng cho</th></tr></thead><tbody><tr><td><strong>AWS Encryption SDK</strong></td><td>Mã hoá client-side tổng quát (file, message…), hỗ trợ envelope encryption sẵn</td></tr><tr><td><strong>Amazon DynamoDB Encryption Client</strong></td><td>Mã hoá <strong>từng attribute</strong> trong item DynamoDB ở phía client trước khi <code>PutItem</code></td></tr></tbody></table></div>
+<p><strong>Use case điển hình:</strong> kết hợp với <strong>Global Tables</strong> (DynamoDB) hoặc <strong>Aurora Global Database</strong> — mã hoá field nhạy cảm (vd SSN) bằng <strong>KMS Multi-Region Key</strong> ở region chính, dữ liệu <strong>đã mã hoá</strong> được replicate tự động sang các region khác; client ở region phụ decrypt bằng <strong>Replica MRK cùng ID</strong> với latency thấp (không cần gọi ngược region chính). Cách này bảo vệ field ngay cả khỏi <strong>DB admin</strong> — vì DB chỉ lưu ciphertext.</p>
+<hr/>
+<h3 id="4-aws-systems-manager-parameter-store">4. AWS Systems Manager Parameter Store<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-aws-systems-manager-parameter-store" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Kho lưu <strong>cấu hình và secret</strong> dạng key-value, có cấu trúc <strong>phân cấp (hierarchy)</strong> theo path.</p>
+<h4 id="41-hierarchy--ví-dụ-cấu-trúc-path">4.1 Hierarchy — ví dụ cấu trúc path<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-hierarchy--ví-dụ-cấu-trúc-path" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>/my-department/my-app/dev/db-url
+/my-department/my-app/dev/db-password
+/my-department/my-app/prod/db-url
+/my-department/my-app/prod/db-password
+/my-department/other-app/...
+/aws/reference/secretsmanager/&lt;secret-id>   ← đọc chéo sang Secrets Manager
+/aws/service/ami-amazon-linux-latest/...    ← parameter công khai do AWS cung cấp
+</code></pre>
+<p>Ứng dụng dùng <code>GetParameters</code> hoặc <code>GetParametersByPath</code> để lấy đúng nhánh (vd Lambda dev chỉ đọc <code>/my-app/dev/*</code>, Lambda prod đọc <code>/my-app/prod/*</code>) — dễ giới hạn quyền theo path bằng IAM.</p>
+<h4 id="42-standard-vs-advanced-tier">4.2 Standard vs Advanced tier<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-standard-vs-advanced-tier" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Standard</strong></th><th><strong>Advanced</strong></th></tr></thead><tbody><tr><td>Số parameter tối đa/account/region</td><td><strong>10.000</strong></td><td><strong>100.000</strong></td></tr><tr><td>Kích thước giá trị tối đa</td><td><strong>4 KB</strong></td><td><strong>8 KB</strong></td></tr><tr><td>Parameter Policies (TTL…)</td><td>Không</td><td><strong>Có</strong></td></tr><tr><td>Chi phí</td><td>Miễn phí</td><td><strong>$0.05/parameter/tháng</strong></td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260902173716.png" alt width="auto" height="auto"/></p>
+<h4 id="43-parameter-policies-chỉ-advanced-tier">4.3 Parameter Policies (chỉ Advanced tier)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-parameter-policies-chỉ-advanced-tier" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Gắn <strong>TTL</strong> cho parameter để ép buộc update/xoá dữ liệu nhạy cảm (vd password), có thể gắn nhiều policy cùng lúc:</p>
+<ul>
+<li><strong>Expiration</strong> — tự xoá parameter khi hết hạn.</li>
+<li><strong>ExpirationNotification</strong> — bắn event qua <strong>EventBridge</strong> trước khi hết hạn.</li>
+<li><strong>NoChangeNotification</strong> — cảnh báo qua EventBridge nếu parameter <strong>không được đổi</strong> sau X ngày (phát hiện secret bị quên rotate).</li>
+</ul>
+<p>Mã hoá: parameter kiểu <code>String</code>/<code>StringList</code> là plaintext; <code>SecureString</code> được mã hoá bằng <strong>KMS</strong>.</p>
+<hr/>
+<h3 id="5-aws-secrets-manager">5. AWS Secrets Manager<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-aws-secrets-manager" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dịch vụ chuyên cho <strong>secret</strong> (khác Parameter Store ở khả năng <strong>tự động xoay khoá</strong>):</p>
+<ul>
+<li><strong>Force rotation mỗi X ngày</strong>, tự sinh secret mới bằng <strong>Lambda</strong> (blueprint có sẵn cho RDS/Aurora — MySQL, PostgreSQL).</li>
+<li>Mã hoá secret <strong>bắt buộc bằng KMS</strong>.</li>
+<li>Chủ yếu thiết kế để tích hợp <strong>Amazon RDS</strong>, nhưng dùng được cho secret bất kỳ.</li>
+</ul>
+<h4 id="51-multi-region-secrets">5.1 Multi-Region Secrets<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-multi-region-secrets" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Secrets Manager <strong>replicate secret</strong> sang các region khác, giữ <strong>read replica đồng bộ</strong> với secret gốc (primary).</li>
+<li>Có thể <strong>promote</strong> một replica thành secret độc lập (đứt liên kết với primary) khi cần.</li>
+<li><strong>Use case:</strong> ứng dụng multi-region, disaster recovery, database replicate nhiều vùng.</li>
+</ul>
+<hr/>
+<h3 id="6-aws-certificate-manager-acm">6. AWS Certificate Manager (ACM)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-aws-certificate-manager-acm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Provision, quản lý và <strong>tự động renew</strong> chứng chỉ TLS/SSL cho HTTPS.</p>
+<ul>
+<li>Hỗ trợ cả <strong>public</strong> (miễn phí hoàn toàn) và <strong>private</strong> certificate.</li>
+<li><strong>Tích hợp:</strong> Elastic Load Balancer (CLB/ALB/NLB), CloudFront, API Gateway. <strong>Không cài trực tiếp lên EC2 được</strong> — cert luôn nằm ở tầng edge/load balancer, EC2 nhận traffic HTTP thường sau khi ALB đã “bóc” TLS (TLS termination).</li>
+</ul>
+<h4 id="61-request-public-certificate">6.1 Request public certificate<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-request-public-certificate" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li>Liệt kê domain: FQDN (<code>corp.example.com</code>) hoặc wildcard (<code>*.example.com</code>).</li>
+<li>Chọn <strong>Validation Method</strong>: <strong>DNS Validation</strong> (khuyến nghị, tự động qua CNAME record ở Route 53) hoặc <strong>Email Validation</strong> (gửi email tới địa chỉ trong WHOIS — khó tự động hoá).</li>
+<li>Xác minh mất vài giờ.</li>
+<li>Certificate <strong>tự động renew</strong> — ACM gia hạn <strong>60 ngày trước khi hết hạn</strong> (chỉ áp dụng cert do ACM tạo).</li>
+</ol>
+<h4 id="62-import-certificate-không-do-acm-tạo">6.2 Import certificate (không do ACM tạo)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-import-certificate-không-do-acm-tạo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Không</strong> có auto-renewal — phải tự import cert mới trước khi hết hạn.</li>
+<li>ACM gửi <strong>daily expiration event</strong> bắt đầu <strong>45 ngày</strong> trước hạn (số ngày cấu hình được) qua <strong>EventBridge</strong> → có thể route tới Lambda/SNS/SQS.</li>
+<li><strong>AWS Config</strong> có managed rule <code>acm-certificate-expiration-check</code> để dò cert sắp hết hạn.</li>
+</ul>
+<h4 id="63-tích-hợp-alb--api-gateway">6.3 Tích hợp ALB &amp; API Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#63-tích-hợp-alb--api-gateway" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>ALB:</strong> thường cấu hình rule redirect HTTP → HTTPS, ALB làm TLS termination bằng cert ACM, forward HTTP thuần vào EC2 phía sau.</li>
+<li><strong>API Gateway — 3 kiểu endpoint:</strong></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Kiểu</th><th>Dùng cho</th><th>Vị trí cert</th></tr></thead><tbody><tr><td><strong>Edge-Optimized</strong> (mặc định)</td><td>Client toàn cầu, traffic qua CloudFront edge để giảm latency</td><td>Cert phải nằm ở <strong>us-east-1</strong> (vì gắn vào CloudFront)</td></tr><tr><td><strong>Regional</strong></td><td>Client trong cùng region</td><td>Cert import ngay tại region của API stage</td></tr><tr><td><strong>Private</strong></td><td>Chỉ truy cập từ VPC qua Interface VPC Endpoint</td><td>Dùng resource policy để kiểm soát truy cập</td></tr></tbody></table></div>
+<hr/>
+<h3 id="7-aws-cloudhsm">7. AWS CloudHSM<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-aws-cloudhsm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khác biệt cốt lõi với KMS: <strong>CloudHSM = AWS chỉ cấp phần cứng (hardware), bạn tự quản lý toàn bộ key</strong>.</p>
+<ul>
+<li>Thiết bị <strong>HSM tamper-resistant</strong>, đạt chuẩn <strong>FIPS 140-2 Level 3</strong> (KMS cũng đạt L3 nhưng ở lớp phần mềm).</li>
+<li>Hỗ trợ cả <strong>symmetric và asymmetric</strong> encryption (kể cả SSL/TLS key).</li>
+<li><strong>Không có free tier.</strong></li>
+<li>Phải cài <strong>CloudHSM Client Software</strong> để giao tiếp.</li>
+<li><strong>Redshift</strong> hỗ trợ CloudHSM cho database encryption/key management; hợp với <strong>SSE-C</strong> (bạn tự giữ key hoàn toàn).</li>
+<li><strong>HA:</strong> deploy nhiều HSM node trên <strong>nhiều AZ</strong> thành 1 cluster.</li>
+<li>Tích hợp KMS qua <strong>Custom Key Store</strong>: cấu hình KMS dùng CloudHSM cluster làm nơi lưu key vật lý — vẫn dùng API KMS quen thuộc (EBS, S3, RDS…) nhưng key thật nằm trong HSM riêng của bạn.</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260902173719.png" alt width="auto" height="auto"/></p>
+<h4 id="71-kms-vs-cloudhsm">7.1 KMS vs CloudHSM<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#71-kms-vs-cloudhsm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th><strong>AWS KMS</strong></th><th><strong>AWS CloudHSM</strong></th></tr></thead><tbody><tr><td>Tenancy</td><td>Multi-tenant (dùng chung hạ tầng AWS)</td><td><strong>Single-tenant</strong> — HSM riêng cho bạn</td></tr><tr><td>Standard</td><td>FIPS 140-2 Level 3</td><td>FIPS 140-2 Level 3</td></tr><tr><td>Ai tạo/sở hữu key</td><td>AWS Owned / AWS Managed / Customer Managed</td><td><strong>Chỉ</strong> Customer Managed</td></tr><tr><td>Loại key</td><td>Symmetric, Asymmetric, Digital Signing</td><td>Symmetric, Asymmetric, Digital Signing &amp; Hashing</td></tr><tr><td>Vị trí truy cập key</td><td>Trong region tạo key (không lấy key ra khỏi region)</td><td>Deploy trong <strong>VPC</strong>, share được qua <strong>VPC Peering</strong></td></tr><tr><td>Crypto acceleration</td><td>Không</td><td><strong>SSL/TLS acceleration</strong>, <strong>Oracle TDE acceleration</strong></td></tr><tr><td>Auth</td><td>IAM</td><td>Tự tạo user &amp; quản lý permission trong HSM</td></tr><tr><td>HA</td><td>AWS tự quản lý</td><td>Tự thêm HSM ở nhiều AZ</td></tr><tr><td>Audit</td><td>CloudTrail, CloudWatch</td><td>CloudTrail, CloudWatch, <strong>hỗ trợ MFA</strong></td></tr><tr><td>Free tier</td><td><strong>Có</strong></td><td><strong>Không</strong></td></tr><tr><td>Chọn khi</td><td>99% use case AWS thông thường, cần tích hợp sẵn với service</td><td>Bắt buộc tuân thủ compliance đòi <strong>kiểm soát phần cứng riêng</strong>, hoặc cần tính năng HSM đặc thù (Oracle TDE, custom key store)</td></tr></tbody></table></div>
+<hr/>
+<h2 id="phần-b--detection--protection-services">Phần B — Detection &amp; Protection services<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phần-b--detection--protection-services" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="8-aws-waf-web-application-firewall">8. AWS WAF (Web Application Firewall)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-aws-waf-web-application-firewall" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bảo vệ ở <strong>Layer 7 (HTTP)</strong>, khác Security Group/NACL vốn hoạt động Layer 3/4.</p>
+<ul>
+<li><strong>Deploy trên:</strong> Application Load Balancer, API Gateway, CloudFront, AppSync GraphQL API, Cognito User Pool.</li>
+<li><strong>Web ACL (Web Access Control List)</strong> — tập hợp rule:
+<ul>
+<li><strong>IP Set</strong> — tối đa 10.000 IP/rule, cần nhiều IP hơn thì dùng nhiều rule.</li>
+<li>Kiểm tra <strong>HTTP header, HTTP body, URI string</strong> — chặn SQL Injection, Cross-Site Scripting (XSS).</li>
+<li><strong>Size constraint</strong>, <strong>geo-match</strong> (chặn theo quốc gia).</li>
+<li><strong>Rate-based rule</strong> — đếm số request để chống DDoS nhẹ/bot.</li>
+</ul>
+</li>
+<li><strong>Rule Group</strong> — bộ rule tái sử dụng được, gắn vào nhiều Web ACL.</li>
+<li>Web ACL là <strong>regional</strong>, <strong>trừ</strong> khi gắn cho CloudFront (lúc đó là global/edge).</li>
+<li><strong>WAF không hỗ trợ Network Load Balancer</strong> (vì NLB là Layer 4). Muốn vừa có fixed IP vừa có WAF trên kiến trúc dùng NLB → đặt <strong>Global Accelerator</strong> (cho fixed IP) trỏ vào <strong>ALB</strong> (nơi gắn WAF), NLB không tham gia phần WAF.</li>
+</ul>
+<hr/>
+<h3 id="9-aws-shield">9. AWS Shield<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-aws-shield" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Chuyên chống <strong>DDoS (Distributed Denial of Service)</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Shield Standard</strong></th><th><strong>Shield Advanced</strong></th></tr></thead><tbody><tr><td>Chi phí</td><td><strong>Miễn phí</strong>, tự động bật cho mọi account</td><td><strong>$3.000/tháng/organization</strong></td></tr><tr><td>Phạm vi bảo vệ</td><td>Layer 3/4 (SYN/UDP Flood, Reflection attack)</td><td>Thêm bảo vệ nâng cao cho EC2, ELB, CloudFront, Global Accelerator, Route 53</td></tr><tr><td>Layer 7</td><td>Không</td><td><strong>Có</strong> — tự động tạo/đánh giá/deploy <strong>WAF rule</strong> để giảm thiểu tấn công layer 7</td></tr><tr><td>Hỗ trợ</td><td>Không có team riêng</td><td><strong>24/7 DDoS Response Team (DRT)</strong></td></tr><tr><td>Cost protection</td><td>Không</td><td><strong>Có</strong> — hoàn phí nếu bill tăng vọt do usage spike gây ra bởi DDoS</td></tr></tbody></table></div>
+<hr/>
+<h3 id="10-aws-firewall-manager">10. AWS Firewall Manager<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-aws-firewall-manager" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Quản lý rule bảo mật <strong>tập trung trên toàn bộ AWS Organization</strong> (nhiều account).</p>
+<ul>
+<li><strong>Security Policy</strong> = một bộ rule chung, áp dụng cho:
+<ul>
+<li>WAF rules (ALB, API Gateway, CloudFront)</li>
+<li>Shield Advanced (ALB, CLB, NLB, Elastic IP, CloudFront)</li>
+<li>Security Group (EC2, ALB, ENI trong VPC)</li>
+<li>AWS Network Firewall (cấp VPC)</li>
+<li>Route 53 Resolver DNS Firewall</li>
+</ul>
+</li>
+<li>Policy tạo ở <strong>cấp region</strong>.</li>
+<li>Rule <strong>tự động áp dụng cho resource mới tạo</strong> trong account hiện tại lẫn tương lai → rất hữu ích cho compliance ở quy mô nhiều team/account.</li>
+</ul>
+<h4 id="101-waf-vs-shield-vs-firewall-manager--dùng-cùng-nhau">10.1 WAF vs Shield vs Firewall Manager — dùng cùng nhau<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#101-waf-vs-shield-vs-firewall-manager--dùng-cùng-nhau" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>WAF</strong> một mình → đủ cho bảo vệ <strong>chi tiết từng resource</strong> (rule cụ thể theo ứng dụng).</li>
+<li>Muốn dùng WAF <strong>xuyên suốt nhiều account</strong>, tự động hoá config, ép resource mới cũng được bảo vệ → thêm <strong>Firewall Manager</strong>.</li>
+<li><strong>Shield Advanced</strong> = lớp bổ sung trên WAF: có SRT (Shield Response Team) hỗ trợ trực tiếp + báo cáo nâng cao. Tổ chức <strong>hay bị DDoS</strong> nên cân nhắc mua Shield Advanced.</li>
+</ul>
+<hr/>
+<h3 id="11-aws-best-practices-for-ddos-resiliency--4-lớp-phòng-thủ">11. AWS Best Practices for DDoS Resiliency — 4 lớp phòng thủ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-aws-best-practices-for-ddos-resiliency--4-lớp-phòng-thủ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Sau khi đã có đủ WAF + Shield + Firewall Manager, AWS tổng hợp lại thành <strong>4 lớp phòng thủ</strong>, mỗi lớp gắn với một tập “Best Practice” (BP1-BP7) — đây là 1 slide riêng trong khoá, rất hay bị bỏ qua nhưng lại là khung tư duy tổng quát để ghép mọi dịch vụ ở trên lại với nhau:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Lớp phòng thủ</th><th>Best Practices</th><th>Dùng gì</th></tr></thead><tbody><tr><td><strong>1. Edge Location Mitigation</strong> (BP1, BP3)</td><td>Chặn tấn công ngay tại edge, chưa vào tới backend</td><td><strong>CloudFront</strong> (BP1 — cache + chặn SYN/UDP flood, reflection attack), <strong>Global Accelerator</strong> (BP1 — fixed IP + tích hợp Shield, hữu ích khi backend không tương thích CloudFront), <strong>Route 53</strong> (BP3 — DNS resolution tại edge, có cơ chế chống DDoS riêng)</td></tr><tr><td><strong>2. Infrastructure Layer Defense</strong> (BP1, BP3, BP6, BP7)</td><td>Bảo vệ EC2 khỏi traffic cao bất thường</td><td>Kết hợp Global Accelerator + Route 53 + CloudFront + <strong>ELB</strong> (BP6 — scale theo traffic, phân phối đều ra nhiều EC2); <strong>EC2 Auto Scaling</strong> (BP7 — tự scale khi traffic tăng đột biến, kể cả do DDoS)</td></tr><tr><td><strong>3. Application Layer Defense</strong> (BP1, BP2, BP6)</td><td>Lọc request độc hại ở tầng ứng dụng (Layer 7)</td><td><strong>CloudFront</strong> cache static content để giảm tải backend; <strong>AWS WAF</strong> đặt trên CloudFront/ALB để lọc theo request signature, <strong>rate-based rule</strong> tự động block IP xấu, <strong>managed rules</strong> chặn theo IP reputation; <strong>Shield Advanced</strong> tự động tạo/deploy WAF rule để giảm thiểu tấn công layer 7</td></tr><tr><td><strong>4. Attack Surface Reduction</strong> (BP1, BP4, BP5, BP6)</td><td>Giảm diện tích bị tấn công</td><td><strong>Obfuscate resource</strong> — dùng CloudFront/API Gateway/ELB để giấu EC2/Lambda phía sau; <strong>Security Group &amp; NACL</strong> (BP5) lọc theo IP ở cấp subnet/ENI, Elastic IP được Shield Advanced bảo vệ; <strong>Protecting API endpoints</strong> (BP4) — API Gateway Edge-optimized hoặc CloudFront + Regional mode để kiểm soát tốt hơn, kết hợp WAF + API Gateway (burst limit, header filtering, API key)</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Điểm hay ra thi:</strong> Câu hỏi dạng “thiết kế kiến trúc chống DDoS toàn diện” → câu trả lời đúng luôn là <strong>kết hợp nhiều lớp</strong> (CloudFront/Global Accelerator + ELB + Auto Scaling + WAF + Shield Advanced), không phải chỉ 1 dịch vụ đơn lẻ.</p>
+</blockquote>
+<hr/>
+<h3 id="12-amazon-guardduty">12. Amazon GuardDuty<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-amazon-guardduty" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dịch vụ phát hiện mối đe doạ dùng <strong>Machine Learning</strong>, <strong>không cần cài agent</strong>, bật 1-click (có trial 30 ngày).</p>
+<p><strong>Nguồn dữ liệu đầu vào (mặc định, không tốn thêm cấu hình gì):</strong></p>
+<ul>
+<li><strong>CloudTrail Event Logs</strong> — API call bất thường, deploy trái phép.</li>
+<li><strong>CloudTrail Management Events</strong> — tạo VPC subnet, tạo trail…</li>
+<li><strong>CloudTrail S3 Data Events</strong> — get/list/delete object.</li>
+<li><strong>VPC Flow Logs</strong> — traffic nội bộ bất thường, IP lạ.</li>
+<li><strong>DNS Logs</strong> — EC2 bị compromise gửi data mã hoá qua DNS query.</li>
+</ul>
+<p><strong>Optional features</strong> (bật thêm, có thể tốn phí): EKS Audit Logs, RDS &amp; Aurora login activity, EBS volume, Lambda network activity, S3 Data Events mở rộng.</p>
+<ul>
+<li>Kết quả (<strong>Findings</strong>) đẩy qua <strong>EventBridge</strong> → trigger Lambda (tự động cô lập tài nguyên) hoặc SNS (cảnh báo người).</li>
+<li>Có finding chuyên biệt cho <strong>tấn công đào Cryptocurrency</strong>.</li>
+</ul>
+<hr/>
+<h3 id="13-amazon-inspector">13. Amazon Inspector<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-amazon-inspector" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dịch vụ <strong>quét lỗ hổng tự động</strong> — chỉ áp dụng cho <strong>3 loại tài nguyên</strong>: EC2, Container Image trên ECR, Lambda function.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đối tượng</th><th>Cách quét</th></tr></thead><tbody><tr><td><strong>EC2</strong></td><td>Qua <strong>SSM Agent</strong> — phân tích network reachability (mở port không mong muốn) + OS có lỗ hổng CVE đã biết</td></tr><tr><td><strong>Container Image trên ECR</strong></td><td>Quét ngay khi image được push lên</td></tr><tr><td><strong>Lambda function</strong></td><td>Phân tích lỗ hổng trong code + dependency package, quét lại mỗi khi deploy</td></tr></tbody></table></div>
+<ul>
+<li>Chỉ quét <strong>khi cần</strong> (continuous scanning nhưng không phải liên tục vô ích) — package vulnerability dựa trên database <strong>CVE</strong>.</li>
+<li>Mỗi finding có <strong>risk score</strong> để ưu tiên xử lý.</li>
+<li>Tích hợp báo cáo với <strong>AWS Security Hub</strong>, gửi finding qua <strong>EventBridge</strong>.</li>
+</ul>
+<hr/>
+<h3 id="14-amazon-macie">14. Amazon Macie<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-amazon-macie" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dịch vụ <strong>phát hiện dữ liệu nhạy cảm</strong>, dùng ML + pattern matching.</p>
+<ul>
+<li><strong>Mục tiêu duy nhất: Amazon S3.</strong></li>
+<li>Quét nội dung object để tìm <strong>PII (Personally Identifiable Information)</strong> — vd số thẻ tín dụng, hộ chiếu, thông tin định danh cá nhân.</li>
+<li>Cảnh báo qua <strong>EventBridge</strong> khi phát hiện — hữu ích để phát hiện bucket chứa PII bị cấu hình sai (public).</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260902173722.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="15-so-sánh--chọn-đáp-án-thi">15. So sánh &amp; chọn đáp án thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#15-so-sánh--chọn-đáp-án-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="151-kms-vs-cloudhsm--chọn-nhanh">15.1 KMS vs CloudHSM — chọn nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#151-kms-vs-cloudhsm--chọn-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đề bài nhắc</th><th>Chọn</th></tr></thead><tbody><tr><td>Tích hợp sẵn với S3/EBS/RDS, không muốn quản lý hạ tầng</td><td><strong>KMS</strong></td></tr><tr><td>Bắt buộc single-tenant hardware, kiểm soát 100% key, compliance chặt</td><td><strong>CloudHSM</strong></td></tr><tr><td>Cần Oracle TDE acceleration hoặc SSL/TLS acceleration phần cứng</td><td><strong>CloudHSM</strong></td></tr><tr><td>Muốn dùng API KMS quen thuộc nhưng key vật lý nằm trong HSM riêng</td><td><strong>KMS Custom Key Store + CloudHSM</strong></td></tr><tr><td>Không có ngân sách, cần free tier</td><td><strong>KMS</strong> (CloudHSM không có free tier)</td></tr></tbody></table></div>
+<h3 id="152-secrets-manager-vs-ssm-parameter-store">15.2 Secrets Manager vs SSM Parameter Store<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#152-secrets-manager-vs-ssm-parameter-store" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th><strong>Secrets Manager</strong></th><th><strong>SSM Parameter Store</strong></th></tr></thead><tbody><tr><td>Auto rotation</td><td><strong>Có sẵn</strong> (Lambda blueprint cho RDS/Aurora)</td><td>Không có sẵn — phải tự viết Lambda</td></tr><tr><td>Chi phí</td><td>Trả phí theo secret/tháng + API call</td><td><strong>Miễn phí</strong> ở Standard tier</td></tr><tr><td>Cấu trúc</td><td>Key-value cho secret</td><td><strong>Hierarchy theo path</strong>, hợp cho config lẫn secret</td></tr><tr><td>Multi-region</td><td><strong>Replicate tự động</strong>, promote replica được</td><td>Không có replicate tự động</td></tr><tr><td>Mã hoá</td><td>Bắt buộc KMS</td><td>Tuỳ chọn (<code>String</code> plaintext / <code>SecureString</code> qua KMS)</td></tr><tr><td>Dùng khi</td><td>Credential DB cần xoay định kỳ, cross-region app</td><td>Config app, giá trị ít đổi, cần tiết kiệm chi phí, cần TTL cảnh báo</td></tr></tbody></table></div>
+<h3 id="153-guardduty-vs-inspector-vs-macie--phân-biệt-phát-hiện-cái-gì">15.3 GuardDuty vs Inspector vs Macie — phân biệt “phát hiện cái gì”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#153-guardduty-vs-inspector-vs-macie--phân-biệt-phát-hiện-cái-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>GuardDuty</strong></th><th><strong>Inspector</strong></th><th><strong>Macie</strong></th></tr></thead><tbody><tr><td>Phát hiện</td><td><strong>Hành vi bất thường / tấn công</strong> đang diễn ra (network, account, API)</td><td><strong>Lỗ hổng (CVE)</strong> trong tài nguyên</td><td><strong>Dữ liệu nhạy cảm (PII)</strong> bị lưu sai chỗ</td></tr><tr><td>Nguồn dữ liệu</td><td>CloudTrail, VPC Flow Logs, DNS Logs</td><td>SSM Agent (EC2), ECR push, Lambda deploy</td><td>Nội dung object trong S3</td></tr><tr><td>Phạm vi</td><td>Toàn account/VPC</td><td>Chỉ <strong>EC2, ECR, Lambda</strong></td><td>Chỉ <strong>S3</strong></td></tr><tr><td>Cần cài agent?</td><td>Không</td><td>Có (SSM Agent cho EC2)</td><td>Không</td></tr><tr><td>Câu hỏi mẫu</td><td>”Phát hiện EC2 đang liên lạc với địa chỉ IP độc hại&quot;</td><td>&quot;Tìm CVE trên EC2/Lambda/container image&quot;</td><td>&quot;Có credit card number nào bị upload nhầm lên S3 không”</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    Need[\&quot;Cần dịch vụ bảo mật nào?\&quot;] --> A{\&quot;Phát hiện hành vi&lt;br/>bất thường/tấn công?\&quot;}\n    A -->|\&quot;Có\&quot;| GD[\&quot;Amazon GuardDuty\&quot;]\n    A -->|\&quot;Không\&quot;| B{\&quot;Quét lỗ hổng CVE trên&lt;br/>EC2, ECR, Lambda?\&quot;}\n    B -->|\&quot;Có\&quot;| Insp[\&quot;Amazon Inspector\&quot;]\n    B -->|\&quot;Không\&quot;| C{\&quot;Tìm PII trong S3?\&quot;}\n    C -->|\&quot;Có\&quot;| Macie[\&quot;Amazon Macie\&quot;]&quot;">graph TD
+    Need[&quot;Cần dịch vụ bảo mật nào?&quot;] --> A{&quot;Phát hiện hành vi&lt;br/>bất thường/tấn công?&quot;}
+    A -->|&quot;Có&quot;| GD[&quot;Amazon GuardDuty&quot;]
+    A -->|&quot;Không&quot;| B{&quot;Quét lỗ hổng CVE trên&lt;br/>EC2, ECR, Lambda?&quot;}
+    B -->|&quot;Có&quot;| Insp[&quot;Amazon Inspector&quot;]
+    B -->|&quot;Không&quot;| C{&quot;Tìm PII trong S3?&quot;}
+    C -->|&quot;Có&quot;| Macie[&quot;Amazon Macie&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="154-tình-huống-thi">15.4 Tình huống thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#154-tình-huống-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đề bài (rút gọn)</th><th>Đáp án</th></tr></thead><tbody><tr><td>Mã hoá file lớn (>4KB) bằng KMS</td><td><strong>Envelope encryption</strong> (GenerateDataKey)</td></tr><tr><td>Copy EBS snapshot sang account khác đang mã hoá bằng AWS Managed Key</td><td>Không share được trực tiếp → tạo <strong>copy với Customer Managed Key</strong> rồi share key</td></tr><tr><td>Cần đọc &amp; giải mã object S3 (SSE-KMS) từ account khác</td><td>Cấp đủ <strong>cả</strong> S3 Bucket Policy <strong>và</strong> KMS Key Policy cho account/role đó</td></tr><tr><td>Global DynamoDB cần mã hoá field ở client, decrypt nhanh ở mọi region</td><td><strong>KMS Multi-Region Key</strong> + DynamoDB Encryption Client</td></tr><tr><td>S3 CRR không replicate object mã hoá SSE-KMS</td><td>Bật tuỳ chọn <strong>replicate SSE-KMS</strong>, cấu hình Key Policy + IAM role decrypt/encrypt</td></tr><tr><td>Lưu API key bên thứ 3, không cần rotate, ưu tiên rẻ</td><td><strong>SSM Parameter Store</strong> (SecureString)</td></tr><tr><td>Lưu mật khẩu RDS, cần tự đổi mỗi 30 ngày</td><td><strong>AWS Secrets Manager</strong></td></tr><tr><td>TLS certificate miễn phí, tự renew, gắn vào ALB</td><td><strong>ACM public certificate</strong></td></tr><tr><td>Cert cho API Gateway phục vụ client toàn cầu qua CloudFront</td><td><strong>Edge-Optimized</strong>, cert đặt ở <strong>us-east-1</strong></td></tr><tr><td>Compliance yêu cầu HSM phần cứng riêng, không multi-tenant</td><td><strong>CloudHSM</strong></td></tr><tr><td>Chặn SQL Injection/XSS ở tầng ứng dụng</td><td><strong>AWS WAF</strong></td></tr><tr><td>Có NLB, vẫn cần WAF + fixed IP</td><td><strong>Global Accelerator</strong> trỏ <strong>ALB</strong> (WAF gắn ALB, không gắn NLB)</td></tr><tr><td>Chống DDoS layer 7 tự động, có đội hỗ trợ 24/7</td><td><strong>Shield Advanced</strong></td></tr><tr><td>Enforce WAF/Shield/Security Group cho hàng trăm account</td><td><strong>AWS Firewall Manager</strong></td></tr><tr><td>EC2 liên lạc với IP độc hại đã biết (threat intel)</td><td><strong>GuardDuty</strong></td></tr><tr><td>Tìm lỗ hổng CVE trên container image mới push lên ECR</td><td><strong>Amazon Inspector</strong></td></tr><tr><td>Bucket S3 công khai chứa số thẻ tín dụng</td><td><strong>Amazon Macie</strong></td></tr></tbody></table></div>
+<hr/>
+<h2 id="16-câu-hỏi-ôn-tập">16. Câu hỏi ôn tập<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#16-câu-hỏi-ôn-tập" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>25 câu hỏi thực hành, bám sát Encryption (KMS, SSE, client-side) và Detection &amp; Protection.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>#</th><th>Chủ đề</th><th>Đáp án đúng</th></tr></thead><tbody><tr><td>1</td><td>Điều kiện để bật In-flight Encryption</td><td><strong>HTTPS endpoint</strong> với SSL certificate</td></tr><tr><td>2</td><td>SSE có nghĩa là dữ liệu gửi lên đã mã hoá?</td><td><strong>False</strong> — SSE là mã hoá <strong>at-rest</strong>, không phải in-transit</td></tr><tr><td>3</td><td>SSE: encryption/decryption diễn ra ở đâu</td><td><strong>Cả hai đều trên server</strong></td></tr><tr><td>4</td><td>Client-Side Encryption: server cần biết encryption scheme trước?</td><td><strong>False</strong> — server không biết gì về scheme</td></tr><tr><td>5</td><td>Phải tự tạo KMS Key trước khi dùng encryption cho EBS/S3/RDS?</td><td><strong>False</strong> — đã có sẵn <strong>AWS Managed Key</strong></td></tr><tr><td>6</td><td>KMS có hỗ trợ cả symmetric lẫn asymmetric key?</td><td><strong>True</strong></td></tr><tr><td>7</td><td>Automatic Rotation xoay backing key mỗi bao lâu?</td><td><strong>1 year</strong></td></tr><tr><td>8</td><td>Share AMI có encrypted EBS snapshot sang account khác nhưng vẫn không dùng được</td><td>Phải <strong>share KMS CMK</strong> đã mã hoá snapshot</td></tr><tr><td>9</td><td>Company policy bắt rotate CMK mỗi 6 tháng</td><td><strong>Bật lại Automatic Rotation với chu kỳ tuỳ chỉnh 180 ngày</strong> (flexible rotation period)</td></tr><tr><td>10</td><td>Kiểm soát access tới KMS CMK bằng gì?</td><td><strong>KMS Key Policies</strong></td></tr><tr><td>11</td><td>Cách an toàn nhất để Lambda lấy DB password</td><td><strong>Encrypted environment variable</strong>, decrypt lúc runtime</td></tr><tr><td>12</td><td>Lưu + theo dõi lịch sử giá trị của một secret</td><td><strong>SSM Parameter Store</strong></td></tr><tr><td>13</td><td>Website nguy cơ DDoS cao, cần hỗ trợ 24/7 + hoàn phí do attack</td><td><strong>AWS Shield Advanced</strong></td></tr><tr><td>14</td><td>Lưu config value bên ngoài, cần version history</td><td><strong>SSM Parameter Store</strong></td></tr><tr><td>15</td><td>GuardDuty KHÔNG scan nguồn nào</td><td><strong>CloudWatch Logs</strong></td></tr><tr><td>16</td><td>Bảo vệ website (EC2 + ALB) khỏi SQL Injection</td><td><strong>AWS WAF</strong></td></tr><tr><td>17</td><td>Phân tích lỗ hổng OS trong EC2 hàng tuần, kèm khuyến nghị cụ thể</td><td><strong>Amazon Inspector</strong></td></tr><tr><td>18</td><td>Lưu RDS DB password, cần auto rotation</td><td><strong>AWS Secrets Manager</strong></td></tr><tr><td>19</td><td>Quản lý tập trung Security Group + Shield Advanced toàn Organization</td><td><strong>AWS Firewall Manager</strong></td></tr><tr><td>20</td><td>Bảo vệ dữ liệu nhạy cảm lưu trong S3</td><td><strong>Amazon Macie</strong></td></tr><tr><td>21</td><td>Aurora Global Database, mã hoá field mà admin cũng không đọc được</td><td><strong>Aurora Client-side Encryption</strong> + <strong>KMS Multi-Region Keys</strong></td></tr><tr><td>22</td><td>S3 Replication SSE-KMS khác key cùng region vẫn không chạy</td><td>Cấp <code>kms:Decrypt</code> trên key <strong>nguồn</strong> + <code>kms:Encrypt</code> trên key <strong>đích</strong> cho Replication Service</td></tr><tr><td>23</td><td>Cert Let’s Encrypt import vào ACM, cần báo 30 ngày trước khi hết hạn</td><td><strong>EventBridge Daily Expiration Events</strong> → SNS</td></tr><tr><td>24</td><td>Edge-Optimized API Gateway ở us-west-2, đặt ACM cert ở region nào</td><td><strong>us-east-1</strong></td></tr><tr><td>25</td><td>Quản lý Security Group + WAF Rules tập trung nhiều account sau sự cố bảo mật</td><td><strong>AWS Firewall Manager</strong></td></tr></tbody></table></div>
+<h3 id="câu-1--điều-kiện-để-bật-in-flight-encryption">Câu 1 — Điều kiện để bật In-flight Encryption<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-1--điều-kiện-để-bật-in-flight-encryption" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>To enable In-flight Encryption (In-Transit Encryption), we need to have …………………….</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>an HTTP endpoint with an SSL certificate</li>
+<li>an HTTPS endpoint with an SSL certificate</li>
+<li>a TCP endpoint</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — HTTP endpoint + SSL certificate</td><td><strong>Sai</strong></td><td>Mâu thuẫn nội tại: <strong>HTTP</strong> vốn là giao thức <strong>không mã hoá</strong> — gắn SSL certificate vào HTTP endpoint không tự động biến nó thành kết nối mã hoá, phải <strong>đổi giao thức</strong> thành HTTPS</td></tr><tr><td><strong>2 — HTTPS endpoint + SSL certificate</strong></td><td><strong>Đúng</strong></td><td>Đúng định nghĩa In-transit encryption ở Phần A §1: TLS/SSL bảo vệ dữ liệu <strong>đang truyền trên mạng</strong> — HTTPS = HTTP <strong>chạy trên TLS</strong>, cần <strong>SSL/TLS certificate</strong> để thiết lập kênh mã hoá giữa client và server</td></tr><tr><td>3 — TCP endpoint</td><td><strong>Sai</strong></td><td>TCP chỉ là giao thức <strong>vận chuyển ở Layer 4</strong>, tự thân <strong>không mã hoá</strong> gì cả — TLS (thứ tạo ra HTTPS) chạy <strong>trên</strong> TCP chứ TCP không tự bao gồm encryption</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — an HTTPS endpoint with an SSL certificate.</strong></p>
+<blockquote>
+<p>Câu hỏi kiểm tra trực diện định nghĩa In-transit encryption ở Phần A §1. Bẫy nằm ở phương án 1: nhiều người thấy “có SSL certificate” là nghĩ đã đủ, quên rằng <strong>giao thức phải là HTTPS</strong> thì certificate đó mới thực sự được dùng để mã hoá kênh truyền.</p>
+</blockquote>
+<h3 id="câu-2--sse-có-nghĩa-là-dữ-liệu-được-gửi-lên-server-ở-dạng-đã-mã-hoá">Câu 2 — SSE có nghĩa là dữ liệu được gửi lên server ở dạng đã mã hoá?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-2--sse-có-nghĩa-là-dữ-liệu-được-gửi-lên-server-ở-dạng-đã-mã-hoá" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Server-Side Encryption means that the data is sent encrypted to the server.</p>
+</blockquote>
+<p><strong>Đáp án:</strong> True / False</p>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phát biểu</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>”SSE nghĩa là data được <strong>gửi</strong> tới server ở dạng mã hoá”</td><td><strong>Sai → đáp án là False</strong></td><td>Đúng bảng phân loại ở Phần A §1: SSE (server-side/at-rest encryption) bảo vệ dữ liệu <strong>đang lưu trữ</strong>, không phải đang truyền — <strong>server nhận bản rõ</strong> (qua kênh HTTPS nếu có bật in-transit riêng), rồi <strong>chính server/AWS service</strong> mới mã hoá dữ liệu đó trước khi ghi xuống đĩa</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: False.</strong></p>
+<blockquote>
+<p>Đây là bẫy phân biệt kinh điển giữa <strong>in-transit</strong> và <strong>at-rest</strong>: SSE chỉ nói tới việc dữ liệu được mã hoá <strong>khi lưu</strong> (câu trả lời cho “ai mã hoá, lưu ở đâu”), hoàn toàn tách biệt với việc kênh truyền dữ liệu lên server có được mã hoá hay không (đó là phạm vi của Câu 1 — In-transit Encryption/HTTPS). Hai khái niệm <strong>độc lập với nhau</strong>: có thể bật SSE mà không cần HTTPS (và ngược lại), dù thực tế nên bật cả hai.</p>
+</blockquote>
+<h3 id="câu-3--trong-sse-encryptiondecryption-diễn-ra-ở-đâu">Câu 3 — Trong SSE, encryption/decryption diễn ra ở đâu?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-3--trong-sse-encryptiondecryption-diễn-ra-ở-đâu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>In Server-Side Encryption, where do the encryption and decryption happen?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Both Encryption and Decryption happen on the server</li>
+<li>Both Encryption and Decryption happen on the client</li>
+<li>Encryption happens on the server and Decryption happens on the client</li>
+<li>Encryption happens on the client and Decryption happens on the server</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — Cả hai đều trên server</strong></td><td><strong>Đúng</strong></td><td>Đúng nguyên văn bảng Phần A §1: <em>“At-rest (server-side)… <strong>AWS service</strong> mã hoá khi nhận, giải mã khi trả về”</em> — client chỉ gửi/nhận bản rõ, toàn bộ việc mã hoá và giải mã do <strong>server (AWS service)</strong> đảm nhiệm</td></tr><tr><td>2 — Cả hai đều trên client</td><td><strong>Sai</strong></td><td>Đây là mô tả của <strong>Client-Side Encryption</strong> (Phần A §3), không phải SSE — nếu client tự encrypt/decrypt thì server sẽ không bao giờ thấy bản rõ, trái ngược hoàn toàn với cơ chế SSE</td></tr><tr><td>3 — Encrypt ở server, decrypt ở client</td><td><strong>Sai</strong></td><td>Không khớp với bất kỳ mô hình encryption nào đã học — SSE luôn đối xứng: <strong>cùng một bên</strong> (server) làm cả hai chiều</td></tr><tr><td>4 — Encrypt ở client, decrypt ở server</td><td><strong>Sai</strong></td><td>Đây gần giống mô tả <strong>upload</strong> trong client-side encryption chỉ ở <strong>một chiều</strong> — không đúng bản chất SSE, và SSE không yêu cầu client tự encrypt gì cả</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1.</strong></p>
+<blockquote>
+<p>Câu này cùng cụm với Câu 2 — cả hai kiểm tra đúng một ý: SSE là encryption <strong>do AWS service tự làm toàn bộ</strong>, client hoàn toàn “vô can” về mặt mã hoá, chỉ gửi/nhận dữ liệu ở dạng bản rõ.</p>
+</blockquote>
+<h3 id="câu-4--client-side-encryption-server-có-cần-biết-encryption-scheme-trước-khi-upload">Câu 4 — Client-Side Encryption: server có cần biết encryption scheme trước khi upload?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-4--client-side-encryption-server-có-cần-biết-encryption-scheme-trước-khi-upload" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>In Client-Side Encryption, the server must know our encryption scheme before we can upload the data.</p>
+</blockquote>
+<p><strong>Đáp án:</strong> True / False (đáp án đúng đã được đánh dấu sẵn: <strong>False</strong>)</p>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phát biểu</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>”Server phải biết encryption scheme trước khi upload”</td><td><strong>Sai → đáp án là False</strong></td><td>Đúng bản chất Client-Side Encryption ở Phần A §3: <strong>client tự mã hoá</strong> dữ liệu hoàn toàn trước khi gửi đi, server <strong>không bao giờ</strong> tham gia vào bất kỳ thao tác encryption/decryption nào — nên server <strong>không cần và không thể</strong> biết trước “encryption scheme” là gì, nó chỉ nhận và lưu lại <strong>ciphertext</strong> như một khối dữ liệu bất kỳ</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: False.</strong></p>
+<blockquote>
+<p>Đối lập trực tiếp với Câu 3 (SSE): ở SSE, server <strong>phải biết</strong> cách mã hoá vì chính nó thực hiện việc đó; ở Client-Side Encryption, server <strong>hoàn toàn mù mờ</strong> về encryption scheme vì không tham gia gì vào quá trình mã hoá/giải mã (Phần A §3: <em>“server/database không bao giờ thấy bản rõ”</em>) — đây là điểm khác biệt cốt lõi nhất giữa hai mô hình, cũng là lý do Client-Side Encryption bảo vệ được dữ liệu <strong>ngay cả khỏi chính AWS/DB admin</strong>.</p>
+</blockquote>
+<h3 id="câu-5--có-bắt-buộc-tự-tạo-kms-key-trước-khi-dùng-encryption-cho-ebss3rds">Câu 5 — Có bắt buộc tự tạo KMS Key trước khi dùng encryption cho EBS/S3/RDS?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-5--có-bắt-buộc-tự-tạo-kms-key-trước-khi-dùng-encryption-cho-ebss3rds" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You need to create KMS Keys in AWS KMS before you are able to use the encryption features for EBS, S3, RDS …</p>
+</blockquote>
+<p><strong>Đáp án:</strong> True / False</p>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phát biểu</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>”Phải tự tạo KMS Key trước khi dùng được encryption cho EBS/S3/RDS”</td><td><strong>Sai → đáp án là False</strong></td><td>Đúng bảng phân loại KMS Key ở §2.2: AWS đã cung cấp sẵn <strong>AWS Owned Key</strong> (miễn phí, dùng cho SSE-S3/SQS/DDB mặc định) và <strong>AWS Managed Key</strong> (<code>aws/ebs</code>, <code>aws/rds</code>…) — cả hai loại này <strong>có sẵn tự động</strong>, không cần bạn tự tạo gì cả; bạn chỉ cần <strong>tự tạo Customer Managed Key</strong> nếu muốn kiểm soát nhiều hơn (rotation thủ công, key policy tuỳ biến, cross-account share)</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: False.</strong></p>
+<blockquote>
+<p>Bẫy của câu: nghe “muốn dùng encryption thì phải có key” có vẻ hợp lý theo trực giác — nhưng AWS đã <strong>chuẩn bị sẵn</strong> AWS Owned/Managed Key cho hầu hết service phổ biến (EBS, S3, RDS…), đúng như mục đích thiết kế: <strong>bật encryption chỉ với một click</strong>, không cần thao tác tạo/quản lý key gì thêm. Chỉ khi cần <strong>kiểm soát key ở mức cao hơn</strong> (audit riêng, rotate tuỳ ý, chia sẻ cross-account) mới cần tạo <strong>Customer Managed Key</strong> — đúng như đã phân biệt ở §2.2.</p>
+</blockquote>
+<h3 id="câu-6--kms-có-hỗ-trợ-cả-symmetric-lẫn-asymmetric-key-không">Câu 6 — KMS có hỗ trợ cả symmetric lẫn asymmetric key không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-6--kms-có-hỗ-trợ-cả-symmetric-lẫn-asymmetric-key-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>AWS KMS supports both symmetric and asymmetric KMS keys.</p>
+</blockquote>
+<p><strong>Đáp án:</strong> True / False</p>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phát biểu</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>”KMS hỗ trợ cả symmetric lẫn asymmetric key”</td><td><strong>Đúng → đáp án là True</strong></td><td>Đúng bảng §2.1: KMS hỗ trợ <strong>Symmetric</strong> (AES-256, mặc định, dùng cho hầu hết service AWS) <strong>và Asymmetric</strong> (RSA/ECC, dùng khi bên ngoài AWS cần mã hoá bằng public key tải về)</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: True.</strong></p>
+<blockquote>
+<p>Câu hỏi trực diện kiểm tra §2.1 — dễ bị phân vân vì đa số ví dụ trong khoá học đều xoay quanh symmetric key (EBS, S3, RDS…), khiến người học quên rằng KMS <strong>vẫn hỗ trợ song song</strong> cả asymmetric key cho các use case đặc thù hơn (ký số, mã hoá ngoài AWS).</p>
+</blockquote>
+<h3 id="câu-7--automatic-rotation-xoay-backing-key-mỗi-bao-lâu">Câu 7 — Automatic Rotation xoay backing key mỗi bao lâu?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-7--automatic-rotation-xoay-backing-key-mỗi-bao-lâu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>When you enable Automatic Rotation on your KMS Key, the backing key is rotated every …………….</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>90 days</li>
+<li>1 year</li>
+<li>2 years</li>
+<li>3 years</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — 90 days</td><td><strong>Sai</strong></td><td>Không khớp chu kỳ thật của KMS auto rotation — con số 90 ngày dễ gây nhầm với retention của <strong>CloudTrail</strong> (§2.3 file Monitoring) chứ không phải KMS</td></tr><tr><td><strong>2 — 1 year</strong></td><td><strong>Đúng</strong></td><td>Đúng bảng §2.2: cả <strong>AWS Managed Key</strong> (tự động) lẫn <strong>Customer Managed Key</strong> khi <strong>bật</strong> Automatic Rotation đều xoay backing key theo chu kỳ cố định <strong>mỗi 1 năm</strong></td></tr><tr><td>3 — 2 years</td><td><strong>Sai</strong></td><td>Không khớp chu kỳ thật</td></tr><tr><td>4 — 3 years</td><td><strong>Sai</strong></td><td>Không khớp chu kỳ thật</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — 1 year.</strong></p>
+<blockquote>
+<p>Con số cần thuộc lòng: <strong>1 năm là chu kỳ mặc định</strong> của Automatic Rotation khi bật lên mà không tuỳ chỉnh gì thêm. AWS KMS về sau đã bổ sung tính năng <strong>flexible rotation period</strong> — cho phép chỉ định một chu kỳ <strong>tuỳ chỉnh</strong> (90–2.560 ngày) ngay trong chính Automatic Rotation, xem chi tiết ở Câu 9 bên dưới. Trong phạm vi câu hỏi này (không nhắc gì tới tuỳ chỉnh), đáp án đúng vẫn là <strong>1 year</strong> — đúng giá trị mặc định.</p>
+</blockquote>
+<h3 id="câu-8--share-ami-có-encrypted-ebs-snapshot-sang-account-khác-nhưng-vẫn-không-dùng-được">Câu 8 — Share AMI có encrypted EBS snapshot sang account khác nhưng vẫn không dùng được<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-8--share-ami-có-encrypted-ebs-snapshot-sang-account-khác-nhưng-vẫn-không-dùng-được" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have an AMI that has an encrypted EBS snapshot using KMS CMK. You want to share this AMI with another AWS account. You have shared the AMI with the desired AWS account, but the other AWS account still can’t use it. How would you solve this problem?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>The other AWS account needs to logout and login again to refresh its credentials</li>
+<li>You need to share the KMS CMK used to encrypt the AMI with the other AWS account</li>
+<li>You can’t share an AMI that has an encrypted EBS snapshot</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Logout/login lại để refresh credentials</td><td><strong>Sai</strong></td><td>Đây là lỗi <strong>quyền truy cập key</strong>, không phải vấn đề session/credentials hết hạn — logout/login không thay đổi được Key Policy</td></tr><tr><td><strong>2 — Share KMS CMK dùng để mã hoá AMI với account kia</strong></td><td><strong>Đúng</strong></td><td>Đúng quy trình đầy đủ ở §2.8: chỉ <strong>Launch Permission</strong> trên AMI thôi chưa đủ — phải <strong>share luôn KMS Key</strong> (qua Key Policy) mà AMI/snapshot đó tham chiếu, account đích mới <strong>giải mã được</strong> snapshot để dùng AMI; account đích còn cần quyền <code>DescribeKey</code>, <code>ReEncrypt*</code>, <code>CreateGrant</code>, <code>Decrypt</code></td></tr><tr><td>3 — Không thể share AMI có encrypted EBS snapshot</td><td><strong>Sai</strong></td><td>Hoàn toàn <strong>share được</strong> — chỉ cần đúng quy trình cấp quyền lên cả AMI (Launch Permission) <strong>và</strong> KMS Key (Key Policy), như chính §2.8 đã mô tả</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2.</strong></p>
+<blockquote>
+<p>Đây là ví dụ áp dụng trực tiếp §2.8 (AMI Sharing cross-account với KMS): cấp Launch Permission trên AMI <strong>chỉ là bước 1</strong> — thiếu bước <strong>share KMS Key</strong> là nguyên nhân phổ biến nhất khiến account nhận “share được nhưng không dùng được”, đúng triệu chứng mô tả trong đề.</p>
+</blockquote>
+<h3 id="câu-9--company-policy-bắt-rotate-cmk-mỗi-6-tháng-nên-làm-gì">Câu 9 — Company policy bắt rotate CMK mỗi 6 tháng, nên làm gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-9--company-policy-bắt-rotate-cmk-mỗi-6-tháng-nên-làm-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have created a Customer-managed CMK in KMS that you use to encrypt both S3 buckets and EBS snapshots. Your company policy mandates that your encryption keys be rotated every 6 months. What should you do?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Re-configure your KMS CMK and enable Automatic Key Rotation, and configure the Retention Period with 180 days</li>
+<li>Use AWS Managed Keys as they are automatically rotated by AWS every 3 months</li>
+<li>Rotate the KMS CMK manually. Create a new KMS CMK and use Key Aliases to reference the new KMS CMK. Keep the old KMS CMK so you can decrypt the old data</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — Bật lại Automatic Key Rotation, cấu hình chu kỳ 180 ngày</strong></td><td><strong>Đúng</strong></td><td>AWS KMS hỗ trợ <strong>flexible rotation period</strong>: khi bật Automatic Key Rotation, có thể chỉ định một <strong>chu kỳ tuỳ chỉnh</strong> (90–2.560 ngày, tham số <code>RotationPeriodInDays</code> của API <code>EnableKeyRotation</code>) thay vì bắt buộc dùng mặc định 1 năm — đặt <strong>180 ngày</strong> là khớp chính xác yêu cầu “rotate mỗi 6 tháng” của company policy, <strong>mà vẫn dùng cơ chế tự động</strong>, không cần thao tác thủ công nào</td></tr><tr><td>2 — Dùng AWS Managed Key vì AWS tự rotate mỗi 3 tháng</td><td><strong>Sai</strong></td><td>Sai ở <strong>hai lớp</strong>: AWS Managed Key auto-rotate theo chu kỳ <strong>AWS tự chọn</strong> (không phải 3 tháng, và bạn <strong>không kiểm soát được</strong> con số này); đổi sang AWS Managed Key cũng đồng nghĩa <strong>mất quyền tuỳ chỉnh</strong> — không đáp ứng đúng yêu cầu “6 tháng” cụ thể của company policy</td></tr><tr><td>3 — Rotate thủ công: tạo CMK mới, trỏ Alias sang CMK mới, giữ CMK cũ</td><td><strong>Sai (không còn là lựa chọn tối ưu)</strong></td><td>Đây <strong>vẫn là một cách khả thi về mặt kỹ thuật</strong> (§2.2: <em>“cũng có thể xoay thủ công (on-demand)”</em>) nhưng <strong>không còn cần thiết</strong> kể từ khi KMS hỗ trợ chu kỳ rotation tuỳ chỉnh — tự làm thủ công tốn công vận hành hơn hẳn so với việc chỉ cần <strong>cấu hình lại một tham số</strong> trên chính Automatic Rotation</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1.</strong></p>
+<blockquote>
+<p><strong>Đính chính so với suy luận ban đầu:</strong> trước đây (và trong đa số tài liệu ôn thi cũ) Automatic Rotation của KMS bị coi là <strong>cố định cứng 1 năm</strong>, không tuỳ chỉnh được — đúng như đã ghi ở Câu 7. Nhưng AWS đã bổ sung tính năng <strong>flexible key rotation period</strong>: <code>EnableKeyRotation</code> giờ nhận thêm tham số <code>RotationPeriodInDays</code> (90–2.560 ngày), cho phép đặt <strong>bất kỳ chu kỳ nào</strong> ngay trong chính cơ chế tự động, không cần vòng qua rotate thủ công + Key Alias nữa. Phương án 3 (rotate thủ công) vẫn <strong>đúng về mặt kỹ thuật</strong> trong một số trường hợp đặc biệt (vd cần kiểm soát chi tiết từng bước, hoặc dùng key <strong>import từ ngoài</strong> — loại này §2.2 ghi rõ <em>“chỉ xoay thủ công, không có auto rotation”</em>), nhưng với <strong>Customer Managed Key do KMS tự sinh key material</strong> như trong đề, cấu hình lại chu kỳ Automatic Rotation luôn là lựa chọn <strong>đơn giản và đúng chuẩn hơn</strong>.</p>
+</blockquote>
+<h3 id="câu-10--kiểm-soát-access-tới-kms-cmk-bằng-công-cụ-gì">Câu 10 — Kiểm soát access tới KMS CMK bằng công cụ gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-10--kiểm-soát-access-tới-kms-cmk-bằng-công-cụ-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>What should you use to control access to your KMS CMKs?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>KMS Key Policies</li>
+<li>KMS IAM Policy</li>
+<li>AWS GuardDuty</li>
+<li>KMS Access Control List (KMS ACL)</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — KMS Key Policies</strong></td><td><strong>Đúng</strong></td><td>Đúng cơ chế <strong>bắt buộc và trung tâm</strong> đã ghi ở §2.4: <em>“không có Key Policy cấp quyền thì không ai dùng được key, kể cả root/admin IAM”</em> — Key Policy là công cụ <strong>gốc, luôn cần có</strong> để kiểm soát truy cập KMS Key</td></tr><tr><td>2 — “KMS IAM Policy”</td><td><strong>Sai</strong></td><td>Đây là tên <strong>không chính xác</strong> — IAM Policy (gắn User/Group/Role) <strong>có thể</strong> dùng kèm để kiểm soát quyền gọi API KMS, nhưng nó <strong>không thay thế được</strong> Key Policy: thiếu Key Policy cấp quyền thì IAM Policy Allow cũng vô nghĩa (đúng bẫy đã ghi ở §2.4: <em>“IAM Policy cho phép <code>kms:Decrypt</code> nhưng Key Policy không liệt kê principal đó → vẫn AccessDenied”</em>)</td></tr><tr><td>3 — AWS GuardDuty</td><td><strong>Sai</strong></td><td>GuardDuty là dịch vụ <strong>phát hiện đe doạ</strong> (§12), không có chức năng cấp/kiểm soát quyền truy cập resource nào cả</td></tr><tr><td>4 — “KMS Access Control List (KMS ACL)“</td><td><strong>Sai</strong></td><td>Không tồn tại tính năng này trong AWS KMS — tên bịa ra nghe giống S3 ACL để gây nhiễu</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — KMS Key Policies.</strong></p>
+<blockquote>
+<p>Bẫy của câu nằm ở phương án 2 — dễ chọn nhầm vì IAM Policy <strong>cũng đóng vai trò</strong> trong việc cấp quyền gọi KMS API, nhưng theo đúng nguyên tắc “hai lớp” ở §2.4, <strong>Key Policy mới là lớp bắt buộc và quyết định cuối cùng</strong> — không có nó, mọi IAM Policy khác đều vô hiệu. Phương án 3 và 4 là tên dịch vụ/tính năng không liên quan hoặc không tồn tại, cùng kiểu bẫy “nghe hợp lý nhưng bịa” đã gặp nhiều lần trong các bộ câu hỏi trước.</p>
+</blockquote>
+<h3 id="câu-11--cách-an-toàn-nhất-để-lambda-lấy-database-password">Câu 11 — Cách an toàn nhất để Lambda lấy database password<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-11--cách-an-toàn-nhất-để-lambda-lấy-database-password" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have a Lambda function used to process some data in the database. You would like to give your Lambda function access to the database password. Which of the following options is the most secure?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Embed it in the code</li>
+<li>Have it as a plaintext environment variable</li>
+<li>Have it as an encrypted environment variable and decrypt it at runtime</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Nhúng thẳng vào code</td><td><strong>Sai</strong></td><td>Tệ nhất: password nằm ngay trong source code — lộ qua git history, code review, hay bất kỳ ai đọc được mã nguồn đều thấy password ở dạng <strong>plaintext vĩnh viễn</strong></td></tr><tr><td>2 — Environment variable dạng plaintext</td><td><strong>Sai</strong></td><td>Đỡ hơn hard-code nhưng vẫn là <strong>bản rõ</strong> — bất kỳ ai xem được cấu hình Lambda (console, <code>GetFunctionConfiguration</code> qua API/IAM permission) đều đọc được password ngay lập tức</td></tr><tr><td><strong>3 — Encrypted environment variable, decrypt lúc runtime</strong></td><td><strong>Đúng</strong></td><td>An toàn nhất trong 3 lựa chọn: password được <strong>mã hoá bằng KMS</strong> trước khi lưu vào environment variable, chỉ <strong>giải mã trong bộ nhớ khi function chạy</strong> — người xem cấu hình Lambda (console/API) chỉ thấy <strong>ciphertext</strong>, không thấy được password thật nếu không có quyền <code>kms:Decrypt</code> trên đúng KMS Key</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3.</strong></p>
+<blockquote>
+<p>Lưu ý: về mặt best practice tuyệt đối, AWS khuyến nghị dùng <strong>Secrets Manager</strong> (auto rotation, không cần tự quản lý vòng đời mã hoá) cho trường hợp này — nhưng trong phạm vi <strong>3 lựa chọn của câu hỏi</strong>, “encrypted env var + decrypt at runtime” vẫn là lựa chọn an toàn nhất so với 2 phương án còn lại đều để lộ password ở dạng plaintext.</p>
+</blockquote>
+<h3 id="câu-12--lưu-và-theo-dõi-lịch-sử-giá-trị-của-một-secret-dùng-cho-encryption">Câu 12 — Lưu và theo dõi lịch sử giá trị của một secret dùng cho encryption<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-12--lưu-và-theo-dõi-lịch-sử-giá-trị-của-một-secret-dùng-cho-encryption" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have a secret value that you use for encryption purposes, and you want to store and track the values of this secret over time. Which AWS service should you use?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>AWS KMS Versioning feature</li>
+<li>SSM Parameter Store</li>
+<li>Amazon S3</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — “AWS KMS Versioning feature”</td><td><strong>Sai</strong></td><td>Không tồn tại tính năng này — KMS quản lý <strong>key</strong> (mã hoá/giải mã), không phải nơi <strong>lưu và version hoá giá trị secret</strong> của bạn; tên bịa ra nghe hợp lý để gây nhiễu, cùng kiểu bẫy đã gặp ở Câu 10 (“KMS ACL”)</td></tr><tr><td><strong>2 — SSM Parameter Store</strong></td><td><strong>Đúng</strong></td><td>Đúng thiết kế: Parameter Store <strong>tự động lưu version</strong> mỗi khi giá trị parameter được cập nhật, cho phép xem lại lịch sử thay đổi theo thời gian — đúng chức năng “store and track values over time” mà đề bài mô tả, đồng thời hỗ trợ <code>SecureString</code> mã hoá bằng KMS (§4)</td></tr><tr><td>3 — Amazon S3</td><td><strong>Sai</strong></td><td>S3 Versioning theo dõi được <strong>version của object</strong>, nhưng S3 không phải công cụ chuyên dụng cho secret/config key-value — không có cơ chế <code>GetParameter</code>/hierarchy phù hợp cho use case này như Parameter Store</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — SSM Parameter Store.</strong></p>
+<blockquote>
+<p>Từ khoá nhận diện: “store <strong>and track values over time</strong>” → đúng đặc trưng <strong>version history tự động</strong> của Parameter Store, không cần cấu hình gì thêm (khác S3 phải tự bật Versioning cho bucket).</p>
+</blockquote>
+<h3 id="câu-13--website-nguy-cơ-ddos-cao-cần-hỗ-trợ-247--hoàn-phí-do-attack">Câu 13 — Website nguy cơ DDoS cao, cần hỗ trợ 24/7 + hoàn phí do attack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-13--website-nguy-cơ-ddos-cao-cần-hỗ-trợ-247--hoàn-phí-do-attack" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Your user-facing website is a high-risk target for DDoS attacks and you would like to get 24/7 support in case they happen and AWS bill reimbursement for the incurred costs during the attack. What AWS service should you use?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>AWS WAF</li>
+<li>AWS Shield Advanced</li>
+<li>AWS Shield</li>
+<li>AWS DDoS OpsTeam</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — AWS WAF</td><td><strong>Sai</strong></td><td>WAF chặn ở <strong>Layer 7</strong> theo rule (SQLi, XSS…) — không có đội hỗ trợ 24/7 riêng, cũng không có cơ chế <strong>hoàn phí</strong> khi bị DDoS</td></tr><tr><td><strong>2 — AWS Shield Advanced</strong></td><td><strong>Đúng</strong></td><td>Đúng 2 tính năng đề bài yêu cầu, cả hai đều <strong>chỉ có ở bản Advanced</strong> (§9): <strong>24/7 DDoS Response Team (DRT)</strong> và <strong>Cost protection</strong> (hoàn phí nếu bill tăng vọt do usage spike gây ra bởi DDoS)</td></tr><tr><td>3 — AWS Shield (Standard)</td><td><strong>Sai</strong></td><td>Shield Standard <strong>miễn phí, tự động bật</strong> nhưng chỉ bảo vệ Layer 3/4 cơ bản — <strong>không có</strong> DRT 24/7 và <strong>không có</strong> cost protection, đúng 2 thứ đề bài cần</td></tr><tr><td>4 — “AWS DDoS OpsTeam”</td><td><strong>Sai</strong></td><td>Không tồn tại dịch vụ/team nào tên như vậy — tên gần giống “DDoS Response Team (DRT)” thật để gây nhiễu</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — AWS Shield Advanced.</strong></p>
+<blockquote>
+<p>Hai từ khoá “24/7 support” và “bill reimbursement” trong đề đúng là <strong>2 tính năng độc quyền</strong> phân biệt Shield Advanced với Shield Standard, đã liệt kê rõ trong bảng so sánh ở §9 — chỉ cần khớp đúng 2 từ khoá này là loại được toàn bộ 3 phương án còn lại.</p>
+</blockquote>
+<h3 id="câu-14--lưu-config-value-bên-ngoài-cần-kiểm-soát--version-history">Câu 14 — Lưu config value bên ngoài, cần kiểm soát + version history<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-14--lưu-config-value-bên-ngoài-cần-kiểm-soát--version-history" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You would like to externally maintain the configuration values of your main database, to be picked up at runtime by your application. What’s the best place to store them to maintain control and version history?</p>
+</blockquote>
+<p><strong>Đáp án:</strong> (đáp án đúng đã được đánh dấu sẵn: <strong>SSM Parameter Store</strong>)</p>
+<ol>
+<li>Amazon DynamoDB</li>
+<li>Amazon S3</li>
+<li>Amazon EBS</li>
+<li>SSM Parameter Store</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Amazon DynamoDB</td><td><strong>Sai</strong></td><td>Là database NoSQL cho dữ liệu ứng dụng nói chung — không có cơ chế <strong>version history</strong> tích hợp sẵn cho từng giá trị như Parameter Store</td></tr><tr><td>2 — Amazon S3</td><td><strong>Sai</strong></td><td>Có Versioning nhưng phải tự bật, và S3 sinh ra để lưu <strong>object/file</strong>, không tối ưu cho việc app đọc <strong>config key-value</strong> tại runtime bằng API đơn giản như <code>GetParameter</code></td></tr><tr><td>3 — Amazon EBS</td><td><strong>Sai</strong></td><td>EBS là <strong>block storage</strong> gắn vào EC2 — hoàn toàn không phải nơi lưu config tập trung để nhiều service/app cùng đọc</td></tr><tr><td><strong>4 — SSM Parameter Store</strong></td><td><strong>Đúng</strong></td><td>Đúng thiết kế chuyên dụng: cấu trúc <strong>hierarchy theo path</strong> (§4.1), tự động lưu <strong>version history</strong> mỗi lần đổi giá trị, ứng dụng đọc bằng <code>GetParameters</code>/<code>GetParametersByPath</code> tại runtime, kiểm soát quyền theo path bằng IAM</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 4 — SSM Parameter Store.</strong></p>
+<blockquote>
+<p>Cùng một mẫu câu hỏi với Câu 12 — chỉ đổi ngữ cảnh từ “secret dùng cho encryption” sang “config value của database”, nhưng đáp án đúng vẫn luôn là <strong>Parameter Store</strong> vì đúng đặc trưng “store + track version history” mà cả hai câu cùng nhắm tới.</p>
+</blockquote>
+<h3 id="câu-15--guardduty-không-scan-nguồn-dữ-liệu-nào">Câu 15 — GuardDuty KHÔNG scan nguồn dữ liệu nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-15--guardduty-không-scan-nguồn-dữ-liệu-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>AWS GuardDuty scans the following data sources, EXCEPT …………….</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>CloudTrail Logs</li>
+<li>VPC Flow Logs</li>
+<li>DNS Logs</li>
+<li>CloudWatch Logs</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Là nguồn mặc định của GuardDuty?</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — CloudTrail Logs</td><td>Có</td><td>Đúng nguồn mặc định ở §12: API call bất thường, Management Events, S3 Data Events</td></tr><tr><td>2 — VPC Flow Logs</td><td>Có</td><td>Đúng nguồn mặc định ở §12: traffic nội bộ bất thường, IP lạ</td></tr><tr><td>3 — DNS Logs</td><td>Có</td><td>Đúng nguồn mặc định ở §12: phát hiện EC2 bị compromise gửi data mã hoá qua DNS query</td></tr><tr><td><strong>4 — CloudWatch Logs</strong></td><td><strong>KHÔNG — đây là đáp án</strong></td><td>Không nằm trong danh sách <strong>3 nguồn mặc định</strong> (CloudTrail, VPC Flow Logs, DNS Logs) cũng không phải <strong>optional feature</strong> của GuardDuty (§12: EKS Audit Logs, RDS/Aurora login, EBS volume, Lambda network activity, S3 Data Events mở rộng) — GuardDuty không trực tiếp “scan” CloudWatch Logs như một nguồn dữ liệu đầu vào</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 4 — CloudWatch Logs.</strong></p>
+<blockquote>
+<p>Câu hỏi kiểm tra chính xác <strong>3 nguồn dữ liệu mặc định</strong> đã liệt kê ở §12 — 3 phương án đầu đều đúng nguyên văn, chỉ có “CloudWatch Logs” là tên <strong>nghe rất hợp lý</strong> (vì CloudWatch Logs cũng chứa nhiều loại log) nhưng <strong>không phải</strong> nguồn GuardDuty thực sự dùng, dễ gây nhầm với chính <strong>CloudTrail Logs</strong> (đôi khi CloudTrail cũng ghi vào CloudWatch Logs, nhưng GuardDuty lấy trực tiếp từ CloudTrail Event, không qua CloudWatch Logs).</p>
+</blockquote>
+<h3 id="câu-16--bảo-vệ-website-ec2--alb-khỏi-tấn-công-web-phổ-biến">Câu 16 — Bảo vệ website (EC2 + ALB) khỏi tấn công web phổ biến<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-16--bảo-vệ-website-ec2--alb-khỏi-tấn-công-web-phổ-biến" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have a website hosted on a fleet of EC2 instances fronted by an Application Load Balancer. What should you use to protect your website from common web application attacks (e.g., SQL Injection)?</p>
+</blockquote>
+<p><strong>Đáp án:</strong> (đáp án đúng đã được đánh dấu sẵn: <strong>AWS WAF</strong>)</p>
+<ol>
+<li>AWS Shield</li>
+<li>AWS WAF</li>
+<li>AWS Security Hub</li>
+<li>AWS GuardDuty</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — AWS Shield</td><td><strong>Sai</strong></td><td>Shield chuyên chống <strong>DDoS</strong> ở Layer 3/4 (và Layer 7 nếu là Advanced) — không có cơ chế kiểm tra <strong>nội dung request</strong> (HTTP header/body/URI) để chặn SQL Injection</td></tr><tr><td><strong>2 — AWS WAF</strong></td><td><strong>Đúng</strong></td><td>Đúng chức năng cốt lõi ở §8: bảo vệ <strong>Layer 7 (HTTP)</strong>, deploy trực tiếp trên <strong>Application Load Balancer</strong>, kiểm tra HTTP header/body/URI string để <strong>chặn SQL Injection, XSS</strong> — đúng y hệt ví dụ nêu trong đề</td></tr><tr><td>3 — AWS Security Hub</td><td><strong>Sai</strong></td><td>Security Hub chỉ <strong>tổng hợp finding</strong> từ các dịch vụ bảo mật khác (GuardDuty, Inspector, Macie…) thành một dashboard — bản thân nó <strong>không chặn</strong> request nào cả</td></tr><tr><td>4 — AWS GuardDuty</td><td><strong>Sai</strong></td><td>GuardDuty <strong>phát hiện hành vi bất thường</strong> (§12) dựa trên CloudTrail/VPC Flow Logs/DNS Logs — không kiểm tra nội dung HTTP request, không phải công cụ chặn tấn công ứng dụng web</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — AWS WAF.</strong></p>
+<blockquote>
+<p>Từ khoá “SQL Injection” + “ALB” là combo nhận diện WAF kinh điển nhất trong cả chương — đúng nguyên văn §8: <em>“Kiểm tra HTTP header, HTTP body, URI string — chặn SQL Injection, Cross-Site Scripting (XSS).”</em> Shield và GuardDuty là 2 phương án dễ gây nhầm nhất vì cùng thuộc nhóm “bảo mật” nhưng giải quyết bài toán khác (DDoS, phát hiện hành vi) chứ không phải lọc request độc hại theo nội dung.</p>
+</blockquote>
+<h3 id="câu-17--phân-tích-lỗ-hổng-os-trong-ec2-hàng-tuần-kèm-khuyến-nghị-cụ-thể">Câu 17 — Phân tích lỗ hổng OS trong EC2 hàng tuần, kèm khuyến nghị cụ thể<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-17--phân-tích-lỗ-hổng-os-trong-ec2-hàng-tuần-kèm-khuyến-nghị-cụ-thể" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You would like to analyze OS vulnerabilities from within EC2 instances. You need these analyses to occur weekly and provide you with concrete recommendations in case vulnerabilities are found. Which AWS service should you use?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>AWS Shield</li>
+<li>Amazon GuardDuty</li>
+<li>Amazon Inspector</li>
+<li>AWS Config</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — AWS Shield</td><td><strong>Sai</strong></td><td>Shield chống DDoS, hoàn toàn không liên quan tới quét <strong>lỗ hổng OS</strong> bên trong EC2</td></tr><tr><td>2 — Amazon GuardDuty</td><td><strong>Sai</strong></td><td>GuardDuty phát hiện <strong>hành vi tấn công đang diễn ra</strong> (§12) dựa trên CloudTrail/VPC Flow Logs/DNS Logs — không quét <strong>CVE</strong> hay lỗ hổng <strong>bên trong OS</strong> của EC2</td></tr><tr><td><strong>3 — Amazon Inspector</strong></td><td><strong>Đúng</strong></td><td>Đúng chức năng cốt lõi ở §13: quét EC2 qua <strong>SSM Agent</strong>, phân tích <strong>network reachability</strong> + <strong>OS có lỗ hổng CVE đã biết</strong>, <strong>continuous scanning</strong> (khớp yêu cầu “weekly”), mỗi finding có <strong>risk score để ưu tiên xử lý</strong> — đúng nghĩa “concrete recommendations” mà đề bài yêu cầu</td></tr><tr><td>4 — AWS Config</td><td><strong>Sai</strong></td><td>Config đánh giá <strong>compliance cấu hình</strong> theo rule tự định nghĩa — không có database <strong>CVE</strong> và không tự phân tích lỗ hổng <strong>bên trong</strong> OS như Inspector</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — Amazon Inspector.</strong></p>
+<blockquote>
+<p>Từ khoá nhận diện: “OS vulnerabilities” + “EC2” + “concrete recommendations” là combo đặc trưng của Inspector — đúng bảng phân biệt GuardDuty/Inspector/Macie ở §15.3: Inspector là dịch vụ <strong>duy nhất</strong> trong bộ ba chuyên trách “phát hiện <strong>lỗ hổng (CVE)</strong> trong tài nguyên”, khác hẳn GuardDuty (hành vi bất thường) và Macie (dữ liệu nhạy cảm).</p>
+</blockquote>
+<h3 id="câu-18--lưu-rds-db-password-cần-auto-rotation">Câu 18 — Lưu RDS DB password, cần auto rotation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-18--lưu-rds-db-password-cần-auto-rotation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>What is the most suitable AWS service for storing RDS DB passwords which also provides you automatic rotation?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>AWS Secrets Manager</li>
+<li>AWS KMS</li>
+<li>AWS SSM Parameter Store</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — AWS Secrets Manager</strong></td><td><strong>Đúng</strong></td><td>Đúng thiết kế chuyên biệt ở §5: <em>“Chủ yếu thiết kế để tích hợp Amazon RDS”</em>, hỗ trợ <strong>Force rotation mỗi X ngày</strong> bằng <strong>Lambda blueprint có sẵn cho RDS/Aurora</strong> (MySQL, PostgreSQL) — đúng cả 2 yêu cầu “lưu RDS password” và “auto rotation” trong cùng một câu</td></tr><tr><td>2 — AWS KMS</td><td><strong>Sai</strong></td><td>KMS chỉ quản lý <strong>key mã hoá</strong>, không phải nơi <strong>lưu trữ secret/password</strong> — Secrets Manager dùng KMS <strong>bên dưới</strong> để mã hoá secret, nhưng bản thân KMS không có khái niệm “lưu password” hay “rotate password”</td></tr><tr><td>3 — AWS SSM Parameter Store</td><td><strong>Sai</strong></td><td>Đúng bảng so sánh §15.2: Parameter Store <strong>không có sẵn</strong> auto rotation — muốn rotate phải <strong>tự viết Lambda</strong>, trong khi Secrets Manager có blueprint <strong>có sẵn</strong> cho RDS/Aurora, đúng yêu cầu “most suitable” của đề</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — AWS Secrets Manager.</strong></p>
+<blockquote>
+<p>Đây là bài kiểm tra trực tiếp dòng đầu tiên trong bảng so sánh §15.2 (Secrets Manager vs Parameter Store): tiêu chí <strong>Auto rotation</strong> là điểm khác biệt cốt lõi nhất giữa hai dịch vụ — hễ đề nhắc “password DB” + “auto rotation” cùng lúc, luôn luôn là Secrets Manager.</p>
+</blockquote>
+<h3 id="câu-19--quản-lý-tập-trung-security-group--shield-advanced-toàn-organization">Câu 19 — Quản lý tập trung Security Group + Shield Advanced toàn Organization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-19--quản-lý-tập-trung-security-group--shield-advanced-toàn-organization" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Which AWS service allows you to centrally manage EC2 Security Groups and AWS Shield Advanced across all AWS accounts in your AWS Organization?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>AWS Shield</li>
+<li>AWS GuardDuty</li>
+<li>AWS Config</li>
+<li>AWS Firewall Manager</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — AWS Shield</td><td><strong>Sai</strong></td><td>Shield tự nó bảo vệ DDoS cho <strong>một resource/account</strong>, không có khái niệm quản lý <strong>tập trung nhiều account</strong> trong Organization</td></tr><tr><td>2 — AWS GuardDuty</td><td><strong>Sai</strong></td><td>GuardDuty phát hiện đe doạ, không quản lý cấu hình Security Group hay Shield Advanced</td></tr><tr><td>3 — AWS Config</td><td><strong>Sai</strong></td><td>Config theo dõi <strong>compliance cấu hình</strong> (có thể aggregate qua account) nhưng <strong>không tự áp đặt/quản lý</strong> rule Security Group hay Shield Advanced xuyên account — đó là việc của Firewall Manager</td></tr><tr><td><strong>4 — AWS Firewall Manager</strong></td><td><strong>Đúng</strong></td><td>Đúng nguyên văn §10: Security Policy của Firewall Manager áp dụng được cho cả <strong>Security Group (EC2, ALB, ENI trong VPC)</strong> lẫn <strong>Shield Advanced (ALB, CLB, NLB, Elastic IP, CloudFront)</strong>, quản lý <strong>tập trung trên toàn AWS Organization</strong>, tự động áp cho resource mới tạo</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 4 — AWS Firewall Manager.</strong></p>
+<blockquote>
+<p>Đúng combo đã liệt kê ở §10 (danh sách 5 loại rule Firewall Manager quản lý được: WAF, Shield Advanced, Security Group, Network Firewall, Route 53 Resolver DNS Firewall) — cứ thấy đề nhắc “tập trung nhiều account trong Organization” + tên bất kỳ rule bảo mật nào trong danh sách đó, đáp án luôn là Firewall Manager.</p>
+</blockquote>
+<h3 id="câu-20--bảo-vệ-dữ-liệu-nhạy-cảm-lưu-trong-s3">Câu 20 — Bảo vệ dữ liệu nhạy cảm lưu trong S3<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-20--bảo-vệ-dữ-liệu-nhạy-cảm-lưu-trong-s3" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Which AWS service helps you protect your sensitive data stored in S3 buckets?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Amazon GuardDuty</li>
+<li>Amazon Shield</li>
+<li>Amazon Macie</li>
+<li>AWS KMS</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Amazon GuardDuty</td><td><strong>Sai</strong></td><td>GuardDuty phát hiện <strong>hành vi tấn công/bất thường</strong> ở cấp account/network — không quét <strong>nội dung object</strong> để tìm dữ liệu nhạy cảm</td></tr><tr><td>2 — Amazon Shield</td><td><strong>Sai</strong></td><td>Shield chống DDoS, hoàn toàn không liên quan tới nội dung dữ liệu lưu trong S3</td></tr><tr><td><strong>3 — Amazon Macie</strong></td><td><strong>Đúng</strong></td><td>Đúng mục tiêu duy nhất đã ghi ở §14: <em>“Mục tiêu duy nhất: Amazon S3… Quét nội dung object để tìm PII… hữu ích để phát hiện bucket chứa PII bị cấu hình sai (public)”</em> — đây chính là dịch vụ chuyên trách “bảo vệ dữ liệu nhạy cảm trong S3” mà đề hỏi</td></tr><tr><td>4 — AWS KMS</td><td><strong>Sai</strong></td><td>KMS chỉ mã hoá dữ liệu (bảo vệ khỏi bị đọc trộm nếu rò rỉ hạ tầng) nhưng <strong>không phát hiện</strong> được liệu bucket có đang <strong>chứa</strong> dữ liệu nhạy cảm hay bị cấu hình public hay không — hai lớp bảo vệ khác nhau: KMS = mã hoá, Macie = phát hiện/phân loại nội dung</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — Amazon Macie.</strong></p>
+<blockquote>
+<p>Bẫy hay gặp nhất ở đây là chọn nhầm KMS vì nghĩ “bảo vệ dữ liệu” = “mã hoá dữ liệu” — nhưng đề hỏi cụ thể về việc <strong>phát hiện và cảnh báo</strong> dữ liệu nhạy cảm (PII) đang nằm ở đâu, đúng chuyên môn của Macie (§14, §15.3) chứ không phải KMS (vốn chỉ giải quyết bài toán mã hoá, không biết nội dung file là gì).</p>
+</blockquote>
+<h3 id="câu-21--aurora-global-database-mã-hoá-field-mà-cả-admin-công-ty-cũng-không-đọc-được">Câu 21 — Aurora Global Database, mã hoá field mà cả admin công ty cũng không đọc được<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-21--aurora-global-database-mã-hoá-field-mà-cả-admin-công-ty-cũng-không-đọc-được" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>An online-payment company is using AWS to host its infrastructure. The frontend is created using VueJS and is hosted on an S3 bucket and the backend is developed using PHP and is hosted on EC2 instances in an Auto Scaling Group. As their customers are worldwide, they use both CloudFront and Aurora Global database to implement multi-region deployments to provide the lowest latency and provide availability, and resiliency. A new feature required which gives customers the ability to store data encrypted on the database and this data must not be disclosed even by the company admins. The data should be encrypted on the client side and stored in an encrypted format. What do you recommend to implement this?</p>
+</blockquote>
+<p><strong>Đáp án:</strong> (đã chọn sẵn trong ảnh: <strong>Using Aurora Client-side Encryption and KMS Multi-region Keys</strong>)</p>
+<ol>
+<li>Using Aurora Client-side Encryption and KMS Multi-region Keys</li>
+<li>Using Lambda Client-side Encryption and KMS Multi-region Keys</li>
+<li>Using Aurora Client-side Encryption and CloudHSM</li>
+<li>Using Lambda Client-side Encryption and CloudHSM</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — Aurora Client-side Encryption + KMS Multi-Region Keys</strong></td><td><strong>Đúng</strong></td><td>Đúng y hệt use case đã mô tả ở §2.5 và §3: mã hoá <strong>ở phía client</strong> (app PHP tự mã hoá field trước khi ghi vào Aurora — đúng yêu cầu “must not be disclosed even by admins” vì DB chỉ lưu ciphertext) bằng <strong>KMS Multi-Region Key</strong>, cho phép region chính mã hoá bằng Primary MRK và region phụ <strong>giải mã bằng Replica MRK cùng ID mà không cần round-trip</strong> sang region chính — khớp hoàn hảo với kiến trúc <strong>multi-region</strong> (CloudFront + Aurora Global Database) đã có sẵn trong đề</td></tr><tr><td>2 — Lambda Client-side Encryption + KMS Multi-Region Keys</td><td><strong>Sai</strong></td><td>Kiến trúc trong đề <strong>không có Lambda</strong> — backend là PHP chạy trên EC2 trong ASG; việc mã hoá client-side nên xảy ra <strong>ngay trong tiến trình ứng dụng</strong> (dùng thư viện encryption client) trước khi ghi DB, không cần thêm một Lambda trung gian làm phức tạp và tăng latency không cần thiết</td></tr><tr><td>3 — Aurora Client-side Encryption + CloudHSM</td><td><strong>Sai</strong></td><td>CloudHSM <strong>không có tính năng Multi-Region Key</strong> như KMS (§2.5, §7.1) — dùng CloudHSM cho kiến trúc multi-region đòi hỏi <strong>tự đồng bộ key thủ công</strong> giữa các cluster HSM ở từng region, mất đúng lợi ích “giải mã region phụ không cần round-trip” mà đề yêu cầu (latency thấp)</td></tr><tr><td>4 — Lambda Client-side Encryption + CloudHSM</td><td><strong>Sai</strong></td><td>Kết hợp cả 2 lỗi ở trên: thêm Lambda không cần thiết <strong>và</strong> CloudHSM không hỗ trợ multi-region tiện lợi như KMS MRK</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1.</strong></p>
+<blockquote>
+<p>Đây là ví dụ áp dụng gần như nguyên văn use case đã ghi ở §2.5: <em>“mã hoá field nhạy cảm (vd SSN) bằng KMS Multi-Region Key ở region chính, dữ liệu đã mã hoá được replicate tự động sang các region khác; client ở region phụ decrypt bằng Replica MRK cùng ID với latency thấp… Cách này bảo vệ field ngay cả khỏi DB admin — vì DB chỉ lưu ciphertext.”</em> Chỉ cần nhận diện đúng 3 từ khoá “multi-region + client-side + không cho DB admin thấy” là khớp thẳng vào §2.5, không cần suy luận thêm.</p>
+</blockquote>
+<h3 id="câu-22--s3-replication-sse-kms-khác-key-cùng-region-vẫn-không-chạy">Câu 22 — S3 Replication SSE-KMS khác key, cùng region, vẫn không chạy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-22--s3-replication-sse-kms-khác-key-cùng-region-vẫn-không-chạy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have an S3 bucket that is encrypted with SSE-KMS. You have been tasked to replicate the objects to a target bucket in the same AWS region but with a different KMS Key. You have configured the S3 replication, the target bucket, and the target KMS key and it is still not working. What is missing to make the S3 replication work?</p>
+</blockquote>
+<p><strong>Đáp án:</strong> (đã chọn sẵn trong ảnh: <strong>cấp <code>kms:Decrypt</code> trên Source Key + <code>kms:Encrypt</code> trên Target Key</strong>)</p>
+<ol>
+<li>This is not a supported feature</li>
+<li>You have to raise a support ticket for AWS to start this replication process for you</li>
+<li>You have to configure permissions for both Source KMS Key (<code>kms:Decrypt</code>) and Target KMS Key (<code>kms:Encrypt</code>) to be used by the S3 Replication Service</li>
+<li>The source KMS Key and the target KMS key must be the same</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Không phải tính năng được hỗ trợ</td><td><strong>Sai</strong></td><td>Sai hoàn toàn — S3 Replication <strong>hỗ trợ</strong> đổi KMS Key giữa nguồn/đích, chỉ cần <strong>bật riêng tuỳ chọn replicate object mã hoá KMS</strong> (§2.7), đây chính là tính năng đề bài đang cấu hình</td></tr><tr><td>2 — Phải mở support ticket để AWS tự chạy hộ</td><td><strong>Sai</strong></td><td>Không có quy trình nào như vậy — cấu hình replication hoàn toàn tự làm được qua Console/API, không cần AWS can thiệp thủ công</td></tr><tr><td><strong>3 — Cấp quyền cho cả Source Key (<code>kms:Decrypt</code>) và Target Key (<code>kms:Encrypt</code>) cho S3 Replication Service</strong></td><td><strong>Đúng</strong></td><td>Đúng nguyên văn quy trình ở §2.7: <em>“IAM Role của replication cần <code>kms:Decrypt</code> trên key nguồn và <code>kms:Encrypt</code> trên key đích.”</em> Đề bài đã cấu hình xong replication + target bucket + target key nhưng <strong>thiếu bước cấp quyền KMS</strong> cho chính <strong>IAM Role/Service</strong> thực hiện replication — đây là nguyên nhân phổ biến nhất khiến replication “config đủ nhưng vẫn không chạy”</td></tr><tr><td>4 — Source key và target key phải giống nhau</td><td><strong>Sai</strong></td><td>Ngược lại chính yêu cầu của đề: đề bài <strong>chủ động muốn</strong> dùng <strong>key khác nhau</strong> giữa nguồn và đích (mã hoá lại bằng key riêng ở đích) — đây là kịch bản S3 Replication <strong>hỗ trợ sẵn</strong>, không bắt buộc phải cùng key</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3.</strong></p>
+<blockquote>
+<p>Bẫy của câu: 3 phương án sai đều gợi ý “có vấn đề về tính năng/quy trình” (không hỗ trợ, cần ticket, phải cùng key) — trong khi vấn đề thật chỉ đơn giản là <strong>thiếu một bước cấu hình quyền IAM/KMS</strong>, đúng checklist đầy đủ ở §2.7: chỉ định KMS Key đích + sửa Key Policy đích cho phép replication + <strong>IAM Role có đủ <code>kms:Decrypt</code> (nguồn) và <code>kms:Encrypt</code> (đích)</strong> — đề bài mới làm 2/3 bước, thiếu đúng bước cuối.</p>
+</blockquote>
+<h3 id="câu-23--cert-lets-encrypt-import-vào-acm-cần-báo-trước-30-ngày-khi-hết-hạn">Câu 23 — Cert Let’s Encrypt import vào ACM, cần báo trước 30 ngày khi hết hạn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-23--cert-lets-encrypt-import-vào-acm-cần-báo-trước-30-ngày-khi-hết-hạn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have generated a public certificate using LetsEncrypt and uploaded it to the ACM so you can use and attach to an Application Load Balancer that forwards traffic to EC2 instances. As this certificate is generated outside of AWS, it does not support the automatic renewal feature. How would you be notified 30 days before this certificate expires so you can manually generate a new one?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Configure ACM to send notifications by linking it to 3rd party certificate provider LetsEncrypt</li>
+<li>Configure EventBridge for Daily Expiration Events from ACM to invoke SNS notifications to your email</li>
+<li>Configure EventBridge for Monthly Expiration Events from ACM to invoke SNS notifications to your email</li>
+<li>Configure CloudWatch Alarms for Daily Expiration Events from ACM to invoke SNS notifications to your email</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Cấu hình ACM link tới Let’s Encrypt để gửi notification</td><td><strong>Sai</strong></td><td>Không tồn tại cơ chế “ACM liên kết ngược với nhà cung cấp cert bên thứ 3” để nhận notification — ACM không biết gì về hệ thống của Let’s Encrypt sau khi cert đã được <strong>import</strong> xong</td></tr><tr><td><strong>2 — EventBridge Daily Expiration Events từ ACM → SNS</strong></td><td><strong>Đúng</strong></td><td>Đúng cơ chế thật ở §6.2: với cert <strong>import</strong> (không do ACM tạo), ACM tự gửi <strong>daily expiration event</strong> bắt đầu <strong>45 ngày trước hạn</strong> qua <strong>EventBridge</strong>, route tiếp tới SNS → email; vì sự kiện gửi <strong>hàng ngày</strong>, bạn chắc chắn nhận được cảnh báo đúng vào mốc <strong>30 ngày</strong> trước hạn nằm trong chuỗi daily event đó, không cần cấu hình gì đặc biệt cho riêng “30 ngày”</td></tr><tr><td>3 — EventBridge Monthly Expiration Events</td><td><strong>Sai</strong></td><td>Không tồn tại loại event “Monthly” cho ACM — cơ chế thật là <strong>Daily</strong>, không phải theo tháng; nếu dùng chu kỳ tháng có thể <strong>bỏ lỡ</strong> đúng mốc 30 ngày mà đề yêu cầu</td></tr><tr><td>4 — CloudWatch Alarms cho Daily Expiration Events</td><td><strong>Sai</strong></td><td>ACM <strong>không expose metric CloudWatch</strong> cho việc sắp hết hạn cert để gắn Alarm — cơ chế thông báo thật của ACM đi qua <strong>EventBridge event</strong>, không phải CloudWatch Alarm (khác với AWS Config có managed rule <code>acm-certificate-expiration-check</code> để dò, nhưng đó là con đường khác, không phải CloudWatch Alarm)</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — EventBridge Daily Expiration Events → SNS.</strong></p>
+<blockquote>
+<p>Đúng nguyên văn cơ chế ở §6.2: <em>“ACM gửi daily expiration event bắt đầu 45 ngày trước hạn (số ngày cấu hình được) qua EventBridge → có thể route tới Lambda/SNS/SQS.”</em> Từ khoá “generated outside of AWS” + “does not support auto renewal” là tín hiệu nhận diện ngay: đây là <strong>imported certificate</strong>, phải dùng đúng cơ chế cảnh báo dành riêng cho loại cert này (EventBridge Daily Expiration Events), không phải cơ chế nào khác.</p>
+</blockquote>
+<h3 id="câu-24--edge-optimized-api-gateway-ở-us-west-2-đặt-acm-cert-ở-region-nào">Câu 24 — Edge-Optimized API Gateway ở us-west-2, đặt ACM cert ở region nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-24--edge-optimized-api-gateway-ở-us-west-2-đặt-acm-cert-ở-region-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have created the main Edge-Optimized API Gateway in <code>us-west-2</code> AWS region. This main Edge-Optimized API Gateway forwards traffic to the second level API Gateway in <code>ap-southeast-1</code>. You want to secure the main API Gateway by attaching an ACM certificate to it. Which AWS region are you going to create the ACM certificate in?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li><code>us-east-1</code></li>
+<li><code>us-west-2</code></li>
+<li><code>ap-southeast-1</code></li>
+<li>Both <code>us-east-1</code> and <code>us-west-2</code> works</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — <code>us-east-1</code></strong></td><td><strong>Đúng</strong></td><td>Đúng quy tắc cố định ở §6.3: <strong>Edge-Optimized API Gateway</strong> gắn vào <strong>CloudFront</strong> phía sau, mà <strong>CloudFront luôn yêu cầu ACM certificate nằm ở <code>us-east-1</code></strong> — quy tắc này <strong>không phụ thuộc</strong> vào region mà chính API Gateway được tạo</td></tr><tr><td>2 — <code>us-west-2</code> (region của API Gateway chính)</td><td><strong>Sai</strong></td><td>Bẫy trực giác “cert nên cùng region với resource” — nhưng với <strong>Edge-Optimized</strong>, quy tắc luôn là <code>us-east-1</code> bất kể API Gateway nằm ở region nào, vì thực thể thật sự “tiêu thụ” cert là CloudFront (global nhưng quản lý cert tại <code>us-east-1</code>), không phải chính API Gateway</td></tr><tr><td>3 — <code>ap-southeast-1</code> (region của API Gateway cấp 2)</td><td><strong>Sai</strong></td><td>Không liên quan — API Gateway cấp 2 chỉ là <strong>backend nội bộ</strong> nhận traffic forward từ cái chính, không phải nơi cần đặt cert cho <strong>client-facing endpoint</strong></td></tr><tr><td>4 — Cả hai <code>us-east-1</code> và <code>us-west-2</code> đều được</td><td><strong>Sai</strong></td><td>Sai vì với Edge-Optimized, chỉ có <strong><code>us-east-1</code></strong> hoạt động — đặt cert ở <code>us-west-2</code> sẽ <strong>không gắn được</strong> vào CloudFront phía sau API Gateway Edge-Optimized</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — <code>us-east-1</code>.</strong></p>
+<blockquote>
+<p>Đúng nguyên văn bảng 3 kiểu endpoint API Gateway ở §6.3: <em>“Edge-Optimized (mặc định)… Cert phải nằm ở us-east-1 (vì gắn vào CloudFront).”</em> Region <code>us-west-2</code> trong đề chỉ là “mồi nhử” để kiểm tra xem có nhầm lẫn giữa “region của API Gateway” và “region bắt buộc của cert CloudFront” hay không — hai thứ này <strong>độc lập hoàn toàn</strong> với Edge-Optimized endpoint.</p>
+</blockquote>
+<h3 id="câu-25--quản-lý-security-group--waf-rules-tập-trung-nhiều-account-sau-sự-cố-bảo-mật">Câu 25 — Quản lý Security Group + WAF Rules tập trung nhiều account sau sự cố bảo mật<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-25--quản-lý-security-group--waf-rules-tập-trung-nhiều-account-sau-sự-cố-bảo-mật" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You are managing an AWS Organization with multiple AWS accounts. Each account has a separate application with different resources. You want an easy way to manage Security Groups and WAF Rules across those accounts as there was a security incident the last week and you want to tighten up your resources. Which AWS service can help you to do so?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>AWS GuardDuty</li>
+<li>Amazon Shield</li>
+<li>Amazon Inspector</li>
+<li>AWS Firewall Manager</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — AWS GuardDuty</td><td><strong>Sai</strong></td><td>GuardDuty chỉ <strong>phát hiện</strong> hành vi bất thường — không có chức năng <strong>quản lý/áp đặt</strong> rule Security Group hay WAF</td></tr><tr><td>2 — Amazon Shield</td><td><strong>Sai</strong></td><td>Shield chỉ chống DDoS, không liên quan tới quản lý Security Group hay WAF Rules</td></tr><tr><td>3 — Amazon Inspector</td><td><strong>Sai</strong></td><td>Inspector quét lỗ hổng CVE trên EC2/ECR/Lambda (§13) — không quản lý Security Group hay WAF</td></tr><tr><td><strong>4 — AWS Firewall Manager</strong></td><td><strong>Đúng</strong></td><td>Đúng chức năng cốt lõi ở §10: Security Policy của Firewall Manager quản lý <strong>tập trung</strong> cả <strong>WAF rules</strong> lẫn <strong>Security Group</strong> (EC2, ALB, ENI trong VPC) <strong>trên toàn AWS Organization</strong>, đúng 2 thứ đề bài cần quản lý xuyên suốt nhiều account</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 4 — AWS Firewall Manager.</strong></p>
+<blockquote>
+<p>Cùng một mẫu với Câu 19 — chỉ đổi ngữ cảnh từ “Security Group + Shield Advanced” (Câu 19) sang “Security Group + WAF Rules” (câu này), nhưng đáp án đúng vẫn luôn là <strong>Firewall Manager</strong> vì đây là dịch vụ <strong>duy nhất</strong> trong cả chương có khả năng quản lý tập trung nhiều loại rule bảo mật (WAF, Shield Advanced, Security Group, Network Firewall, Route 53 Resolver DNS Firewall) xuyên suốt <strong>AWS Organization</strong> (§10). Bối cảnh “security incident tuần trước” chỉ là lý do nghiệp vụ, không đổi bản chất câu hỏi.</p>
+</blockquote>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>3 loại encryption</strong>: in-transit (TLS), at-rest (SSE qua KMS), client-side (SDK riêng) — đề hay hỏi “AWS service nào không giải mã được”? → client-side.</li>
+<li>KMS: Owned key (free, SSE-S3/SQS/DDB) vs Managed key (<code>aws/service</code>, free, rotate 1 năm) vs Customer Managed ($1/tháng, tự bật rotate).</li>
+<li><strong>Key Policy quyết định tất cả</strong> — IAM Allow không đủ nếu Key Policy không cấp quyền.</li>
+<li><strong>Envelope encryption</strong>: <code>GenerateDataKey</code> → mã hoá bằng plaintext key → xoá key khỏi RAM → lưu ciphertext + encrypted key.</li>
+<li><strong>Multi-Region Key</strong>: cùng key ID nhiều region nhưng <strong>quản lý độc lập</strong>, không phải key toàn cầu; S3 Replication vẫn coi 2 MRK là 2 key riêng (vẫn decrypt+encrypt lại).</li>
+<li><strong>Copy snapshot cross-account</strong> phải dùng Customer Managed Key (AWS Managed Key không share được).</li>
+<li><strong>SSM Parameter Store</strong>: Standard (10.000 param, 4KB, free) vs Advanced (100.000 param, 8KB, có TTL policy, $0.05/param/tháng).</li>
+<li><strong>Secrets Manager</strong> = Parameter Store + auto rotation (Lambda) + multi-region replication — chọn khi cần rotate credential DB.</li>
+<li><strong>ACM</strong>: public cert free + auto renew 60 ngày trước hạn; imported cert phải tự renew, cảnh báo 45 ngày qua EventBridge; <strong>không cài lên EC2 trực tiếp</strong> — chỉ ELB/CloudFront/API Gateway.</li>
+<li><strong>API Gateway Edge-Optimized</strong>: cert bắt buộc ở <strong>us-east-1</strong> vì gắn CloudFront.</li>
+<li><strong>CloudHSM</strong>: single-tenant, bạn tự quản lý key hoàn toàn, không free tier, HA bằng nhiều HSM trên nhiều AZ, tích hợp KMS qua Custom Key Store.</li>
+<li><strong>WAF</strong> = Layer 7, gắn ALB/API Gateway/CloudFront/AppSync/Cognito — <strong>không gắn được NLB</strong>.</li>
+<li><strong>Shield Standard</strong> free cho mọi người (L3/4); <strong>Shield Advanced</strong> $3.000/tháng, thêm L7 mitigation + DRT + cost protection.</li>
+<li><strong>Firewall Manager</strong> = quản lý WAF/Shield/SG/Network Firewall tập trung nhiều account, tự áp cho resource mới.</li>
+<li><strong>GuardDuty</strong>: ML, không cần agent, input là CloudTrail + VPC Flow Logs + DNS Logs.</li>
+<li><strong>Inspector</strong>: chỉ EC2/ECR/Lambda, quét CVE + network reachability.</li>
+<li><strong>Macie</strong>: chỉ S3, tìm PII bằng ML.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Nhìn tổng thể, section này chia đúng 2 câu hỏi: <strong>“dữ liệu có được bảo vệ đúng cách không” (encryption)</strong> và <strong>“có ai đang cố tấn công/đã có lỗ hổng/data đã lộ ra ngoài chưa” (detection)</strong>. Học theo 2 trục này dễ nhớ hơn học tuần tự từng slide.</li>
+<li>Combo hay bị hỏi nhất theo kinh nghiệm cá nhân: (1) cross-account KMS key sharing (S3 + snapshot), (2) WAF không hỗ trợ NLB, (3) phân biệt GuardDuty/Inspector/Macie bằng câu “chúng phát hiện cái gì” thay vì học thuộc tên.</li>
+<li>Đối chiếu với 3 note domain-based đã có (<a href="../../../02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.4---data-protection---kms,-acm,-encryption" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.4---data-protection---kms,-acm,-encryption">1.4 - Data Protection - KMS, ACM, Encryption</a>, <a href="../../../02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.5---security-services---waf,-shield,-guardduty" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.5---security-services---waf,-shield,-guardduty">1.5 - Security Services - WAF, Shield, GuardDuty</a>, <a href="../../../02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.6---secrets-và-credentials-management" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.6---secrets-và-credentials-management">1.6 - Secrets và Credentials Management</a>) — số liệu (chi phí KMS, ngưỡng Standard/Advanced Parameter Store, $3.000 Shield Advanced) đều khớp, chỉ khác cách tổ chức: 3 note kia gom theo domain thi, note này bám theo đúng thứ tự slide gốc của Stephane Maarek nên có thêm chi tiết cơ chế (cross-region/cross-account KMS, Multi-Region Key, API Gateway endpoint types) mà bản domain-based lược bớt.</li>
+<li>QLDB không xuất hiện trong slide section này (đã học ở <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/21---databases-in-aws" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/21---databases-in-aws">21 - Databases in AWS</a>) — đúng vì đây là bài Security, không phải Database.</li>
+<li><strong>Đính chính quan trọng từ bộ 25 câu ôn tập (§16):</strong> AWS KMS Automatic Key Rotation <strong>không còn bị khoá cứng ở 1 năm</strong> như tôi hiểu ban đầu — có tính năng <strong>flexible rotation period</strong> (90–2.560 ngày, tham số <code>RotationPeriodInDays</code>), đã cập nhật lại vào §2.2 và Câu 9. Bài học: khi ôn theo tài liệu khoá học cũ, luôn kiểm tra lại những con số “cố định tuyệt đối” vì AWS có thể đã bổ sung tính năng mới sau thời điểm slide được quay.</li>
+<li>Bộ 25 câu ôn tập ở §16 củng cố đúng 2 trục đã nói ở trên: <strong>encryption</strong> (SSE vs client-side vs KMS key management vs rotation) chiếm khoảng 2/3 số câu, <strong>detection &amp; protection</strong> (WAF/Shield/Firewall Manager/GuardDuty/Inspector/Macie) chiếm phần còn lại — tỷ lệ này phản ánh đúng trọng số thật của domain Security trong đề thi.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>3 loại encryption: in-transit vs at-rest vs client-side</li>
+<li>KMS Key types (Owned/Managed/Customer) + chi phí + rotation</li>
+<li>KMS Envelope Encryption (GenerateDataKey)</li>
+<li>KMS Key Policy vs IAM Policy — vì sao cần cả hai</li>
+<li>KMS Multi-Region Keys (không phải global key)</li>
+<li>Copy EBS Snapshot cross-region/cross-account với KMS</li>
+<li>S3 Replication + SSE-KMS (cấu hình bắt buộc)</li>
+<li>SSM Parameter Store: Standard vs Advanced tier + Parameter Policies (TTL)</li>
+<li>AWS Secrets Manager: auto rotation + multi-region replication</li>
+<li>ACM: public vs private cert, DNS vs Email validation, import vs ACM-issued</li>
+<li>API Gateway endpoint types (Edge-Optimized/Regional/Private) và vị trí cert</li>
+<li>CloudHSM vs KMS (tenancy, HA, free tier, crypto acceleration)</li>
+<li>AWS WAF: Web ACL, rule types, không hỗ trợ NLB</li>
+<li>Shield Standard vs Shield Advanced</li>
+<li>AWS Best Practices for DDoS Resiliency — 4 lớp phòng thủ (BP1-BP7)</li>
+<li>AWS Firewall Manager (multi-account security policy)</li>
+<li>Amazon GuardDuty: nguồn dữ liệu + cơ chế ML</li>
+<li>Amazon Inspector: phạm vi EC2/ECR/Lambda</li>
+<li>Amazon Macie: PII detection trong S3</li>
+<li>Bảng phân biệt GuardDuty vs Inspector vs Macie</li>
+<li>KMS Flexible Rotation Period — chu kỳ Automatic Rotation tuỳ chỉnh 90–2.560 ngày (không còn cố định 1 năm)</li>
+<li>Bộ 25 câu ôn tập AWS Security &amp; Encryption (§16) — encryption + detection/protection</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-94" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#26--aws-security--encryption-kms-secrets-manager-acm-waf-shield-guardduty-macie" data-for="26--aws-security--encryption-kms-secrets-manager-acm-waf-shield-guardduty-macie">26 – AWS Security &amp; Encryption: KMS, Secrets Manager, ACM, WAF, Shield, GuardDuty, Macie</a></li><li class="depth-1"><a href="#phần-a--encryption" data-for="phần-a--encryption">Phần A — Encryption</a></li><li class="depth-2"><a href="#1-ba-loại-encryption-cần-phân-biệt" data-for="1-ba-loại-encryption-cần-phân-biệt">1. Ba loại encryption cần phân biệt</a></li><li class="depth-2"><a href="#2-aws-kms-key-management-service" data-for="2-aws-kms-key-management-service">2. AWS KMS (Key Management Service)</a></li><li class="depth-2"><a href="#3-client-side-encryption-aws-encryption-sdk" data-for="3-client-side-encryption-aws-encryption-sdk">3. Client-side encryption: AWS Encryption SDK</a></li><li class="depth-2"><a href="#4-aws-systems-manager-parameter-store" data-for="4-aws-systems-manager-parameter-store">4. AWS Systems Manager Parameter Store</a></li><li class="depth-2"><a href="#5-aws-secrets-manager" data-for="5-aws-secrets-manager">5. AWS Secrets Manager</a></li><li class="depth-2"><a href="#6-aws-certificate-manager-acm" data-for="6-aws-certificate-manager-acm">6. AWS Certificate Manager (ACM)</a></li><li class="depth-2"><a href="#7-aws-cloudhsm" data-for="7-aws-cloudhsm">7. AWS CloudHSM</a></li><li class="depth-1"><a href="#phần-b--detection--protection-services" data-for="phần-b--detection--protection-services">Phần B — Detection &amp; Protection services</a></li><li class="depth-2"><a href="#8-aws-waf-web-application-firewall" data-for="8-aws-waf-web-application-firewall">8. AWS WAF (Web Application Firewall)</a></li><li class="depth-2"><a href="#9-aws-shield" data-for="9-aws-shield">9. AWS Shield</a></li><li class="depth-2"><a href="#10-aws-firewall-manager" data-for="10-aws-firewall-manager">10. AWS Firewall Manager</a></li><li class="depth-2"><a href="#11-aws-best-practices-for-ddos-resiliency--4-lớp-phòng-thủ" data-for="11-aws-best-practices-for-ddos-resiliency--4-lớp-phòng-thủ">11. AWS Best Practices for DDoS Resiliency — 4 lớp phòng thủ</a></li><li class="depth-2"><a href="#12-amazon-guardduty" data-for="12-amazon-guardduty">12. Amazon GuardDuty</a></li><li class="depth-2"><a href="#13-amazon-inspector" data-for="13-amazon-inspector">13. Amazon Inspector</a></li><li class="depth-2"><a href="#14-amazon-macie" data-for="14-amazon-macie">14. Amazon Macie</a></li><li class="depth-1"><a href="#15-so-sánh--chọn-đáp-án-thi" data-for="15-so-sánh--chọn-đáp-án-thi">15. So sánh &amp; chọn đáp án thi</a></li><li class="depth-2"><a href="#151-kms-vs-cloudhsm--chọn-nhanh" data-for="151-kms-vs-cloudhsm--chọn-nhanh">15.1 KMS vs CloudHSM — chọn nhanh</a></li><li class="depth-2"><a href="#152-secrets-manager-vs-ssm-parameter-store" data-for="152-secrets-manager-vs-ssm-parameter-store">15.2 Secrets Manager vs SSM Parameter Store</a></li><li class="depth-2"><a href="#153-guardduty-vs-inspector-vs-macie--phân-biệt-phát-hiện-cái-gì" data-for="153-guardduty-vs-inspector-vs-macie--phân-biệt-phát-hiện-cái-gì">15.3 GuardDuty vs Inspector vs Macie — phân biệt “phát hiện cái gì”</a></li><li class="depth-2"><a href="#154-tình-huống-thi" data-for="154-tình-huống-thi">15.4 Tình huống thi</a></li><li class="depth-1"><a href="#16-câu-hỏi-ôn-tập" data-for="16-câu-hỏi-ôn-tập">16. Câu hỏi ôn tập</a></li><li class="depth-2"><a href="#câu-1--điều-kiện-để-bật-in-flight-encryption" data-for="câu-1--điều-kiện-để-bật-in-flight-encryption">Câu 1 — Điều kiện để bật In-flight Encryption</a></li><li class="depth-2"><a href="#câu-2--sse-có-nghĩa-là-dữ-liệu-được-gửi-lên-server-ở-dạng-đã-mã-hoá" data-for="câu-2--sse-có-nghĩa-là-dữ-liệu-được-gửi-lên-server-ở-dạng-đã-mã-hoá">Câu 2 — SSE có nghĩa là dữ liệu được gửi lên server ở dạng đã mã hoá?</a></li><li class="depth-2"><a href="#câu-3--trong-sse-encryptiondecryption-diễn-ra-ở-đâu" data-for="câu-3--trong-sse-encryptiondecryption-diễn-ra-ở-đâu">Câu 3 — Trong SSE, encryption/decryption diễn ra ở đâu?</a></li><li class="depth-2"><a href="#câu-4--client-side-encryption-server-có-cần-biết-encryption-scheme-trước-khi-upload" data-for="câu-4--client-side-encryption-server-có-cần-biết-encryption-scheme-trước-khi-upload">Câu 4 — Client-Side Encryption: server có cần biết encryption scheme trước khi upload?</a></li><li class="depth-2"><a href="#câu-5--có-bắt-buộc-tự-tạo-kms-key-trước-khi-dùng-encryption-cho-ebss3rds" data-for="câu-5--có-bắt-buộc-tự-tạo-kms-key-trước-khi-dùng-encryption-cho-ebss3rds">Câu 5 — Có bắt buộc tự tạo KMS Key trước khi dùng encryption cho EBS/S3/RDS?</a></li><li class="depth-2"><a href="#câu-6--kms-có-hỗ-trợ-cả-symmetric-lẫn-asymmetric-key-không" data-for="câu-6--kms-có-hỗ-trợ-cả-symmetric-lẫn-asymmetric-key-không">Câu 6 — KMS có hỗ trợ cả symmetric lẫn asymmetric key không?</a></li><li class="depth-2"><a href="#câu-7--automatic-rotation-xoay-backing-key-mỗi-bao-lâu" data-for="câu-7--automatic-rotation-xoay-backing-key-mỗi-bao-lâu">Câu 7 — Automatic Rotation xoay backing key mỗi bao lâu?</a></li><li class="depth-2"><a href="#câu-8--share-ami-có-encrypted-ebs-snapshot-sang-account-khác-nhưng-vẫn-không-dùng-được" data-for="câu-8--share-ami-có-encrypted-ebs-snapshot-sang-account-khác-nhưng-vẫn-không-dùng-được">Câu 8 — Share AMI có encrypted EBS snapshot sang account khác nhưng vẫn không dùng được</a></li><li class="depth-2"><a href="#câu-9--company-policy-bắt-rotate-cmk-mỗi-6-tháng-nên-làm-gì" data-for="câu-9--company-policy-bắt-rotate-cmk-mỗi-6-tháng-nên-làm-gì">Câu 9 — Company policy bắt rotate CMK mỗi 6 tháng, nên làm gì?</a></li><li class="depth-2"><a href="#câu-10--kiểm-soát-access-tới-kms-cmk-bằng-công-cụ-gì" data-for="câu-10--kiểm-soát-access-tới-kms-cmk-bằng-công-cụ-gì">Câu 10 — Kiểm soát access tới KMS CMK bằng công cụ gì?</a></li><li class="depth-2"><a href="#câu-11--cách-an-toàn-nhất-để-lambda-lấy-database-password" data-for="câu-11--cách-an-toàn-nhất-để-lambda-lấy-database-password">Câu 11 — Cách an toàn nhất để Lambda lấy database password</a></li><li class="depth-2"><a href="#câu-12--lưu-và-theo-dõi-lịch-sử-giá-trị-của-một-secret-dùng-cho-encryption" data-for="câu-12--lưu-và-theo-dõi-lịch-sử-giá-trị-của-một-secret-dùng-cho-encryption">Câu 12 — Lưu và theo dõi lịch sử giá trị của một secret dùng cho encryption</a></li><li class="depth-2"><a href="#câu-13--website-nguy-cơ-ddos-cao-cần-hỗ-trợ-247--hoàn-phí-do-attack" data-for="câu-13--website-nguy-cơ-ddos-cao-cần-hỗ-trợ-247--hoàn-phí-do-attack">Câu 13 — Website nguy cơ DDoS cao, cần hỗ trợ 24/7 + hoàn phí do attack</a></li><li class="depth-2"><a href="#câu-14--lưu-config-value-bên-ngoài-cần-kiểm-soát--version-history" data-for="câu-14--lưu-config-value-bên-ngoài-cần-kiểm-soát--version-history">Câu 14 — Lưu config value bên ngoài, cần kiểm soát + version history</a></li><li class="depth-2"><a href="#câu-15--guardduty-không-scan-nguồn-dữ-liệu-nào" data-for="câu-15--guardduty-không-scan-nguồn-dữ-liệu-nào">Câu 15 — GuardDuty KHÔNG scan nguồn dữ liệu nào?</a></li><li class="depth-2"><a href="#câu-16--bảo-vệ-website-ec2--alb-khỏi-tấn-công-web-phổ-biến" data-for="câu-16--bảo-vệ-website-ec2--alb-khỏi-tấn-công-web-phổ-biến">Câu 16 — Bảo vệ website (EC2 + ALB) khỏi tấn công web phổ biến</a></li><li class="depth-2"><a href="#câu-17--phân-tích-lỗ-hổng-os-trong-ec2-hàng-tuần-kèm-khuyến-nghị-cụ-thể" data-for="câu-17--phân-tích-lỗ-hổng-os-trong-ec2-hàng-tuần-kèm-khuyến-nghị-cụ-thể">Câu 17 — Phân tích lỗ hổng OS trong EC2 hàng tuần, kèm khuyến nghị cụ thể</a></li><li class="depth-2"><a href="#câu-18--lưu-rds-db-password-cần-auto-rotation" data-for="câu-18--lưu-rds-db-password-cần-auto-rotation">Câu 18 — Lưu RDS DB password, cần auto rotation</a></li><li class="depth-2"><a href="#câu-19--quản-lý-tập-trung-security-group--shield-advanced-toàn-organization" data-for="câu-19--quản-lý-tập-trung-security-group--shield-advanced-toàn-organization">Câu 19 — Quản lý tập trung Security Group + Shield Advanced toàn Organization</a></li><li class="depth-2"><a href="#câu-20--bảo-vệ-dữ-liệu-nhạy-cảm-lưu-trong-s3" data-for="câu-20--bảo-vệ-dữ-liệu-nhạy-cảm-lưu-trong-s3">Câu 20 — Bảo vệ dữ liệu nhạy cảm lưu trong S3</a></li><li class="depth-2"><a href="#câu-21--aurora-global-database-mã-hoá-field-mà-cả-admin-công-ty-cũng-không-đọc-được" data-for="câu-21--aurora-global-database-mã-hoá-field-mà-cả-admin-công-ty-cũng-không-đọc-được">Câu 21 — Aurora Global Database, mã hoá field mà cả admin công ty cũng không đọc được</a></li><li class="depth-2"><a href="#câu-22--s3-replication-sse-kms-khác-key-cùng-region-vẫn-không-chạy" data-for="câu-22--s3-replication-sse-kms-khác-key-cùng-region-vẫn-không-chạy">Câu 22 — S3 Replication SSE-KMS khác key, cùng region, vẫn không chạy</a></li><li class="depth-2"><a href="#câu-23--cert-lets-encrypt-import-vào-acm-cần-báo-trước-30-ngày-khi-hết-hạn" data-for="câu-23--cert-lets-encrypt-import-vào-acm-cần-báo-trước-30-ngày-khi-hết-hạn">Câu 23 — Cert Let’s Encrypt import vào ACM, cần báo trước 30 ngày khi hết hạn</a></li><li class="depth-2"><a href="#câu-24--edge-optimized-api-gateway-ở-us-west-2-đặt-acm-cert-ở-region-nào" data-for="câu-24--edge-optimized-api-gateway-ở-us-west-2-đặt-acm-cert-ở-region-nào">Câu 24 — Edge-Optimized API Gateway ở us-west-2, đặt ACM cert ở region nào?</a></li><li class="depth-2"><a href="#câu-25--quản-lý-security-group--waf-rules-tập-trung-nhiều-account-sau-sự-cố-bảo-mật" data-for="câu-25--quản-lý-security-group--waf-rules-tập-trung-nhiều-account-sau-sự-cố-bảo-mật">Câu 25 — Quản lý Security Group + WAF Rules tập trung nhiều account sau sự cố bảo mật</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

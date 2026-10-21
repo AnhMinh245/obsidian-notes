@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG Cách đọc note này: Đây là bài tổng hợp case study, giống tinh thần §20 Serverless Solution Architecture — không có dịch vụ mới, chỉ ghép lại các dịch vụ đã học (§17 Decoupling, §19 Serv..."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG Cách đọc note này: Đây là bài tổng hợp case study, giống tinh thần §20 Serverless Solution Architecture — không có dịch vụ mới, chỉ ghép lại các dịch vụ đã học (§17 Decoupling, §19 Serv..."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG Cách đọc note này: Đây là bài tổng hợp case study, giống tinh thần §20 Serverless Solution Architecture — không có dịch vụ mới, chỉ ghép lại các dịch vụ đã học (§17 Decoupling, §19 Serv..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/29---more-solutions-architecture"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/29---more-solutions-architecture"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG Cách đọc note này: Đây là bài tổng hợp case study, giống tinh thần §20 Serverless Solution Architecture — không có dịch vụ mới, chỉ ghép lại các dịch vụ đã học (§17 Decoupling, §19 Serv..."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/29---more-solutions-architecture" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-97" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-97" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG</a></div></nav><h1 class="article-title">29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">More Solutions Architecture</span><span class="note-properties-separator">, </span><span class="note-properties-text">HPC on AWS</span><span class="note-properties-separator">, </span><span class="note-properties-text">Highly Available EC2 with ASG</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-09-01T17:00:00.000Z">02 thg 9, 2026</time><span>20 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="29--more-solutions-architecture-lambdasnssqs-pattern-hpc-ha-ec2-với-asg">29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#29--more-solutions-architecture-lambdasnssqs-pattern-hpc-ha-ec2-với-asg" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> Đây là bài <strong>tổng hợp case study</strong>, giống tinh thần <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/20---serverless-solution-architecture" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/20---serverless-solution-architecture">§20 Serverless Solution Architecture</a> — không có dịch vụ mới, chỉ ghép lại các dịch vụ đã học (<a href="../../../02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq">§17 Decoupling</a>, <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/19---serverless" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/19---serverless">§19 Serverless</a>, <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.6---auto-scaling-group" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/08---high-availability--and--scalability/08.6---auto-scaling-group">§08.6 Auto Scaling Group</a>) thành các pattern kiến trúc hay gặp trong đề thi. Đọc theo mạch: (1) Lambda + SNS + SQS retry pattern → (2) Fan-out PUT trực tiếp vs qua SNS → (3) S3 Event Notifications (cơ bản + EventBridge) → (4) EventBridge chặn API call nguy hiểm → (5) API Gateway gọi thẳng AWS service → (6) Caching Strategies (tổng hợp) → (7) Chặn một IP address (case study tiến hoá kiến trúc) → (8) High Performance Computing (HPC) → (9) 2 case study EC2 highly available với ASG.</p>
+</blockquote>
+<hr/>
+<h2 id="1-lambda-sns--sqs--pattern-retry--dlq">1. Lambda, SNS &amp; SQS — pattern retry &amp; DLQ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-lambda-sns--sqs--pattern-retry--dlq" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Cùng một câu hỏi: <strong>Lambda fail thì chuyện gì xảy ra?</strong> — câu trả lời khác nhau tuỳ Lambda được <strong>trigger bởi cái gì</strong>. Đây là 3 tình huống hay bị gộp nhầm với nhau.</p>
+<h3 id="11-sns--lambda-asynchronous-invocation">1.1 SNS → Lambda (asynchronous invocation)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-sns--lambda-asynchronous-invocation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>SNS gọi Lambda theo kiểu <strong>asynchronous invocation</strong> — SNS “ném” event rồi đi tiếp, không chờ Lambda trả lời.</li>
+<li>Lambda fail → <strong>tự động retry</strong> (mặc định tối đa <strong>2 lần</strong>, có backoff giữa các lần).</li>
+<li>Retry hết vẫn fail → event được đẩy vào <strong>Lambda Destination</strong> hoặc <strong>DLQ</strong> (SQS/SNS) cấu hình trực tiếp trên <strong>function</strong> Lambda.</li>
+</ul>
+<h3 id="12-sqs-standard--lambda-poll-based-dlq-nằm-ở-sqs">1.2 SQS Standard → Lambda (poll-based, DLQ nằm ở SQS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-sqs-standard--lambda-poll-based-dlq-nằm-ở-sqs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Lambda <strong>không</strong> được SNS/S3 “gọi thẳng” — Lambda tự <strong>poll</strong> SQS qua Event Source Mapping.</li>
+<li>Mỗi lần poll xong, Lambda được invoke <strong>synchronous</strong> với batch message đó.</li>
+<li>Lambda fail → message <strong>không bị xoá</strong> → hiện lại sau visibility timeout → retry.</li>
+<li>Fail đủ số lần <code>maxReceiveCount</code> → message sang <strong>DLQ của chính SQS queue đó</strong> (không phải DLQ của Lambda).</li>
+</ul>
+<blockquote>
+<p><strong>Khác biệt cốt lõi so với §1.1:</strong> DLQ nằm ở đâu quyết định bởi <strong>ai chủ động gọi ai</strong>. SNS chủ động push vào Lambda → DLQ cấu hình trên Lambda. Lambda chủ động poll SQS → DLQ cấu hình trên SQS.</p>
+</blockquote>
+<h3 id="13-sqs-fifo--lambda--rủi-ro-blocking">1.3 SQS FIFO → Lambda — rủi ro “blocking”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-sqs-fifo--lambda--rủi-ro-blocking" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>SQS FIFO xử lý tuần tự theo <strong>Message Group</strong> (xem lại <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq#28-fifo-queue--cần-thứ-tự--không-trùng" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq">§17</a>).</li>
+<li>Lambda fail khi xử lý 1 message trong group → <strong>toàn bộ message sau nó trong cùng group bị block</strong> (không được xử lý tiếp, vì FIFO không cho phép “nhảy cóc” thứ tự).</li>
+<li>Chuỗi retry lặp lại tới <code>maxReceiveCount</code> → message lỗi chuyển sang <strong>FIFO DLQ</strong> → group được <strong>unblock</strong>, các message còn lại xử lý tiếp.</li>
+</ul>
+<blockquote>
+<p><strong>Bẫy hay thi:</strong> SQS FIFO + Lambda dùng đúng khi cần thứ tự tuyệt đối, nhưng phải ý thức đánh đổi: 1 message “poison” có thể <strong>chặn đứng cả group</strong> cho tới khi nó rơi vào DLQ. Đây là lý do SQS Standard vẫn được ưu tiên mặc định trừ khi đề bài đòi hỏi ordering rõ ràng.</p>
+</blockquote>
+<h3 id="14-tổng-kết-3-pattern">1.4 Tổng kết 3 pattern<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-tổng-kết-3-pattern" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Trigger</th><th>Kiểu invoke</th><th>Retry mặc định</th><th>DLQ đặt ở đâu</th><th>Rủi ro riêng</th></tr></thead><tbody><tr><td><strong>SNS → Lambda</strong></td><td>Asynchronous</td><td>2 lần, có backoff</td><td>Lambda (Destination/DLQ)</td><td>Mất order hoàn toàn (SNS không giữ thứ tự)</td></tr><tr><td><strong>SQS Standard → Lambda</strong></td><td>Poll rồi invoke sync</td><td>Tới <code>maxReceiveCount</code></td><td><strong>SQS queue</strong></td><td>Có thể xử lý trùng (at-least-once)</td></tr><tr><td><strong>SQS FIFO → Lambda</strong></td><td>Poll rồi invoke sync, theo group</td><td>Tới <code>maxReceiveCount</code></td><td><strong>FIFO DLQ</strong></td><td>1 message lỗi <strong>block cả group</strong></td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    SNS[\&quot;SNS Topic\&quot;] -->|\&quot;async invoke, retry 2 lần\&quot;| L1[\&quot;Lambda\&quot;]\n    L1 -->|\&quot;vẫn fail\&quot;| DLQ1[\&quot;DLQ / Destination&lt;br/>cấu hình trên Lambda\&quot;]\n\n    SQS[\&quot;SQS Standard\&quot;] -->|\&quot;poll, invoke sync\&quot;| L2[\&quot;Lambda\&quot;]\n    L2 -->|\&quot;fail, hết maxReceiveCount\&quot;| DLQ2[\&quot;DLQ&lt;br/>cấu hình trên SQS\&quot;]\n\n    FIFO[\&quot;SQS FIFO&lt;br/>Message Group\&quot;] -->|\&quot;poll theo thứ tự\&quot;| L3[\&quot;Lambda\&quot;]\n    L3 -->|\&quot;fail 1 message\&quot;| Block[\&quot;Group bị block&lt;br/>cho tới khi hết retry\&quot;]\n    Block --> DLQ3[\&quot;FIFO DLQ&lt;br/>group được unblock\&quot;]&quot;">graph TD
+    SNS[&quot;SNS Topic&quot;] -->|&quot;async invoke, retry 2 lần&quot;| L1[&quot;Lambda&quot;]
+    L1 -->|&quot;vẫn fail&quot;| DLQ1[&quot;DLQ / Destination&lt;br/>cấu hình trên Lambda&quot;]
+
+    SQS[&quot;SQS Standard&quot;] -->|&quot;poll, invoke sync&quot;| L2[&quot;Lambda&quot;]
+    L2 -->|&quot;fail, hết maxReceiveCount&quot;| DLQ2[&quot;DLQ&lt;br/>cấu hình trên SQS&quot;]
+
+    FIFO[&quot;SQS FIFO&lt;br/>Message Group&quot;] -->|&quot;poll theo thứ tự&quot;| L3[&quot;Lambda&quot;]
+    L3 -->|&quot;fail 1 message&quot;| Block[&quot;Group bị block&lt;br/>cho tới khi hết retry&quot;]
+    Block --> DLQ3[&quot;FIFO DLQ&lt;br/>group được unblock&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><img src="../../.././../../attachments/pasted-image-20260902173923.png" alt width="auto" height="auto"/><br/>
+<em>3 pattern gốc từ slide: SQS→Lambda (poll), SQS FIFO→Lambda (retry blocking), SNS→Lambda (asynchronous, có vòng lặp retries riêng trước khi rơi vào DLQ).</em></p>
+<hr/>
+<h2 id="2-fan-out-put-trực-tiếp-vào-nhiều-sqs-vs-qua-sns">2. Fan-out: PUT trực tiếp vào nhiều SQS vs qua SNS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-fan-out-put-trực-tiếp-vào-nhiều-sqs-vs-qua-sns" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Bài toán quen: 1 producer cần đẩy dữ liệu tới <strong>nhiều SQS queue</strong> (ví dụ: billing, analytics, fraud).</p>
+<h3 id="21-option-1--producer-tự-put-vào-từng-queue">2.1 Option 1 — Producer tự PUT vào từng queue<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-option-1--producer-tự-put-vào-từng-queue" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Producer dùng SDK gọi <code>SendMessage</code> <strong>lần lượt</strong> vào từng queue (PUT #1, PUT #2…).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nhược điểm</th><th>Giải thích</th></tr></thead><tbody><tr><td>Producer phải <strong>biết trước</strong> danh sách toàn bộ queue đích</td><td>Thêm queue mới → phải sửa code producer</td></tr><tr><td>Chậm hơn</td><td>N lần gọi API thay vì 1</td></tr><tr><td>Không atomic</td><td>PUT #1 thành công, PUT #2 fail → dữ liệu lệch giữa các queue</td></tr></tbody></table></div>
+<h3 id="22-option-2--fan-out-qua-sns-khuyến-nghị">2.2 Option 2 — Fan-out qua SNS (khuyến nghị)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-option-2--fan-out-qua-sns-khuyến-nghị" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Producer chỉ <strong>PUT một lần</strong> vào SNS Topic; mỗi SQS queue là một <strong>subscription</strong>. Muốn thêm queue thứ 3 (PUT #3) → chỉ cần subscribe thêm, <strong>không đụng code producer</strong>.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Producer[\&quot;Producer\&quot;] -->|\&quot;1 PUT duy nhất\&quot;| Topic[\&quot;SNS Topic\&quot;]\n    Topic --> Q1[\&quot;SQS Queue 1\&quot;]\n    Topic --> Q2[\&quot;SQS Queue 2\&quot;]\n    Topic -.->|\&quot;subscribe thêm, không sửa producer\&quot;| Q3[\&quot;SQS Queue 3 (mới)\&quot;]&quot;">graph LR
+    Producer[&quot;Producer&quot;] -->|&quot;1 PUT duy nhất&quot;| Topic[&quot;SNS Topic&quot;]
+    Topic --> Q1[&quot;SQS Queue 1&quot;]
+    Topic --> Q2[&quot;SQS Queue 2&quot;]
+    Topic -.->|&quot;subscribe thêm, không sửa producer&quot;| Q3[&quot;SQS Queue 3 (mới)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p>Đây chính là <strong>Fan-out Pattern</strong> đã học kỹ ở <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq#32-pattern-vàng-sns--sqs-fan-out" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq">§17.3.2</a> — note này chỉ nhấn thêm lý do <strong>vì sao Option 2 luôn thắng Option 1</strong>: tách rời hoàn toàn producer khỏi danh sách consumer, đúng tinh thần decoupling.</p>
+</blockquote>
+<hr/>
+<h2 id="3-s3-event-notifications--recap-và-mở-rộng-với-eventbridge">3. S3 Event Notifications — recap và mở rộng với EventBridge<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-s3-event-notifications--recap-và-mở-rộng-với-eventbridge" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-s3-event-notifications-cơ-bản">3.1 S3 Event Notifications cơ bản<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-s3-event-notifications-cơ-bản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Sự kiện: <code>S3:ObjectCreated</code>, <code>S3:ObjectRemoved</code>, <code>S3:ObjectRestore</code>, <code>S3:Replication</code>…</li>
+<li>Filter được theo <strong>tên object</strong> (ví dụ <code>*.jpg</code>).</li>
+<li>Đích: <strong>SNS</strong>, <strong>SQS</strong>, hoặc <strong>Lambda Function</strong> trực tiếp.</li>
+<li>Use case kinh điển: upload ảnh lên S3 → tự tạo thumbnail.</li>
+<li>Có thể tạo <strong>nhiều “S3 event” rule</strong> tuỳ ý, nhưng nhớ giới hạn đã học: <strong>1 rule / (event type + prefix)</strong> — muốn fan-out nhiều đích cho cùng 1 event+prefix thì phải qua SNS.</li>
+<li>Độ trễ: sự kiện thường tới trong <strong>vài giây</strong>, nhưng đôi khi có thể mất tới <strong>một phút hoặc hơn</strong>.</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    S3[\&quot;Amazon S3 bucket\&quot;] -->|\&quot;events\&quot;| SNS[\&quot;SNS\&quot;]\n    S3 -->|\&quot;events\&quot;| SQS[\&quot;SQS\&quot;]\n    S3 -->|\&quot;events\&quot;| Lambda[\&quot;Lambda Function\&quot;]&quot;">graph LR
+    S3[&quot;Amazon S3 bucket&quot;] -->|&quot;events&quot;| SNS[&quot;SNS&quot;]
+    S3 -->|&quot;events&quot;| SQS[&quot;SQS&quot;]
+    S3 -->|&quot;events&quot;| Lambda[&quot;Lambda Function&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="32-s3-event-notifications-với-amazon-eventbridge">3.2 S3 Event Notifications với Amazon EventBridge<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-s3-event-notifications-với-amazon-eventbridge" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi cần filter phức tạp hơn hoặc nhiều đích hơn, route <strong>tất cả</strong> S3 event qua <strong>EventBridge</strong> thay vì cấu hình rule riêng lẻ:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khả năng</th><th>Chi tiết</th></tr></thead><tbody><tr><td>Filtering nâng cao</td><td>JSON rule theo <strong>metadata, object size, tên object</strong>… (linh hoạt hơn filter theo prefix/suffix cơ bản)</td></tr><tr><td>Đích</td><td>Trên <strong>18 AWS service</strong> làm target — ví dụ Step Functions, Kinesis Data Streams/Firehose</td></tr><tr><td>Khả năng riêng của EventBridge</td><td><strong>Archive</strong> (lưu trữ sự kiện), <strong>Replay</strong> (phát lại sự kiện cũ), <strong>reliable delivery</strong></td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    S3B[\&quot;Amazon S3 bucket\&quot;] -->|\&quot;all events\&quot;| EB[\&quot;Amazon EventBridge\&quot;]\n    EB -->|\&quot;rules\&quot;| Targets[\&quot;18+ AWS service&lt;br/>làm destination\&quot;]&quot;">graph LR
+    S3B[&quot;Amazon S3 bucket&quot;] -->|&quot;all events&quot;| EB[&quot;Amazon EventBridge&quot;]
+    EB -->|&quot;rules&quot;| Targets[&quot;18+ AWS service&lt;br/>làm destination&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Chọn nhanh:</strong> cần đơn giản, ít đích, filter theo tên/prefix → <strong>S3 Event Notifications cơ bản</strong>. Cần filter theo metadata/size, nhiều đích cùng lúc, hoặc cần <strong>archive &amp; replay sự kiện</strong> → <strong>S3 Event Notifications qua EventBridge</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="4-eventbridge--chặn-api-call-nguy-hiểm-case-study">4. EventBridge — chặn API call nguy hiểm (case study)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-eventbridge--chặn-api-call-nguy-hiểm-case-study" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Bài toán:</strong> muốn được <strong>báo động ngay lập tức</strong> khi có ai đó gọi một API nguy hiểm — ví dụ <code>DeleteTable</code> trên DynamoDB.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    User[\&quot;User gọi&lt;br/>DeleteTable API\&quot;] --> DDB[\&quot;DynamoDB\&quot;]\n    User -.->|\&quot;mọi API call đều được log\&quot;| CT[\&quot;CloudTrail\&quot;]\n    CT -->|\&quot;event\&quot;| EB[\&quot;Amazon EventBridge&lt;br/>rule khớp DeleteTable\&quot;]\n    EB -->|\&quot;alert\&quot;| SNS[\&quot;SNS Topic\&quot;]\n    SNS --> Alert[\&quot;Email / SMS cảnh báo\&quot;]&quot;">graph LR
+    User[&quot;User gọi&lt;br/>DeleteTable API&quot;] --> DDB[&quot;DynamoDB&quot;]
+    User -.->|&quot;mọi API call đều được log&quot;| CT[&quot;CloudTrail&quot;]
+    CT -->|&quot;event&quot;| EB[&quot;Amazon EventBridge&lt;br/>rule khớp DeleteTable&quot;]
+    EB -->|&quot;alert&quot;| SNS[&quot;SNS Topic&quot;]
+    SNS --> Alert[&quot;Email / SMS cảnh báo&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Luồng:</strong></p>
+<ol>
+<li><strong>CloudTrail</strong> ghi log <strong>mọi API call</strong> trong account (đã bật by default cho management events).</li>
+<li><strong>EventBridge</strong> có rule khớp đúng loại event (<code>DeleteTable</code>, hoặc rộng hơn: bất kỳ API call nào match pattern).</li>
+<li>Match → EventBridge trigger <strong>SNS</strong> → gửi alert cho team vận hành.</li>
+</ol>
+<blockquote>
+<p><strong>Pattern cần nhớ:</strong> “CloudTrail + EventBridge + SNS” = công thức chuẩn để <strong>giám sát/chặn cảnh báo cho một API call cụ thể</strong> mà không cần build hệ thống logging riêng. Đây là cách dùng EventBridge như một <strong>interceptor cho control-plane API</strong>, khác hẳn với việc dùng nó cho data event (S3, đơn hàng…).</p>
+</blockquote>
+<hr/>
+<h2 id="5-api-gateway--gọi-thẳng-aws-service-service-integration">5. API Gateway — gọi thẳng AWS service (Service Integration)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-api-gateway--gọi-thẳng-aws-service-service-integration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Bài toán:</strong> Client gửi record liên tục, muốn lưu xuống S3 dạng <code>.json</code> mà <strong>không cần Lambda</strong> làm trung gian.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Client[\&quot;Client\&quot;] -->|\&quot;requests, gửi records\&quot;| APIGW[\&quot;API Gateway&lt;br/>(AWS Service Integration)\&quot;]\n    APIGW -->|\&quot;send\&quot;| KDS[\&quot;Kinesis Data Streams\&quot;]\n    KDS --> KDF[\&quot;Kinesis Data Firehose\&quot;]\n    KDF -->|\&quot;store .json files\&quot;| S3[\&quot;Amazon S3\&quot;]&quot;">graph LR
+    Client[&quot;Client&quot;] -->|&quot;requests, gửi records&quot;| APIGW[&quot;API Gateway&lt;br/>(AWS Service Integration)&quot;]
+    APIGW -->|&quot;send&quot;| KDS[&quot;Kinesis Data Streams&quot;]
+    KDS --> KDF[&quot;Kinesis Data Firehose&quot;]
+    KDF -->|&quot;store .json files&quot;| S3[&quot;Amazon S3&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>API Gateway</strong> hỗ trợ gọi <strong>thẳng</strong> một AWS service khác (không qua Lambda) — gọi là <strong>AWS Service Integration</strong>.</li>
+<li>Ở đây: API Gateway map request trực tiếp vào <strong>Kinesis Data Streams</strong> → <strong>Kinesis Data Firehose</strong> đọc lại và <strong>lưu S3</strong> dưới dạng file <code>.json</code>.</li>
+<li>Lợi ích: bớt một tầng Lambda → giảm latency, giảm chi phí invocation cho những luồng chỉ cần “nhận rồi chuyển tiếp”, không có business logic phức tạp.</li>
+</ul>
+<blockquote>
+<p><strong>Khi nào chọn:</strong> đề bài nói <strong>“không cần business logic”</strong>, chỉ cần nhận request rồi đẩy thẳng vào service khác (Kinesis, SQS, SNS, DynamoDB, Step Functions…) → nghĩ ngay tới <strong>API Gateway Service Integration</strong> thay vì mặc định chèn Lambda vào giữa.</p>
+</blockquote>
+<hr/>
+<h2 id="6-caching-strategies--tổng-hợp-các-tầng-cache">6. Caching Strategies — tổng hợp các tầng cache<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-caching-strategies--tổng-hợp-các-tầng-cache" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Đây là slide tổng hợp lại toàn bộ những tầng cache đã rải rác học qua các bài trước — không có khái niệm mới, chỉ nhìn lại <strong>bức tranh tổng thể</strong>.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Client[\&quot;Client\&quot;] --> CF[\&quot;CloudFront&lt;br/>(cache tại edge)\&quot;]\n    CF --> APIGW[\&quot;API Gateway&lt;br/>(cache response)\&quot;]\n    APIGW --> App[\&quot;App logic&lt;br/>EC2 / Lambda\&quot;]\n    App --> Cache[\&quot;Redis / Memcached / DAX\&quot;]\n    Cache --> DB[\&quot;Database\&quot;]\n    CF -.-> S3[\&quot;S3\&quot;]&quot;">graph LR
+    Client[&quot;Client&quot;] --> CF[&quot;CloudFront&lt;br/>(cache tại edge)&quot;]
+    CF --> APIGW[&quot;API Gateway&lt;br/>(cache response)&quot;]
+    APIGW --> App[&quot;App logic&lt;br/>EC2 / Lambda&quot;]
+    App --> Cache[&quot;Redis / Memcached / DAX&quot;]
+    Cache --> DB[&quot;Database&quot;]
+    CF -.-> S3[&quot;S3&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tầng</th><th>Cache gì</th><th>Đã học chi tiết ở</th></tr></thead><tbody><tr><td><strong>CloudFront</strong></td><td>Content tại edge location, gần client nhất</td><td><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/15---cloudfront--and--aws-global-accelerator" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/15---cloudfront--and--aws-global-accelerator">15 - CloudFront &amp; AWS Global Accelerator</a></td></tr><tr><td><strong>API Gateway</strong></td><td>Response HTTP hoàn chỉnh</td><td>[[20 - Serverless Solution Architecture#1.5 Bước 4 — Cache thêm ở tầng API Gateway</td></tr><tr><td><strong>Redis / Memcached</strong></td><td>Session, object cache tự quản lý</td><td><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/09---rds-+-aurora-+-elasticache/09.4---elasticache" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/09---rds-+-aurora-+-elasticache/09.4---elasticache">09.4 - ElastiCache</a></td></tr><tr><td><strong>DAX</strong></td><td>Kết quả query DynamoDB</td><td>[[20 - Serverless Solution Architecture#1.4 Bước 3 — Read throughput cao với DAX</td></tr></tbody></table></div>
+<blockquote>
+<p>Nguyên tắc xuyên suốt vẫn giữ nguyên như ở §20: <strong>cache càng gần client càng tiết kiệm</strong> (network, computation, cost, latency) — nhưng cũng càng khó invalidate khi data đổi.</p>
+</blockquote>
+<hr/>
+<h2 id="7-case-study--chặn-một-địa-chỉ-ip">7. Case study — Chặn một địa chỉ IP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-case-study--chặn-một-địa-chỉ-ip" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Series slide này cho thấy <strong>cùng một yêu cầu</strong> (“chặn 1 IP xấu”) đòi hỏi <strong>kiến trúc khác nhau</strong> tuỳ layer đang dùng — rất hay bị hỏi dạng “which of the following can you use to block a specific IP”.</p>
+<h3 id="71-chỉ-ec2--security-group--không-chặn-được">7.1 Chỉ EC2 + Security Group — KHÔNG chặn được<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#71-chỉ-ec2--security-group--không-chặn-được" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Client[\&quot;Client\&quot;] --> NACL1[\&quot;NACL&lt;br/>(Public Subnet)\&quot;]\n    NACL1 --> EC2A[\&quot;EC2 Instance&lt;br/>Public IP + Security Group\&quot;]&quot;">graph LR
+    Client[&quot;Client&quot;] --> NACL1[&quot;NACL&lt;br/>(Public Subnet)&quot;]
+    NACL1 --> EC2A[&quot;EC2 Instance&lt;br/>Public IP + Security Group&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>Security Group chỉ có allow rule</strong>, không có deny → không thể dùng SG để chặn riêng 1 IP xấu.</li>
+<li>Muốn chặn ở layer network → phải dùng <strong>NACL</strong> (Network ACL) — đây là thành phần <strong>duy nhất</strong> trong VPC có deny rule tường minh theo IP.</li>
+</ul>
+<h3 id="72-thêm-alb--client-ip-bị-che-khỏi-ec2">7.2 Thêm ALB — client IP bị “che” khỏi EC2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#72-thêm-alb--client-ip-bị-che-khỏi-ec2" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Client2[\&quot;Client\&quot;] --> NACL2[\&quot;NACL&lt;br/>(Public Subnet)\&quot;]\n    NACL2 --> ALB[\&quot;Application Load Balancer&lt;br/>(Public Subnet)\&quot;]\n    ALB -->|\&quot;Connection Termination\&quot;| EC2B[\&quot;EC2 Instance&lt;br/>Private IP&lt;br/>(Private Subnet)\&quot;]&quot;">graph LR
+    Client2[&quot;Client&quot;] --> NACL2[&quot;NACL&lt;br/>(Public Subnet)&quot;]
+    NACL2 --> ALB[&quot;Application Load Balancer&lt;br/>(Public Subnet)&quot;]
+    ALB -->|&quot;Connection Termination&quot;| EC2B[&quot;EC2 Instance&lt;br/>Private IP&lt;br/>(Private Subnet)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>ALB <strong>terminate connection</strong> — EC2 phía sau chỉ thấy <strong>private IP của ALB</strong>, không thấy IP gốc của client (IP gốc chỉ còn nằm trong header <code>X-Forwarded-For</code>).</li>
+<li>Vì vậy: <strong>Security Group của EC2 không thể chặn theo IP client thật</strong>. Việc chặn IP phải làm <strong>trước ALB</strong>, ở tầng NACL của public subnet.</li>
+</ul>
+<h3 id="73-thay-bằng-nlb--client-ip-vẫn-sống">7.3 Thay bằng NLB — client IP vẫn “sống”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#73-thay-bằng-nlb--client-ip-vẫn-sống" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Client3[\&quot;Client\&quot;] --> NACL3[\&quot;NACL&lt;br/>(Public Subnet)\&quot;]\n    NACL3 --> NLB[\&quot;Network Load Balancer&lt;br/>(Public Subnet)\&quot;]\n    NLB -->|\&quot;pass-through, giữ IP gốc\&quot;| EC2C[\&quot;EC2 Instance&lt;br/>Private IP&lt;br/>(Private Subnet)\&quot;]&quot;">graph LR
+    Client3[&quot;Client&quot;] --> NACL3[&quot;NACL&lt;br/>(Public Subnet)&quot;]
+    NACL3 --> NLB[&quot;Network Load Balancer&lt;br/>(Public Subnet)&quot;]
+    NLB -->|&quot;pass-through, giữ IP gốc&quot;| EC2C[&quot;EC2 Instance&lt;br/>Private IP&lt;br/>(Private Subnet)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>NLB hoạt động ở Layer 4, <strong>không terminate connection</strong> như ALB — client IP thật <strong>vẫn tới được EC2</strong>.</li>
+<li>Vì vậy Security Group của EC2 <strong>có thể</strong> chặn theo IP client thật khi đứng sau NLB — khác hẳn trường hợp ALB ở §7.2.</li>
+</ul>
+<h3 id="74-thêm-aws-waf--công-cụ-đúng-để-chặn-ip">7.4 Thêm AWS WAF — công cụ đúng để chặn IP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#74-thêm-aws-waf--công-cụ-đúng-để-chặn-ip" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Client4[\&quot;Client\&quot;] --> NACL4[\&quot;NACL&lt;br/>(Public Subnet)\&quot;]\n    NACL4 --> WAF[\&quot;AWS WAF&lt;br/>(IP Address Filtering)\&quot;]\n    WAF --> ALB2[\&quot;Application Load Balancer\&quot;]\n    ALB2 --> EC2D[\&quot;EC2 Instance&lt;br/>Private IP\&quot;]&quot;">graph LR
+    Client4[&quot;Client&quot;] --> NACL4[&quot;NACL&lt;br/>(Public Subnet)&quot;]
+    NACL4 --> WAF[&quot;AWS WAF&lt;br/>(IP Address Filtering)&quot;]
+    WAF --> ALB2[&quot;Application Load Balancer&quot;]
+    ALB2 --> EC2D[&quot;EC2 Instance&lt;br/>Private IP&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>Thay vì loay hoay với NACL/SG, <strong>AWS WAF</strong> sinh ra đúng để làm việc này: gắn <strong>IP set rule</strong> vào ALB (hoặc CloudFront, API Gateway) để filter theo IP — quản lý tập trung, dễ update runtime, không cần đổi hạ tầng mạng.</li>
+</ul>
+<h3 id="75-thêm-cloudfront--chặn-ở-edge-xa-client-nhất-có-thể">7.5 Thêm CloudFront — chặn ở edge, xa client nhất có thể<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#75-thêm-cloudfront--chặn-ở-edge-xa-client-nhất-có-thể" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Client5[\&quot;Client\&quot;] --> CF2[\&quot;CloudFront&lt;br/>(Geo Restriction)\&quot;]\n    CF2 --> WAF2[\&quot;AWS WAF&lt;br/>(IP Address Filtering)\&quot;]\n    WAF2 --> ALB3[\&quot;Application Load Balancer&lt;br/>Public IP — chặn trực tiếp KHÔNG hiệu quả\&quot;]\n    ALB3 --> EC2E[\&quot;EC2 Instance&lt;br/>Private IP\&quot;]&quot;">graph LR
+    Client5[&quot;Client&quot;] --> CF2[&quot;CloudFront&lt;br/>(Geo Restriction)&quot;]
+    CF2 --> WAF2[&quot;AWS WAF&lt;br/>(IP Address Filtering)&quot;]
+    WAF2 --> ALB3[&quot;Application Load Balancer&lt;br/>Public IP — chặn trực tiếp KHÔNG hiệu quả&quot;]
+    ALB3 --> EC2E[&quot;EC2 Instance&lt;br/>Private IP&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>Nếu chỉ chặn IP trực tiếp <strong>tại ALB public</strong> thì không hiệu quả — traffic đã đi xa vào hạ tầng, và IP nguồn khi qua CloudFront sẽ là dải IP của CloudFront, không phải IP client gốc nữa.</li>
+<li>Giải pháp đúng: gắn <strong>WAF</strong> vào <strong>CloudFront</strong> (không phải ALB) để lọc theo IP <strong>ngay tại edge</strong>, kết hợp thêm <strong>CloudFront Geo Restriction</strong> nếu cần chặn theo quốc gia.</li>
+</ul>
+<h3 id="76-tổng-kết--chọn-đúng-layer-để-chặn-ip">7.6 Tổng kết — chọn đúng layer để chặn IP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#76-tổng-kết--chọn-đúng-layer-để-chặn-ip" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Kiến trúc</th><th>Chặn IP ở đâu</th><th>Vì sao</th></tr></thead><tbody><tr><td>EC2 trần</td><td><strong>NACL</strong></td><td>SG không có deny rule</td></tr><tr><td>EC2 sau ALB</td><td><strong>NACL trước ALB</strong>, không phải SG của EC2</td><td>ALB che IP client thật</td></tr><tr><td>EC2 sau NLB</td><td><strong>SG của EC2</strong> vẫn dùng được</td><td>NLB pass-through IP client</td></tr><tr><td>Có ALB</td><td><strong>AWS WAF gắn vào ALB</strong></td><td>Công cụ chuẩn, quản lý tập trung</td></tr><tr><td>Có CloudFront</td><td><strong>AWS WAF gắn vào CloudFront</strong> (+ Geo Restriction)</td><td>Chặn ở edge, gần client nhất; chặn tại ALB lúc này vô nghĩa vì nguồn traffic đã là IP CloudFront</td></tr></tbody></table></div>
+<hr/>
+<h2 id="8-high-performance-computing-hpc-trên-aws">8. High Performance Computing (HPC) trên AWS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-high-performance-computing-hpc-trên-aws" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="81-vì-sao-cloud-hợp-để-làm-hpc">8.1 Vì sao cloud hợp để làm HPC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#81-vì-sao-cloud-hợp-để-làm-hpc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Tạo <strong>rất nhiều resource</strong> gần như tức thì.</li>
+<li>Rút ngắn thời gian ra kết quả bằng cách <strong>thêm resource</strong> (scale out thay vì chờ).</li>
+<li>Chỉ trả tiền cho phần <strong>đã dùng</strong>.</li>
+<li>Use case: genomics, computational chemistry, financial risk modeling, dự báo thời tiết, machine learning/deep learning, xe tự lái.</li>
+</ul>
+<h3 id="82-data-management--transfer">8.2 Data management &amp; transfer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#82-data-management--transfer" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dịch vụ</th><th>Dùng khi</th></tr></thead><tbody><tr><td><strong>AWS Direct Connect</strong></td><td>Chuyển <strong>GB/s</strong> dữ liệu lên cloud qua mạng riêng, bảo mật, ổn định</td></tr><tr><td><strong>Snowball &amp; Snowmobile</strong></td><td>Chuyển <strong>PB</strong> dữ liệu — khối lượng quá lớn để đi qua network</td></tr><tr><td><strong>AWS DataSync</strong></td><td>Chuyển lượng dữ liệu lớn giữa on-premises và S3 / EFS / FSx for Windows</td></tr></tbody></table></div>
+<h3 id="83-compute--networking">8.3 Compute &amp; Networking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#83-compute--networking" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>EC2:</strong></p>
+<ul>
+<li>Instance <strong>CPU optimized</strong>, <strong>GPU optimized</strong> tuỳ loại workload.</li>
+<li><strong>Spot Instances / Spot Fleet</strong> để tiết kiệm chi phí, kết hợp <strong>Auto Scaling</strong>.</li>
+</ul>
+<p><strong>Placement Group — Cluster:</strong></p>
+<ul>
+<li>Gom EC2 vào <strong>cùng rack, cùng AZ</strong> → network performance tốt (băng thông cao, latency thấp) — đúng nhu cầu HPC là các node giao tiếp với nhau liên tục.</li>
+</ul>
+<p><strong>Enhanced Networking (SR-IOV):</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Option</th><th>Băng thông</th><th>Ghi chú</th></tr></thead><tbody><tr><td><strong>Elastic Network Adapter (ENA)</strong></td><td>Tới <strong>100 Gbps</strong></td><td>Khuyến nghị hiện nay</td></tr><tr><td><strong>Intel 82599 VF</strong></td><td>Tới <strong>10 Gbps</strong></td><td><strong>Legacy</strong></td></tr></tbody></table></div>
+<p><strong>Elastic Fabric Adapter (EFA):</strong></p>
+<ul>
+<li>Phiên bản <strong>nâng cấp của ENA dành riêng cho HPC</strong>, chỉ chạy trên <strong>Linux</strong>.</li>
+<li>Tối ưu cho <strong>giao tiếp giữa các node</strong> (inter-node communication), workload <strong>tightly coupled</strong>.</li>
+<li>Dùng chuẩn <strong>Message Passing Interface (MPI)</strong>.</li>
+<li><strong>Bypass OS Linux bên dưới</strong> để đạt latency thấp, transport đáng tin cậy.</li>
+</ul>
+<blockquote>
+<p><strong>Phân biệt nhanh:</strong> ENA = network card tốc độ cao cho <strong>mọi loại EC2</strong>. EFA = ENA “độ” thêm riêng cho <strong>HPC multi-node</strong>, chỉ Linux, chỉ có giá trị khi các node cần nói chuyện với nhau liên tục (không phải khi chỉ cần băng thông ra ngoài internet).</p>
+</blockquote>
+<h3 id="84-storage-cho-hpc">8.4 Storage cho HPC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#84-storage-cho-hpc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Instance-attached storage:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Đặc điểm</th></tr></thead><tbody><tr><td><strong>EBS io2 Block Express</strong></td><td>Scale tới <strong>256.000 IOPS</strong></td></tr><tr><td><strong>Instance Store</strong></td><td>Scale tới <strong>hàng triệu IOPS</strong>, gắn liền vật lý với instance, latency rất thấp — nhưng <strong>mất dữ liệu</strong> khi stop/terminate</td></tr></tbody></table></div>
+<p><strong>Network storage:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dịch vụ</th><th>Đặc điểm</th></tr></thead><tbody><tr><td><strong>Amazon S3</strong></td><td>Lưu blob lớn, <strong>không phải file system</strong></td></tr><tr><td><strong>Amazon EFS</strong></td><td>IOPS scale theo tổng dung lượng, hoặc dùng <strong>Provisioned IOPS</strong></td></tr><tr><td><strong>Amazon FSx for Lustre</strong></td><td>File system phân tán <strong>tối ưu riêng cho HPC</strong>, hàng triệu IOPS, <strong>backed by S3</strong></td></tr></tbody></table></div>
+<h3 id="85-automation--orchestration">8.5 Automation &amp; Orchestration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#85-automation--orchestration" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dịch vụ</th><th>Vai trò</th></tr></thead><tbody><tr><td><strong>AWS Batch</strong></td><td>Hỗ trợ <strong>multi-node parallel jobs</strong> — 1 job chạy trải trên nhiều EC2 instance cùng lúc; tự schedule job và launch EC2 tương ứng</td></tr><tr><td><strong>AWS ParallelCluster</strong></td><td>Công cụ <strong>open-source</strong> để deploy cụm HPC trên AWS, cấu hình bằng <strong>text file</strong>; tự động dựng VPC, Subnet, chọn cluster type/instance type; có thể <strong>bật EFA</strong> trên cluster để tăng network performance</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Ý chính cần nhớ cho HPC:</strong> đề bài có các từ khoá <strong>“tightly coupled”, “multi-node”, “MPI”, “cluster placement group”</strong> → nghĩ ngay tới <strong>EFA + Placement Group Cluster</strong>. Từ khoá <strong>“schedule nhiều job song song trên nhiều EC2”</strong> → <strong>AWS Batch</strong>. Từ khoá <strong>“deploy cả cụm HPC bằng config file, mã nguồn mở”</strong> → <strong>AWS ParallelCluster</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="9-case-study--highly-available-ec2-instance">9. Case study — Highly Available EC2 instance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-case-study--highly-available-ec2-instance" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Bối cảnh chung:</strong> một EC2 instance <strong>đơn lẻ</strong> (không phải web farm phía sau load balancer) cần <strong>tự phục hồi</strong> khi AZ gặp sự cố, mà vẫn giữ nguyên <strong>1 địa chỉ truy cập cố định</strong> cho client — ví dụ một server nội bộ, một API endpoint duy nhất mà hệ thống khác đã hard-code IP.</p>
+<h3 id="91-cách-a--auto-scaling-group--elastic-ip">9.1 Cách A — Auto Scaling Group + Elastic IP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#91-cách-a--auto-scaling-group--elastic-ip" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    ASG[\&quot;Auto Scaling Group&lt;br/>min 1, max 1, desired 1&lt;br/>trải ≥ 2 AZ\&quot;]\n    ASG -->|\&quot;launch\&quot;| EC2A[\&quot;EC2 trong AZ 1\&quot;]\n    EC2A -.->|\&quot;instance chết\&quot;| EC2B[\&quot;ASG launch instance thay thế&lt;br/>trong AZ 2\&quot;]\n    EC2B -->|\&quot;EC2 User Data:&lt;br/>tự attach Elastic IP theo Tag\&quot;| EIP[\&quot;Elastic IP Address&lt;br/>(1 địa chỉ cố định)\&quot;]&quot;">graph TD
+    ASG[&quot;Auto Scaling Group&lt;br/>min 1, max 1, desired 1&lt;br/>trải ≥ 2 AZ&quot;]
+    ASG -->|&quot;launch&quot;| EC2A[&quot;EC2 trong AZ 1&quot;]
+    EC2A -.->|&quot;instance chết&quot;| EC2B[&quot;ASG launch instance thay thế&lt;br/>trong AZ 2&quot;]
+    EC2B -->|&quot;EC2 User Data:&lt;br/>tự attach Elastic IP theo Tag&quot;| EIP[&quot;Elastic IP Address&lt;br/>(1 địa chỉ cố định)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Kiến trúc — từng bước:</strong></p>
+<ol>
+<li><strong>Auto Scaling Group</strong> cấu hình <code>min = 1</code>, <code>max = 1</code>, <code>desired = 1</code>, trải trên <strong>≥ 2 Availability Zone</strong>.</li>
+<li>Instance chết (health check fail) → ASG <strong>tự launch instance thay thế</strong> ở một AZ khác.</li>
+<li>Instance mới chạy <strong>EC2 User Data script</strong> ngay lúc boot → script này <strong>tự gọi AWS API để attach Elastic IP</strong> đã biết trước (tìm theo <strong>Tag</strong>, hoặc parameter cố định).</li>
+<li>Instance cần có <strong>IAM Role</strong> cho phép gọi API <code>AssociateAddress</code> để tự attach Elastic IP đó.</li>
+</ol>
+<p><strong>Vì sao thiết kế vậy:</strong></p>
+<ul>
+<li><code>min=max=desired=1</code> đảm bảo <strong>luôn có đúng 1 instance chạy</strong>, không hơn không kém — ASG ở đây dùng như một “supervisor” tự phục hồi, không phải để scale ngang.</li>
+<li>Elastic IP là địa chỉ <strong>không đổi</strong> dù instance vật lý phía sau thay đổi liên tục — client/DNS chỉ cần trỏ vào 1 IP duy nhất, không cần biết instance nào đang sống.</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260902173924.png" alt width="auto" height="auto"/><br/>
+<em>ASG (1 min/1 max/1 desired, ≥ 2 AZ) — instance mới lên luôn tự attach lại đúng Elastic IP nhờ EC2 User Data + Tag, nhờ IAM Role cho phép gọi API attach.</em></p>
+<ul>
+<li>Việc attach diễn ra <strong>tự động qua User Data</strong>, không cần con người can thiệp → thời gian phục hồi nhanh, đúng tinh thần HA.</li>
+</ul>
+<blockquote>
+<p><strong>Giới hạn của cách A:</strong> chỉ khôi phục lại được <strong>compute</strong> (EC2 chạy lại) và <strong>network identity</strong> (Elastic IP). Toàn bộ <strong>dữ liệu trên ổ đĩa cũ bị mất</strong> vì instance mới là instance trắng (từ AMI gốc) — nếu ứng dụng cần giữ lại state/data trên đĩa, phải dùng cách B.</p>
+</blockquote>
+<h3 id="92-cách-b--auto-scaling-group--ebs-snapshot-lifecycle-hook">9.2 Cách B — Auto Scaling Group + EBS Snapshot lifecycle hook<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#92-cách-b--auto-scaling-group--ebs-snapshot-lifecycle-hook" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    ASG2[\&quot;Auto Scaling Group&lt;br/>trải ≥ 2 AZ\&quot;]\n    ASG2 -->|\&quot;instance sắp bị terminate\&quot;| Hook1[\&quot;Lifecycle Hook: Terminating\&quot;]\n    Hook1 --> Snap[\&quot;Tạo EBS Snapshot&lt;br/>+ gắn Tag định danh\&quot;]\n    Snap --> Term[\&quot;Instance bị terminate\&quot;]\n    ASG2 -->|\&quot;instance mới launch\&quot;| Hook2[\&quot;Lifecycle Hook: Launching\&quot;]\n    Hook2 --> Restore[\&quot;Tạo EBS Volume mới từ Snapshot&lt;br/>(tìm theo Tag) + attach vào instance mới\&quot;]\n    Restore --> EC2New[\&quot;EC2 instance mới&lt;br/>đã có lại dữ liệu cũ\&quot;]\n    EC2New -->|\&quot;User Data: attach Elastic IP\&quot;| EIP2[\&quot;Elastic IP Address\&quot;]&quot;">graph TD
+    ASG2[&quot;Auto Scaling Group&lt;br/>trải ≥ 2 AZ&quot;]
+    ASG2 -->|&quot;instance sắp bị terminate&quot;| Hook1[&quot;Lifecycle Hook: Terminating&quot;]
+    Hook1 --> Snap[&quot;Tạo EBS Snapshot&lt;br/>+ gắn Tag định danh&quot;]
+    Snap --> Term[&quot;Instance bị terminate&quot;]
+    ASG2 -->|&quot;instance mới launch&quot;| Hook2[&quot;Lifecycle Hook: Launching&quot;]
+    Hook2 --> Restore[&quot;Tạo EBS Volume mới từ Snapshot&lt;br/>(tìm theo Tag) + attach vào instance mới&quot;]
+    Restore --> EC2New[&quot;EC2 instance mới&lt;br/>đã có lại dữ liệu cũ&quot;]
+    EC2New -->|&quot;User Data: attach Elastic IP&quot;| EIP2[&quot;Elastic IP Address&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Kiến trúc — từng bước:</strong></p>
+<ol>
+<li>Vẫn là ASG <code>min=max=desired=1</code>, trải nhiều AZ, giống cách A.</li>
+<li>Trước khi ASG <strong>terminate</strong> một instance (scale-in, thay thế do unhealthy…), <strong>Lifecycle Hook “Terminating”</strong> kích hoạt: tạo <strong>EBS Snapshot</strong> của volume dữ liệu, gắn kèm <strong>Tag</strong> để nhận diện lại sau này.</li>
+<li>Khi ASG <strong>launch</strong> instance mới thay thế, <strong>Lifecycle Hook “Launching”</strong> kích hoạt: tìm snapshot mới nhất theo Tag → <strong>tạo EBS Volume mới</strong> từ snapshot đó → <strong>attach</strong> vào instance mới.</li>
+<li>Instance mới tiếp tục dùng <strong>EC2 User Data</strong> để tự attach lại <strong>Elastic IP</strong> (giống hệt cách A) → vừa có lại dữ liệu, vừa giữ nguyên địa chỉ truy cập.</li>
+</ol>
+<p><strong>Vì sao thiết kế vậy:</strong></p>
+<ul>
+<li><strong>Lifecycle Hook</strong> là cơ chế đúng để “chen” một hành động tuỳ ý (custom action) vào giữa vòng đời instance của ASG, thay vì ASG chỉ biết launch/terminate trần trụi.</li>
+<li>Snapshot-trước-khi-terminate đảm bảo <strong>không mất dữ liệu ghi gần nhất</strong> — khác hẳn cách A nơi dữ liệu trên đĩa bị bỏ lại hoàn toàn.</li>
+<li>Kết hợp cả 2 cơ chế (EBS lifecycle hook + Elastic IP User Data) → instance mới <strong>vừa giữ danh tính mạng, vừa giữ dữ liệu</strong> — gần như “instance clone lại chính nó” sau sự cố.</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260902173925.png" alt width="auto" height="auto"/><br/>
+<em>Lifecycle Hook <code>Terminate</code> tạo EBS Snapshot + tag trước khi instance cũ mất; Lifecycle Hook <code>Launch</code> tạo lại EBS Volume từ snapshot đó và attach vào instance mới.</em></p>
+<h3 id="93-so-sánh-nhanh-2-cách">9.3 So sánh nhanh 2 cách<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#93-so-sánh-nhanh-2-cách" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>Cách A — chỉ Elastic IP</th><th>Cách B — thêm EBS Snapshot</th></tr></thead><tbody><tr><td>Khôi phục network identity</td><td>✔</td><td>✔</td></tr><tr><td>Khôi phục dữ liệu trên đĩa</td><td>✖ (instance mới từ AMI gốc, trắng)</td><td>✔ (volume phục hồi từ snapshot mới nhất)</td></tr><tr><td>Độ phức tạp</td><td>Thấp — chỉ cần User Data + IAM Role</td><td>Cao hơn — cần cấu hình 2 Lifecycle Hook</td></tr><tr><td>Phù hợp khi</td><td>App <strong>stateless</strong> hoặc state đã nằm ngoài EC2 (DB, S3…)</td><td>App <strong>stateful</strong>, dữ liệu quan trọng nằm ngay trên đĩa EC2</td></tr></tbody></table></div>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>3 kiểu retry/DLQ khác nhau</strong> tuỳ Lambda được gọi bởi ai: SNS→Lambda (DLQ trên Lambda), SQS Standard→Lambda (DLQ trên SQS), SQS FIFO→Lambda (1 message lỗi <strong>block cả group</strong> cho tới khi rơi DLQ).</li>
+<li><strong>Fan-out qua SNS luôn thắng PUT trực tiếp nhiều SQS</strong>: thêm consumer mới không cần sửa producer.</li>
+<li>S3 Event Notifications cơ bản → SNS/SQS/Lambda; cần filter nâng cao/nhiều đích/archive &amp; replay → route qua <strong>EventBridge</strong>.</li>
+<li>Pattern giám sát API nguy hiểm: <strong>CloudTrail → EventBridge → SNS</strong>.</li>
+<li><strong>API Gateway Service Integration</strong>: gọi thẳng AWS service (Kinesis, SQS, DynamoDB…) mà <strong>không cần Lambda</strong> khi không có business logic.</li>
+<li>Chặn 1 IP: <strong>SG không deny được</strong>; NACL deny được nhưng chỉ hiệu quả nếu client IP còn “sống” tới đó; <strong>ALB che IP client</strong> (chặn phải làm ở NACL trước ALB), <strong>NLB pass-through IP client</strong> (SG của EC2 vẫn chặn được); công cụ chuẩn để chặn IP là <strong>AWS WAF</strong>, gắn ở <strong>CloudFront</strong> nếu có CloudFront (chặn tại ALB lúc đó vô nghĩa).</li>
+<li>HPC: <strong>Direct Connect/Snowball/DataSync</strong> để đưa data lên; <strong>Placement Group Cluster + EFA (MPI, Linux-only)</strong> cho giao tiếp giữa node; <strong>FSx for Lustre</strong> cho file system HPC; <strong>AWS Batch</strong> (multi-node parallel job) vs <strong>AWS ParallelCluster</strong> (open-source, deploy cả cụm bằng text config).</li>
+<li>HA EC2 đơn lẻ: <strong>ASG min=max=desired=1</strong> + <strong>Elastic IP qua User Data/Tag</strong> (mất data) hoặc thêm <strong>EBS Snapshot Lifecycle Hook</strong> (giữ data) — chọn theo app có stateful hay không.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Bài này giống §20 ở chỗ “không dạy gì mới”, nhưng khác ở <strong>độ lắt léo</strong>: nhiều case study đòi hỏi phân biệt rất tinh (SG vs NACL vs WAF; SQS Standard vs FIFO khi gắn Lambda) — dễ chọn nhầm nếu học hời hợt.</li>
+<li>2 case study “HA EC2 + ASG” là dạng câu hỏi kinh điển kiểu “so sánh 2 phương án, chọn theo yêu cầu app có cần giữ data hay không” — nhớ tách bạch rõ: Elastic IP giải quyết <strong>network identity</strong>, EBS Snapshot giải quyết <strong>data</strong>, hai cái độc lập nhau và có thể dùng riêng hoặc cùng lúc.</li>
+<li>Ghi chú riêng: slide gốc trong khoảng trang 802-824 <strong>không đề cập Amazon SES</strong> — phần “gửi email qua S3 event” chỉ xuất hiện ở <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/20---serverless-solution-architecture#26-bước-5--luồng-gửi-email-chào-mừng" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/20---serverless-solution-architecture">§20</a> (DynamoDB Streams → Lambda → SES), không phải section 29 này. Nếu tài liệu khoá học của mình có thêm slide SES ở đây, cần bổ sung lại sau khi đối chiếu PDF gốc.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Lambda retry pattern: SNS async vs SQS poll vs SQS FIFO blocking</li>
+<li>Fan-out qua SNS vs PUT trực tiếp nhiều SQS</li>
+<li>S3 Event Notifications vs S3 Event Notifications qua EventBridge</li>
+<li>EventBridge intercept API call pattern (CloudTrail → EventBridge → SNS)</li>
+<li>API Gateway AWS Service Integration (bỏ qua Lambda)</li>
+<li>Chặn IP address: SG vs NACL vs ALB vs NLB vs WAF vs CloudFront+WAF</li>
+<li>HPC: Enhanced Networking (ENA) vs Elastic Fabric Adapter (EFA)</li>
+<li>HPC storage: EBS io2 Block Express vs Instance Store vs FSx for Lustre</li>
+<li>AWS Batch vs AWS ParallelCluster</li>
+<li>HA EC2 đơn lẻ: ASG + Elastic IP (User Data + Tag)</li>
+<li>HA EC2 đơn lẻ: ASG + EBS Snapshot Lifecycle Hook</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-97" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#29--more-solutions-architecture-lambdasnssqs-pattern-hpc-ha-ec2-với-asg" data-for="29--more-solutions-architecture-lambdasnssqs-pattern-hpc-ha-ec2-với-asg">29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG</a></li><li class="depth-1"><a href="#1-lambda-sns--sqs--pattern-retry--dlq" data-for="1-lambda-sns--sqs--pattern-retry--dlq">1. Lambda, SNS &amp; SQS — pattern retry &amp; DLQ</a></li><li class="depth-2"><a href="#11-sns--lambda-asynchronous-invocation" data-for="11-sns--lambda-asynchronous-invocation">1.1 SNS → Lambda (asynchronous invocation)</a></li><li class="depth-2"><a href="#12-sqs-standard--lambda-poll-based-dlq-nằm-ở-sqs" data-for="12-sqs-standard--lambda-poll-based-dlq-nằm-ở-sqs">1.2 SQS Standard → Lambda (poll-based, DLQ nằm ở SQS)</a></li><li class="depth-2"><a href="#13-sqs-fifo--lambda--rủi-ro-blocking" data-for="13-sqs-fifo--lambda--rủi-ro-blocking">1.3 SQS FIFO → Lambda — rủi ro “blocking”</a></li><li class="depth-2"><a href="#14-tổng-kết-3-pattern" data-for="14-tổng-kết-3-pattern">1.4 Tổng kết 3 pattern</a></li><li class="depth-1"><a href="#2-fan-out-put-trực-tiếp-vào-nhiều-sqs-vs-qua-sns" data-for="2-fan-out-put-trực-tiếp-vào-nhiều-sqs-vs-qua-sns">2. Fan-out: PUT trực tiếp vào nhiều SQS vs qua SNS</a></li><li class="depth-2"><a href="#21-option-1--producer-tự-put-vào-từng-queue" data-for="21-option-1--producer-tự-put-vào-từng-queue">2.1 Option 1 — Producer tự PUT vào từng queue</a></li><li class="depth-2"><a href="#22-option-2--fan-out-qua-sns-khuyến-nghị" data-for="22-option-2--fan-out-qua-sns-khuyến-nghị">2.2 Option 2 — Fan-out qua SNS (khuyến nghị)</a></li><li class="depth-1"><a href="#3-s3-event-notifications--recap-và-mở-rộng-với-eventbridge" data-for="3-s3-event-notifications--recap-và-mở-rộng-với-eventbridge">3. S3 Event Notifications — recap và mở rộng với EventBridge</a></li><li class="depth-2"><a href="#31-s3-event-notifications-cơ-bản" data-for="31-s3-event-notifications-cơ-bản">3.1 S3 Event Notifications cơ bản</a></li><li class="depth-2"><a href="#32-s3-event-notifications-với-amazon-eventbridge" data-for="32-s3-event-notifications-với-amazon-eventbridge">3.2 S3 Event Notifications với Amazon EventBridge</a></li><li class="depth-1"><a href="#4-eventbridge--chặn-api-call-nguy-hiểm-case-study" data-for="4-eventbridge--chặn-api-call-nguy-hiểm-case-study">4. EventBridge — chặn API call nguy hiểm (case study)</a></li><li class="depth-1"><a href="#5-api-gateway--gọi-thẳng-aws-service-service-integration" data-for="5-api-gateway--gọi-thẳng-aws-service-service-integration">5. API Gateway — gọi thẳng AWS service (Service Integration)</a></li><li class="depth-1"><a href="#6-caching-strategies--tổng-hợp-các-tầng-cache" data-for="6-caching-strategies--tổng-hợp-các-tầng-cache">6. Caching Strategies — tổng hợp các tầng cache</a></li><li class="depth-1"><a href="#7-case-study--chặn-một-địa-chỉ-ip" data-for="7-case-study--chặn-một-địa-chỉ-ip">7. Case study — Chặn một địa chỉ IP</a></li><li class="depth-2"><a href="#71-chỉ-ec2--security-group--không-chặn-được" data-for="71-chỉ-ec2--security-group--không-chặn-được">7.1 Chỉ EC2 + Security Group — KHÔNG chặn được</a></li><li class="depth-2"><a href="#72-thêm-alb--client-ip-bị-che-khỏi-ec2" data-for="72-thêm-alb--client-ip-bị-che-khỏi-ec2">7.2 Thêm ALB — client IP bị “che” khỏi EC2</a></li><li class="depth-2"><a href="#73-thay-bằng-nlb--client-ip-vẫn-sống" data-for="73-thay-bằng-nlb--client-ip-vẫn-sống">7.3 Thay bằng NLB — client IP vẫn “sống”</a></li><li class="depth-2"><a href="#74-thêm-aws-waf--công-cụ-đúng-để-chặn-ip" data-for="74-thêm-aws-waf--công-cụ-đúng-để-chặn-ip">7.4 Thêm AWS WAF — công cụ đúng để chặn IP</a></li><li class="depth-2"><a href="#75-thêm-cloudfront--chặn-ở-edge-xa-client-nhất-có-thể" data-for="75-thêm-cloudfront--chặn-ở-edge-xa-client-nhất-có-thể">7.5 Thêm CloudFront — chặn ở edge, xa client nhất có thể</a></li><li class="depth-2"><a href="#76-tổng-kết--chọn-đúng-layer-để-chặn-ip" data-for="76-tổng-kết--chọn-đúng-layer-để-chặn-ip">7.6 Tổng kết — chọn đúng layer để chặn IP</a></li><li class="depth-1"><a href="#8-high-performance-computing-hpc-trên-aws" data-for="8-high-performance-computing-hpc-trên-aws">8. High Performance Computing (HPC) trên AWS</a></li><li class="depth-2"><a href="#81-vì-sao-cloud-hợp-để-làm-hpc" data-for="81-vì-sao-cloud-hợp-để-làm-hpc">8.1 Vì sao cloud hợp để làm HPC</a></li><li class="depth-2"><a href="#82-data-management--transfer" data-for="82-data-management--transfer">8.2 Data management &amp; transfer</a></li><li class="depth-2"><a href="#83-compute--networking" data-for="83-compute--networking">8.3 Compute &amp; Networking</a></li><li class="depth-2"><a href="#84-storage-cho-hpc" data-for="84-storage-cho-hpc">8.4 Storage cho HPC</a></li><li class="depth-2"><a href="#85-automation--orchestration" data-for="85-automation--orchestration">8.5 Automation &amp; Orchestration</a></li><li class="depth-1"><a href="#9-case-study--highly-available-ec2-instance" data-for="9-case-study--highly-available-ec2-instance">9. Case study — Highly Available EC2 instance</a></li><li class="depth-2"><a href="#91-cách-a--auto-scaling-group--elastic-ip" data-for="91-cách-a--auto-scaling-group--elastic-ip">9.1 Cách A — Auto Scaling Group + Elastic IP</a></li><li class="depth-2"><a href="#92-cách-b--auto-scaling-group--ebs-snapshot-lifecycle-hook" data-for="92-cách-b--auto-scaling-group--ebs-snapshot-lifecycle-hook">9.2 Cách B — Auto Scaling Group + EBS Snapshot lifecycle hook</a></li><li class="depth-2"><a href="#93-so-sánh-nhanh-2-cách" data-for="93-so-sánh-nhanh-2-cách">9.3 So sánh nhanh 2 cách</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

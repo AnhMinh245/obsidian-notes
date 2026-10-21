@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Chương 08: Infrastructure Context</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Chương 08: Infrastructure Context"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Chương 08: Infrastructure Context"/><meta name="twitter:description" content="Chương 08: Infrastructure Context &quot;Ứng dụng không chạy trong chân không — nó chạy trên infrastructure."/><meta property="og:description" content="Chương 08: Infrastructure Context &quot;Ứng dụng không chạy trong chân không — nó chạy trên infrastructure."/><meta property="og:image:alt" content="Chương 08: Infrastructure Context &quot;Ứng dụng không chạy trong chân không — nó chạy trên infrastructure."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/08---infrastructure-context"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/fundamentals/08---infrastructure-context"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Chương 08: Infrastructure Context &quot;Ứng dụng không chạy trong chân không — nó chạy trên infrastructure."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/fundamentals/08---infrastructure-context" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-443" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-443" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/fundamentals/">Fundamentals</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Chương 08: Infrastructure Context</a></div></nav><h1 class="article-title">Chương 08: Infrastructure Context</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-03T17:00:00.000Z">04 thg 4, 2026</time><span>13 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="chương-08-infrastructure-context">Chương 08: Infrastructure Context<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chương-08-infrastructure-context" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote class="callout quote" data-callout="quote">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>&quot;Ứng dụng không chạy trong chân không — nó chạy trên infrastructure. Hiểu infrastructure = hiểu context của mọi vấn đề.&quot; </p></div>
+                  
+                </div>
+</blockquote>
+<p><strong>Mục tiêu chương này</strong>: Hiểu tại sao <strong>infrastructure context</strong> là mảnh ghép thiết yếu cho Observability, cách correlate application performance với infrastructure state, và biết cần observe gì ở K8s, load balancers, cloud, và service mesh.</p>
+<p><strong>ShopVN evolution</strong>: ShopVN deploy trên Kubernetes. Khi app metrics cho thấy latency tăng, bạn cần dữ liệu infrastructure để phân biệt: “Do app code chậm? Hay do node quá tải? Hay do network issue?” Không có infra context = <strong>debug với một mắt bị bịt</strong>.</p>
+<p><strong>Liên kết</strong>: Infrastructure metrics dùng framework <strong>USE</strong> từ <a href="../../../02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics">03 - Three Pillars Deep Dive - Metrics</a>. Infra events correlate với alerts từ <a href="../../../02---areas/observability/fundamentals/07---alerting--and--incident-management" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/07---alerting--and--incident-management">07 - Alerting &amp; Incident Management</a>. Topology mapping hỗ trợ root cause analysis từ <a href="../../../02---areas/observability/fundamentals/09---aiops--and--advanced-patterns" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/09---aiops--and--advanced-patterns">09 - AIOps &amp; Advanced Patterns</a>.</p>
+<blockquote class="callout info" data-callout="info">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Chương này tập trung vào <strong>góc nhìn Observability</strong> của infrastructure — không dạy cách setup K8s hay Cloud từ đầu.</p></div>
+                  
+                </div>
+</blockquote>
+<hr/>
+<h2 id="1-tại-sao-infrastructure-context-quan-trọng">1. Tại sao Infrastructure Context quan trọng?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-tại-sao-infrastructure-context-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-ví-dụ-không-có-infra-context-vs-có-infra-context">1.1 Ví dụ: Không có infra context vs có infra context<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-ví-dụ-không-có-infra-context-vs-có-infra-context" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Tình huống: &quot;ShopVN Order Service latency p99 = 3 giây&quot; (bình thường 200ms)
+
+━━━━━━ KHÔNG CÓ infra context ━━━━━━
+   Engineer nhìn app metrics:
+   → Error rate bình thường
+   → DB query time bình thường  
+   → No recent deployments
+   → Code không thay đổi
+   → &quot;Tại sao chậm???&quot; 😤
+   → 30 phút debug, vẫn không tìm ra 💀
+
+━━━━━━ CÓ infra context ━━━━━━
+   Engineer nhìn app metrics + infra metrics:
+   → Order Service pod đang chạy trên Node worker-3
+   → Node worker-3: CPU 98%, Memory 95%  ← ĐÂY RỒI!
+   → Vì sao? Pod của batch-job-ML đang chạy cùng node, chiếm hết resource
+   → Giải pháp: Evict batch job, hoặc move order-service sang node khác
+   → ROOT CAUSE: Resource contention (noisy neighbor)
+   → Không liên quan gì đến app code!
+   → 3 phút tìm ra ✅
+</code></pre>
+<h3 id="12-bốn-tầng-observability-data">1.2 Bốn tầng observability data<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-bốn-tầng-observability-data" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────┐
+│  Business Logic (SLIs/SLOs)         │  ← Ch06: &quot;Chất lượng dịch vụ thế nào?&quot;
+├─────────────────────────────────────┤
+│  Application (Logs/Metrics/Traces)  │  ← Ch02-05: &quot;App đang làm gì?&quot;
+├─────────────────────────────────────┤
+│  Infrastructure (K8s/VM/Network)    │  ← Ch08 (bạn đang ở đây): &quot;Infra có ổn không?&quot;
+├─────────────────────────────────────┤
+│  Hardware (CPU/Memory/Disk/Network) │  ← Physical/virtual resources
+└─────────────────────────────────────┘
+
+Khi debug: đi từ TRÊN XUỐNG
+  &quot;SLO vi phạm&quot; → &quot;App error ở đâu?&quot; → &quot;Infra có vấn đề gì?&quot;
+</code></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Mỗi tầng bổ sung context cho tầng trên </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Application metrics vô nghĩa nếu thiếu infrastructure context. “App chậm” có thể do code, do DB, <strong>hoặc</strong> do node hết memory. Chỉ nhìn app metrics thì không phân biệt được.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="2-containers--kubernetes--góc-nhìn-observability">2. Containers &amp; Kubernetes — Góc nhìn Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-containers--kubernetes--góc-nhìn-observability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-tại-sao-containers-phức-tạp-hóa-observability">2.1 Tại sao containers phức tạp hóa Observability?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-tại-sao-containers-phức-tạp-hóa-observability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>TRƯỚC containers (traditional):
+  1 server = 1 ứng dụng = &quot;App chậm = server chậm&quot; → Dễ debug
+  Monitor: SSH vào server, top, htop, xem CPU/memory → xong
+
+SAU containers:
+  1 server (node) = 20-50 containers → &quot;Container NÀO chậm?&quot;
+  Containers tạo/xóa liên tục (scale up/down, rolling update)
+  → IP thay đổi, hostname thay đổi, pod name thay đổi
+  → &quot;Ephemeral&quot; — monitoring truyền thống (SSH, check process) không hoạt động
+  → CẦN monitoring tự động, dynamic, label-based
+</code></pre>
+<h3 id="22-kubernetes-concepts--chỉ-những-gì-cần-cho-observability">2.2 Kubernetes Concepts — Chỉ những gì cần cho Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-kubernetes-concepts--chỉ-những-gì-cần-cho-observability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bạn không cần hiểu toàn bộ K8s để làm Observability. Chỉ cần nắm các concepts sau và <strong>tại sao chúng quan trọng cho monitoring</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>K8s Concept</th><th>Là gì</th><th>Tại sao Observability cần biết</th></tr></thead><tbody><tr><td><strong>Pod</strong></td><td>Đơn vị nhỏ nhất, chứa 1+ containers</td><td>Observe <strong>per-pod</strong> metrics: CPU, memory, restart count</td></tr><tr><td><strong>Node</strong></td><td>Máy vật lý/ảo chạy pods</td><td>Node unhealthy → <strong>MỌI pod trên nó</strong> bị ảnh hưởng</td></tr><tr><td><strong>Namespace</strong></td><td>Nhóm logic (prod, staging, dev)</td><td>Filter metrics/logs <strong>theo namespace</strong></td></tr><tr><td><strong>Service</strong></td><td>Network endpoint trỏ đến pods</td><td>Observe traffic <strong>qua service</strong> (load balanced)</td></tr><tr><td><strong>Deployment</strong></td><td>Quản lý replicas và rollout</td><td>Observe <strong>rollout events</strong>: bao nhiêu replicas ready, có lỗi không</td></tr><tr><td><strong>DaemonSet</strong></td><td>Đảm bảo 1 pod per node</td><td><strong>Pattern phổ biến để deploy monitoring agents</strong></td></tr><tr><td><strong>HPA</strong></td><td>Horizontal Pod Autoscaler</td><td>Observe <strong>scaling events</strong>: khi nào scale, lý do gì</td></tr></tbody></table></div>
+<h3 id="23-daemonset--cách-deploy-monitoring-agents-trên-k8s">2.3 DaemonSet — Cách deploy monitoring agents trên K8s<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-daemonset--cách-deploy-monitoring-agents-trên-k8s" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>DaemonSet <strong>đảm bảo có 1 pod chạy trên MỖI node</strong> trong cluster. Đây chính xác là cách monitoring agents được deploy:</p>
+<pre><code>┌─── Node 1 ─────────────────────────┐  ┌─── Node 2 ─────────────────────────┐
+│                                      │  │                                      │
+│ ┌──────────────────────────────────┐ │  │ ┌──────────────────────────────────┐ │
+│ │  📡 OTel Collector (DaemonSet)   │ │  │ │  📡 OTel Collector (DaemonSet)   │ │
+│ │  Thu thập logs/metrics từ        │ │  │ │  Thu thập logs/metrics từ        │ │
+│ │  TẤT CẢ pods trên node này      │ │  │ │  TẤT CẢ pods trên node này      │ │
+│ └──────────────┬───────────────────┘ │  │ └──────────────┬───────────────────┘ │
+│                │ collect              │  │                │ collect              │
+│ ┌────────┐ ┌──┴─────┐ ┌──────────┐  │  │ ┌────────┐ ┌──┴─────┐              │
+│ │ Order  │ │Product │ │ Redis    │  │  │ │Payment │ │  User  │              │
+│ │Service │ │Service │ │ Cache    │  │  │ │Service │ │Service │              │
+│ └────────┘ └────────┘ └──────────┘  │  │ └────────┘ └────────┘              │
+│                                      │  │                                      │
+└──────────────────────────────────────┘  └──────────────────────────────────────┘
+</code></pre>
+<p><strong>Dynatrace OneAgent</strong>, <strong>Datadog Agent</strong>, <strong>OTel Collector</strong> → tất cả đều deploy dưới dạng DaemonSet trên K8s. Agent trên mỗi node <strong>tự động</strong> phát hiện và collect data từ mọi pod trên node đó.</p>
+<h3 id="24-k8s-metrics--những-gì-phải-monitor">2.4 K8s Metrics — Những gì PHẢI monitor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-k8s-metrics--những-gì-phải-monitor" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Cluster level</strong> — “Cluster có đủ resource không?”</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Node health</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">kube_node_status_condition{condition=&quot;Ready&quot;} == 0</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Node NOT ready!</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># → Node not ready = pods bị evict, services bị ảnh hưởng</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Resource availability</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">kube_node_status_allocatable_cpu_cores</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">          # Có bao nhiêu CPU available?</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">kube_node_status_allocatable_memory_bytes</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # Có bao nhiêu memory?</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># → Nếu gần hết = không thể schedule pods mới = không scale được</span></span></code></pre></figure>
+<p><strong>Pod level</strong> — “Pod của tôi có healthy không?”</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># CPU &amp; Memory usage</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">container_cpu_usage_seconds_total</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">               # CPU đang dùng</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">container_memory_usage_bytes</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                     # Memory đang dùng</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># So sánh với limits (để biết gần OOM chưa):</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">container_memory_usage_bytes / container_spec_memory_limit_bytes</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># → > 90% = sắp OOMKilled!</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Restart count — indicator quan trọng nhất</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">kube_pod_container_status_restarts_total</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">         # Số lần restart</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># → > 0 VÀ đang tăng = CrashLoopBackOff = app đang crash liên tục</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Pod phase</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">kube_pod_status_phase{phase=&quot;Pending&quot;}</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">           # Pod đang chờ schedule</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># → Pending lâu = không đủ resource để schedule</span></span></code></pre></figure>
+<p><strong>Deployment level</strong> — “Deployment rollout có OK không?”</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Available replicas vs desired</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">kube_deployment_status_replicas_available</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        # Bao nhiêu pods sẵn sàng?</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">kube_deployment_spec_replicas</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                    # Bao nhiêu pods mong muốn?</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># → available &lt; desired = có pods chưa sẵn sàng, đang rollout hoặc bị lỗi</span></span></code></pre></figure>
+<blockquote class="callout danger" data-callout="danger">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>OOMKilled — Nguyên nhân crash phổ biến nhất trên K8s </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>OOMKilled</strong> (Out of Memory Killed): K8s tự động giết pod khi nó dùng memory vượt quá limit.</p>
+<pre><code>Sequence:
+1. Pod dùng dần memory (memory leak hoặc payload lớn)
+2. Memory usage chạm limit (ví dụ 512MB)
+3. K8s gửi SIGKILL → pod chết NGAY LẬP TỨC (không cleanup)
+4. K8s restart pod → restart counter +1
+5. Nếu crash lại → CrashLoopBackOff (restart interval tăng dần)
+</code></pre>
+<p><strong>Monitor</strong>: Alert khi <code>container_memory_usage_bytes > 85% of limit</code> → fix TRƯỚC khi OOMKilled.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="3-cloud-infrastructure--load-balancers--auto-scaling">3. Cloud Infrastructure — Load Balancers &amp; Auto-scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-cloud-infrastructure--load-balancers--auto-scaling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-load-balancer-observability">3.1 Load Balancer Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-load-balancer-observability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Load balancer (ALB, NLB trên AWS; Cloud Load Balancing trên GCP) là <strong>cánh cửa đầu tiên</strong> của mọi traffic. Metrics từ LB cho bạn biết <strong>toàn bộ traffic picture</strong>:</p>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│                 Load Balancer Dashboard               │
+│                                                        │
+│  Active connections:        1,250                      │
+│  Requests/second:           850                        │
+│  Response time (avg):       45ms                       │
+│                                                        │
+│  Healthy backends:          4/5  ⚠️ (1 unhealthy!)   │
+│  5xx from LB itself:        0                          │
+│  5xx from backends:         23                         │
+│  Spillover (rejected):      0                          │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>LB Metric</th><th>Điều nó cho bạn biết</th><th>Alert khi</th></tr></thead><tbody><tr><td><strong>Healthy backends</strong></td><td>Bao nhiêu server đang nhận traffic</td><td>&lt; desired count</td></tr><tr><td><strong>5xx from backends</strong></td><td>Backend nào đang trả lỗi</td><td>Tăng đột biến</td></tr><tr><td><strong>5xx from LB</strong></td><td>LB không thể forward request (cực nghiêm trọng)</td><td>> 0</td></tr><tr><td><strong>Spillover count</strong></td><td>Requests bị reject vì quá tải</td><td>> 0 (capacity issue!)</td></tr><tr><td><strong>Target response time</strong></td><td>Backend đang phản hồi chậm</td><td>p99 > threshold</td></tr><tr><td><strong>Active connections</strong></td><td>Traffic hiện tại</td><td>Bất thường (quá cao hoặc quá thấp)</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Request count từ LB = nguồn chính xác nhất cho throughput </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>LB thấy <strong>100% traffic</strong> (trước khi nó được distribute đến backends). Đây là nơi tốt nhất để đo tổng throughput và error rate cho toàn bộ service.</p>
+</div>
+</blockquote>
+<h3 id="32-auto-scaling--tự-co-giãn-và-cần-observe-gì">3.2 Auto-scaling — “Tự co giãn” và cần observe gì<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-auto-scaling--tự-co-giãn-và-cần-observe-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Horizontal Pod Autoscaler (HPA) watches metrics:
+  CPU > 70% for 5 min → Scale UP: thêm pods (3 → 5 pods)
+  CPU &lt; 30% for 10 min → Scale DOWN: bớt pods (5 → 3 pods)
+
+Observability cần track:
+  1. SCALING EVENTS
+     → Khi nào scale? Scale lên/xuống bao nhiêu? Trigger metric là gì?
+     
+  2. TIME TO SCALE
+     → Từ lúc CPU > 70% đến lúc pod mới ready = bao lâu?
+     → Nếu > 5 phút = có thể quá chậm, users đã bị ảnh hưởng
+     
+  3. SCALING FAILURES
+     → Không thể scale vì hết resource trên cluster?
+     → Không thể scale vì quota limits trên cloud?
+     
+  4. OSCILLATION
+     → Scale up rồi scale down rồi scale up liên tục?
+     → = threshold quá nhạy, cần tune
+</code></pre>
+<hr/>
+<h2 id="4-service-mesh--observability-gần-như-miễn-phí">4. Service Mesh — Observability “gần như miễn phí”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-service-mesh--observability-gần-như-miễn-phí" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-service-mesh-là-gì-từ-góc-nhìn-observability">4.1 Service Mesh là gì (từ góc nhìn Observability)?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-service-mesh-là-gì-từ-góc-nhìn-observability" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Service Mesh (Istio, Linkerd) gắn một <strong>sidecar proxy</strong> (thường là Envoy) vào mỗi pod. Proxy này ngồi giữa app và network, <strong>xử lý mọi traffic</strong> vào/ra:</p>
+<pre><code>┌──── Pod: Order Service ─────────────────────┐
+│                                               │
+│  ┌──────────────┐     ┌────────────────────┐ │
+│  │  Order App   │◄───►│  Envoy Proxy       │◄───► Network
+│  │  (your code) │     │  (sidecar)         │ │
+│  │              │     │                    │ │
+│  │  Chỉ biết:   │     │  TỰ ĐỘNG thu thập: │ │
+│  │  business    │     │  ✅ RED metrics    │ │
+│  │  logic       │     │  ✅ Traces          │ │
+│  │              │     │  ✅ mTLS encryption │ │
+│  └──────────────┘     └────────────────────┘ │
+└───────────────────────────────────────────────┘
+</code></pre>
+<h3 id="42-tại-sao-gần-như-miễn-phí">4.2 Tại sao “gần như miễn phí”?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-tại-sao-gần-như-miễn-phí" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Vì proxy tự động thu thập <strong>RED metrics</strong> (Rate, Errors, Duration) và <strong>distributed traces</strong> cho MỌI HTTP/gRPC calls — <strong>không cần sửa một dòng code app nào</strong>. Chỉ cần deploy Istio lên cluster → tự có metrics + traces cho tất cả services.</p>
+<h3 id="43-giới-hạn--vẫn-cần-manual-instrumentation">4.3 Giới hạn — vẫn cần manual instrumentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-giới-hạn--vẫn-cần-manual-instrumentation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Service mesh cho bạn (free):
+  ✅ HTTP request rate, error rate, latency (RED)
+  ✅ Connection-level traces (service A gọi service B)
+  ✅ Traffic visualization (service map)
+  ✅ mTLS (encrypted traffic between services)
+
+Service mesh KHÔNG cho bạn:
+  ❌ Business context (order_id, user_id, product_category)
+  ❌ Application-level spans (validate_input, check_inventory)
+  ❌ Custom business metrics (orders_created, revenue)
+  ❌ Log content
+</code></pre>
+<p>→ <strong>Best practice</strong>: Service mesh cho network-level observability + manual OTel cho business-level observability = complete picture.</p>
+<hr/>
+<h2 id="5-topology--dependency-mapping">5. Topology &amp; Dependency Mapping<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-topology--dependency-mapping" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-tại-sao-cần-bản-đồ-hệ-thống">5.1 Tại sao cần “bản đồ” hệ thống?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-tại-sao-cần-bản-đồ-hệ-thống" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi hệ thống có 50+ services, <strong>không ai</strong> nhớ hết “service nào gọi service nào”. Topology map trả lời:</p>
+<ul>
+<li>Service X chết → ảnh hưởng bao nhiêu service downstream?</li>
+<li>Chain dài nhất là gì? (càng dài → càng fragile)</li>
+<li>Có circular dependency không? (A → B → C → A?)</li>
+</ul>
+<h3 id="52-tools-cho-topology-mapping">5.2 Tools cho Topology Mapping<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-tools-cho-topology-mapping" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tool</th><th>Cách hoạt động</th><th>Tự động?</th></tr></thead><tbody><tr><td><strong>Dynatrace Smartscape</strong></td><td>OneAgent tự discover processes, services, hosts → xây 3D topology</td><td>✅ Hoàn toàn</td></tr><tr><td><strong>Datadog Service Map</strong></td><td>Từ APM traces, xây dependency graph</td><td>✅ Hoàn toàn</td></tr><tr><td><strong>Kiali</strong> (Istio)</td><td>Từ Envoy proxy traffic data</td><td>✅ Hoàn toàn</td></tr><tr><td><strong>Manual documentation</strong></td><td>Team tự vẽ diagram</td><td>❌ Outdated nhanh</td></tr></tbody></table></div>
+<h3 id="53-shopvn-dependency-map--impact-analysis">5.3 ShopVN Dependency Map + Impact Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-shopvn-dependency-map--impact-analysis" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>                  ┌──────────┐
+                  │ Browser  │
+                  └────┬─────┘
+                       │
+                  ┌────▼─────┐
+                  │ Gateway  │
+                  └────┬─────┘
+           ┌───────────┼───────────┐
+           │           │           │
+      ┌────▼────┐ ┌────▼────┐ ┌───▼─────┐
+      │Product  │ │ Order   │ │  User   │
+      │Service  │ │Service  │ │Service  │
+      └────┬────┘ └────┬────┘ └────┬────┘
+           │      ┌────┘           │
+           │      │                │
+      ┌────▼──┐ ┌─▼───────┐  ┌────▼──┐
+      │Prod DB│ │Payment  │  │User DB│
+      └───────┘ │Service  │  └───────┘
+                └────┬────┘
+                     │
+               ┌─────▼─────┐
+               │  Bank API  │ ← External (không kiểm soát)
+               └────────────┘
+</code></pre>
+<p><strong>Impact Analysis</strong> — “Nếu X chết, hậu quả là gì?”</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Component chết</th><th>Impact</th><th>Severity</th></tr></thead><tbody><tr><td><strong>Bank API</strong></td><td>Payment fails → Order fails → 100% checkout broken</td><td>🔴 P1</td></tr><tr><td><strong>User DB</strong></td><td>Login fails → MỌI tính năng cần auth đều chết</td><td>🔴 P1</td></tr><tr><td><strong>Product DB</strong></td><td>Search/browse không hoạt động, nhưng checkout OK (nếu đã có product info)</td><td>🟠 P2</td></tr><tr><td><strong>Notification</strong></td><td>User không nhận email xác nhận. Core flow vẫn hoạt động</td><td>🟡 P3</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Blast radius analysis </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Topology map cho bạn thấy <strong>blast radius</strong> (phạm vi ảnh hưởng) khi một component fail. Component có blast radius lớn (Bank API, User DB) cần SLO cao hơn, redundancy nhiều hơn, circuit breaker sẵn sàng.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="6-infrastructure-changes--correlation">6. Infrastructure Changes &amp; Correlation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-infrastructure-changes--correlation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-change-events--correlate-infra-change-với-performance-change">6.1 Change Events — Correlate infra change với performance change<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-change-events--correlate-infra-change-với-performance-change" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Khi bạn thay đổi infrastructure, hậu quả có thể không hiện ngay:</p>
+<pre><code>Timeline:
+  14:00 — Terraform apply: scale Order Service từ 4 pods → 2 pods
+  14:01 — Mọi thứ OK (2 pods đủ handle traffic hiện tại)
+  14:15 — Traffic afternoon peak bắt đầu
+  14:20 — Latency tăng 300% (2 pods không đủ handle peak traffic)
+  14:25 — Alert fires: &quot;p99 > 2s&quot;
+
+Nếu KHÔNG correlate:
+  → Engineer debug code → code bình thường → confused
+  
+Nếu CÓ correlate (change events overlay trên dashboard):
+  → Engineer thấy: &quot;Ồ, 14:00 có scale down event&quot; → ROOT CAUSE ngay
+</code></pre>
+<h3 id="62-gửi-change-events-vào-observability-platform">6.2 Gửi change events vào Observability platform<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-gửi-change-events-vào-observability-platform" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Gửi deployment event vào Dynatrace</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> requests</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">requests.post(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">    &quot;https://abc123.dynatrace.com/api/v2/events/ingest&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">    headers</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Authorization&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Api-Token dt0c01.xxxx&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">},</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">    json</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;eventType&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;CUSTOM_DEPLOYMENT&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;title&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Order Service scaled to 2 replicas&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">        &quot;properties&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;order-service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;action&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;scale-down&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;replicas_before&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">4</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;replicas_after&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">            &quot;triggered_by&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;terraform-pipeline&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span></code></pre></figure>
+<p>Khi event này xuất hiện trên timeline, mọi correlation trở nên <strong>tức thì</strong> — nhìn 1 cái là thấy “có change → có problem”.</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Luôn gửi change events </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Cả Dynatrace (Events API) và Datadog (Events) đều hỗ trợ. Overlay deployment/config change events trên metrics dashboard → correlation tức thì.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="7-tổng-kết">7. Tổng Kết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-tổng-kết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept</th><th>Key Takeaway</th></tr></thead><tbody><tr><td><strong>4 tầng data</strong></td><td>Business → Application → Infrastructure → Hardware. Debug từ trên xuống</td></tr><tr><td><strong>Container challenges</strong></td><td>Ephemeral, dynamic → cần monitoring tự động, label-based</td></tr><tr><td><strong>K8s key metrics</strong></td><td>OOMKilled, restarts, pending pods, available replicas</td></tr><tr><td><strong>DaemonSet</strong></td><td>Pattern deploy monitoring agents: 1 agent per node</td></tr><tr><td><strong>Load Balancer</strong></td><td>Healthy targets, 5xx, spillover — nguồn throughput chính xác nhất</td></tr><tr><td><strong>Auto-scaling</strong></td><td>Track events, time-to-scale, failures, oscillation</td></tr><tr><td><strong>Service Mesh</strong></td><td>”Free” RED metrics + traces ở network level</td></tr><tr><td><strong>Topology</strong></td><td>Dependency map → blast radius → impact analysis</td></tr><tr><td><strong>Change correlation</strong></td><td>Overlay infra change events trên metrics → tìm root cause nhanh</td></tr></tbody></table></div>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>ShopVN sau Chương 08 </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>ShopVN chạy trên K8s với đầy đủ observability ở mọi tầng: application + infrastructure. Topology map cho thấy dependencies rõ ràng. Change events correlate với incidents.</p>
+<p>Nhưng với 50+ services, hàng nghìn metrics, hàng trăm dashboards — <strong>con người không thể xem hết</strong>. Cần AI để tự phát hiện anomaly, tự nhóm alerts, tự tìm root cause.</p>
+<p>👉 Chương tiếp theo <a href="../../../02---areas/observability/fundamentals/09---aiops--and--advanced-patterns" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/09---aiops--and--advanced-patterns">09 - AIOps &amp; Advanced Patterns</a>: AI-assisted Observability, Chaos Engineering, và FinOps.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mapping-sang-dynatrace--datadog" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept trong chương</th><th>Dynatrace</th><th>Datadog</th></tr></thead><tbody><tr><td>Container Monitoring</td><td><strong>OneAgent</strong> trên node → tự discover containers, collect metrics</td><td><strong>Datadog Agent</strong> DaemonSet → container metrics + live containers view</td></tr><tr><td>K8s Monitoring</td><td><strong>Kubernetes app</strong> — cluster overview, workloads, pods, events</td><td><strong>Kubernetes Explorer</strong> — cluster map, pod/node views, events</td></tr><tr><td>DaemonSet agents</td><td><strong>OneAgent DaemonSet</strong> — Helm chart hoặc Dynatrace Operator</td><td><strong>Datadog Agent DaemonSet</strong> — Helm chart</td></tr><tr><td>K8s metrics</td><td>Built-in: pod CPU/memory, restarts, node health, OOMKilled</td><td>Built-in: same metrics + <strong>Cluster Checks</strong> cho control plane</td></tr><tr><td>Load Balancer</td><td><strong>Cloud integration</strong> (AWS, Azure, GCP) → ingest LB metrics</td><td><strong>Cloud integration</strong> → ALB/NLB/CLB metrics built-in</td></tr><tr><td>Topology / Dependency</td><td><strong>Smartscape</strong> — 3D topology tự build: process → service → host → DC</td><td><strong>Service Map</strong> — dependency graph từ APM traces</td></tr><tr><td>Change Correlation</td><td><strong>Events API</strong> → deployment markers trên charts, Davis AI correlate</td><td><strong>Events</strong> → overlay markers, <strong>Deployment Tracking</strong></td></tr><tr><td>Service Mesh</td><td><strong>Istio</strong> integration qua OneAgent hoặc OTel</td><td><strong>Istio integration</strong> built-in via Datadog Agent</td></tr></tbody></table></div>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Smartscape vs Service Map </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li><strong>Dynatrace Smartscape</strong>: Full-stack topology (từ process → host → datacenter). Agent-based, tự discover mọi thứ kể cả non-instrumented.</li>
+<li><strong>Datadog Service Map</strong>: Trace-based (chỉ thấy services đã instrumented). Nhẹ hơn nhưng blind spots cho uninstrumented dependencies.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-tham-khảo">📚 Tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://sre.google/workbook/monitoring/" class="external external-link">Kubernetes Monitoring — Google SRE Workbook<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.dynatrace.com/docs/platform/infrastructure-monitoring/container-platform-monitoring/kubernetes-monitoring" class="external external-link">Dynatrace Kubernetes Monitoring<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.datadoghq.com/containers/kubernetes/" class="external external-link">Datadog Kubernetes Monitoring<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://istio.io/latest/docs/concepts/observability/" class="external external-link">Istio Observability<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-monitoring.html" class="external external-link">AWS ALB Monitoring<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-393" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#chương-08-infrastructure-context" data-for="chương-08-infrastructure-context">Chương 08: Infrastructure Context</a></li><li class="depth-1"><a href="#1-tại-sao-infrastructure-context-quan-trọng" data-for="1-tại-sao-infrastructure-context-quan-trọng">1. Tại sao Infrastructure Context quan trọng?</a></li><li class="depth-2"><a href="#11-ví-dụ-không-có-infra-context-vs-có-infra-context" data-for="11-ví-dụ-không-có-infra-context-vs-có-infra-context">1.1 Ví dụ: Không có infra context vs có infra context</a></li><li class="depth-2"><a href="#12-bốn-tầng-observability-data" data-for="12-bốn-tầng-observability-data">1.2 Bốn tầng observability data</a></li><li class="depth-1"><a href="#2-containers--kubernetes--góc-nhìn-observability" data-for="2-containers--kubernetes--góc-nhìn-observability">2. Containers &amp; Kubernetes — Góc nhìn Observability</a></li><li class="depth-2"><a href="#21-tại-sao-containers-phức-tạp-hóa-observability" data-for="21-tại-sao-containers-phức-tạp-hóa-observability">2.1 Tại sao containers phức tạp hóa Observability?</a></li><li class="depth-2"><a href="#22-kubernetes-concepts--chỉ-những-gì-cần-cho-observability" data-for="22-kubernetes-concepts--chỉ-những-gì-cần-cho-observability">2.2 Kubernetes Concepts — Chỉ những gì cần cho Observability</a></li><li class="depth-2"><a href="#23-daemonset--cách-deploy-monitoring-agents-trên-k8s" data-for="23-daemonset--cách-deploy-monitoring-agents-trên-k8s">2.3 DaemonSet — Cách deploy monitoring agents trên K8s</a></li><li class="depth-2"><a href="#24-k8s-metrics--những-gì-phải-monitor" data-for="24-k8s-metrics--những-gì-phải-monitor">2.4 K8s Metrics — Những gì PHẢI monitor</a></li><li class="depth-1"><a href="#3-cloud-infrastructure--load-balancers--auto-scaling" data-for="3-cloud-infrastructure--load-balancers--auto-scaling">3. Cloud Infrastructure — Load Balancers &amp; Auto-scaling</a></li><li class="depth-2"><a href="#31-load-balancer-observability" data-for="31-load-balancer-observability">3.1 Load Balancer Observability</a></li><li class="depth-2"><a href="#32-auto-scaling--tự-co-giãn-và-cần-observe-gì" data-for="32-auto-scaling--tự-co-giãn-và-cần-observe-gì">3.2 Auto-scaling — “Tự co giãn” và cần observe gì</a></li><li class="depth-1"><a href="#4-service-mesh--observability-gần-như-miễn-phí" data-for="4-service-mesh--observability-gần-như-miễn-phí">4. Service Mesh — Observability “gần như miễn phí”</a></li><li class="depth-2"><a href="#41-service-mesh-là-gì-từ-góc-nhìn-observability" data-for="41-service-mesh-là-gì-từ-góc-nhìn-observability">4.1 Service Mesh là gì (từ góc nhìn Observability)?</a></li><li class="depth-2"><a href="#42-tại-sao-gần-như-miễn-phí" data-for="42-tại-sao-gần-như-miễn-phí">4.2 Tại sao “gần như miễn phí”?</a></li><li class="depth-2"><a href="#43-giới-hạn--vẫn-cần-manual-instrumentation" data-for="43-giới-hạn--vẫn-cần-manual-instrumentation">4.3 Giới hạn — vẫn cần manual instrumentation</a></li><li class="depth-1"><a href="#5-topology--dependency-mapping" data-for="5-topology--dependency-mapping">5. Topology &amp; Dependency Mapping</a></li><li class="depth-2"><a href="#51-tại-sao-cần-bản-đồ-hệ-thống" data-for="51-tại-sao-cần-bản-đồ-hệ-thống">5.1 Tại sao cần “bản đồ” hệ thống?</a></li><li class="depth-2"><a href="#52-tools-cho-topology-mapping" data-for="52-tools-cho-topology-mapping">5.2 Tools cho Topology Mapping</a></li><li class="depth-2"><a href="#53-shopvn-dependency-map--impact-analysis" data-for="53-shopvn-dependency-map--impact-analysis">5.3 ShopVN Dependency Map + Impact Analysis</a></li><li class="depth-1"><a href="#6-infrastructure-changes--correlation" data-for="6-infrastructure-changes--correlation">6. Infrastructure Changes &amp; Correlation</a></li><li class="depth-2"><a href="#61-change-events--correlate-infra-change-với-performance-change" data-for="61-change-events--correlate-infra-change-với-performance-change">6.1 Change Events — Correlate infra change với performance change</a></li><li class="depth-2"><a href="#62-gửi-change-events-vào-observability-platform" data-for="62-gửi-change-events-vào-observability-platform">6.2 Gửi change events vào Observability platform</a></li><li class="depth-1"><a href="#7-tổng-kết" data-for="7-tổng-kết">7. Tổng Kết</a></li><li class="depth-1"><a href="#-mapping-sang-dynatrace--datadog" data-for="-mapping-sang-dynatrace--datadog">🔗 Mapping sang Dynatrace &amp; Datadog</a></li><li class="depth-1"><a href="#-tham-khảo" data-for="-tham-khảo">📚 Tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/observability/datadog/labs/00---setup-storedog--and--datadog-agent" class="internal">Lab 00 — Setup Storedog &amp; Datadog Agent trên Kubernetes</a></li><li><a href="../../../02---areas/observability/datadog/labs/01---infrastructure-monitoring--and--host-map" class="internal">Lab 01 — Infrastructure Monitoring &amp; Host Map</a></li><li><a href="../../../02---areas/observability/datadog/labs/02---tagging-strategy--and--organization" class="internal">Lab 02 — Tagging Strategy &amp; Organization</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/00---setup-easytrade--and--oneagent" class="internal">Lab 00 — Setup EasyTrade &amp; OneAgent</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/01---host-monitoring--and--smartscape-topology" class="internal">Lab 01 — Host Monitoring &amp; Smartscape Topology</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/06---dashboards--and--dql-queries" class="internal">Lab 06 — Dashboards &amp; DQL Queries</a></li><li><a href="../../../02---areas/observability/dynatrace/labs/07---slos,-alerting-profiles--and--management-zones" class="internal">Lab 07 — SLOs, Alerting Profiles &amp; Management Zones</a></li><li><a href="../../../02---areas/observability/fundamentals/00---mục-lục--and--lộ-trình-học" class="internal">Observability Fundamentals — Mục Lục &amp; Lộ Trình Học</a></li><li><a href="../../../02---areas/observability/fundamentals/07---alerting--and--incident-management" class="internal">Chương 07: Alerting &amp; Incident Management</a></li><li><a href="../../../02---areas/observability/fundamentals/demo/readme" class="internal">ShopVN Demo — Hands-on Lab Guide</a></li><li><a href="../../../02---areas/observability/labs/00---lab-overview--and--roadmap" class="internal">Observability Platform Labs — Tổng Quan &amp; Lộ Trình</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

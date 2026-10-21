@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config Cách đọc note này: (0) Ba câu hỏi khác nhau mà ba dịch vụ trả lời → (1) CloudWatch (performance/monitoring) → (2) CloudTrail (audit — ai làm gì) → (3) Config (compliance — cấu hình ..."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config Cách đọc note này: (0) Ba câu hỏi khác nhau mà ba dịch vụ trả lời → (1) CloudWatch (performance/monitoring) → (2) CloudTrail (audit — ai làm gì) → (3) Config (compliance — cấu hình ..."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config Cách đọc note này: (0) Ba câu hỏi khác nhau mà ba dịch vụ trả lời → (1) CloudWatch (performance/monitoring) → (2) CloudTrail (audit — ai làm gì) → (3) Config (compliance — cấu hình ..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/24---aws-monitoring,-audit--and--performance"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/24---aws-monitoring,-audit--and--performance"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config Cách đọc note này: (0) Ba câu hỏi khác nhau mà ba dịch vụ trả lời → (1) CloudWatch (performance/monitoring) → (2) CloudTrail (audit — ai làm gì) → (3) Config (compliance — cấu hình ..."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/24---aws-monitoring,-audit--and--performance" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-92" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-92" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config</a></div></nav><h1 class="article-title">24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">AWS Monitoring Audit Performance</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon CloudWatch</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS CloudTrail</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Config</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-09-11T17:00:00.000Z">12 thg 9, 2026</time><span>45 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="24--aws-monitoring-audit--performance-cloudwatch-cloudtrail--config">24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24--aws-monitoring-audit--performance-cloudwatch-cloudtrail--config" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> (0) Ba câu hỏi khác nhau mà ba dịch vụ trả lời → (1) CloudWatch (performance/monitoring) → (2) CloudTrail (audit — ai làm gì) → (3) Config (compliance — cấu hình có đúng chuẩn không, thay đổi theo thời gian) → (4) Bảng so sánh → (5) Case study “For an ELB” → (6) So sánh &amp; chọn đáp án thi.</p>
+</blockquote>
+<hr/>
+<h2 id="0-ba-dịch-vụ-ba-câu-hỏi-khác-nhau">0. Ba dịch vụ, ba câu hỏi khác nhau<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#0-ba-dịch-vụ-ba-câu-hỏi-khác-nhau" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Đây là điểm dễ nhầm nhất của cả bài: cả ba đều dính tới “theo dõi” hệ thống, nhưng mỗi dịch vụ trả lời <strong>một câu hỏi hoàn toàn khác</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dịch vụ</th><th>Câu hỏi nó trả lời</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>CloudWatch</strong></td><td>”<strong>Hệ thống đang chạy như thế nào?</strong>” (performance)</td><td>CPU đang bao nhiêu %? Có bao nhiêu lỗi 5xx trong 1 giờ qua?</td></tr><tr><td><strong>CloudTrail</strong></td><td>”<strong>Ai đã làm gì, khi nào?</strong>” (audit)</td><td>Ai xoá bucket này? Ai gọi API <code>DeleteTable</code>?</td></tr><tr><td><strong>Config</strong></td><td>”<strong>Cấu hình hiện tại có đúng chuẩn không, và nó đã đổi ra sao theo thời gian?</strong>” (compliance)</td><td>Security Group này có đang mở SSH cho <code>0.0.0.0/0</code> không? Cấu hình ALB tuần trước khác tuần này thế nào?</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Ghi nhớ nhanh:</strong> CloudWatch nhìn vào <strong>số liệu/log runtime</strong>. CloudTrail nhìn vào <strong>API call</strong>. Config nhìn vào <strong>trạng thái cấu hình</strong> (snapshot theo thời gian + có tuân thủ rule hay không). Ba dịch vụ này <strong>bổ sung cho nhau</strong>, không thay thế nhau — một hệ thống production nghiêm túc dùng cả ba.</p>
+</blockquote>
+<hr/>
+<h2 id="1-amazon-cloudwatch--performance-monitoring">1. Amazon CloudWatch — performance monitoring<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-amazon-cloudwatch--performance-monitoring" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-cloudwatch-metrics">1.1 CloudWatch Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-cloudwatch-metrics" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Metric</strong> = một biến số được theo dõi (<code>CPUUtilization</code>, <code>NetworkIn</code>…) — CloudWatch cung cấp metric cho <strong>mọi service AWS</strong></li>
+<li>Metric thuộc về một <strong>namespace</strong> (gom nhóm theo service/ứng dụng)</li>
+<li><strong>Dimension</strong> = thuộc tính của metric (instance id, environment…) — tối đa <strong>30 dimension/metric</strong></li>
+<li>Metric luôn có <strong>timestamp</strong></li>
+<li>Dựng được <strong>CloudWatch Dashboard</strong> từ metric</li>
+<li><strong>Custom Metrics</strong>: metric AWS không tự cung cấp sẵn (ví dụ <strong>RAM</strong> — CloudWatch mặc định KHÔNG có metric RAM cho EC2, phải tự đẩy lên)</li>
+</ul>
+<h3 id="12-cloudwatch-metric-streams--đẩy-metric-ra-ngoài-gần-thời-gian-thực">1.2 CloudWatch Metric Streams — đẩy metric ra ngoài gần thời gian thực<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-cloudwatch-metric-streams--đẩy-metric-ra-ngoài-gần-thời-gian-thực" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Stream <strong>liên tục</strong> metric CloudWatch tới đích mong muốn, độ trễ thấp, <strong>near-real-time</strong></li>
+<li>Đích: <strong>Kinesis Data Firehose</strong> (rồi đi tiếp S3, Redshift, Athena, OpenSearch) hoặc <strong>3rd-party</strong> (Datadog, Dynatrace, New Relic, Splunk, Sumo Logic…)</li>
+<li>Có thể <strong>filter</strong> để chỉ stream một tập con metric, không cần đẩy hết</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    CW[\&quot;CloudWatch Metrics\&quot;] --> Stream[\&quot;CloudWatch Metric Streams\&quot;]\n    Stream --> KDF[\&quot;Kinesis Data Firehose\&quot;]\n    KDF --> S3[\&quot;S3 / Redshift / Athena / OpenSearch\&quot;]\n    Stream --> ThirdParty[\&quot;Bên thứ 3: Datadog, Dynatrace, New Relic, Splunk...\&quot;]&quot;">graph LR
+    CW[&quot;CloudWatch Metrics&quot;] --> Stream[&quot;CloudWatch Metric Streams&quot;]
+    Stream --> KDF[&quot;Kinesis Data Firehose&quot;]
+    KDF --> S3[&quot;S3 / Redshift / Athena / OpenSearch&quot;]
+    Stream --> ThirdParty[&quot;Bên thứ 3: Datadog, Dynatrace, New Relic, Splunk...&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p>Đây chính là cách kết nối CloudWatch với các công cụ observability ngoài AWS như Dynatrace — hợp với domain observability trong vault này.</p>
+</blockquote>
+<h3 id="13-cloudwatch-logs">1.3 CloudWatch Logs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-cloudwatch-logs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Log Group</strong>: tên tuỳ ý, thường đại diện cho <strong>một ứng dụng</strong></li>
+<li><strong>Log Stream</strong>: các instance/log file/container <strong>bên trong</strong> một log group</li>
+<li>Đặt được <strong>retention policy</strong> (never expire, từ 1 ngày đến 10 năm)</li>
+<li>Log group gửi được sang: <strong>S3</strong> (export), <strong>Kinesis Data Streams</strong>, <strong>Kinesis Data Firehose</strong>, <strong>Lambda</strong>, <strong>OpenSearch</strong></li>
+<li><strong>Mã hoá mặc định</strong>; đặt được <strong>KMS key riêng</strong> nếu cần</li>
+</ul>
+<p><strong>Nguồn log — ai đẩy log vào CloudWatch Logs:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nguồn</th><th>Ghi chú</th></tr></thead><tbody><tr><td>SDK, <strong>CloudWatch Logs Agent</strong>, <strong>CloudWatch Unified Agent</strong></td><td>Cho EC2/on-prem</td></tr><tr><td><strong>Elastic Beanstalk</strong></td><td>Log ứng dụng</td></tr><tr><td><strong>ECS</strong></td><td>Log container</td></tr><tr><td><strong>AWS Lambda</strong></td><td>Log function</td></tr><tr><td><strong>VPC Flow Logs</strong></td><td>Log riêng cho VPC</td></tr><tr><td><strong>API Gateway</strong></td><td>Log request/response</td></tr><tr><td><strong>CloudTrail</strong></td><td>Chỉ khi có filter</td></tr><tr><td><strong>Route 53</strong></td><td>Log DNS query</td></tr></tbody></table></div>
+<p>Sơ đồ gốc từ slide — gom log CloudWatch Logs từ nhiều account/nhiều region về một nơi qua Subscription Filter → Kinesis Data Streams → Kinesis Data Firehose → S3:</p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173847.png" alt width="auto" height="auto"/></p>
+<h3 id="14-cloudwatch-logs-insights--công-cụ-query-không-phải-real-time-engine">1.4 CloudWatch Logs Insights — công cụ query, không phải real-time engine<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-cloudwatch-logs-insights--công-cụ-query-không-phải-real-time-engine" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Tìm kiếm &amp; phân tích dữ liệu <strong>đã nằm sẵn</strong> trong CloudWatch Logs (vd tìm 1 IP cụ thể, đếm số lần <code>&quot;ERROR&quot;</code>)</li>
+<li>Có <strong>ngôn ngữ query riêng</strong>; tự động phát hiện field từ AWS service và JSON log event</li>
+<li>Fetch field, filter theo điều kiện, tính aggregate, sort, giới hạn số event</li>
+<li>Lưu query lại, gắn vào <strong>CloudWatch Dashboard</strong></li>
+<li>Query được <strong>nhiều Log Group ở nhiều account khác nhau</strong> cùng lúc</li>
+<li><strong>Bẫy quan trọng:</strong> đây là <strong>query engine</strong>, <strong>KHÔNG PHẢI real-time engine</strong> — dữ liệu đã ghi vào log group rồi mới query được, không phải luồng streaming.</li>
+</ul>
+<p><strong>Xuất log ra S3 (<code>CloudWatch Logs → S3</code>):</strong></p>
+<ul>
+<li>API: <code>CreateExportTask</code></li>
+<li>Dữ liệu có thể mất <strong>tới 12 giờ</strong> mới export xong</li>
+<li><strong>Không near-real-time, không real-time</strong> → cần thời gian thực thì dùng <strong>Logs Subscriptions</strong> thay vì export</li>
+</ul>
+<p><strong>Logs Subscriptions — muốn near-real-time/real-time thì dùng cái này:</strong></p>
+<ul>
+<li>Lấy log event <strong>real-time</strong> từ CloudWatch Logs để xử lý/phân tích</li>
+<li>Gửi tới <strong>Kinesis Data Streams</strong>, <strong>Kinesis Data Firehose</strong>, hoặc <strong>Lambda</strong></li>
+<li><strong>Subscription Filter</strong>: lọc chỉ những log nào được đẩy sang đích</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    CWL[\&quot;CloudWatch Logs\&quot;] --> SF[\&quot;Subscription Filter\&quot;]\n    SF -->|\&quot;real-time\&quot;| Lambda[\&quot;Lambda\&quot;]\n    SF -->|\&quot;real-time\&quot;| OS[\&quot;OpenSearch\&quot;]\n    SF -->|\&quot;near real-time\&quot;| KDF[\&quot;Kinesis Data Firehose\&quot;]\n    SF -->|\&quot;near real-time\&quot;| KDS[\&quot;Kinesis Data Streams\&quot;]\n    KDF --> S3[\&quot;S3\&quot;]&quot;">graph LR
+    CWL[&quot;CloudWatch Logs&quot;] --> SF[&quot;Subscription Filter&quot;]
+    SF -->|&quot;real-time&quot;| Lambda[&quot;Lambda&quot;]
+    SF -->|&quot;real-time&quot;| OS[&quot;OpenSearch&quot;]
+    SF -->|&quot;near real-time&quot;| KDF[&quot;Kinesis Data Firehose&quot;]
+    SF -->|&quot;near real-time&quot;| KDS[&quot;Kinesis Data Streams&quot;]
+    KDF --> S3[&quot;S3&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Ghi nhớ:</strong> đẩy thẳng tới <strong>Lambda/OpenSearch</strong> = real-time. Đẩy qua <strong>Kinesis Data Streams/Firehose</strong> rồi mới tới đích = near-real-time.</p>
+</blockquote>
+<p><strong>Cross-Account &amp; Cross-Region Subscription — gom log nhiều account/region về một chỗ:</strong></p>
+<ul>
+<li><strong>Cross-Account Subscription</strong>: gửi log event sang <strong>tài nguyên ở account khác</strong> (Kinesis Data Streams/Firehose bên account nhận)</li>
+<li>Account gửi cần <strong>Subscription Filter</strong> trỏ tới đích ở account nhận</li>
+<li>Account nhận cần: <strong>Destination</strong> (vd Kinesis Data Streams) + <strong>Destination Access Policy</strong> (cho phép account gửi ghi vào) + <strong>IAM Role</strong> (cross-account, account gửi assume để <code>PutRecord</code>)</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Sender[\&quot;Account gửi&lt;br/>CloudWatch Logs + Subscription Filter\&quot;] -->|\&quot;logs, assume IAM Role\&quot;| Recipient[\&quot;Account nhận&lt;br/>Kinesis Data Streams (Subscription Destination)\&quot;]&quot;">graph LR
+    Sender[&quot;Account gửi&lt;br/>CloudWatch Logs + Subscription Filter&quot;] -->|&quot;logs, assume IAM Role&quot;| Recipient[&quot;Account nhận&lt;br/>Kinesis Data Streams (Subscription Destination)&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Use case thi hay gặp:</strong> gom log của toàn bộ AWS Organization về <strong>một account trung tâm</strong> để phân tích tập trung.</p>
+</blockquote>
+<h3 id="15-cloudwatch-logs-agent--unified-agent--đẩy-logmetric-từ-ec2-và-on-prem">1.5 CloudWatch Logs Agent &amp; Unified Agent — đẩy log/metric từ EC2 và on-prem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#15-cloudwatch-logs-agent--unified-agent--đẩy-logmetric-từ-ec2-và-on-prem" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Mặc định EC2 KHÔNG tự gửi log gì sang CloudWatch</strong> — phải tự cài <strong>agent</strong></li>
+<li><strong>CloudWatch Logs Agent</strong> (bản cũ): chỉ gửi được <strong>log</strong>, chạy được cả EC2 lẫn <strong>on-premises</strong></li>
+<li><strong>CloudWatch Unified Agent</strong> (khuyến nghị):
+<ul>
+<li>Thu thêm <strong>metric hệ thống</strong> (RAM, process…) mà EC2 mặc định không có</li>
+<li>Gửi log sang CloudWatch Logs</li>
+<li><strong>Cấu hình tập trung qua SSM Parameter Store</strong></li>
+</ul>
+</li>
+<li>Cần <strong>IAM permission</strong> đúng để agent hoạt động</li>
+</ul>
+<p><strong>Metric mà Unified Agent thu được trực tiếp trên server (Linux/EC2):</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nhóm</th><th>Chi tiết</th></tr></thead><tbody><tr><td>CPU</td><td>active, guest, idle, system, user, steal</td></tr><tr><td>Disk</td><td>free/used/total; Disk IO: writes, reads, bytes, iops</td></tr><tr><td>RAM</td><td>free, inactive, used, total, cached</td></tr><tr><td>Netstat</td><td>số kết nối TCP/UDP, packet, byte</td></tr><tr><td>Processes</td><td>total, dead, blocked, idle, running, sleep</td></tr><tr><td>Swap</td><td>free, used, used %</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Nhắc lại:</strong> metric <strong>out-of-the-box</strong> của EC2 (không cần agent) chỉ có <strong>disk, CPU, network ở mức cao</strong> (tổng quát) — muốn chi tiết như RAM, process phải qua Unified Agent.</p>
+</blockquote>
+<h3 id="16-cloudwatch-alarms">1.6 CloudWatch Alarms<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#16-cloudwatch-alarms" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Trigger notification dựa trên <strong>một metric</strong> — nhiều tuỳ chọn đánh giá (sampling, %, max, min…)</li>
+<li><strong>Alarm State</strong>: <code>OK</code> · <code>INSUFFICIENT_DATA</code> · <code>ALARM</code></li>
+<li><strong>Period</strong>: khoảng thời gian (giây) để đánh giá metric; <strong>high-resolution custom metric</strong>: <strong>10s, 30s</strong>, hoặc <strong>bội số của 60s</strong></li>
+</ul>
+<p><strong>Alarm target — báo động xong thì làm gì:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Target</th><th>Hành động</th></tr></thead><tbody><tr><td><strong>EC2 Instance</strong></td><td>Stop, Terminate, Reboot, hoặc <strong>Recover</strong></td></tr><tr><td><strong>EC2 Auto Scaling</strong></td><td>Trigger scaling action</td></tr><tr><td><strong>Amazon SNS</strong></td><td>Gửi notification — từ đây làm được gần như mọi thứ (email, Lambda, SQS…)</td></tr></tbody></table></div>
+<p><strong>Composite Alarms — giảm “alarm noise”:</strong></p>
+<ul>
+<li>Một Alarm thường chỉ theo dõi <strong>một metric</strong></li>
+<li><strong>Composite Alarm</strong> theo dõi <strong>trạng thái của nhiều alarm khác</strong>, kết hợp bằng <code>AND</code>/<code>OR</code></li>
+<li>Hữu ích để tránh spam alarm (vd chỉ báo khi <strong>cả CPU lẫn IOPS</strong> cùng bất thường, thay vì báo riêng từng cái)</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    A[\&quot;CW Alarm A&lt;br/>monitor CPU\&quot;] --> Comp[\&quot;Composite Alarm&lt;br/>(AND/OR)\&quot;]\n    B[\&quot;CW Alarm B&lt;br/>monitor IOPS\&quot;] --> Comp\n    Comp -->|\&quot;ALARM\&quot;| SNS[\&quot;Amazon SNS\&quot;]&quot;">graph TD
+    A[&quot;CW Alarm A&lt;br/>monitor CPU&quot;] --> Comp[&quot;Composite Alarm&lt;br/>(AND/OR)&quot;]
+    B[&quot;CW Alarm B&lt;br/>monitor IOPS&quot;] --> Comp
+    Comp -->|&quot;ALARM&quot;| SNS[&quot;Amazon SNS&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Status Check — 3 loại:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Kiểm tra gì</th></tr></thead><tbody><tr><td><strong>Instance status</strong></td><td>Bản thân EC2 VM</td></tr><tr><td><strong>System status</strong></td><td>Phần cứng bên dưới (host)</td></tr><tr><td><strong>Attached EBS status</strong></td><td>Các volume EBS đính kèm</td></tr></tbody></table></div>
+<p><strong>EC2 Instance Recovery</strong>: khi <code>StatusCheckFailed_System</code> → Alarm trigger recovery, instance được khôi phục với <strong>cùng Private IP, Public IP, Elastic IP, metadata, placement group</strong> (không phải chạy lại từ đầu như instance mới).</p>
+<p><strong>Alarm từ CloudWatch Logs Metric Filter</strong>: đặt filter trên log group → filter đó tạo ra metric → gắn Alarm vào metric đó → báo SNS khi khớp pattern (vd đếm số dòng <code>&quot;ERROR&quot;</code> vượt ngưỡng).</p>
+<p><strong>Test alarm bằng CLI</strong> (không cần đợi điều kiện thật xảy ra):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> cloudwatch</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> set-alarm-state</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --alarm-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;myalarm&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --state-value</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ALARM</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --state-reason</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;testing purposes&quot;</span></span></code></pre></figure>
+<h3 id="17-cloudwatch-network-monitor">1.7 CloudWatch Network Monitor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#17-cloudwatch-network-monitor" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Giám sát vấn đề mạng <strong>giữa app trên AWS và data center on-premises</strong></li>
+<li>Phát hiện suy giảm hiệu năng mạng: <strong>packet loss, latency, jitter</strong></li>
+<li><strong>Không cần cài agent</strong></li>
+<li>Test <strong>ICMP hoặc TCP</strong> tới đích on-premises (IPv4) qua <strong>Direct Connect</strong> hoặc <strong>Site-to-Site VPN</strong></li>
+<li>Kết quả publish vào <strong>CloudWatch Metrics</strong> như metric bình thường</li>
+</ul>
+<h3 id="18-amazon-eventbridge-tên-cũ-cloudwatch-events">1.8 Amazon EventBridge (tên cũ: CloudWatch Events)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#18-amazon-eventbridge-tên-cũ-cloudwatch-events" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Schedule</strong>: chạy theo lịch (cron job) → trigger Lambda (vd chạy mỗi giờ)</li>
+<li><strong>Event Pattern</strong>: rule phản ứng khi một service AWS “làm gì đó” (vd <strong>IAM Root User sign-in</strong> → gửi SNS email cảnh báo)</li>
+<li>Trigger được: <strong>Lambda</strong>, <strong>SQS/SNS</strong>, <strong>Kinesis Data Streams</strong>, <strong>Step Functions</strong>, <strong>CodePipeline</strong>, <strong>CodeBuild</strong>, <strong>SSM</strong>, <strong>EC2 Actions</strong>, <strong>ECS Task</strong>, <strong>AWS Batch</strong></li>
+</ul>
+<p><strong>Nguồn sự kiện (Event Source) thường gặp:</strong> EC2 (vd Start Instance), CodeBuild (build fail), S3 Event (upload object), <strong>CloudTrail</strong> (bất kỳ API call nào), Trusted Advisor (finding mới), Schedule/Cron.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    S1[\&quot;EC2 State Change\&quot;] --> EB[\&quot;Amazon EventBridge\&quot;]\n    S2[\&quot;S3 Event\&quot;] --> EB\n    S3v[\&quot;CloudTrail&lt;br/>(any API call)\&quot;] --> EB\n    S4[\&quot;Schedule / Cron\&quot;] --> EB\n    EB --> D1[\&quot;Lambda\&quot;]\n    EB --> D2[\&quot;SQS / SNS\&quot;]\n    EB --> D3[\&quot;Step Functions\&quot;]\n    EB --> D4[\&quot;Kinesis Data Streams\&quot;]&quot;">graph LR
+    S1[&quot;EC2 State Change&quot;] --> EB[&quot;Amazon EventBridge&quot;]
+    S2[&quot;S3 Event&quot;] --> EB
+    S3v[&quot;CloudTrail&lt;br/>(any API call)&quot;] --> EB
+    S4[&quot;Schedule / Cron&quot;] --> EB
+    EB --> D1[&quot;Lambda&quot;]
+    EB --> D2[&quot;SQS / SNS&quot;]
+    EB --> D3[&quot;Step Functions&quot;]
+    EB --> D4[&quot;Kinesis Data Streams&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Event Bus — 3 loại:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Ai gửi vào</th></tr></thead><tbody><tr><td><strong>Default Event Bus</strong></td><td>AWS services</td></tr><tr><td><strong>Partner Event Bus</strong></td><td>AWS SaaS Partners</td></tr><tr><td><strong>Custom Event Bus</strong></td><td>Ứng dụng tự viết</td></tr></tbody></table></div>
+<ul>
+<li>Event Bus truy cập được từ <strong>account khác</strong> qua <strong>Resource-based Policy</strong></li>
+<li>Có thể <strong>archive</strong> event gửi tới bus (toàn bộ hoặc theo filter), giữ <strong>vô thời hạn</strong> hoặc theo period, và <strong>replay</strong> lại archive khi cần</li>
+<li><strong>Use case Resource-based Policy hay gặp:</strong> gom toàn bộ event của <strong>AWS Organization</strong> về <strong>một account trung tâm</strong> (giống pattern Cross-Account Subscription của CloudWatch Logs ở §1.4)</li>
+</ul>
+<p><strong>Schema Registry</strong>: EventBridge tự <strong>phân tích event trong bus và suy ra schema</strong>, cho phép <strong>generate code</strong> để ứng dụng biết trước cấu trúc dữ liệu; schema được <strong>version hoá</strong>.</p>
+<h3 id="19-nhóm-cloudwatch-insights--4-loại-đừng-nhầm-lẫn">1.9 Nhóm “CloudWatch Insights” — 4 loại, đừng nhầm lẫn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#19-nhóm-cloudwatch-insights--4-loại-đừng-nhầm-lẫn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Áp dụng cho</th><th>Làm gì</th></tr></thead><tbody><tr><td><strong>Container Insights</strong></td><td>ECS, EKS, Kubernetes trên EC2, Fargate (cả ECS lẫn EKS)</td><td>Thu thập, gộp, tóm tắt metric + log từ container; trên EKS/K8s cần <strong>agent CloudWatch dạng container</strong></td></tr><tr><td><strong>Lambda Insights</strong></td><td>AWS Lambda</td><td>Metric hệ thống (CPU, memory, disk, network) + chẩn đoán (<strong>cold start</strong>, worker shutdown); phân phối dưới dạng <strong>Lambda Layer</strong></td></tr><tr><td><strong>Contributor Insights</strong></td><td>Bất kỳ log nào AWS tạo ra (VPC Flow Logs, DNS…)</td><td>Tìm <strong>Top-N contributor</strong> (IP xấu, user tốn network nhất, URL lỗi nhiều nhất); dùng rule tự viết hoặc rule mẫu có sẵn</td></tr><tr><td><strong>Application Insights</strong></td><td>App chạy trên EC2 (Java, .NET, IIS, database…) + resource khác (EBS, RDS, ELB, ASG, Lambda, SQS, DynamoDB, S3, ECS, EKS, SNS, API Gateway)</td><td>Dashboard <strong>tự động</strong> phát hiện vấn đề, chạy trên nền <strong>SageMaker</strong>; finding/alert gửi tới <strong>EventBridge</strong> và <strong>SSM OpsCenter</strong></td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Cách phân biệt nhanh:</strong> Container/Lambda Insights = <strong>thu thập metric/log chuyên biệt cho một loại compute</strong>. Contributor Insights = <strong>phân tích ai/cái gì đang gây tải nhiều nhất</strong> từ log có sẵn. Application Insights = <strong>dashboard tự động phát hiện vấn đề</strong> cho cả một stack ứng dụng.</p>
+</blockquote>
+<hr/>
+<h2 id="2-aws-cloudtrail--audit-ai-đã-làm-gì">2. AWS CloudTrail — audit, ai đã làm gì<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-aws-cloudtrail--audit-ai-đã-làm-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Cung cấp <strong>governance, compliance, audit</strong> cho AWS Account</li>
+<li><strong>Bật mặc định!</strong> (không cần tự enable)</li>
+<li>Ghi lại <strong>lịch sử API call/event</strong> trong account, gọi qua Console, SDK, CLI, hoặc do AWS Service tự gọi</li>
+<li>Log được đẩy vào <strong>CloudWatch Logs</strong> hoặc <strong>S3</strong></li>
+<li>Một <strong>trail</strong> áp dụng cho <strong>All Regions</strong> (mặc định) hoặc <strong>một region duy nhất</strong></li>
+<li><strong>Bẫy kinh điển:</strong> resource nào đó bị xoá trong AWS → <strong>luôn kiểm tra CloudTrail đầu tiên</strong> để biết ai/API nào đã xoá</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Console[\&quot;Console\&quot;] --> Trail[\&quot;CloudTrail\&quot;]\n    SDK[\&quot;SDK\&quot;] --> Trail\n    CLI[\&quot;CLI\&quot;] --> Trail\n    IAM[\&quot;IAM Users &amp; Roles\&quot;] --> Trail\n    Trail --> CWL[\&quot;CloudWatch Logs\&quot;]\n    Trail --> S3[\&quot;S3 Bucket\&quot;]\n    CWL --> Audit[\&quot;Inspect &amp; Audit\&quot;]\n    S3 --> Audit&quot;">graph LR
+    Console[&quot;Console&quot;] --> Trail[&quot;CloudTrail&quot;]
+    SDK[&quot;SDK&quot;] --> Trail
+    CLI[&quot;CLI&quot;] --> Trail
+    IAM[&quot;IAM Users &amp; Roles&quot;] --> Trail
+    Trail --> CWL[&quot;CloudWatch Logs&quot;]
+    Trail --> S3[&quot;S3 Bucket&quot;]
+    CWL --> Audit[&quot;Inspect &amp; Audit&quot;]
+    S3 --> Audit
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="21-ba-loại-event-của-cloudtrail">2.1 Ba loại event của CloudTrail<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-ba-loại-event-của-cloudtrail" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại</th><th>Mặc định có log không</th><th>Ví dụ</th></tr></thead><tbody><tr><td><strong>Management Events</strong></td><td><strong>Có, mặc định bật</strong></td><td>Cấu hình security (<code>AttachRolePolicy</code>), cấu hình routing (<code>CreateSubnet</code>), setup logging (<code>CreateTrail</code>); tách được <strong>Read Events</strong> (không đổi resource) vs <strong>Write Events</strong> (có thể đổi resource)</td></tr><tr><td><strong>Data Events</strong></td><td><strong>KHÔNG</strong> (vì volume rất cao)</td><td>S3 object-level (<code>GetObject</code>, <code>PutObject</code>, <code>DeleteObject</code> — tách Read/Write được); Lambda <code>Invoke</code></td></tr><tr><td><strong>CloudTrail Insights Events</strong></td><td>Phải tự <strong>bật</strong></td><td>Xem §2.2</td></tr></tbody></table></div>
+<h3 id="22-cloudtrail-insights--phát-hiện-hoạt-động-bất-thường">2.2 CloudTrail Insights — phát hiện hoạt động bất thường<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-cloudtrail-insights--phát-hiện-hoạt-động-bất-thường" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Bật để phát hiện: <strong>provisioning tài nguyên bất thường</strong>, <strong>chạm giới hạn service</strong>, <strong>bùng nổ IAM action</strong>, <strong>khoảng trống trong hoạt động bảo trì định kỳ</strong></li>
+<li>Cơ chế: phân tích <strong>Management Events</strong> bình thường để tạo <strong>baseline</strong>, rồi <strong>liên tục phân tích Write Events</strong> để tìm pattern bất thường</li>
+<li>Anomaly xuất hiện trong <strong>CloudTrail Console</strong>, event được gửi vào <strong>S3</strong>, và sinh ra một <strong>EventBridge event</strong> (để tự động hoá phản ứng)</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    ME[\&quot;Management Events\&quot;] --> CTI[\&quot;CloudTrail Insights&lt;br/>(continuous analysis)\&quot;]\n    CTI --> IE[\&quot;Insights Events\&quot;]\n    IE --> Console[\&quot;CloudTrail Console\&quot;]\n    IE --> S3b[\&quot;S3 Bucket\&quot;]\n    IE --> EB[\&quot;EventBridge event\&quot;]&quot;">graph LR
+    ME[&quot;Management Events&quot;] --> CTI[&quot;CloudTrail Insights&lt;br/>(continuous analysis)&quot;]
+    CTI --> IE[&quot;Insights Events&quot;]
+    IE --> Console[&quot;CloudTrail Console&quot;]
+    IE --> S3b[&quot;S3 Bucket&quot;]
+    IE --> EB[&quot;EventBridge event&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="23-retention--lưu-bao-lâu">2.3 Retention — lưu bao lâu?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-retention--lưu-bao-lâu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Event lưu <strong>90 ngày</strong> trong CloudTrail</li>
+<li>Cần giữ lâu hơn → log ra <strong>S3</strong> + dùng <strong>Athena</strong> để phân tích</li>
+</ul>
+<h3 id="24-eventbridge--cloudtrail--chặnphản-ứng-theo-api-call">2.4 EventBridge + CloudTrail — chặn/phản ứng theo API call<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-eventbridge--cloudtrail--chặnphản-ứng-theo-api-call" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Vì CloudTrail sinh event cho <strong>mọi API call</strong>, kết hợp với EventBridge tạo được cảnh báo real-time theo hành động cụ thể:</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    User[\&quot;User gọi DeleteTable\&quot;] --> DDB[\&quot;DynamoDB\&quot;]\n    DDB --> Trail[\&quot;CloudTrail&lt;br/>(log API call)\&quot;]\n    Trail -->|\&quot;event\&quot;| EB[\&quot;EventBridge\&quot;]\n    EB -->|\&quot;alert\&quot;| SNS[\&quot;SNS\&quot;]&quot;">graph LR
+    User[&quot;User gọi DeleteTable&quot;] --> DDB[&quot;DynamoDB&quot;]
+    DDB --> Trail[&quot;CloudTrail&lt;br/>(log API call)&quot;]
+    Trail -->|&quot;event&quot;| EB[&quot;EventBridge&quot;]
+    EB -->|&quot;alert&quot;| SNS[&quot;SNS&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p>Các ví dụ khác trong slide: <code>AssumeRole</code> (IAM) hoặc <code>AuthorizeSecurityGroupIngress</code> (sửa Inbound Rule của Security Group) → CloudTrail ghi event → EventBridge bắt event → SNS cảnh báo. Đây là pattern nền cho phần audit của case study ELB ở §5.</p>
+<p>Sơ đồ gốc từ slide (2 ví dụ: AssumeRole và AuthorizeSecurityGroupIngress):</p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173848.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="3-aws-config--compliance--lịch-sử-cấu-hình">3. AWS Config — compliance &amp; lịch sử cấu hình<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-aws-config--compliance--lịch-sử-cấu-hình" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Giúp <strong>audit và ghi nhận compliance</strong> cho resource trong AWS</li>
+<li>Ghi lại <strong>cấu hình đã thay đổi ra sao theo thời gian</strong></li>
+<li>Câu hỏi Config trả lời được:
+<ul>
+<li>Security Group nào đang mở SSH không giới hạn?</li>
+<li>Bucket nào đang có public access?</li>
+<li>Cấu hình ALB đã đổi ra sao theo thời gian?</li>
+</ul>
+</li>
+<li>Nhận <strong>alert qua SNS</strong> khi có thay đổi</li>
+<li>Config là dịch vụ <strong>theo từng region</strong> — có thể <strong>aggregate</strong> dữ liệu qua nhiều region/account</li>
+<li>Lưu dữ liệu cấu hình vào <strong>S3</strong> để phân tích bằng <strong>Athena</strong></li>
+</ul>
+<h3 id="31-config-rules">3.1 Config Rules<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-config-rules" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Dùng <strong>AWS Managed Config Rules</strong> có sẵn (<strong>hơn 75 rule</strong>)</li>
+<li>Hoặc viết <strong>Custom Rule</strong> (bắt buộc định nghĩa bằng <strong>Lambda</strong>) — vd kiểm tra mọi EBS volume có phải type <code>gp2</code>, mọi EC2 có phải <code>t2.micro</code></li>
+<li>Rule được đánh giá/trigger theo:
+<ul>
+<li><strong>Mỗi lần có thay đổi cấu hình</strong>, và/hoặc</li>
+<li><strong>Theo chu kỳ thời gian cố định</strong></li>
+</ul>
+</li>
+<li><strong>Bẫy quan trọng nhất của Config:</strong> Config Rules <strong>KHÔNG NGĂN CHẶN</strong> hành động xảy ra (<strong>không deny</strong>) — nó chỉ <strong>phát hiện</strong> (detective), không phải <strong>preventive</strong>. Muốn ngăn chặn phải dùng SCP/IAM policy, không phải Config.</li>
+<li><strong>Pricing</strong>: <strong>không có free tier</strong>; <strong><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">003</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∗</span><span class="mord">/</span><span class="mord mathnormal">co</span><span class="mord mathnormal">n</span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">u</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">ni</span><span class="mord mathnormal">t</span><span class="mord mathnormal">e</span><span class="mord mathnormal">m</span><span class="mord latin_fallback">đư</span><span class="mord">ợ</span><span class="mord mathnormal">c</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">hinh</span><span class="mord">ậ</span><span class="mord mathnormal">n</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">∗</span><span class="mord">∗</span></span></span></span>0,001</strong> / lần đánh giá config rule / region</li>
+</ul>
+<h3 id="32-aws-config-resource--xem-được-gì-cho-một-resource">3.2 AWS Config Resource — xem được gì cho một resource<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-aws-config-resource--xem-được-gì-cho-một-resource" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Xem được</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>Compliance timeline</strong></td><td>Resource này compliant/non-compliant qua từng thời điểm</td></tr><tr><td><strong>Configuration timeline</strong></td><td>Cấu hình resource đã đổi ra sao theo thời gian</td></tr><tr><td><strong>CloudTrail API calls timeline</strong></td><td>Ai gọi API nào lên resource này, khi nào</td></tr></tbody></table></div>
+<blockquote>
+<p>Đây là 3 thứ ghép lại <strong>đúng bằng 3 câu hỏi ở §0</strong> — Config tự thân đã tích hợp cả góc nhìn CloudTrail (API calls) vào trong resource view của nó.</p>
+</blockquote>
+<h3 id="33-config-rules--remediation-tự-sửa-resource-không-tuân-thủ">3.3 Config Rules — Remediation (tự sửa resource không tuân thủ)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-config-rules--remediation-tự-sửa-resource-không-tuân-thủ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Tự động <strong>remediation</strong> cho resource non-compliant bằng <strong>SSM Automation Documents</strong></li>
+<li>Dùng <strong>AWS-Managed Automation Documents</strong> có sẵn, hoặc tạo <strong>custom Automation Document</strong></li>
+<li><strong>Mẹo:</strong> custom Automation Document có thể <strong>invoke Lambda function</strong> bên trong để xử lý logic phức tạp hơn</li>
+<li>Đặt được <strong>Remediation Retries</strong> nếu sau khi auto-remediate xong resource <strong>vẫn còn non-compliant</strong></li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Res[\&quot;IAM Access Key&lt;br/>(NON_COMPLIANT)\&quot;] -->|\&quot;monitor\&quot;| Config[\&quot;AWS Config\&quot;]\n    Config -->|\&quot;trigger\&quot;| Remed[\&quot;Auto-Remediation Action&lt;br/>SSM: AWSConfigRemediationRevokeUnusedIAMUserCredentials&lt;br/>Retries: 5\&quot;]\n    Remed -->|\&quot;deactivate\&quot;| Res&quot;">graph LR
+    Res[&quot;IAM Access Key&lt;br/>(NON_COMPLIANT)&quot;] -->|&quot;monitor&quot;| Config[&quot;AWS Config&quot;]
+    Config -->|&quot;trigger&quot;| Remed[&quot;Auto-Remediation Action&lt;br/>SSM: AWSConfigRemediationRevokeUnusedIAMUserCredentials&lt;br/>Retries: 5&quot;]
+    Remed -->|&quot;deactivate&quot;| Res
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="34-config-rules--notifications">3.4 Config Rules — Notifications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#34-config-rules--notifications" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Dùng <strong>EventBridge</strong> để trigger notification khi resource <strong>non-compliant</strong></li>
+<li>Hoặc gửi <strong>mọi loại event</strong> (thay đổi cấu hình + trạng thái compliance) thẳng tới <strong>SNS</strong> — lọc bằng <strong>SNS Filtering</strong> hoặc filter ở phía client</li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Res[\&quot;AWS Resources&lt;br/>Security Group...\&quot;] -->|\&quot;monitor\&quot;| Config[\&quot;AWS Config\&quot;]\n    Config -->|\&quot;trigger, non-compliant\&quot;| EB[\&quot;EventBridge\&quot;]\n    EB --> Lambda[\&quot;Lambda\&quot;]\n    EB --> SNSa[\&quot;SNS\&quot;]\n    EB --> SQSa[\&quot;SQS\&quot;]\n    Config -->|\&quot;all events\&quot;| SNSb[\&quot;SNS\&quot;]\n    SNSb --> Admin[\&quot;Admin\&quot;]&quot;">graph LR
+    Res[&quot;AWS Resources&lt;br/>Security Group...&quot;] -->|&quot;monitor&quot;| Config[&quot;AWS Config&quot;]
+    Config -->|&quot;trigger, non-compliant&quot;| EB[&quot;EventBridge&quot;]
+    EB --> Lambda[&quot;Lambda&quot;]
+    EB --> SNSa[&quot;SNS&quot;]
+    EB --> SQSa[&quot;SQS&quot;]
+    Config -->|&quot;all events&quot;| SNSb[&quot;SNS&quot;]
+    SNSb --> Admin[&quot;Admin&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p>Sơ đồ gốc từ slide (2 cách: qua EventBridge có lọc, hoặc gửi thẳng “all events” tới SNS):</p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173949.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="4-bảng-so-sánh-cloudwatch-vs-cloudtrail-vs-config">4. Bảng so sánh: CloudWatch vs CloudTrail vs Config<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-bảng-so-sánh-cloudwatch-vs-cloudtrail-vs-config" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>CloudWatch</strong></th><th><strong>CloudTrail</strong></th><th><strong>Config</strong></th></tr></thead><tbody><tr><td>Trả lời câu hỏi</td><td>Hệ thống đang chạy thế nào?</td><td>Ai đã làm gì?</td><td>Cấu hình có đúng chuẩn, đã đổi ra sao?</td></tr><tr><td>Chức năng chính</td><td>Performance monitoring (metric, CPU, network…) + dashboard; Events &amp; Alerting; log aggregation &amp; analysis</td><td>Ghi lại <strong>API call</strong> trong account bởi mọi người; định nghĩa trail cho resource cụ thể; <strong>Global Service</strong></td><td>Ghi lại <strong>thay đổi cấu hình</strong>; đánh giá resource theo <strong>compliance rule</strong>; timeline cấu hình + compliance</td></tr><tr><td>Phạm vi mặc định</td><td>Theo region</td><td><strong>All Regions</strong> (mặc định) hoặc 1 region</td><td><strong>Per-region</strong>, aggregate được qua region/account</td></tr><tr><td>Có ngăn chặn hành động không</td><td>Không (chỉ cảnh báo)</td><td>Không (chỉ ghi log)</td><td><strong>Không</strong> (chỉ phát hiện, không deny)</td></tr><tr><td>Lưu dài hạn</td><td>Metric lưu theo policy riêng; Logs theo retention</td><td>90 ngày trong CloudTrail, dài hạn → S3 + Athena</td><td>Lưu S3, phân tích bằng Athena</td></tr></tbody></table></div>
+<hr/>
+<h2 id="5-case-study--for-an-elastic-load-balancer">5. Case study — For an Elastic Load Balancer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-case-study--for-an-elastic-load-balancer" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Ví dụ tổng hợp trong slide: cùng một ELB, ba dịch vụ đóng ba vai trò khác nhau, minh hoạ trực tiếp cho bảng ở §4.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dịch vụ</th><th>Vai trò với ELB</th></tr></thead><tbody><tr><td><strong>CloudWatch</strong></td><td>Theo dõi metric <strong>Incoming Connections</strong>; trực quan hoá <strong>% error code theo thời gian</strong>; dựng <strong>dashboard</strong> để nắm nhanh hiệu năng của load balancer</td></tr><tr><td><strong>Config</strong></td><td>Theo dõi <strong>rule của Security Group</strong> gắn với ELB; theo dõi <strong>cấu hình đã thay đổi</strong> ra sao; đảm bảo <strong>luôn có SSL certificate</strong> gắn vào ELB (compliance)</td></tr><tr><td><strong>CloudTrail</strong></td><td>Theo dõi <strong>ai đã gọi API nào</strong> để thay đổi cấu hình ELB</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    ELB[\&quot;Elastic Load Balancer\&quot;]\n    ELB --> CW[\&quot;CloudWatch&lt;br/>Incoming Connections, % error, dashboard\&quot;]\n    ELB --> Cfg[\&quot;Config&lt;br/>SG rules, config change, SSL cert compliance\&quot;]\n    ELB --> CT[\&quot;CloudTrail&lt;br/>Ai gọi API nào để đổi ELB\&quot;]&quot;">graph TD
+    ELB[&quot;Elastic Load Balancer&quot;]
+    ELB --> CW[&quot;CloudWatch&lt;br/>Incoming Connections, % error, dashboard&quot;]
+    ELB --> Cfg[&quot;Config&lt;br/>SG rules, config change, SSL cert compliance&quot;]
+    ELB --> CT[&quot;CloudTrail&lt;br/>Ai gọi API nào để đổi ELB&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Bài học kiến trúc:</strong> đây chính là ba câu hỏi ở §0 áp vào một resource cụ thể. Bất kỳ đề bài nào hỏi “giám sát toàn diện resource X” đều nên trả lời theo đúng khuôn: <strong>CloudWatch (hiệu năng) + Config (cấu hình/compliance) + CloudTrail (ai làm gì)</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="6-so-sánh--chọn-đáp-án-thi">6. So sánh &amp; chọn đáp án thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-so-sánh--chọn-đáp-án-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Từ khoá trong đề bài</th><th>Chọn</th></tr></thead><tbody><tr><td>”Metric CPU/network, dashboard hiệu năng”</td><td><strong>CloudWatch Metrics</strong></td></tr><tr><td>Metric không có sẵn (vd RAM)</td><td><strong>CloudWatch Custom Metrics</strong> (qua Unified Agent)</td></tr><tr><td>Đẩy metric ra Datadog/Splunk gần real-time</td><td><strong>CloudWatch Metric Streams</strong></td></tr><tr><td>Search/count log, ngôn ngữ query riêng, không cần real-time</td><td><strong>CloudWatch Logs Insights</strong></td></tr><tr><td>Cần log <strong>real-time</strong>, không chấp nhận trễ 12h của export</td><td><strong>CloudWatch Logs Subscriptions</strong> (không phải S3 Export)</td></tr><tr><td>Gom log nhiều account/region về một chỗ</td><td><strong>Cross-Account Subscription Filter</strong></td></tr><tr><td>EC2 không tự gửi log/RAM lên CloudWatch</td><td>Cài <strong>CloudWatch Unified Agent</strong></td></tr><tr><td>Cấu hình agent tập trung nhiều instance</td><td><strong>SSM Parameter Store</strong></td></tr><tr><td>Giảm “báo động dồn dập” từ nhiều alarm liên quan</td><td><strong>Composite Alarm</strong></td></tr><tr><td>EC2 recover instance sau khi hardware lỗi, giữ nguyên IP</td><td><strong>CloudWatch Alarm + EC2 Instance Recovery</strong> (<code>StatusCheckFailed_System</code>)</td></tr><tr><td>Giám sát chất lượng kết nối DX/VPN tới on-prem</td><td><strong>CloudWatch Network Monitor</strong></td></tr><tr><td>Chạy script định kỳ / phản ứng khi service có sự kiện</td><td><strong>Amazon EventBridge</strong></td></tr><tr><td>Gom event toàn bộ Organization về 1 account</td><td><strong>EventBridge Resource-based Policy</strong> trên Event Bus</td></tr><tr><td>Biết trước cấu trúc dữ liệu JSON trong event bus</td><td><strong>EventBridge Schema Registry</strong></td></tr><tr><td>Metric/log cho container ECS/EKS</td><td><strong>CloudWatch Container Insights</strong></td></tr><tr><td>Cold start, memory Lambda</td><td><strong>CloudWatch Lambda Insights</strong></td></tr><tr><td>”Top-N” IP/host gây tải nhiều nhất từ VPC Flow Logs</td><td><strong>CloudWatch Contributor Insights</strong></td></tr><tr><td>Dashboard tự động phát hiện vấn đề cho cả stack ứng dụng</td><td><strong>CloudWatch Application Insights</strong></td></tr><tr><td>”Ai đã xoá resource này?”</td><td><strong>CloudTrail</strong></td></tr><tr><td>Cần log ở mọi region, mặc định đã bật</td><td><strong>CloudTrail</strong> (đặc biệt: trail All Regions)</td></tr><tr><td>Audit theo dõi <code>GetObject</code>/<code>PutObject</code> trên S3</td><td><strong>CloudTrail Data Events</strong> (phải tự bật)</td></tr><tr><td>Phát hiện bất thường: bùng nổ IAM action, chạm service limit</td><td><strong>CloudTrail Insights</strong></td></tr><tr><td>Giữ log CloudTrail > 90 ngày</td><td>Log ra <strong>S3 + Athena</strong></td></tr><tr><td>SG có đang mở SSH <code>0.0.0.0/0</code>? Bucket có public không?</td><td><strong>AWS Config Rules</strong></td></tr><tr><td>Tự động sửa resource non-compliant</td><td><strong>Config Remediation</strong> qua <strong>SSM Automation Document</strong></td></tr><tr><td>Custom Automation Document cần logic phức tạp</td><td>Cho invoke <strong>Lambda</strong> bên trong</td></tr><tr><td>Rule Config <strong>không</strong> ngăn được hành động sai</td><td>Đúng — Config <strong>không deny</strong>, chỉ phát hiện</td></tr><tr><td>Cần biết resource này đổi cấu hình ra sao + ai gọi API nào lên nó</td><td><strong>AWS Config Resource view</strong> (đã tích hợp cả CloudTrail timeline)</td></tr></tbody></table></div>
+<hr/>
+<h2 id="7-câu-hỏi-ôn-tập">7. Câu hỏi ôn tập<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-câu-hỏi-ôn-tập" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>16 câu hỏi thực hành, bám sát khung 3 dịch vụ ở §0. Bảng dưới để <strong>ôn nhanh</strong> trước khi thi; xem chi tiết phân tích/bẫy ở từng mục §7.1–§7.16 bên dưới.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>#</th><th>Chủ đề</th><th>Đáp án đúng</th></tr></thead><tbody><tr><td>7.1</td><td>RDS log có <code>Error</code> → tạo Alarm</td><td><strong>CloudWatch Logs Metric Filter</strong> + Alarm</td></tr><tr><td>7.2</td><td>ASG đã ở min capacity, Alarm scale-in vẫn ALARM</td><td>Alarm giữ <strong>ALARM</strong>, ASG <strong>không giảm</strong> thêm instance</td></tr><tr><td>7.3</td><td>Theo dõi memory usage EC2</td><td><strong>Unified CloudWatch Agent</strong> → Custom Metric</td></tr><tr><td>7.4</td><td>Đổi config, đánh giá tác động hiệu năng</td><td><strong>Amazon CloudWatch</strong></td></tr><tr><td>7.5</td><td>Ai terminate EC2 (1 tuần trước)</td><td><strong>AWS CloudTrail</strong> (còn trong 90 ngày)</td></tr><tr><td>7.6</td><td>Phát hiện hoạt động bất thường</td><td><strong>CloudTrail Insights</strong></td></tr><tr><td>7.7</td><td>Ai terminate EC2 (4 tháng trước), log đã ở S3</td><td><strong>Athena trên S3</strong> (đã quá 90 ngày)</td></tr><tr><td>7.8</td><td>Liên tục giám sát port 84 có mở không</td><td><strong>Config Rules</strong></td></tr><tr><td>7.9</td><td>Đánh giá compliance cấu hình theo thời gian</td><td><strong>AWS Config</strong></td></tr><tr><td>7.10</td><td>Ai chịu trách nhiệm log “ai đã đổi cấu hình”</td><td><strong>AWS CloudTrail</strong></td></tr><tr><td>7.11</td><td>Tự động sửa SG mở SSH về đúng chuẩn</td><td><strong>Config Remediations</strong></td></tr><tr><td>7.12</td><td>Nhận email khi SG bị đổi</td><td><strong>Config Notifications</strong></td></tr><tr><td>7.13</td><td>Điền khuyết: đẩy metric near real-time ra S3/3rd-party</td><td><strong>CloudWatch Metric Stream</strong></td></tr><tr><td>7.14</td><td>Tìm top IP nghi tấn công từ VPC Flow Logs</td><td><strong>CloudWatch Contributor Insights</strong></td></tr><tr><td>7.15</td><td>Ngăn xoá bảng DynamoDB + cảnh báo</td><td>IAM + <strong>CloudTrail</strong> + EventBridge + <strong>SNS</strong></td></tr><tr><td>7.16</td><td>Tái sử dụng EventBridge event 6 tháng sau</td><td><strong>EventBridge Archive &amp; Replay</strong></td></tr></tbody></table></div>
+<h3 id="71-rds-đẩy-log-sang-cloudwatch-muốn-alarm-khi-log-có-error">7.1 RDS đẩy log sang CloudWatch, muốn Alarm khi log có <code>&quot;Error&quot;</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#71-rds-đẩy-log-sang-cloudwatch-muốn-alarm-khi-log-có-error" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have an RDS DB instance that’s configured to push its database logs to CloudWatch. You want to create a CloudWatch alarm if there’s an <code>Error</code> found in the logs. How would you do that?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Create a scheduled CloudWatch Event that triggers an AWS Lambda every 1 hour, scans the logs, and notify you through SNS topic</li>
+<li>Create a CloudWatch Logs Metric Filter that filter the logs for the keyword <code>Error</code>, then create a CloudWatch Alarm based on that Metric Filter</li>
+<li>Create an AWS Config Rule that monitors <code>Error</code> in your database logs and notify you through SNS topic</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Scheduled Lambda mỗi 1 giờ scan log → SNS</td><td><strong>Sai</strong></td><td>Không real-time (trễ tới 1 giờ giữa hai lần scan), tự viết logic scan/parse log trong Lambda trong khi CloudWatch đã có cơ chế native làm sẵn việc này — thừa và kém hiệu quả</td></tr><tr><td><strong>2 — CloudWatch Logs Metric Filter lọc <code>Error</code> → CloudWatch Alarm dựa trên Metric Filter đó</strong></td><td><strong>Đúng</strong></td><td>Đây đúng là cơ chế native: Metric Filter quét log group theo pattern → mỗi lần khớp thì tăng một <strong>custom metric</strong> → Alarm gắn thẳng vào metric này, đánh giá gần real-time, trigger SNS khi vượt ngưỡng (vd <code>>= 1</code> trong 1 phút)</td></tr><tr><td>3 — AWS Config Rule monitor <code>Error</code> trong log DB → SNS</td><td><strong>Sai</strong></td><td>Config trả lời câu hỏi “cấu hình có đúng chuẩn không” (§0, §3) — nó theo dõi <strong>trạng thái cấu hình resource</strong>, không đọc <strong>nội dung dòng log</strong> ứng dụng/database</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — CloudWatch Logs Metric Filter + CloudWatch Alarm.</strong></p>
+<blockquote>
+<p>Đây chính là cơ chế đã ghi ở §1.6: <em>“Alarm từ CloudWatch Logs Metric Filter: đặt filter trên log group → filter đó tạo ra metric → gắn Alarm vào metric đó → báo SNS khi khớp pattern (vd đếm số dòng <code>&quot;ERROR&quot;</code> vượt ngưỡng).”</em> Câu hỏi này là ví dụ áp dụng trực tiếp của dòng đó, chỉ đổi ngữ cảnh từ log chung sang log RDS.</p>
+</blockquote>
+<p><strong>Bẫy của đề:</strong> cả 2 phương án sai đều có vẻ “làm được việc” (scan bằng Lambda vẫn báo được lỗi; Config vẫn giám sát được resource RDS) — nhưng đều không phải là công cụ đúng cho <strong>tìm kiếm nội dung log gần real-time</strong>. Ghi nhớ: <strong>tìm keyword trong log → luôn nghĩ tới Metric Filter trước tiên</strong>, không phải viết thêm Lambda hay dùng Config.</p>
+<h3 id="72-asg-đã-ở-minimum-capacity-alarm-scale-in-vẫn-ở-trạng-thái-alarm-thì-sao">7.2 ASG đã ở minimum capacity, Alarm scale-in vẫn ở trạng thái ALARM thì sao?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#72-asg-đã-ở-minimum-capacity-alarm-scale-in-vẫn-ở-trạng-thái-alarm-thì-sao" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have an application hosted on a fleet of EC2 instances managed by an Auto Scaling Group that you configured its minimum capacity to 2. Also, you have created a CloudWatch Alarm that is configured to scale in your ASG when CPU Utilization is below 60%. Currently, your application runs on 2 EC2 instances and has low traffic and the CloudWatch Alarm is in the ALARM state. What will happen?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>One EC2 instance will be terminated and the ASG desired and minimum capacity will go to 1</li>
+<li>The CloudWatch Alarm will remain in ALARM state but never decrease the number of EC2 instances in the ASG</li>
+<li>The CloudWatch Alarm will be detached from my ASG</li>
+<li>The CloudWatch Alarm will go in OK state</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Terminate 1 instance, ASG min capacity tự giảm xuống 1</td><td><strong>Sai</strong></td><td><strong>Minimum capacity là ràng buộc cứng do người dùng đặt</strong> — ASG không bao giờ tự ý sửa đổi con số min/max mình đã cấu hình chỉ vì một alarm scale-in kích hoạt</td></tr><tr><td><strong>2 — Alarm vẫn ở ALARM, nhưng ASG không giảm thêm instance nào</strong></td><td><strong>Đúng</strong></td><td>ASG scale-in policy <strong>luôn tôn trọng min capacity</strong>: dù alarm liên tục báo ALARM (CPU &lt; 60%), ASG <strong>đã ở đúng minimum (2)</strong> nên không terminate thêm — action scale-in bị “chặn” ở biên dưới, alarm vẫn giữ nguyên trạng thái vì metric CPU vẫn đang dưới ngưỡng</td></tr><tr><td>3 — Alarm bị gỡ (detach) khỏi ASG</td><td><strong>Sai</strong></td><td>Không có cơ chế nào tự động detach alarm khỏi ASG chỉ vì đã chạm min capacity; alarm vẫn gắn liền, chỉ là scaling action không thực thi được</td></tr><tr><td>4 — Alarm chuyển sang OK</td><td><strong>Sai</strong></td><td>Trạng thái Alarm (<code>OK</code>/<code>ALARM</code>/<code>INSUFFICIENT_DATA</code>) chỉ phụ thuộc vào <strong>giá trị metric CPU</strong> so với threshold, hoàn toàn độc lập với việc ASG có scale được hay không — CPU vẫn dưới 60% thì alarm vẫn ALARM</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2.</strong></p>
+<blockquote>
+<p>Liên hệ §1.6: Alarm State (<code>OK</code>/<code>INSUFFICIENT_DATA</code>/<code>ALARM</code>) được tính từ metric, <strong>tách biệt hoàn toàn</strong> khỏi việc target (EC2 Auto Scaling) có thực thi được hành động hay không. Đây là điểm dễ nhầm nhất: nhiều người nghĩ “alarm không scale được thì phải đổi trạng thái hoặc bị gỡ” — thực ra alarm chỉ là <strong>cái đồng hồ đo</strong>, còn ASG mới là bên quyết định có hành động hay không dựa trên <strong>giới hạn min/max đã cấu hình sẵn</strong>.</p>
+</blockquote>
+<p><strong>Bẫy của đề:</strong> đề đánh vào trực giác “min capacity phải mềm dẻo theo tải” — nhưng thực tế <strong>min/max của ASG là con số cứng do người dùng chủ động đặt</strong>, chỉ thay đổi khi người dùng (hoặc Scheduled Action/Predictive Scaling) chủ động sửa, không bao giờ tự do bị alarm scale-in “vượt rào” xuống dưới.</p>
+<h3 id="73-muốn-theo-dõi-memory-usage-của-ec2-trong-cloudwatch-thì-làm-sao">7.3 Muốn theo dõi memory usage của EC2 trong CloudWatch thì làm sao?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#73-muốn-theo-dõi-memory-usage-của-ec2-trong-cloudwatch-thì-làm-sao" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>How would you monitor your EC2 instance memory usage in CloudWatch?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Enable EC2 Detailed Monitoring</li>
+<li>By default, the EC2 instance pushes memory usage to CloudWatch</li>
+<li>Use the Unified CloudWatch Agent to push memory usage as a custom metric to CloudWatch</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Bật EC2 Detailed Monitoring</td><td><strong>Sai</strong></td><td>Detailed Monitoring chỉ đổi <strong>tần suất</strong> thu thập các metric <strong>có sẵn</strong> từ 5 phút xuống 1 phút (CPU, network, disk ở mức tổng quát) — nó <strong>không thêm metric mới</strong>, RAM vẫn không xuất hiện dù bật tính năng này</td></tr><tr><td>2 — Mặc định EC2 tự đẩy memory usage lên CloudWatch</td><td><strong>Sai</strong></td><td>Đây là hiểu lầm phổ biến nhất của bài — theo §1.5: <strong>mặc định EC2 KHÔNG tự gửi log/metric RAM nào cả</strong>, hypervisor bên dưới không có quyền nhìn vào bộ nhớ <strong>bên trong</strong> OS của instance</td></tr><tr><td><strong>3 — Dùng Unified CloudWatch Agent để đẩy memory usage như một custom metric</strong></td><td><strong>Đúng</strong></td><td>RAM là metric <strong>không có sẵn</strong> trên EC2 (out-of-the-box chỉ có CPU/disk/network tổng quát) → phải cài <strong>Unified Agent bên trong instance</strong>, agent chạy trong OS nên đọc được RAM thật và đẩy lên CloudWatch dưới dạng <strong>Custom Metric</strong></td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3.</strong></p>
+<blockquote>
+<p>Liên hệ §1.1 và §1.5: RAM luôn là ví dụ kinh điển cho <strong>Custom Metric</strong> trong SAA-C03 — vì nó nằm <strong>bên trong hệ điều hành</strong>, AWS (ở tầng hypervisor) không thấy được, chỉ agent chạy trong OS (Unified Agent) mới đọc và đẩy lên được.</p>
+</blockquote>
+<p><strong>Bẫy của đề:</strong> “Detailed Monitoring” nghe rất giống “theo dõi chi tiết hơn = thấy được nhiều thứ hơn (kể cả RAM)” — thực ra nó chỉ tăng <strong>tần suất</strong> (1 phút thay vì 5 phút) cho các metric <strong>đã có sẵn</strong>, hoàn toàn không liên quan tới việc thêm metric RAM.</p>
+<h3 id="74-vừa-đổi-cấu-hình-muốn-đánh-giá-tác-động-lên-hiệu-năng--dùng-dịch-vụ-nào">7.4 Vừa đổi cấu hình, muốn đánh giá tác động lên hiệu năng — dùng dịch vụ nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#74-vừa-đổi-cấu-hình-muốn-đánh-giá-tác-động-lên-hiệu-năng--dùng-dịch-vụ-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have made a configuration change and would like to evaluate the impact of it on the performance of your application. Which AWS service should you use?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Amazon CloudWatch</li>
+<li>AWS CloudTrail</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — Amazon CloudWatch</strong></td><td><strong>Đúng</strong></td><td>Câu hỏi là “<strong>tác động lên hiệu năng</strong>” — đúng câu hỏi số 1 ở §0: “hệ thống đang chạy như thế nào?”. Phải nhìn metric (CPU, latency, error rate…) <strong>trước và sau</strong> thời điểm đổi cấu hình để so sánh hiệu năng</td></tr><tr><td>2 — AWS CloudTrail</td><td><strong>Sai</strong></td><td>CloudTrail chỉ ghi lại <strong>API call nào đã được gọi, ai gọi, khi nào</strong> — nó biết “cấu hình đã bị đổi” nhưng <strong>không đo được hiệu năng</strong> trước/sau, không có khái niệm metric hay dashboard</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — Amazon CloudWatch.</strong></p>
+<blockquote>
+<p>Đây là câu hỏi thuần tuý về khung 3 câu hỏi ở §0 — “ảnh hưởng đến hiệu năng” luôn luôn là CloudWatch, còn “ai đã đổi cấu hình” mới là CloudTrail. Hai câu hỏi rất dễ bị trộn lẫn vì cùng nói về một “configuration change”.</p>
+</blockquote>
+<h3 id="75-ec2-hosting-critical-db-bị-terminate-tuần-trước--tìm-ai-làm-khi-nào">7.5 EC2 hosting critical DB bị terminate tuần trước — tìm ai làm, khi nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#75-ec2-hosting-critical-db-bị-terminate-tuần-trước--tìm-ai-làm-khi-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Someone has terminated an EC2 instance in your AWS account last week, which was hosting a critical database that contains sensitive data. Which AWS service helps you find who did that and when?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>CloudWatch Metrics</li>
+<li>CloudWatch Alarms</li>
+<li>CloudWatch Events</li>
+<li>AWS CloudTrail</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — CloudWatch Metrics</td><td><strong>Sai</strong></td><td>Chỉ đo số liệu runtime (CPU, network…) của instance <strong>khi nó còn sống</strong> — không ghi nhận <strong>ai</strong> gọi API terminate</td></tr><tr><td>2 — CloudWatch Alarms</td><td><strong>Sai</strong></td><td>Alarm chỉ phản ứng khi metric vượt ngưỡng — không có chức năng tra cứu “ai đã làm gì”</td></tr><tr><td>3 — CloudWatch Events</td><td><strong>Sai</strong></td><td>Đây là tên cũ của EventBridge — dùng để <strong>phản ứng</strong> với sự kiện tương lai (trigger Lambda/SNS…), không phải công cụ để <strong>tra cứu lịch sử</strong> đã xảy ra tuần trước</td></tr><tr><td><strong>4 — AWS CloudTrail</strong></td><td><strong>Đúng</strong></td><td>Đúng chuẩn câu hỏi số 2 ở §0: “ai đã làm gì, khi nào?”. Sự kiện xảy ra <strong>tuần trước</strong>, còn nằm trong <strong>90 ngày retention</strong> mặc định của CloudTrail (§2.3) → tra thẳng trong CloudTrail (Event History) là đủ, không cần S3 + Athena</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 4 — AWS CloudTrail.</strong></p>
+<blockquote>
+<p>Đây chính là “bẫy kinh điển” đã ghi ở §2: <em>“resource nào đó bị xoá trong AWS → luôn kiểm tra CloudTrail đầu tiên để biết ai/API nào đã xoá.”</em> Ba phương án CloudWatch chỉ là “mồi nhử” vì cùng chữ CloudWatch nhưng không có chức năng audit.</p>
+</blockquote>
+<h3 id="76-cloudtrail-đã-bật-ở-mọi-region--dùng-gì-để-phát-hiện-hoạt-động-bất-thường">7.6 CloudTrail đã bật ở mọi Region — dùng gì để phát hiện hoạt động bất thường?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#76-cloudtrail-đã-bật-ở-mọi-region--dùng-gì-để-phát-hiện-hoạt-động-bất-thường" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have CloudTrail enabled for your AWS Account in all AWS Regions. What should you use to detect unusual activity in your AWS Account?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>CloudTrail Data Events</li>
+<li>CloudTrail Insights</li>
+<li>CloudTrail Management Events</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — CloudTrail Data Events</td><td><strong>Sai</strong></td><td>Data Events chỉ ghi log <strong>object-level</strong> (<code>GetObject</code>/<code>PutObject</code> trên S3, <code>Invoke</code> trên Lambda…) — cho biết <strong>có</strong> hành động gì xảy ra, nhưng <strong>không tự phân tích</strong> xem đó có phải là <strong>bất thường</strong> hay không</td></tr><tr><td><strong>2 — CloudTrail Insights</strong></td><td><strong>Đúng</strong></td><td>Đúng chức năng thiết kế riêng cho việc này (§2.2): tự tạo <strong>baseline</strong> từ Management Events, liên tục phân tích Write Events để phát hiện <strong>provisioning bất thường, chạm giới hạn service, bùng nổ IAM action…</strong></td></tr><tr><td>3 — CloudTrail Management Events</td><td><strong>Sai</strong></td><td>Management Events chỉ là <strong>nguồn dữ liệu thô</strong> (log mọi thay đổi cấu hình/setup) — nó <strong>không tự động phát hiện</strong> cái gì là bất thường, đó là việc của Insights (Insights dùng chính Management Events làm baseline)</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — CloudTrail Insights.</strong></p>
+<blockquote>
+<p>Bẫy ở đây là Management Events và Data Events đều là “log CÓ”, còn Insights mới là “log <strong>automation phát hiện bất thường</strong>” — xem lại bảng 3 loại event ở §2.1.</p>
+</blockquote>
+<h3 id="77-ec2-bị-terminate-4-tháng-trước-log-cloudtrail-đã-đẩy-sang-s3--tra-cách-nào">7.7 EC2 bị terminate 4 tháng trước, log CloudTrail đã đẩy sang S3 — tra cách nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#77-ec2-bị-terminate-4-tháng-trước-log-cloudtrail-đã-đẩy-sang-s3--tra-cách-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>One of your teammates terminated an EC2 instance 4 months ago which has critical data. You don’t know who made this so you are going to review all API calls within this period using CloudTrail. You already have CloudTrail set up and configured to send logs to the S3 bucket. What should you do to find out who made this?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Use CloudTrail Event History in CloudTrail Console</li>
+<li>Analyze CloudTrail logs in S3 bucket using Amazon Athena</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Dùng CloudTrail Event History trong Console</td><td><strong>Sai</strong></td><td>Event History trong Console chỉ giữ <strong>90 ngày</strong> (§2.3) — sự kiện xảy ra <strong>4 tháng trước</strong> (~120 ngày) đã <strong>vượt quá mốc 90 ngày</strong>, không còn tra được trong Console nữa</td></tr><tr><td><strong>2 — Phân tích log CloudTrail trong S3 bằng Amazon Athena</strong></td><td><strong>Đúng</strong></td><td>Vì cần dữ liệu <strong>dài hạn hơn 90 ngày</strong>, đúng theo nguyên tắc ở §2.3: “cần giữ lâu hơn → log ra S3 + dùng Athena để phân tích” — đề bài còn cho biết CloudTrail <strong>đã cấu hình sẵn gửi log sang S3</strong>, nên chỉ còn việc query bằng Athena</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — Athena trên S3.</strong></p>
+<blockquote>
+<p>So sánh trực tiếp với câu 7.5: cùng là “tìm ai đã terminate EC2”, nhưng 7.5 xảy ra <strong>1 tuần trước</strong> (còn trong 90 ngày → tra thẳng CloudTrail) còn câu này xảy ra <strong>4 tháng trước</strong> (đã quá 90 ngày → bắt buộc qua S3 + Athena). Đây là cặp câu hỏi kinh điển để test xem có nhớ đúng <strong>con số 90 ngày retention</strong> hay không.</p>
+</blockquote>
+<h3 id="78-os-có-lỗ-hổng-ở-port-84--liên-tục-giám-sát-xem-port-có-bị-mở-không">7.8 OS có lỗ hổng ở port 84 — liên tục giám sát xem port có bị mở không?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#78-os-có-lỗ-hổng-ở-port-84--liên-tục-giám-sát-xem-port-có-bị-mở-không" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You are running a website on a fleet of EC2 instances with OS that has a known vulnerability on port 84. You want to continuously monitor your EC2 instances if they have port 84 exposed. How should you do this?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Setup CloudWatch Metrics</li>
+<li>Setup CloudTrail Trails</li>
+<li>Setup Config Rules</li>
+<li>Schedule a CloudWatch Event to trigger a Lambda function to scan your EC2 instances</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — CloudWatch Metrics</td><td><strong>Sai</strong></td><td>Metric chỉ đo số liệu runtime (CPU, network…) — không có khái niệm “port nào đang mở trong Security Group”, đó là <strong>cấu hình</strong>, không phải metric</td></tr><tr><td>2 — CloudTrail Trails</td><td><strong>Sai</strong></td><td>CloudTrail chỉ ghi lại <strong>API call đã xảy ra</strong> (vd ai gọi <code>AuthorizeSecurityGroupIngress</code>) — không tự <strong>đánh giá liên tục</strong> xem trạng thái hiện tại có đang mở port 84 hay không</td></tr><tr><td><strong>3 — Setup Config Rules</strong></td><td><strong>Đúng</strong></td><td>Đúng bài toán compliance ở §3: viết (hoặc dùng managed) Config Rule kiểm tra Security Group có mở port 84 không, rule tự <strong>đánh giá lại mỗi khi có thay đổi cấu hình</strong> → liên tục, native, không cần tự vận hành hạ tầng nào thêm</td></tr><tr><td>4 — Schedule CloudWatch Event trigger Lambda scan EC2</td><td><strong>Sai</strong></td><td>Kỹ thuật này <strong>làm được việc</strong> nhưng là <strong>tự chế lại</strong> thứ Config Rules đã có sẵn — tốn công viết/maintain Lambda, và chỉ chạy theo lịch (delay) thay vì đánh giá <strong>ngay khi cấu hình đổi</strong> như Config Rule</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — Setup Config Rules.</strong></p>
+<blockquote>
+<p>Cùng một khuôn mẫu với ví dụ “SG có đang mở SSH <code>0.0.0.0/0</code> không?” ở §3 và bảng chọn đáp án ở §6 — chỉ đổi cổng SSH (22) thành cổng 84 tuỳ chỉnh, bản chất bài toán y hệt.</p>
+</blockquote>
+<h3 id="79-đánh-giá-compliance-của-cấu-hình-resource-theo-thời-gian--dùng-dịch-vụ-nào">7.9 Đánh giá compliance của cấu hình resource theo thời gian — dùng dịch vụ nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#79-đánh-giá-compliance-của-cấu-hình-resource-theo-thời-gian--dùng-dịch-vụ-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You would like to evaluate the compliance of your resource’s configurations over time. Which AWS service will you choose?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>AWS Config</li>
+<li>Amazon CloudWatch</li>
+<li>AWS CloudTrail</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — AWS Config</strong></td><td><strong>Đúng</strong></td><td>Đúng nguyên văn câu hỏi số 3 ở §0: “cấu hình hiện tại có đúng chuẩn không, và đã đổi ra sao theo thời gian?” — đây chính là định nghĩa của Config</td></tr><tr><td>2 — Amazon CloudWatch</td><td><strong>Sai</strong></td><td>Đo hiệu năng runtime, không đánh giá compliance của cấu hình</td></tr><tr><td>3 — AWS CloudTrail</td><td><strong>Sai</strong></td><td>Chỉ ghi log API call, không tự đánh giá resource có “tuân thủ chuẩn” hay không</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — AWS Config.</strong> Câu hỏi trực diện nhất trong cả bộ, không có bẫy — dùng để khẳng định lại khung 3 câu hỏi ở §0.</p>
+<h3 id="710-ai-chịu-trách-nhiệm-ghi-log-ai-đã-đổi-cấu-hình-resource">7.10 Ai chịu trách nhiệm ghi log “ai đã đổi cấu hình resource”?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#710-ai-chịu-trách-nhiệm-ghi-log-ai-đã-đổi-cấu-hình-resource" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Someone changed the configuration of a resource and made it non-compliant. Which AWS service is responsible for logging who made modifications to resources?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Amazon CloudWatch</li>
+<li>AWS CloudTrail</li>
+<li>AWS Config</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Amazon CloudWatch</td><td><strong>Sai</strong></td><td>Không liên quan tới ghi nhận “ai gọi API nào”</td></tr><tr><td><strong>2 — AWS CloudTrail</strong></td><td><strong>Đúng</strong></td><td>Việc “log ai đã gọi API để sửa resource” luôn luôn thuộc về CloudTrail (§0, §2) — đây là chức năng lõi và duy nhất của CloudTrail trong bộ ba dịch vụ</td></tr><tr><td>3 — AWS Config</td><td><strong>Sai</strong></td><td>Config là bên <strong>phát hiện</strong> resource bị non-compliant (dựa trên Config Rule) — nhưng bản thân việc <strong>ghi log định danh người gọi API</strong> vẫn là CloudTrail; Config Resource view chỉ <strong>hiển thị lại</strong> timeline API call đó bằng cách tích hợp dữ liệu từ CloudTrail (§3.2), chứ không tự sinh ra log đó</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — AWS CloudTrail.</strong></p>
+<blockquote>
+<p>Bẫy của câu này: đề nói tới “non-compliant” (nghe rất Config) khiến dễ chọn nhầm đáp án 3. Nhưng câu hỏi thực chất tách làm hai vế — <strong>“resource bị non-compliant”</strong> là việc của Config, còn <strong>“ai đã sửa”</strong> vẫn luôn là CloudTrail, đúng như phân loại “3-trong-1” đã ghi ở §3.2: Config Resource view = compliance timeline + configuration timeline + <strong>CloudTrail API calls timeline</strong> — CloudTrail vẫn là nguồn gốc của mảnh “ai gọi API”.</p>
+</blockquote>
+<h3 id="711-config-phát-hiện-sg-mở-ssh-không-giới-hạn--feature-nào-tự-sửa-lại-đúng-chuẩn">7.11 Config phát hiện SG mở SSH không giới hạn — feature nào tự sửa lại đúng chuẩn?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#711-config-phát-hiện-sg-mở-ssh-không-giới-hạn--feature-nào-tự-sửa-lại-đúng-chuẩn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have enabled AWS Config to monitor Security Groups if there’s unrestricted SSH access to any of your EC2 instances. Which AWS Config feature can you use to automatically re-configure your Security Groups to their correct state?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>AWS Config Remediations</li>
+<li>AWS Config Rules</li>
+<li>AWS Config Notifications</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — AWS Config Remediations</strong></td><td><strong>Đúng</strong></td><td>Đúng chức năng ở §3.3: remediation dùng <strong>SSM Automation Document</strong> để <strong>tự động sửa lại</strong> resource non-compliant về đúng trạng thái — đây là bước duy nhất thực sự “hành động sửa”, không chỉ phát hiện</td></tr><tr><td>2 — AWS Config Rules</td><td><strong>Sai</strong></td><td>Rule chỉ làm nhiệm vụ <strong>phát hiện/đánh giá</strong> compliance (SG có mở SSH không) — bản thân Rule <strong>không tự sửa</strong> gì cả, đây chính là bẫy “Config không deny/không tự sửa” đã nhấn mạnh ở §3.1</td></tr><tr><td>3 — AWS Config Notifications</td><td><strong>Sai</strong></td><td>Notifications chỉ <strong>báo cho người/hệ thống khác biết</strong> (qua EventBridge/SNS) rằng resource đang non-compliant — không tự thực hiện hành động sửa cấu hình</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — AWS Config Remediations.</strong></p>
+<blockquote>
+<p>Chuỗi đúng của Config luôn là: <strong>Config Rule phát hiện non-compliant → Remediation (SSM Automation Document) tự sửa → Notifications (EventBridge/SNS) báo cho người liên quan biết</strong>. Ba phương án trong câu này chính là ba bước khác nhau của đúng một pipeline — dễ nhầm vì cả ba đều “đúng ngữ cảnh Config” nhưng chỉ có Remediations mới thực sự “re-configure”.</p>
+</blockquote>
+<h3 id="712-config-phát-hiện-sg-bị-đổi--feature-nào-để-nhận-email-báo-tin">7.12 Config phát hiện SG bị đổi — feature nào để nhận email báo tin?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#712-config-phát-hiện-sg-bị-đổi--feature-nào-để-nhận-email-báo-tin" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You are running a critical website on a set of EC2 instances with a tightened Security Group that has restricted SSH access. You have enabled AWS Config in your AWS Region and you want to be notified via email when someone modified your EC2 instances’ Security Group. Which AWS Config feature helps you do this?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>AWS Config Remediations</li>
+<li>AWS Config Rules</li>
+<li>AWS Config Notifications</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — AWS Config Remediations</td><td><strong>Sai</strong></td><td>Remediation dùng để <strong>tự động sửa</strong> resource non-compliant (như câu 7.11) — đề bài này chỉ cần <strong>được báo tin qua email</strong>, không yêu cầu tự sửa gì cả</td></tr><tr><td>2 — AWS Config Rules</td><td><strong>Sai</strong></td><td>Rule chỉ <strong>đánh giá</strong> compliance, không tự gửi email; muốn nhận thông báo phải đi thêm bước Notifications</td></tr><tr><td><strong>3 — AWS Config Notifications</strong></td><td><strong>Đúng</strong></td><td>Đúng chức năng ở §3.4: gửi <strong>mọi loại event</strong> (thay đổi cấu hình) thẳng tới <strong>SNS</strong>, SNS gắn subscription email là xong — hoặc qua EventBridge nếu cần lọc thêm</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — AWS Config Notifications.</strong></p>
+<blockquote>
+<p>So với câu 7.11 (cùng bối cảnh SG, cùng 3 lựa chọn): 7.11 hỏi “<strong>tự sửa</strong>” → Remediations; câu này hỏi “<strong>được báo qua email</strong>” → Notifications. Hai câu là cặp đối chiếu chuẩn để phân biệt hai tính năng hay bị lẫn của Config.</p>
+</blockquote>
+<h3 id="713-điền-vào-chỗ-trống-đẩy-cloudwatch-metric-near-real-time-ra-s33rd-party">7.13 Điền vào chỗ trống: đẩy CloudWatch metric near real-time ra S3/3rd-party<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#713-điền-vào-chỗ-trống-đẩy-cloudwatch-metric-near-real-time-ra-s33rd-party" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>……………………… is a CloudWatch feature that allows you to send CloudWatch metrics in near real-time to S3 bucket (through Kinesis Data Firehose) and 3rd party destinations (e.g., Splunk, Datadog, …).</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>CloudWatch Metric Stream</li>
+<li>CloudWatch Log Stream</li>
+<li>CloudWatch Metric Filter</li>
+<li>CloudWatch Log Group</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — CloudWatch Metric Stream</strong></td><td><strong>Đúng</strong></td><td>Đúng nguyên văn định nghĩa ở §1.2: stream <strong>liên tục</strong> metric, near-real-time, đích là <strong>Kinesis Data Firehose → S3</strong> hoặc <strong>3rd-party</strong> (Datadog, Splunk…)</td></tr><tr><td>2 — CloudWatch Log Stream</td><td><strong>Sai</strong></td><td>Đây là khái niệm hoàn toàn khác — Log Stream là instance/container/log file <strong>bên trong một Log Group</strong> (§1.3), không liên quan tới việc đẩy metric ra ngoài</td></tr><tr><td>3 — CloudWatch Metric Filter</td><td><strong>Sai</strong></td><td>Metric Filter dùng để <strong>lọc log theo pattern rồi tạo metric</strong> (vd đếm dòng <code>&quot;ERROR&quot;</code>, xem §1.6) — không phải cơ chế <strong>stream metric ra 3rd-party</strong></td></tr><tr><td>4 — CloudWatch Log Group</td><td><strong>Sai</strong></td><td>Log Group chỉ là <strong>nơi chứa log</strong> (§1.3), không phải tính năng đẩy metric</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — CloudWatch Metric Stream.</strong> Câu này chỉ là kiểm tra trực tiếp định nghĩa ở §1.2 — 3 phương án còn lại đều là các khái niệm “CloudWatch … Stream/Filter/Group” na ná tên nhưng khác hẳn chức năng, cố tình gây nhiễu.</p>
+<h3 id="714-vpc-flow-logs-trong-cloudwatch-log-group--tìm-top-ip-nghi-tấn-công">7.14 VPC Flow Logs trong CloudWatch Log Group — tìm top IP nghi tấn công<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#714-vpc-flow-logs-trong-cloudwatch-log-group--tìm-top-ip-nghi-tấn-công" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>A DevOps engineer is working for a company and managing its infrastructure and resources on AWS. There was a sudden spike in traffic for the main application for the company which was not normal in this period of the year. The application is hosted on a couple of EC2 instances in private subnets and is fronted by an Application Load Balancer in a public subnet. To detect if this is normal traffic or an attack, the DevOps engineer enabled the VPC Flow Logs for the subnets and stored those logs in CloudWatch Log Group. The DevOps wants to analyze those logs and find out the top IP addresses making requests against the website to check if there is an attack. Which of the following can help the DevOps engineer to analyze those logs?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>CloudWatch Metric Stream</li>
+<li>CloudWatch Alarm</li>
+<li>CloudWatch Contributor Insights</li>
+<li>CloudWatch Metric Filter</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — CloudWatch Metric Stream</td><td><strong>Sai</strong></td><td>Dùng để đẩy metric ra ngoài (S3/3rd-party), không phải công cụ để <strong>phân tích top-N trong log</strong></td></tr><tr><td>2 — CloudWatch Alarm</td><td><strong>Sai</strong></td><td>Alarm chỉ phản ứng khi <strong>một metric</strong> vượt ngưỡng — không tự tính toán “IP nào request nhiều nhất”</td></tr><tr><td><strong>3 — CloudWatch Contributor Insights</strong></td><td><strong>Đúng</strong></td><td>Đúng thiết kế ở §1.9: áp dụng cho <strong>bất kỳ log nào AWS tạo ra, bao gồm cả VPC Flow Logs</strong>, chuyên tìm <strong>Top-N contributor</strong> — chính là “IP xấu gây tải nhiều nhất” nêu ngay trong bảng đó</td></tr><tr><td>4 — CloudWatch Metric Filter</td><td><strong>Sai</strong></td><td>Metric Filter chỉ đếm số lần khớp <strong>một pattern cố định</strong> (vd đếm dòng chứa <code>&quot;ERROR&quot;</code>) — không tự xếp hạng <strong>Top-N theo một trường</strong> như IP address</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — CloudWatch Contributor Insights.</strong></p>
+<blockquote>
+<p>Đây là ví dụ áp dụng trực tiếp của dòng trong bảng ở §1.9: <em>“Contributor Insights — tìm Top-N contributor (IP xấu, user tốn network nhất, URL lỗi nhiều nhất)”</em> — VPC Flow Logs là ví dụ nguồn log kinh điển nhất cho tính năng này.</p>
+</blockquote>
+<h3 id="715-ngăn-xoá-nhầm-bảng-dynamodb--cảnh-báo-khi-có-ai-cố-xoá--chọn-thiết-kế-nào">7.15 Ngăn xoá nhầm bảng DynamoDB + cảnh báo khi có ai cố xoá — chọn thiết kế nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#715-ngăn-xoá-nhầm-bảng-dynamodb--cảnh-báo-khi-có-ai-cố-xoá--chọn-thiết-kế-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>A company is developing a Serverless application on AWS using Lambda, DynamoDB, and Cognito. A junior developer joined a few weeks ago and accidentally deleted one of the DynamoDB tables in the dev AWS account which contained important data. The CTO asks you to prevent this from happening again and there must be a notification system to monitor if there is an attempt to make such deletion actions for the DynamoDB tables. What would you do?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Assign developers to a certain IAM group which prevents deletion of DynamoDB tables. Configure EventBridge to capture any <code>DeleteTable</code> API calls through S3 and send a notification using KMS</li>
+<li>Assign developers to a certain IAM group which prevents deletion of DynamoDB tables. Configure EventBridge to capture any <code>DeleteTable</code> API calls through CloudTrail and send a notification using SNS</li>
+<li>Assign developers to a certain IAM group which prevents deletion of DynamoDB tables. Configure EventBridge to capture any <code>DeleteTable</code> API calls through CloudTrail and send a notification using KMS</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+<p>Cả 3 phương án đều giống nhau ở vế đầu (IAM group chặn quyền <code>DeleteTable</code> — đúng cách <strong>phòng ngừa</strong>, dùng IAM chứ không phải Config vì cần <strong>ngăn chặn thật sự</strong>, khớp bẫy “Config không deny” ở §3.1). Khác biệt nằm ở vế sau — nguồn event và kênh notify:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — EventBridge bắt <code>DeleteTable</code> <strong>qua S3</strong>, notify bằng <strong>KMS</strong></td><td><strong>Sai</strong></td><td>EventBridge không “bắt API call qua S3” — nguồn sự kiện API call đúng phải là <strong>CloudTrail</strong> (§1.8, §2.4); và <strong>KMS là dịch vụ quản lý key mã hoá</strong>, không phải kênh gửi thông báo</td></tr><tr><td><strong>2 — EventBridge bắt <code>DeleteTable</code> qua CloudTrail, notify bằng SNS</strong></td><td><strong>Đúng</strong></td><td>Đúng pattern chuẩn ở §2.4: mọi API call (kể cả <code>DeleteTable</code>) đều được <strong>CloudTrail ghi lại</strong> → EventBridge bắt event đó → gửi cảnh báo qua <strong>SNS</strong> (đúng dịch vụ notification, xem §1.6 và ghi chú SNS/SQS ở note §17 — Decoupling Applications)</td></tr><tr><td>3 — EventBridge bắt <code>DeleteTable</code> qua CloudTrail, notify bằng <strong>KMS</strong></td><td><strong>Sai</strong></td><td>Nguồn event đúng (CloudTrail) nhưng kênh notify sai — <strong>KMS không gửi được thông báo cho người dùng</strong>, đó là việc của SNS</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2.</strong></p>
+<blockquote>
+<p>Công thức đầy đủ: <strong>IAM (ngăn chặn) + CloudTrail ghi API call + EventBridge bắt event + SNS báo tin</strong> — đúng chuỗi đã minh hoạ ở §2.4 (ví dụ <code>AssumeRole</code>/<code>AuthorizeSecurityGroupIngress</code>), chỉ đổi API thành <code>DeleteTable</code>. Bẫy của câu là <strong>KMS</strong> — dễ bị chọn nhầm vì nghe “an toàn/bảo mật” nhưng KMS chỉ quản lý encryption key, không phải dịch vụ notification.</p>
+</blockquote>
+<h3 id="716-muốn-tái-sử-dụng-lại-eventbridge-event-của-prod-cho-dev-6-tháng-sau-mới-cần">7.16 Muốn tái sử dụng lại EventBridge event của prod cho dev, 6 tháng sau mới cần<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#716-muốn-tái-sử-dụng-lại-eventbridge-event-của-prod-cho-dev-6-tháng-sau-mới-cần" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>A company has a running Serverless application on AWS which uses EventBridge as an inter-communication channel between different services within the application. There is a requirement to use the events in the prod environment in the dev environment to make some tests. The tests will be done every 6 months, so the events need to be stored and used later on. What is the most efficient and cost-effective way to store EventBridge events and use them later?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Use EventBridge Archive and Replay feature</li>
+<li>Create a Lambda function to store the EventBridge events in an S3 bucket for later usage</li>
+<li>Configure EventBridge to store events in a DynamoDB table</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — Dùng EventBridge Archive và Replay</strong></td><td><strong>Đúng</strong></td><td>Đúng tính năng <strong>native</strong> đã ghi ở §1.8: EventBridge tự <strong>archive</strong> event gửi tới bus (toàn bộ hoặc theo filter), giữ <strong>vô thời hạn hoặc theo period</strong>, và <strong>replay</strong> lại khi cần — không cần dựng thêm hạ tầng nào, đúng nghĩa “hiệu quả và tiết kiệm chi phí” nhất vì dùng thẳng tính năng có sẵn của chính EventBridge</td></tr><tr><td>2 — Tự viết Lambda lưu event vào S3</td><td><strong>Sai</strong></td><td>Làm được việc nhưng là <strong>tự chế lại</strong> đúng thứ Archive/Replay đã làm sẵn — tốn công viết/vận hành Lambda, không phải phương án “hiệu quả nhất” khi câu hỏi đã có tính năng native</td></tr><tr><td>3 — Cấu hình EventBridge lưu event vào DynamoDB</td><td><strong>Sai</strong></td><td>EventBridge <strong>không có cơ chế cấu hình sẵn</strong> để lưu thẳng event vào DynamoDB — phải tự viết thêm Lambda target để làm việc này, phức tạp hơn cả phương án 2</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — EventBridge Archive and Replay.</strong></p>
+<blockquote>
+<p>Câu này kiểm tra trực tiếp chi tiết ở §1.8: <em>“Có thể archive event gửi tới bus (toàn bộ hoặc theo filter), giữ vô thời hạn hoặc theo period, và replay lại archive khi cần.”</em> Bẫy nằm ở việc đề bài mô tả một nhu cầu nghe rất “custom” (dùng lại event prod cho dev, test định kỳ 6 tháng) khiến người học nghĩ phải tự xây pipeline (Lambda + S3/DynamoDB) — trong khi EventBridge đã có sẵn tính năng đúng y chang cho việc này.</p>
+</blockquote>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Nhớ khung 3 câu hỏi ở §0: <strong>CloudWatch = hiệu năng, CloudTrail = audit API call, Config = compliance/cấu hình theo thời gian</strong>.</li>
+<li>CloudWatch <strong>Dimension</strong>: tối đa <strong>30/metric</strong>. High-resolution custom metric period: <strong>10s, 30s, bội số 60s</strong>.</li>
+<li>CloudWatch Logs Insights là <strong>query engine, không phải real-time engine</strong>; S3 Export trễ tới <strong>12 giờ</strong> → cần real-time thì dùng <strong>Subscriptions</strong>.</li>
+<li>Cross-Account Subscription: account nhận cần <strong>Destination Access Policy + IAM Role</strong>.</li>
+<li><strong>Unified Agent</strong> > Logs Agent cũ (thêm metric hệ thống: CPU/RAM/disk/netstat/process/swap), cấu hình qua <strong>SSM Parameter Store</strong>.</li>
+<li><strong>Composite Alarm</strong> dùng AND/OR để giảm alarm noise; <strong>Status Check</strong> có 3 loại (Instance/System/EBS); Recovery giữ nguyên IP/metadata.</li>
+<li><strong>EventBridge</strong> (tên cũ CloudWatch Events): Schedule/Cron + Event Pattern; 3 loại Event Bus (Default/Partner/Custom); archive + replay; Schema Registry.</li>
+<li>4 loại Insights dễ nhầm: <strong>Container</strong> (ECS/EKS), <strong>Lambda</strong> (cold start), <strong>Contributor</strong> (top-N từ log), <strong>Application</strong> (dashboard tự động, chạy trên SageMaker).</li>
+<li><strong>CloudTrail bật mặc định</strong>; <strong>Management Events</strong> log sẵn, <strong>Data Events</strong> phải tự bật (S3 object-level, Lambda Invoke); retention <strong>90 ngày</strong>, dài hạn → S3 + Athena.</li>
+<li><strong>CloudTrail Insights</strong>: baseline từ Management Events, phân tích liên tục Write Events, sinh <strong>EventBridge event</strong> khi phát hiện bất thường.</li>
+<li><strong>Config Rules KHÔNG NGĂN CHẶN</strong> hành động (no deny) — chỉ phát hiện; <strong>75+ managed rule</strong>, custom rule viết bằng <strong>Lambda</strong>.</li>
+<li><strong>Config Remediation</strong> dùng <strong>SSM Automation Document</strong> (managed hoặc custom, custom gọi được Lambda); có <strong>Remediation Retries</strong>.</li>
+<li>Config Resource view = <strong>3-trong-1</strong>: compliance timeline + configuration timeline + <strong>CloudTrail API calls timeline</strong>.</li>
+<li>Case study ELB là khuôn mẫu chuẩn: <strong>CloudWatch đo hiệu năng, Config kiểm cấu hình/SSL cert, CloudTrail biết ai đổi</strong>.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Bài này không khó về mặt kỹ thuật — khó ở chỗ <strong>nhớ đúng dịch vụ nào trả lời câu hỏi nào</strong>. Cứ hỏi lại bản thân: “đây là hỏi về <strong>hiệu năng runtime</strong>, <strong>ai gọi API</strong>, hay <strong>cấu hình đúng chuẩn không</strong>?” là chọn được ngay CloudWatch / CloudTrail / Config.</li>
+<li>Trong CloudWatch, phần dễ nhầm nhất là <strong>Logs Insights vs Logs Subscriptions vs S3 Export</strong> — cả ba đều liên quan tới log nhưng mục đích khác hẳn: query lịch sử (Insights), real-time streaming (Subscriptions), xuất nguyên khối chậm (Export).</li>
+<li>Chi tiết “Config không deny” rất dễ bị đánh lừa vì tên nghe giống một security guard — thực ra nó chỉ là <strong>camera giám sát + báo cáo</strong>, muốn chặn thật phải dùng SCP/IAM.</li>
+<li>Case study ELB ở §5 là công thức trả lời chuẩn cho mọi câu hỏi dạng “giám sát toàn diện resource X” trong đề thi — nhớ công thức này thay vì học thuộc từng resource riêng lẻ.</li>
+<li>Liên hệ ngược <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq">§17</a> (SNS/SQS là đích quen thuộc của Alarm và EventBridge) và <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/22---data--and--analytics" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/22---data--and--analytics">§22</a> (Athena dùng để phân tích CloudTrail/Config log lưu dài hạn trong S3).</li>
+<li>Bộ 16 câu ôn tập ở §7 cho thấy rõ 3 cặp bẫy lặp lại nhiều lần nhất: <strong>(a)</strong> “làm được việc” bằng Lambda tự chế (scheduled scan, lưu S3/DynamoDB thủ công) so với tính năng <strong>native</strong> sẵn có (Metric Filter, Config Rules, EventBridge Archive/Replay) — đề thi luôn ưu tiên đáp án native, hiệu quả hơn; <strong>(b)</strong> mốc <strong>90 ngày retention</strong> của CloudTrail quyết định tra trực tiếp hay phải qua S3 + Athena (so 7.5 vs 7.7); <strong>(c)</strong> Config luôn tách ba việc — Rules (phát hiện) / Remediations (tự sửa) / Notifications (báo tin) — dễ chọn nhầm giữa ba khi đề chỉ đổi động từ (“tự sửa” vs “được báo”).</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Ba câu hỏi CloudWatch vs CloudTrail vs Config</li>
+<li>CloudWatch Metrics: Namespace, Dimension, Custom Metrics</li>
+<li>CloudWatch Metric Streams</li>
+<li>CloudWatch Logs Insights vs Logs Subscriptions vs S3 Export</li>
+<li>CloudWatch Logs Cross-Account Subscription</li>
+<li>CloudWatch Unified Agent vs Logs Agent</li>
+<li>CloudWatch Alarms: Composite Alarm, Status Check, EC2 Instance Recovery</li>
+<li>CloudWatch Network Monitor</li>
+<li>Amazon EventBridge: Event Bus, Schema Registry, Resource-based Policy</li>
+<li>CloudWatch Insights family (Container / Lambda / Contributor / Application)</li>
+<li>CloudTrail Management Events vs Data Events</li>
+<li>CloudTrail Insights (baseline + anomaly detection)</li>
+<li>CloudTrail Retention &amp; Long-term Storage qua S3 + Athena</li>
+<li>AWS Config Rules (managed vs custom) — Config không deny</li>
+<li>AWS Config Remediation qua SSM Automation Document</li>
+<li>Case study: giám sát toàn diện một ELB (CloudWatch + Config + CloudTrail)</li>
+<li>Bộ 16 câu ôn tập CloudWatch/CloudTrail/Config (§7) — 3 bẫy lặp lại: native feature vs tự chế Lambda, mốc 90 ngày CloudTrail retention, Config Rules/Remediations/Notifications</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-92" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#24--aws-monitoring-audit--performance-cloudwatch-cloudtrail--config" data-for="24--aws-monitoring-audit--performance-cloudwatch-cloudtrail--config">24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config</a></li><li class="depth-1"><a href="#0-ba-dịch-vụ-ba-câu-hỏi-khác-nhau" data-for="0-ba-dịch-vụ-ba-câu-hỏi-khác-nhau">0. Ba dịch vụ, ba câu hỏi khác nhau</a></li><li class="depth-1"><a href="#1-amazon-cloudwatch--performance-monitoring" data-for="1-amazon-cloudwatch--performance-monitoring">1. Amazon CloudWatch — performance monitoring</a></li><li class="depth-2"><a href="#11-cloudwatch-metrics" data-for="11-cloudwatch-metrics">1.1 CloudWatch Metrics</a></li><li class="depth-2"><a href="#12-cloudwatch-metric-streams--đẩy-metric-ra-ngoài-gần-thời-gian-thực" data-for="12-cloudwatch-metric-streams--đẩy-metric-ra-ngoài-gần-thời-gian-thực">1.2 CloudWatch Metric Streams — đẩy metric ra ngoài gần thời gian thực</a></li><li class="depth-2"><a href="#13-cloudwatch-logs" data-for="13-cloudwatch-logs">1.3 CloudWatch Logs</a></li><li class="depth-2"><a href="#14-cloudwatch-logs-insights--công-cụ-query-không-phải-real-time-engine" data-for="14-cloudwatch-logs-insights--công-cụ-query-không-phải-real-time-engine">1.4 CloudWatch Logs Insights — công cụ query, không phải real-time engine</a></li><li class="depth-2"><a href="#15-cloudwatch-logs-agent--unified-agent--đẩy-logmetric-từ-ec2-và-on-prem" data-for="15-cloudwatch-logs-agent--unified-agent--đẩy-logmetric-từ-ec2-và-on-prem">1.5 CloudWatch Logs Agent &amp; Unified Agent — đẩy log/metric từ EC2 và on-prem</a></li><li class="depth-2"><a href="#16-cloudwatch-alarms" data-for="16-cloudwatch-alarms">1.6 CloudWatch Alarms</a></li><li class="depth-2"><a href="#17-cloudwatch-network-monitor" data-for="17-cloudwatch-network-monitor">1.7 CloudWatch Network Monitor</a></li><li class="depth-2"><a href="#18-amazon-eventbridge-tên-cũ-cloudwatch-events" data-for="18-amazon-eventbridge-tên-cũ-cloudwatch-events">1.8 Amazon EventBridge (tên cũ: CloudWatch Events)</a></li><li class="depth-2"><a href="#19-nhóm-cloudwatch-insights--4-loại-đừng-nhầm-lẫn" data-for="19-nhóm-cloudwatch-insights--4-loại-đừng-nhầm-lẫn">1.9 Nhóm “CloudWatch Insights” — 4 loại, đừng nhầm lẫn</a></li><li class="depth-1"><a href="#2-aws-cloudtrail--audit-ai-đã-làm-gì" data-for="2-aws-cloudtrail--audit-ai-đã-làm-gì">2. AWS CloudTrail — audit, ai đã làm gì</a></li><li class="depth-2"><a href="#21-ba-loại-event-của-cloudtrail" data-for="21-ba-loại-event-của-cloudtrail">2.1 Ba loại event của CloudTrail</a></li><li class="depth-2"><a href="#22-cloudtrail-insights--phát-hiện-hoạt-động-bất-thường" data-for="22-cloudtrail-insights--phát-hiện-hoạt-động-bất-thường">2.2 CloudTrail Insights — phát hiện hoạt động bất thường</a></li><li class="depth-2"><a href="#23-retention--lưu-bao-lâu" data-for="23-retention--lưu-bao-lâu">2.3 Retention — lưu bao lâu?</a></li><li class="depth-2"><a href="#24-eventbridge--cloudtrail--chặnphản-ứng-theo-api-call" data-for="24-eventbridge--cloudtrail--chặnphản-ứng-theo-api-call">2.4 EventBridge + CloudTrail — chặn/phản ứng theo API call</a></li><li class="depth-1"><a href="#3-aws-config--compliance--lịch-sử-cấu-hình" data-for="3-aws-config--compliance--lịch-sử-cấu-hình">3. AWS Config — compliance &amp; lịch sử cấu hình</a></li><li class="depth-2"><a href="#31-config-rules" data-for="31-config-rules">3.1 Config Rules</a></li><li class="depth-2"><a href="#32-aws-config-resource--xem-được-gì-cho-một-resource" data-for="32-aws-config-resource--xem-được-gì-cho-một-resource">3.2 AWS Config Resource — xem được gì cho một resource</a></li><li class="depth-2"><a href="#33-config-rules--remediation-tự-sửa-resource-không-tuân-thủ" data-for="33-config-rules--remediation-tự-sửa-resource-không-tuân-thủ">3.3 Config Rules — Remediation (tự sửa resource không tuân thủ)</a></li><li class="depth-2"><a href="#34-config-rules--notifications" data-for="34-config-rules--notifications">3.4 Config Rules — Notifications</a></li><li class="depth-1"><a href="#4-bảng-so-sánh-cloudwatch-vs-cloudtrail-vs-config" data-for="4-bảng-so-sánh-cloudwatch-vs-cloudtrail-vs-config">4. Bảng so sánh: CloudWatch vs CloudTrail vs Config</a></li><li class="depth-1"><a href="#5-case-study--for-an-elastic-load-balancer" data-for="5-case-study--for-an-elastic-load-balancer">5. Case study — For an Elastic Load Balancer</a></li><li class="depth-1"><a href="#6-so-sánh--chọn-đáp-án-thi" data-for="6-so-sánh--chọn-đáp-án-thi">6. So sánh &amp; chọn đáp án thi</a></li><li class="depth-1"><a href="#7-câu-hỏi-ôn-tập" data-for="7-câu-hỏi-ôn-tập">7. Câu hỏi ôn tập</a></li><li class="depth-2"><a href="#71-rds-đẩy-log-sang-cloudwatch-muốn-alarm-khi-log-có-error" data-for="71-rds-đẩy-log-sang-cloudwatch-muốn-alarm-khi-log-có-error">7.1 RDS đẩy log sang CloudWatch, muốn Alarm khi log có &quot;Error&quot;</a></li><li class="depth-2"><a href="#72-asg-đã-ở-minimum-capacity-alarm-scale-in-vẫn-ở-trạng-thái-alarm-thì-sao" data-for="72-asg-đã-ở-minimum-capacity-alarm-scale-in-vẫn-ở-trạng-thái-alarm-thì-sao">7.2 ASG đã ở minimum capacity, Alarm scale-in vẫn ở trạng thái ALARM thì sao?</a></li><li class="depth-2"><a href="#73-muốn-theo-dõi-memory-usage-của-ec2-trong-cloudwatch-thì-làm-sao" data-for="73-muốn-theo-dõi-memory-usage-của-ec2-trong-cloudwatch-thì-làm-sao">7.3 Muốn theo dõi memory usage của EC2 trong CloudWatch thì làm sao?</a></li><li class="depth-2"><a href="#74-vừa-đổi-cấu-hình-muốn-đánh-giá-tác-động-lên-hiệu-năng--dùng-dịch-vụ-nào" data-for="74-vừa-đổi-cấu-hình-muốn-đánh-giá-tác-động-lên-hiệu-năng--dùng-dịch-vụ-nào">7.4 Vừa đổi cấu hình, muốn đánh giá tác động lên hiệu năng — dùng dịch vụ nào?</a></li><li class="depth-2"><a href="#75-ec2-hosting-critical-db-bị-terminate-tuần-trước--tìm-ai-làm-khi-nào" data-for="75-ec2-hosting-critical-db-bị-terminate-tuần-trước--tìm-ai-làm-khi-nào">7.5 EC2 hosting critical DB bị terminate tuần trước — tìm ai làm, khi nào?</a></li><li class="depth-2"><a href="#76-cloudtrail-đã-bật-ở-mọi-region--dùng-gì-để-phát-hiện-hoạt-động-bất-thường" data-for="76-cloudtrail-đã-bật-ở-mọi-region--dùng-gì-để-phát-hiện-hoạt-động-bất-thường">7.6 CloudTrail đã bật ở mọi Region — dùng gì để phát hiện hoạt động bất thường?</a></li><li class="depth-2"><a href="#77-ec2-bị-terminate-4-tháng-trước-log-cloudtrail-đã-đẩy-sang-s3--tra-cách-nào" data-for="77-ec2-bị-terminate-4-tháng-trước-log-cloudtrail-đã-đẩy-sang-s3--tra-cách-nào">7.7 EC2 bị terminate 4 tháng trước, log CloudTrail đã đẩy sang S3 — tra cách nào?</a></li><li class="depth-2"><a href="#78-os-có-lỗ-hổng-ở-port-84--liên-tục-giám-sát-xem-port-có-bị-mở-không" data-for="78-os-có-lỗ-hổng-ở-port-84--liên-tục-giám-sát-xem-port-có-bị-mở-không">7.8 OS có lỗ hổng ở port 84 — liên tục giám sát xem port có bị mở không?</a></li><li class="depth-2"><a href="#79-đánh-giá-compliance-của-cấu-hình-resource-theo-thời-gian--dùng-dịch-vụ-nào" data-for="79-đánh-giá-compliance-của-cấu-hình-resource-theo-thời-gian--dùng-dịch-vụ-nào">7.9 Đánh giá compliance của cấu hình resource theo thời gian — dùng dịch vụ nào?</a></li><li class="depth-2"><a href="#710-ai-chịu-trách-nhiệm-ghi-log-ai-đã-đổi-cấu-hình-resource" data-for="710-ai-chịu-trách-nhiệm-ghi-log-ai-đã-đổi-cấu-hình-resource">7.10 Ai chịu trách nhiệm ghi log “ai đã đổi cấu hình resource”?</a></li><li class="depth-2"><a href="#711-config-phát-hiện-sg-mở-ssh-không-giới-hạn--feature-nào-tự-sửa-lại-đúng-chuẩn" data-for="711-config-phát-hiện-sg-mở-ssh-không-giới-hạn--feature-nào-tự-sửa-lại-đúng-chuẩn">7.11 Config phát hiện SG mở SSH không giới hạn — feature nào tự sửa lại đúng chuẩn?</a></li><li class="depth-2"><a href="#712-config-phát-hiện-sg-bị-đổi--feature-nào-để-nhận-email-báo-tin" data-for="712-config-phát-hiện-sg-bị-đổi--feature-nào-để-nhận-email-báo-tin">7.12 Config phát hiện SG bị đổi — feature nào để nhận email báo tin?</a></li><li class="depth-2"><a href="#713-điền-vào-chỗ-trống-đẩy-cloudwatch-metric-near-real-time-ra-s33rd-party" data-for="713-điền-vào-chỗ-trống-đẩy-cloudwatch-metric-near-real-time-ra-s33rd-party">7.13 Điền vào chỗ trống: đẩy CloudWatch metric near real-time ra S3/3rd-party</a></li><li class="depth-2"><a href="#714-vpc-flow-logs-trong-cloudwatch-log-group--tìm-top-ip-nghi-tấn-công" data-for="714-vpc-flow-logs-trong-cloudwatch-log-group--tìm-top-ip-nghi-tấn-công">7.14 VPC Flow Logs trong CloudWatch Log Group — tìm top IP nghi tấn công</a></li><li class="depth-2"><a href="#715-ngăn-xoá-nhầm-bảng-dynamodb--cảnh-báo-khi-có-ai-cố-xoá--chọn-thiết-kế-nào" data-for="715-ngăn-xoá-nhầm-bảng-dynamodb--cảnh-báo-khi-có-ai-cố-xoá--chọn-thiết-kế-nào">7.15 Ngăn xoá nhầm bảng DynamoDB + cảnh báo khi có ai cố xoá — chọn thiết kế nào?</a></li><li class="depth-2"><a href="#716-muốn-tái-sử-dụng-lại-eventbridge-event-của-prod-cho-dev-6-tháng-sau-mới-cần" data-for="716-muốn-tái-sử-dụng-lại-eventbridge-event-của-prod-cho-dev-6-tháng-sau-mới-cần">7.16 Muốn tái sử dụng lại EventBridge event của prod cho dev, 6 tháng sau mới cần</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

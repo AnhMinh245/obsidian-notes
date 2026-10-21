@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>15 – CloudFront &amp; AWS Global Accelerator</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="15 – CloudFront &amp; AWS Global Accelerator"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="15 – CloudFront &amp; AWS Global Accelerator"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 15 – CloudFront &amp; AWS Global Accelerator Amazon CloudFront là gì? Amazon CloudFront là dịch vụ CDN (Content Delivery Network) của AWS — đưa content gần user hơn bằng cách cache tại edge locations toàn cầu."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 15 – CloudFront &amp; AWS Global Accelerator Amazon CloudFront là gì? Amazon CloudFront là dịch vụ CDN (Content Delivery Network) của AWS — đưa content gần user hơn bằng cách cache tại edge locations toàn cầu."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 15 – CloudFront &amp; AWS Global Accelerator Amazon CloudFront là gì? Amazon CloudFront là dịch vụ CDN (Content Delivery Network) của AWS — đưa content gần user hơn bằng cách cache tại edge locations toàn cầu."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/15---cloudfront--and--aws-global-accelerator"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/15---cloudfront--and--aws-global-accelerator"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 15 – CloudFront &amp; AWS Global Accelerator Amazon CloudFront là gì? Amazon CloudFront là dịch vụ CDN (Content Delivery Network) của AWS — đưa content gần user hơn bằng cách cache tại edge locations toàn cầu."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/15---cloudfront--and--aws-global-accelerator" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-83" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-83" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>15 – CloudFront &amp; AWS Global Accelerator</a></div></nav><h1 class="article-title">15 – CloudFront &amp; AWS Global Accelerator</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">CloudFront</span><span class="note-properties-separator">, </span><span class="note-properties-text">AWS Global Accelerator</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon CloudFront</span><span class="note-properties-separator">, </span><span class="note-properties-text">Global Accelerator</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-10-11T17:00:00.000Z">12 thg 10, 2026</time><span>9 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="15--cloudfront--aws-global-accelerator">15 – CloudFront &amp; AWS Global Accelerator<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#15--cloudfront--aws-global-accelerator" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="amazon-cloudfront-là-gì">Amazon CloudFront là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-cloudfront-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Amazon CloudFront</strong> là dịch vụ <strong>CDN (Content Delivery Network)</strong> của AWS — đưa content gần user hơn bằng cách cache tại <strong>edge locations</strong> toàn cầu.</p>
+<p><strong>Đặc điểm chính:</strong></p>
+<ul>
+<li>Cải thiện <strong>read performance</strong> — content được cache tại edge, user không phải đi hết về Region gốc mỗi lần.</li>
+<li>Có hàng trăm <strong>Points of Presence (PoP)</strong> / edge locations.</li>
+<li>Bảo vệ <strong>DDoS</strong> nhờ mạng phân tán toàn cầu; tích hợp <strong>AWS Shield</strong> và <strong>AWS WAF</strong>.</li>
+<li>Phục vụ cả <strong>static</strong> (ảnh, CSS, JS, video) và <strong>dynamic</strong> (API, HTML sinh động).</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260721155638.png" alt width="auto" height="auto"/></p>
+<h3 id="cloudfront-hoạt-động-thế-nào">CloudFront hoạt động thế nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloudfront-hoạt-động-thế-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant User as User gần edge\n    participant Edge as CloudFront Edge\n    participant Origin as Origin S3 hoặc ALB\n\n    User->>Edge: GET /logo.png\n    alt Cache HIT\n        Edge->>User: Trả file từ cache edge\n    else Cache MISS\n        Edge->>Origin: Forward request\n        Origin->>Edge: Response + Cache-Control / TTL\n        Edge->>Edge: Lưu vào cache\n        Edge->>User: Trả content\n    end&quot;">sequenceDiagram
+    participant User as User gần edge
+    participant Edge as CloudFront Edge
+    participant Origin as Origin S3 hoặc ALB
+
+    User->>Edge: GET /logo.png
+    alt Cache HIT
+        Edge->>User: Trả file từ cache edge
+    else Cache MISS
+        Edge->>Origin: Forward request
+        Origin->>Edge: Response + Cache-Control / TTL
+        Edge->>Edge: Lưu vào cache
+        Edge->>User: Trả content
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p><strong>Ý chính:</strong> User luôn kết nối tới edge gần nhất. Chỉ khi <strong>cache miss</strong> (hoặc content không cache được) CloudFront mới gọi về origin.</p>
+</blockquote>
+<hr/>
+<h2 id="cloudfront--origins">CloudFront – Origins<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloudfront--origins" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Origin</strong> = nguồn gốc mà CloudFront lấy content để phục vụ (và cache khi phù hợp).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Loại Origin</th><th>Dùng khi</th><th>Bảo mật / ghi chú</th></tr></thead><tbody><tr><td><strong>S3 bucket</strong> (REST endpoint)</td><td>Phân phối file static, cache tại edge; upload lên S3 qua CloudFront</td><td>Dùng <strong>Origin Access Control (OAC)</strong> — bucket không public</td></tr><tr><td><strong>VPC Origin</strong></td><td>App trong <strong>VPC private subnet</strong></td><td>Private ALB / NLB / EC2 — <strong>không cần expose Internet</strong></td></tr><tr><td><strong>Custom Origin (HTTP)</strong></td><td>Backend HTTP công khai</td><td>S3 <strong>website</strong> endpoint (phải bật static website hosting), Public ALB, HTTP server bất kỳ</td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260721160714.png" alt width="auto" height="auto"/></p>
+<p><img src="../../.././../../attachments/pasted-image-20260721160735.png" alt width="auto" height="auto"/></p>
+<h3 id="1-s3-làm-origin--origin-access-control-oac">1. S3 làm Origin + Origin Access Control (OAC)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-s3-làm-origin--origin-access-control-oac" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mục tiêu:</strong> User chỉ truy cập file qua CloudFront, <strong>không</strong> vào thẳng S3 URL công khai.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    User[\&quot;User\&quot;] -->|\&quot;HTTPS\&quot;| CF[\&quot;CloudFront\&quot;]\n    CF -->|\&quot;OAC ký request\&quot;| S3[\&quot;S3 Bucket&lt;br/>(private)\&quot;]\n    User -.->|\&quot;❌ bị chặn bởi Bucket Policy\&quot;| S3&quot;">graph LR
+    User[&quot;User&quot;] -->|&quot;HTTPS&quot;| CF[&quot;CloudFront&quot;]
+    CF -->|&quot;OAC ký request&quot;| S3[&quot;S3 Bucket&lt;br/>(private)&quot;]
+    User -.->|&quot;❌ bị chặn bởi Bucket Policy&quot;| S3
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>OAC</strong> thay thế cơ chế cũ <strong>OAI (Origin Access Identity)</strong> — OAC hỗ trợ SSE-KMS, PUT/DELETE qua CloudFront, mọi Region mới hơn.</li>
+<li>Cần <strong>Bucket Policy</strong> cho phép CloudFront service principal (kèm điều kiện <code>AWS:SourceArn</code> của distribution).</li>
+<li>Phân biệt 2 endpoint S3:
+<ul>
+<li><strong>REST API</strong> (<code>bucket.s3.amazonaws.com</code> / regional) → dùng với OAC.</li>
+<li><strong>Website endpoint</strong> (<code>bucket.s3-website-...</code>) → là <strong>Custom Origin</strong>, <strong>không</strong> dùng OAC; bucket phải public (hoặc có cơ chế khác).</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>Điểm thi:</strong> Muốn S3 private + chỉ CloudFront đọc được → <strong>OAC + Bucket Policy</strong>. Không chọn “làm bucket public”.</p>
+</blockquote>
+<h3 id="2-custom-origin-http">2. Custom Origin (HTTP)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-custom-origin-http" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Bất kỳ origin nói HTTP/HTTPS: Public ALB, EC2 có public IP, on-prem HTTP, <strong>S3 website</strong>.</li>
+<li>CloudFront kết nối tới origin theo <strong>Origin Protocol Policy</strong>: HTTP only / HTTPS only / Match Viewer.</li>
+<li>Origin phải reachable từ Internet (trừ khi dùng VPC Origin).</li>
+</ul>
+<h3 id="3-vpc-origin--alb--nlb--ec2-private">3. VPC Origin — ALB / NLB / EC2 private<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-vpc-origin--alb--nlb--ec2-private" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>VPC Origins</strong> cho phép CloudFront lấy content từ app trong <strong>private subnet</strong>, không cần expose ALB/EC2 ra Internet.</p>
+<p>Traffic có thể tới private:</p>
+<ul>
+<li><strong>Application Load Balancer</strong></li>
+<li><strong>Network Load Balancer</strong></li>
+<li><strong>EC2 Instances</strong></li>
+</ul>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    User[\&quot;User\&quot;] --> CF[\&quot;CloudFront\&quot;]\n    CF -->|\&quot;VPC Origin\&quot;| ALB[\&quot;Private ALB\&quot;]\n    ALB --> EC2[\&quot;EC2 private subnet\&quot;]&quot;">graph LR
+    User[&quot;User&quot;] --> CF[&quot;CloudFront&quot;]
+    CF -->|&quot;VPC Origin&quot;| ALB[&quot;Private ALB&quot;]
+    ALB --> EC2[&quot;EC2 private subnet&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Trước đây (không VPC Origin):</strong> ALB thường phải <strong>Internet-facing</strong> để CloudFront gọi được → bề mặt tấn công rộng hơn.</p>
+<p><strong>Với VPC Origin:</strong> ALB/NLB/EC2 giữ <strong>private</strong> → chỉ CloudFront (qua cơ chế VPC Origin) tới được.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260721160841.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Điểm thi:</strong> “Serve app private subnet qua CDN, không public ALB” → CloudFront + <strong>VPC Origin</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="cloudfront-vs-s3-cross-region-replication">CloudFront vs S3 Cross Region Replication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloudfront-vs-s3-cross-region-replication" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Hai giải pháp <strong>giảm latency đọc</strong> nhưng cơ chế khác hẳn — hay bị đề thi trộn.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th><strong>CloudFront</strong></th><th><strong>S3 Cross Region Replication (CRR)</strong></th></tr></thead><tbody><tr><td>Cơ chế</td><td>Cache tại <strong>Global Edge</strong></td><td>Copy object sang bucket ở region khác</td></tr><tr><td>Setup</td><td>1 distribution, cover toàn cầu</td><td>Phải setup <strong>từng cặp</strong> region cần replicate</td></tr><tr><td>Độ “tươi” của data</td><td>Theo <strong>TTL</strong> (có thể vài phút → cả ngày)</td><td>Gần <strong>real-time</strong> (async, thường vài giây)</td></tr><tr><td>Ghi / cập nhật</td><td>Origin vẫn là nguồn truth; edge có thể stale</td><td>Destination nhận bản sao; model <strong>read</strong> tại region đích</td></tr><tr><td>Phù hợp</td><td>Static (và một phần dynamic) cần sẵn sàng <strong>mọi nơi</strong></td><td>Dynamic / data cần <strong>low latency đọc ở vài region cụ thể</strong></td></tr></tbody></table></div>
+<p><strong>Ví dụ chọn:</strong></p>
+<ul>
+<li>Website ảnh/CSS/JS cho user toàn cầu → <strong>CloudFront</strong>.</li>
+<li>Object phải đọc được ngay ở <code>eu-west-1</code> và <code>ap-southeast-1</code> với data gần real-time → <strong>S3 CRR</strong> (hoặc kết hợp cả hai).</li>
+</ul>
+<blockquote>
+<p><strong>Điểm thi:</strong> CloudFront = cache toàn cầu theo TTL. CRR = replicate gần real-time sang region cụ thể — <strong>không thay thế nhau</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="cloudfront--cache--ttl">CloudFront – Cache &amp; TTL<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloudfront--cache--ttl" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>CloudFront quyết định giữ object bao lâu dựa trên:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nguồn TTL</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td>Header origin (<code>Cache-Control</code>, <code>Expires</code>)</td><td>Origin “bảo” edge cache bao lâu</td></tr><tr><td>CloudFront <strong>Minimum / Maximum / Default TTL</strong></td><td>Giới hạn / mặc định phía distribution</td></tr><tr><td>Object không cacheable</td><td>Ví dụ response có <code>Cache-Control: no-cache</code> / cookie / một số dynamic request</td></tr></tbody></table></div>
+<p><strong>Hệ quả:</strong></p>
+<ul>
+<li>TTL còn hiệu lực → user nhận bản <strong>cũ</strong> dù origin đã update.</li>
+<li>Muốn content mới ngay → <strong>Invalidation</strong>, hoặc dùng <strong>versioned filename</strong> (<code>app.v2.js</code>) để URL mới → cache miss tự nhiên.</li>
+</ul>
+<hr/>
+<h2 id="cloudfront-geo-restriction">CloudFront Geo Restriction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloudfront-geo-restriction" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Giới hạn ai được truy cập distribution theo <strong>quốc gia</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Chế độ</th><th>Hành vi</th></tr></thead><tbody><tr><td><strong>Allowlist</strong></td><td>Chỉ user ở các nước trong danh sách mới được truy cập</td></tr><tr><td><strong>Blocklist</strong></td><td>Chặn user ở các nước trong danh sách bị cấm</td></tr></tbody></table></div>
+<ul>
+<li>Quốc gia xác định qua <strong>Geo-IP database bên thứ 3</strong> (không phải GPS chính xác 100%).</li>
+<li>Độ chi tiết: <strong>cấp quốc gia</strong>, không phải thành phố/IP range tùy ý.</li>
+<li><strong>Use case:</strong> tuân thủ luật bản quyền (copyright) theo vùng địa lý — ví dụ chỉ phát video ở EU.</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260722132430.png" alt width="auto" height="auto"/></p>
+<blockquote>
+<p><strong>Phân biệt với Route 53 Geolocation:</strong> Route 53 chọn <strong>DNS answer theo vị trí</strong>; CloudFront Geo Restriction <strong>chặn/cho phép HTTP request</strong> tại edge.</p>
+</blockquote>
+<hr/>
+<h2 id="cloudfront--cache-invalidations">CloudFront – Cache Invalidations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloudfront--cache-invalidations" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Khi cập nhật origin, CloudFront <strong>không tự biết</strong> — vẫn phục vụ bản cache cũ đến khi <strong>TTL hết</strong>.</p>
+<p>Muốn làm mới ngay (bỏ qua TTL) → dùng <strong>CloudFront Invalidation</strong>:</p>
+<ul>
+<li>Invalidate <strong>tất cả</strong>: <code>/*</code> hoặc <code>*</code></li>
+<li>Invalidate theo path: <code>/images/*</code>, <code>/index.html</code></li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260722132443.png" alt width="auto" height="auto"/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cách</th><th>Ưu</th><th>Nhược</th></tr></thead><tbody><tr><td><strong>Invalidation</strong></td><td>Force refresh ngay path cũ</td><td>Có thể tốn phí; không phải best practice dài hạn</td></tr><tr><td><strong>Versioned objects</strong> (<code>style.a1b2.css</code>)</td><td>Không cần invalidate; cache hit URL mới</td><td>Phải đổi URL / build pipeline</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Thực hành tốt:</strong> Deploy static với tên file có hash/version; giữ Invalidation cho emergency hoặc HTML entrypoint.</p>
+</blockquote>
+<hr/>
+<h2 id="bài-toán-user-toàn-cầu-truy-cập-app">Bài toán: User toàn cầu truy cập app<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-toán-user-toàn-cầu-truy-cập-app" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Bạn deploy một application, user toàn cầu muốn truy cập trực tiếp.</p>
+<ul>
+<li>Đi qua <strong>public Internet</strong> → nhiều hop, peering kém → <strong>latency cao</strong>, jitter lớn.</li>
+<li>Mục tiêu: vào <strong>mạng nội bộ AWS sớm nhất có thể</strong> (tại edge gần user) rồi đi private backbone tới Region.</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260722132453.png" alt width="auto" height="auto"/></p>
+<p>Đây là bài toán mà <strong>AWS Global Accelerator</strong> giải quyết (khác CloudFront — GA <strong>không cache content</strong>).</p>
+<hr/>
+<h2 id="aws-global-accelerator">AWS Global Accelerator<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-global-accelerator" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Global Accelerator</strong> tận dụng mạng nội bộ AWS để route traffic tới application — cải thiện hiệu năng <strong>TCP/UDP</strong> bằng cách proxy tại edge, không phải CDN cache.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    User[\&quot;User toàn cầu\&quot;] -->|\&quot;2 Anycast IP\&quot;| Edge[\&quot;Edge Location\&quot;]\n    Edge -->|\&quot;AWS private network\&quot;| EG[\&quot;Endpoint Group&lt;br/>(Region)\&quot;]\n    EG --> EP[\&quot;Endpoint&lt;br/>ALB / NLB / EIP / EC2\&quot;]&quot;">graph LR
+    User[&quot;User toàn cầu&quot;] -->|&quot;2 Anycast IP&quot;| Edge[&quot;Edge Location&quot;]
+    Edge -->|&quot;AWS private network&quot;| EG[&quot;Endpoint Group&lt;br/>(Region)&quot;]
+    EG --> EP[&quot;Endpoint&lt;br/>ALB / NLB / EIP / EC2&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="anycast-ip-là-gì">Anycast IP là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#anycast-ip-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Global Accelerator cấp <strong>2 static Anycast IP</strong> (IPv4) cho accelerator của bạn.</li>
+<li>Cùng 1 IP được advertise từ nhiều edge → user được route tới edge <strong>gần nhất</strong>.</li>
+<li>IP <strong>không đổi</strong> khi bạn failover Region → client / firewall whitelist không bị vỡ vì DNS TTL.</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260722132515.png" alt width="auto" height="auto"/></p>
+<h3 id="endpoint-được-hỗ-trợ">Endpoint được hỗ trợ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#endpoint-được-hỗ-trợ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Elastic IP</strong></li>
+<li><strong>EC2 instances</strong></li>
+<li><strong>ALB</strong>, <strong>NLB</strong></li>
+<li>Public hoặc private (tùy cấu hình)</li>
+</ul>
+<h3 id="ba-nhóm-lợi-ích">Ba nhóm lợi ích<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ba-nhóm-lợi-ích" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nhóm</th><th>Chi tiết</th></tr></thead><tbody><tr><td><strong>Consistent Performance</strong></td><td>Routing tới latency thấp nhất; failover region nhanh; IP cố định → không bị client cache DNS cũ; traffic đi <strong>internal AWS network</strong> sau khi vào edge</td></tr><tr><td><strong>Health Checks</strong></td><td>GA health-check endpoint; failover <strong>&lt; 1 phút</strong> khi unhealthy; hữu ích cho <strong>Disaster Recovery</strong> multi-region</td></tr><tr><td><strong>Security</strong></td><td>Firewall chỉ cần whitelist <strong>2 external IP</strong>; DDoS nhờ <strong>AWS Shield</strong></td></tr></tbody></table></div>
+<p><strong>Ví dụ DR:</strong> Primary ALB <code>us-east-1</code> unhealthy → traffic chuyển sang ALB <code>eu-west-1</code> trong vòng dưới 1 phút, <strong>cùng Anycast IP</strong>.</p>
+<hr/>
+<h2 id="aws-global-accelerator-vs-cloudfront">AWS Global Accelerator vs CloudFront<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-global-accelerator-vs-cloudfront" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Cả hai đều dùng <strong>AWS global network + edge locations</strong>, và đều tích hợp <strong>AWS Shield</strong> (DDoS).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th><strong>CloudFront</strong></th><th><strong>Global Accelerator</strong></th></tr></thead><tbody><tr><td>Vai trò</td><td><strong>CDN</strong> — cache &amp; serve content</td><td><strong>Network layer accelerator</strong> — proxy packets</td></tr><tr><td>Protocol</td><td>Chủ yếu <strong>HTTP/HTTPS</strong></td><td><strong>TCP</strong> và <strong>UDP</strong></td></tr><tr><td>Content ở edge?</td><td>✔ Có thể serve từ cache tại edge</td><td>❌ Không cache app content; forward về Region</td></tr><tr><td>IP</td><td>Domain CloudFront (DNS), IP có thể đổi</td><td><strong>2 static Anycast IP</strong></td></tr><tr><td>Use case nổi bật</td><td>Static + dynamic web, API acceleration, video</td><td>Gaming (UDP), IoT (MQTT), VoIP; HTTP cần <strong>static IP</strong>; failover region <strong>nhanh, deterministic</strong></td></tr></tbody></table></div>
+<h3 id="cách-chọn-nhanh-hay-ra-thi">Cách chọn nhanh (hay ra thi)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-chọn-nhanh-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tình huống đề bài</th><th>Chọn</th></tr></thead><tbody><tr><td>Cache ảnh/video/static gần user</td><td><strong>CloudFront</strong></td></tr><tr><td>API/website HTTP cần CDN + WAF</td><td><strong>CloudFront</strong></td></tr><tr><td>Cần <strong>static IP</strong> cố định cho whitelist</td><td><strong>Global Accelerator</strong></td></tr><tr><td>Gaming / IoT / VoIP (UDP hoặc non-HTTP)</td><td><strong>Global Accelerator</strong></td></tr><tr><td>Failover multi-region &lt; 1 phút, không phụ thuộc DNS TTL</td><td><strong>Global Accelerator</strong></td></tr><tr><td>App private subnet, serve qua CDN HTTP</td><td><strong>CloudFront + VPC Origin</strong></td></tr><tr><td>Data object phải có bản sao gần real-time ở vài Region</td><td><strong>S3 CRR</strong> (không phải CloudFront)</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Công thức nhớ:</strong> CloudFront = <strong>cache content</strong>. Global Accelerator = <strong>tối ưu đường đi mạng + IP tĩnh</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>CloudFront = CDN, cache theo TTL tại edge; origin update ≠ edge update ngay.</li>
+<li>S3 private + CloudFront → <strong>OAC + Bucket Policy</strong> (không public bucket).</li>
+<li>S3 website endpoint = <strong>Custom Origin</strong>, khác S3 REST + OAC.</li>
+<li>Private ALB/EC2 làm origin → <strong>VPC Origin</strong>.</li>
+<li>Geo Restriction = Allowlist / Blocklist theo <strong>quốc gia</strong> (Geo-IP).</li>
+<li>Invalidate <code>/*</code> hoặc path cụ thể để bypass TTL; ưu tiên versioned filenames.</li>
+<li>CloudFront ≠ S3 CRR: edge cache toàn cầu vs replicate gần real-time vài region.</li>
+<li>Global Accelerator: <strong>2 Anycast IP</strong>, health check, failover &lt; 1 phút, Shield.</li>
+<li>Cần static IP / UDP / failover nhanh → <strong>Global Accelerator</strong>; cần CDN cache → <strong>CloudFront</strong>.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>CloudFront tối ưu <strong>đọc content gần user</strong>; Global Accelerator tối ưu <strong>đường đi mạng tới app</strong>.</li>
+<li>VPC Origin = front được app private mà không mở Internet-facing ALB.</li>
+<li>Invalidation = cứu cháy khi TTL còn dài; lâu dài nên version file name.</li>
+<li>Câu hỏi “static IP + multi-region failover” gần như luôn là Global Accelerator, không phải CloudFront.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>CloudFront OAC vs OAI — khi nào migrate</li>
+<li>Khi nào chọn CloudFront vs Global Accelerator vs S3 CRR</li>
+<li>VPC Origins với private ALB</li>
+<li>Cache Invalidation vs versioned objects</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-83" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#15--cloudfront--aws-global-accelerator" data-for="15--cloudfront--aws-global-accelerator">15 – CloudFront &amp; AWS Global Accelerator</a></li><li class="depth-1"><a href="#amazon-cloudfront-là-gì" data-for="amazon-cloudfront-là-gì">Amazon CloudFront là gì?</a></li><li class="depth-2"><a href="#cloudfront-hoạt-động-thế-nào" data-for="cloudfront-hoạt-động-thế-nào">CloudFront hoạt động thế nào?</a></li><li class="depth-1"><a href="#cloudfront--origins" data-for="cloudfront--origins">CloudFront – Origins</a></li><li class="depth-2"><a href="#1-s3-làm-origin--origin-access-control-oac" data-for="1-s3-làm-origin--origin-access-control-oac">1. S3 làm Origin + Origin Access Control (OAC)</a></li><li class="depth-2"><a href="#2-custom-origin-http" data-for="2-custom-origin-http">2. Custom Origin (HTTP)</a></li><li class="depth-2"><a href="#3-vpc-origin--alb--nlb--ec2-private" data-for="3-vpc-origin--alb--nlb--ec2-private">3. VPC Origin — ALB / NLB / EC2 private</a></li><li class="depth-1"><a href="#cloudfront-vs-s3-cross-region-replication" data-for="cloudfront-vs-s3-cross-region-replication">CloudFront vs S3 Cross Region Replication</a></li><li class="depth-1"><a href="#cloudfront--cache--ttl" data-for="cloudfront--cache--ttl">CloudFront – Cache &amp; TTL</a></li><li class="depth-1"><a href="#cloudfront-geo-restriction" data-for="cloudfront-geo-restriction">CloudFront Geo Restriction</a></li><li class="depth-1"><a href="#cloudfront--cache-invalidations" data-for="cloudfront--cache-invalidations">CloudFront – Cache Invalidations</a></li><li class="depth-1"><a href="#bài-toán-user-toàn-cầu-truy-cập-app" data-for="bài-toán-user-toàn-cầu-truy-cập-app">Bài toán: User toàn cầu truy cập app</a></li><li class="depth-1"><a href="#aws-global-accelerator" data-for="aws-global-accelerator">AWS Global Accelerator</a></li><li class="depth-2"><a href="#anycast-ip-là-gì" data-for="anycast-ip-là-gì">Anycast IP là gì?</a></li><li class="depth-2"><a href="#endpoint-được-hỗ-trợ" data-for="endpoint-được-hỗ-trợ">Endpoint được hỗ trợ</a></li><li class="depth-2"><a href="#ba-nhóm-lợi-ích" data-for="ba-nhóm-lợi-ích">Ba nhóm lợi ích</a></li><li class="depth-1"><a href="#aws-global-accelerator-vs-cloudfront" data-for="aws-global-accelerator-vs-cloudfront">AWS Global Accelerator vs CloudFront</a></li><li class="depth-2"><a href="#cách-chọn-nhanh-hay-ra-thi" data-for="cách-chọn-nhanh-hay-ra-thi">Cách chọn nhanh (hay ra thi)</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/20---serverless-solution-architecture" class="internal">20 – Serverless Solution Architecture: 4 case study kiến trúc</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/29---more-solutions-architecture" class="internal">29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

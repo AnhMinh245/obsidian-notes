@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>9.4. Security Workflows - Luồng Authentication, Authorization &amp; Policy Enforcement</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="9.4. Security Workflows - Luồng Authentication, Authorization &amp; Policy Enforcement"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="9.4. Security Workflows - Luồng Authentication, Authorization &amp; Policy Enforcement"/><meta name="twitter:description" content="9.4."/><meta property="og:description" content="9.4."/><meta property="og:image:alt" content="9.4."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/09-security/04-security-workflows"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/k8s/09-security/04-security-workflows"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="9.4."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/k8s/09-security/04-security-workflows" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-163" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-163" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/">K8S</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/k8s/09-security/">09-security</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>9.4. Security Workflows - Luồng Authentication, Authorization &amp; Policy Enforcement</a></div></nav><h1 class="article-title">9.4. Security Workflows - Luồng Authentication, Authorization &amp; Policy Enforcement</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/k8s" class="internal internal-link tag-link">domain/k8s</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-09T17:00:00.000Z">10 thg 4, 2026</time><span>11 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="94-security-workflows---luồng-authentication-authorization--policy-enforcement">9.4. Security Workflows - Luồng Authentication, Authorization &amp; Policy Enforcement<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#94-security-workflows---luồng-authentication-authorization--policy-enforcement" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>Chi tiết cách request đi qua security pipeline, từ identity đến pod-level isolation</p>
+</blockquote>
+<hr/>
+<h2 id="-mục-tiêu-học">🎯 Mục Tiêu Học<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mục-tiêu-học" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau khi học xong phần này, bạn sẽ:</p>
+<ul>
+<li>✅ Trace được <strong>RBAC authorization pipeline</strong> end-to-end</li>
+<li>✅ Hiểu <strong>ServiceAccount token flow</strong> từ Pod đến API Server</li>
+<li>✅ Nắm rõ <strong>Network Policy evaluation</strong> logic</li>
+<li>✅ Hiểu <strong>Pod Security Admission</strong> pipeline</li>
+<li>✅ Trace <strong>complete security request</strong> từ user đến Pod network egress</li>
+</ul>
+<hr/>
+<h2 id="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-quy-tắc-màu-sắc-diagram" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Quy tắc màu nhất quán </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>❤️ <strong>Đỏ</strong> <code>#e74c3c</code> — Deny, Rejected, Authentication</li>
+<li>🧡 <strong>Cam</strong> <code>#e67e22</code> — Authorization, Warning</li>
+<li>💛 <strong>Vàng</strong> <code>#f1c40f</code> — Mutation, modification</li>
+<li>💙 <strong>Xanh dương</strong> <code>#3498db</code> — Validation, checking</li>
+<li>💚 <strong>Xanh lá</strong> <code>#2ecc71</code> — Allow, Admitted, Success</li>
+<li>💜 <strong>Tím</strong> <code>#9b59b6</code> — Persist, Final action</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-1-rbac-authorization-pipeline">🔄 Workflow 1: RBAC Authorization Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-1-rbac-authorization-pipeline" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: User <code>minh</code> chạy <code>kubectl get pods -n production</code></p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant U as 👤 User: minh\n    participant API as 🔀 API Server\n    participant AUTHN as 🔐 Authentication\n    participant AUTHZ as 🛡️ Authorization&lt;br/>(RBAC)\n    participant ETCD as 💾 etcd\n\n    U->>API: kubectl get pods -n production&lt;br/>GET /api/v1/namespaces/production/pods&lt;br/>+ Client Certificate\n\n    rect rgb(255, 230, 230)\n        Note over AUTHN: Phase 1: WHO ARE YOU?\n        API->>AUTHN: Authenticate request\n        AUTHN->>AUTHN: Check authenticators (in order):&lt;br/>1. Client Certificate → CN=minh, O=dev-team ✅&lt;br/>2. Bearer Token&lt;br/>3. OIDC Token&lt;br/>4. ServiceAccount Token\n        AUTHN-->>API: Identity: user=minh, groups=[dev-team]\n    end\n\n    rect rgb(255, 243, 220)\n        Note over AUTHZ: Phase 2: WHAT CAN YOU DO?\n        API->>AUTHZ: Can user \&quot;minh\&quot; GET pods in \&quot;production\&quot;?\n\n        AUTHZ->>AUTHZ: Check RoleBindings in \&quot;production\&quot;:&lt;br/>1. Find: dev-binding binds Role \&quot;developer\&quot;&lt;br/>   to Group \&quot;dev-team\&quot; ✅&lt;br/>2. Check Role \&quot;developer\&quot; rules:&lt;br/>   - resources: [\&quot;pods\&quot;]&lt;br/>   - verbs: [\&quot;get\&quot;, \&quot;list\&quot;, \&quot;watch\&quot;] ✅\n\n        AUTHZ-->>API: ✅ ALLOWED\n    end\n\n    API->>ETCD: Read pods from production namespace\n    ETCD-->>API: [pod-1, pod-2, pod-3]\n    API-->>U: 200 OK + Pod list\n\n    Note over U: NAME      READY   STATUS    AGE&lt;br/>pod-1     1/1     Running   2d&lt;br/>pod-2     1/1     Running   1d&lt;br/>pod-3     1/1     Running   5h&quot;">sequenceDiagram
+    autonumber
+    participant U as 👤 User: minh
+    participant API as 🔀 API Server
+    participant AUTHN as 🔐 Authentication
+    participant AUTHZ as 🛡️ Authorization&lt;br/>(RBAC)
+    participant ETCD as 💾 etcd
+
+    U->>API: kubectl get pods -n production&lt;br/>GET /api/v1/namespaces/production/pods&lt;br/>+ Client Certificate
+
+    rect rgb(255, 230, 230)
+        Note over AUTHN: Phase 1: WHO ARE YOU?
+        API->>AUTHN: Authenticate request
+        AUTHN->>AUTHN: Check authenticators (in order):&lt;br/>1. Client Certificate → CN=minh, O=dev-team ✅&lt;br/>2. Bearer Token&lt;br/>3. OIDC Token&lt;br/>4. ServiceAccount Token
+        AUTHN-->>API: Identity: user=minh, groups=[dev-team]
+    end
+
+    rect rgb(255, 243, 220)
+        Note over AUTHZ: Phase 2: WHAT CAN YOU DO?
+        API->>AUTHZ: Can user &quot;minh&quot; GET pods in &quot;production&quot;?
+
+        AUTHZ->>AUTHZ: Check RoleBindings in &quot;production&quot;:&lt;br/>1. Find: dev-binding binds Role &quot;developer&quot;&lt;br/>   to Group &quot;dev-team&quot; ✅&lt;br/>2. Check Role &quot;developer&quot; rules:&lt;br/>   - resources: [&quot;pods&quot;]&lt;br/>   - verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;] ✅
+
+        AUTHZ-->>API: ✅ ALLOWED
+    end
+
+    API->>ETCD: Read pods from production namespace
+    ETCD-->>API: [pod-1, pod-2, pod-3]
+    API-->>U: 200 OK + Pod list
+
+    Note over U: NAME      READY   STATUS    AGE&lt;br/>pod-1     1/1     Running   2d&lt;br/>pod-2     1/1     Running   1d&lt;br/>pod-3     1/1     Running   5h
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="rbac-deny-flow">RBAC Deny Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rbac-deny-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant U as 👤 User: minh\n    participant API as 🔀 API Server\n    participant AUTHZ as 🛡️ RBAC\n\n    U->>API: kubectl delete secret db-creds -n production\n    Note over API: DELETE /api/v1/namespaces/production/secrets/db-creds\n\n    API->>AUTHZ: Can \&quot;minh\&quot; DELETE secrets in \&quot;production\&quot;?\n\n    AUTHZ->>AUTHZ: Check all RoleBindings:&lt;br/>Role \&quot;developer\&quot;:&lt;br/>  - secrets: NOT in resources list!&lt;br/>  - No rule grants DELETE on secrets\n\n    Note over AUTHZ: Default: DENY&lt;br/>(no matching allow rule = denied)\n\n    AUTHZ-->>API: ❌ FORBIDDEN\n\n    API-->>U: 403 Forbidden&lt;br/>Error: \&quot;minh\&quot; cannot delete&lt;br/>secrets in namespace \&quot;production\&quot;&quot;">sequenceDiagram
+    autonumber
+    participant U as 👤 User: minh
+    participant API as 🔀 API Server
+    participant AUTHZ as 🛡️ RBAC
+
+    U->>API: kubectl delete secret db-creds -n production
+    Note over API: DELETE /api/v1/namespaces/production/secrets/db-creds
+
+    API->>AUTHZ: Can &quot;minh&quot; DELETE secrets in &quot;production&quot;?
+
+    AUTHZ->>AUTHZ: Check all RoleBindings:&lt;br/>Role &quot;developer&quot;:&lt;br/>  - secrets: NOT in resources list!&lt;br/>  - No rule grants DELETE on secrets
+
+    Note over AUTHZ: Default: DENY&lt;br/>(no matching allow rule = denied)
+
+    AUTHZ-->>API: ❌ FORBIDDEN
+
+    API-->>U: 403 Forbidden&lt;br/>Error: &quot;minh&quot; cannot delete&lt;br/>secrets in namespace &quot;production&quot;
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="rbac-objects-relationship">RBAC Objects Relationship<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rbac-objects-relationship" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph \&quot;WHO? (Subjects)\&quot;\n        USER[\&quot;👤 User&lt;br/>minh\&quot;]\n        GROUP[\&quot;👥 Group&lt;br/>dev-team\&quot;]\n        SA[\&quot;🤖 ServiceAccount&lt;br/>ci-deployer\&quot;]\n    end\n\n    subgraph \&quot;BIND (Connection)\&quot;\n        RB[\&quot;📎 RoleBinding&lt;br/>dev-binding&lt;br/>&lt;i>namespace: production&lt;/i>\&quot;]\n        CRB[\&quot;📎 ClusterRoleBinding&lt;br/>ops-binding&lt;br/>&lt;i>cluster-wide&lt;/i>\&quot;]\n    end\n\n    subgraph \&quot;WHAT? (Permissions)\&quot;\n        ROLE[\&quot;📋 Role&lt;br/>developer&lt;br/>&lt;i>namespace: production&lt;/i>&lt;br/>pods: get,list,watch&lt;br/>deployments: *\&quot;]\n        CR[\&quot;📋 ClusterRole&lt;br/>cluster-operator&lt;br/>&lt;i>cluster-wide&lt;/i>&lt;br/>nodes: get,list,watch&lt;br/>PVs: *\&quot;]\n    end\n\n    USER &amp; GROUP --> RB\n    RB --> ROLE\n    SA --> CRB\n    CRB --> CR\n\n    style USER fill:#3498db,stroke:#2980b9,color:#fff\n    style GROUP fill:#3498db,stroke:#2980b9,color:#fff\n    style SA fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style RB fill:#f39c12,stroke:#d68910,color:#fff\n    style CRB fill:#f39c12,stroke:#d68910,color:#fff\n    style ROLE fill:#2ecc71,stroke:#27ae60,color:#fff\n    style CR fill:#2ecc71,stroke:#27ae60,color:#fff&quot;">graph TD
+    subgraph &quot;WHO? (Subjects)&quot;
+        USER[&quot;👤 User&lt;br/>minh&quot;]
+        GROUP[&quot;👥 Group&lt;br/>dev-team&quot;]
+        SA[&quot;🤖 ServiceAccount&lt;br/>ci-deployer&quot;]
+    end
+
+    subgraph &quot;BIND (Connection)&quot;
+        RB[&quot;📎 RoleBinding&lt;br/>dev-binding&lt;br/>&lt;i>namespace: production&lt;/i>&quot;]
+        CRB[&quot;📎 ClusterRoleBinding&lt;br/>ops-binding&lt;br/>&lt;i>cluster-wide&lt;/i>&quot;]
+    end
+
+    subgraph &quot;WHAT? (Permissions)&quot;
+        ROLE[&quot;📋 Role&lt;br/>developer&lt;br/>&lt;i>namespace: production&lt;/i>&lt;br/>pods: get,list,watch&lt;br/>deployments: *&quot;]
+        CR[&quot;📋 ClusterRole&lt;br/>cluster-operator&lt;br/>&lt;i>cluster-wide&lt;/i>&lt;br/>nodes: get,list,watch&lt;br/>PVs: *&quot;]
+    end
+
+    USER &amp; GROUP --> RB
+    RB --> ROLE
+    SA --> CRB
+    CRB --> CR
+
+    style USER fill:#3498db,stroke:#2980b9,color:#fff
+    style GROUP fill:#3498db,stroke:#2980b9,color:#fff
+    style SA fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style RB fill:#f39c12,stroke:#d68910,color:#fff
+    style CRB fill:#f39c12,stroke:#d68910,color:#fff
+    style ROLE fill:#2ecc71,stroke:#27ae60,color:#fff
+    style CR fill:#2ecc71,stroke:#27ae60,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>RBAC Key Rules </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ol>
+<li><strong>Default = DENY</strong> — không có Rule = không có quyền</li>
+<li><strong>RBAC chỉ ADD permissions</strong> — không có “deny” rule, chỉ có “allow”</li>
+<li><strong>Role = namespace-scoped</strong>, ClusterRole = cluster-wide</li>
+<li><strong>ClusterRole + RoleBinding</strong> = grant ClusterRole permissions chỉ trong 1 namespace</li>
+</ol>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-2-serviceaccount-token-flow">🔄 Workflow 2: ServiceAccount Token Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-2-serviceaccount-token-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Pod cần gọi Kubernetes API (ví dụ: list pods)</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    autonumber\n    participant POD as 📦 Pod&lt;br/>(SA: monitoring)\n    participant TOKEN as 🎫 Projected&lt;br/>Volume\n    participant API as 🔀 API Server\n    participant RBAC as 🛡️ RBAC\n\n    Note over POD: Pod starts with&lt;br/>serviceAccountName: monitoring\n\n    Note over TOKEN: kubelet projects token:&lt;br/>/var/run/secrets/kubernetes.io/&lt;br/>serviceaccount/token&lt;br/>&lt;br/>Token: eyJhbGciOiJS...&lt;br/>(JWT, auto-rotated, audience-bound)\n\n    POD->>POD: Read token from mounted path\n    POD->>API: GET /api/v1/namespaces/default/pods&lt;br/>Authorization: Bearer eyJhbGciOiJS...\n\n    API->>API: Authenticate:&lt;br/>Validate JWT signature ✅&lt;br/>Check expiration ✅&lt;br/>Check audience ✅\n\n    Note over API: Identity:&lt;br/>system:serviceaccount:default:monitoring\n\n    API->>RBAC: Can SA \&quot;monitoring\&quot;&lt;br/>GET pods in \&quot;default\&quot;?\n    RBAC->>RBAC: Check RoleBinding:&lt;br/>monitoring-binding → monitoring-role&lt;br/>pods: [get, list, watch] ✅\n    RBAC-->>API: ✅ ALLOWED\n\n    API-->>POD: 200 OK + Pod list&quot;">sequenceDiagram
+    autonumber
+    participant POD as 📦 Pod&lt;br/>(SA: monitoring)
+    participant TOKEN as 🎫 Projected&lt;br/>Volume
+    participant API as 🔀 API Server
+    participant RBAC as 🛡️ RBAC
+
+    Note over POD: Pod starts with&lt;br/>serviceAccountName: monitoring
+
+    Note over TOKEN: kubelet projects token:&lt;br/>/var/run/secrets/kubernetes.io/&lt;br/>serviceaccount/token&lt;br/>&lt;br/>Token: eyJhbGciOiJS...&lt;br/>(JWT, auto-rotated, audience-bound)
+
+    POD->>POD: Read token from mounted path
+    POD->>API: GET /api/v1/namespaces/default/pods&lt;br/>Authorization: Bearer eyJhbGciOiJS...
+
+    API->>API: Authenticate:&lt;br/>Validate JWT signature ✅&lt;br/>Check expiration ✅&lt;br/>Check audience ✅
+
+    Note over API: Identity:&lt;br/>system:serviceaccount:default:monitoring
+
+    API->>RBAC: Can SA &quot;monitoring&quot;&lt;br/>GET pods in &quot;default&quot;?
+    RBAC->>RBAC: Check RoleBinding:&lt;br/>monitoring-binding → monitoring-role&lt;br/>pods: [get, list, watch] ✅
+    RBAC-->>API: ✅ ALLOWED
+
+    API-->>POD: 200 OK + Pod list
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="serviceaccount-token-lifecycle">ServiceAccount Token Lifecycle<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#serviceaccount-token-lifecycle" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    subgraph \&quot;Pod Creation\&quot;\n        CREATE[\&quot;Pod created&lt;br/>serviceAccountName: monitoring\&quot;]\n        CREATE --> MOUNT{\&quot;automountServiceAccountToken?\&quot;}\n        MOUNT -->|\&quot;true (default)\&quot;| PROJECT[\&quot;kubelet projects JWT token&lt;br/>to /var/run/secrets/...\&quot;]\n        MOUNT -->|\&quot;false\&quot;| NO_TOKEN[\&quot;❌ No token mounted&lt;br/>Pod cannot access K8s API\&quot;]\n    end\n\n    subgraph \&quot;Token Properties (K8s 1.21+)\&quot;\n        PROJECT --> BOUND[\&quot;🎫 Bound Service Account Token:&lt;br/>• Time-limited (1h default)&lt;br/>• Audience-bound&lt;br/>• Auto-rotated by kubelet&lt;br/>• Invalidated when Pod deleted\&quot;]\n    end\n\n    subgraph \&quot;Usage\&quot;\n        BOUND --> USE[\&quot;Pod reads token&lt;br/>Calls K8s API with:&lt;br/>Authorization: Bearer \\u003ctoken\\u003e\&quot;]\n        USE --> RESULT{\&quot;RBAC check\&quot;}\n        RESULT -->|\&quot;✅\&quot;| ALLOW[\&quot;API Access Granted\&quot;]\n        RESULT -->|\&quot;❌\&quot;| DENY[\&quot;403 Forbidden\&quot;]\n    end\n\n    style CREATE fill:#3498db,stroke:#2980b9,color:#fff\n    style BOUND fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style ALLOW fill:#2ecc71,stroke:#27ae60,color:#fff\n    style DENY fill:#e74c3c,stroke:#c0392b,color:#fff\n    style NO_TOKEN fill:#95a5a6,stroke:#7f8c8d,color:#fff&quot;">flowchart TD
+    subgraph &quot;Pod Creation&quot;
+        CREATE[&quot;Pod created&lt;br/>serviceAccountName: monitoring&quot;]
+        CREATE --> MOUNT{&quot;automountServiceAccountToken?&quot;}
+        MOUNT -->|&quot;true (default)&quot;| PROJECT[&quot;kubelet projects JWT token&lt;br/>to /var/run/secrets/...&quot;]
+        MOUNT -->|&quot;false&quot;| NO_TOKEN[&quot;❌ No token mounted&lt;br/>Pod cannot access K8s API&quot;]
+    end
+
+    subgraph &quot;Token Properties (K8s 1.21+)&quot;
+        PROJECT --> BOUND[&quot;🎫 Bound Service Account Token:&lt;br/>• Time-limited (1h default)&lt;br/>• Audience-bound&lt;br/>• Auto-rotated by kubelet&lt;br/>• Invalidated when Pod deleted&quot;]
+    end
+
+    subgraph &quot;Usage&quot;
+        BOUND --> USE[&quot;Pod reads token&lt;br/>Calls K8s API with:&lt;br/>Authorization: Bearer \u003ctoken\u003e&quot;]
+        USE --> RESULT{&quot;RBAC check&quot;}
+        RESULT -->|&quot;✅&quot;| ALLOW[&quot;API Access Granted&quot;]
+        RESULT -->|&quot;❌&quot;| DENY[&quot;403 Forbidden&quot;]
+    end
+
+    style CREATE fill:#3498db,stroke:#2980b9,color:#fff
+    style BOUND fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style ALLOW fill:#2ecc71,stroke:#27ae60,color:#fff
+    style DENY fill:#e74c3c,stroke:#c0392b,color:#fff
+    style NO_TOKEN fill:#95a5a6,stroke:#7f8c8d,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Security Best Practices cho ServiceAccount </p></div>
+                  
+                </div>
+<div class="callout-content">
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 1. Mỗi app có SA riêng (không dùng &quot;default&quot;)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">serviceAccountName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">my-app-sa</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 2. Disable auto-mount nếu không cần API access</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">automountServiceAccountToken</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">false</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 3. Minimum permissions qua RBAC</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">rules</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">- </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiGroups</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  resources</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;configmaps&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  verbs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;get&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># CHỈ get, không list/watch/delete</span></span></code></pre></figure>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-3-network-policy-evaluation">🔄 Workflow 3: Network Policy Evaluation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-3-network-policy-evaluation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Default deny + selective allow rules</p>
+</blockquote>
+<h3 id="default-deny--allow-logic">Default Deny → Allow Logic<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#default-deny--allow-logic" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    PACKET[\&quot;📨 Packet arrives&lt;br/>src: Pod A (ns: frontend)&lt;br/>dst: Pod B (ns: backend, port 8080)\&quot;]\n\n    PACKET --> NP_EXISTS{\&quot;NetworkPolicy&lt;br/>selecting Pod B&lt;br/>exists?\&quot;}\n\n    NP_EXISTS -->|\&quot;No NetworkPolicy\&quot;| ALLOW_DEFAULT[\&quot;✅ ALLOW&lt;br/>(K8s default: all traffic allowed)\&quot;]\n\n    NP_EXISTS -->|\&quot;Yes, has ingress rules\&quot;| EVAL[\&quot;Evaluate ALL matching&lt;br/>NetworkPolicies\&quot;]\n\n    EVAL --> MATCH{\&quot;Packet matches&lt;br/>ANY allow rule?\&quot;}\n\n    MATCH -->|\&quot;✅ Matches rule\&quot;| ALLOW[\&quot;✅ ALLOW traffic\&quot;]\n    MATCH -->|\&quot;❌ No match\&quot;| DENY[\&quot;❌ DROP packet&lt;br/>(implicit deny)\&quot;]\n\n    style ALLOW_DEFAULT fill:#2ecc71,stroke:#27ae60,color:#fff\n    style ALLOW fill:#2ecc71,stroke:#27ae60,color:#fff\n    style DENY fill:#e74c3c,stroke:#c0392b,color:#fff\n    style PACKET fill:#3498db,stroke:#2980b9,color:#fff&quot;">flowchart TD
+    PACKET[&quot;📨 Packet arrives&lt;br/>src: Pod A (ns: frontend)&lt;br/>dst: Pod B (ns: backend, port 8080)&quot;]
+
+    PACKET --> NP_EXISTS{&quot;NetworkPolicy&lt;br/>selecting Pod B&lt;br/>exists?&quot;}
+
+    NP_EXISTS -->|&quot;No NetworkPolicy&quot;| ALLOW_DEFAULT[&quot;✅ ALLOW&lt;br/>(K8s default: all traffic allowed)&quot;]
+
+    NP_EXISTS -->|&quot;Yes, has ingress rules&quot;| EVAL[&quot;Evaluate ALL matching&lt;br/>NetworkPolicies&quot;]
+
+    EVAL --> MATCH{&quot;Packet matches&lt;br/>ANY allow rule?&quot;}
+
+    MATCH -->|&quot;✅ Matches rule&quot;| ALLOW[&quot;✅ ALLOW traffic&quot;]
+    MATCH -->|&quot;❌ No match&quot;| DENY[&quot;❌ DROP packet&lt;br/>(implicit deny)&quot;]
+
+    style ALLOW_DEFAULT fill:#2ecc71,stroke:#27ae60,color:#fff
+    style ALLOW fill:#2ecc71,stroke:#27ae60,color:#fff
+    style DENY fill:#e74c3c,stroke:#c0392b,color:#fff
+    style PACKET fill:#3498db,stroke:#2980b9,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="multi-policy-example-flow">Multi-Policy Example Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#multi-policy-example-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph \&quot;Namespace: frontend\&quot;\n        FE1[\&quot;🟢 frontend-pod&lt;br/>labels: app=frontend\&quot;]\n    end\n\n    subgraph \&quot;Namespace: backend\&quot;\n        NP1[\&quot;🔒 NetworkPolicy 1:&lt;br/>deny-all-ingress&lt;br/>&lt;i>Default deny!&lt;/i>&lt;br/>podSelector: {} (all pods)&lt;br/>ingress: [] (empty = deny all)\&quot;]\n\n        NP2[\&quot;🔓 NetworkPolicy 2:&lt;br/>allow-frontend-to-api&lt;br/>podSelector: app=api&lt;br/>ingress:&lt;br/>  from: namespaced(frontend)&lt;br/>  ports: [8080]\&quot;]\n\n        API[\&quot;🟢 api-pod&lt;br/>labels: app=api\&quot;]\n        DB[\&quot;🟢 db-pod&lt;br/>labels: app=database\&quot;]\n    end\n\n    FE1 -->|\&quot;Port 8080&lt;br/>✅ ALLOWED&lt;br/>(matches NP2)\&quot;| API\n    FE1 -->|\&quot;Port 5432&lt;br/>❌ DENIED&lt;br/>(no matching rule)\&quot;| DB\n    API -->|\&quot;Port 5432&lt;br/>Need another&lt;br/>NetworkPolicy!\&quot;| DB\n\n    style NP1 fill:#e74c3c,stroke:#c0392b,color:#fff\n    style NP2 fill:#2ecc71,stroke:#27ae60,color:#fff\n    style FE1 fill:#3498db,stroke:#2980b9,color:#fff\n    style API fill:#27ae60,stroke:#1e8449,color:#fff\n    style DB fill:#e74c3c,stroke:#c0392b,color:#fff&quot;">graph TD
+    subgraph &quot;Namespace: frontend&quot;
+        FE1[&quot;🟢 frontend-pod&lt;br/>labels: app=frontend&quot;]
+    end
+
+    subgraph &quot;Namespace: backend&quot;
+        NP1[&quot;🔒 NetworkPolicy 1:&lt;br/>deny-all-ingress&lt;br/>&lt;i>Default deny!&lt;/i>&lt;br/>podSelector: {} (all pods)&lt;br/>ingress: [] (empty = deny all)&quot;]
+
+        NP2[&quot;🔓 NetworkPolicy 2:&lt;br/>allow-frontend-to-api&lt;br/>podSelector: app=api&lt;br/>ingress:&lt;br/>  from: namespaced(frontend)&lt;br/>  ports: [8080]&quot;]
+
+        API[&quot;🟢 api-pod&lt;br/>labels: app=api&quot;]
+        DB[&quot;🟢 db-pod&lt;br/>labels: app=database&quot;]
+    end
+
+    FE1 -->|&quot;Port 8080&lt;br/>✅ ALLOWED&lt;br/>(matches NP2)&quot;| API
+    FE1 -->|&quot;Port 5432&lt;br/>❌ DENIED&lt;br/>(no matching rule)&quot;| DB
+    API -->|&quot;Port 5432&lt;br/>Need another&lt;br/>NetworkPolicy!&quot;| DB
+
+    style NP1 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style NP2 fill:#2ecc71,stroke:#27ae60,color:#fff
+    style FE1 fill:#3498db,stroke:#2980b9,color:#fff
+    style API fill:#27ae60,stroke:#1e8449,color:#fff
+    style DB fill:#e74c3c,stroke:#c0392b,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>NetworkPolicy Gotchas </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ol>
+<li><strong>No NetworkPolicy = ALL traffic allowed</strong> (dangerous!)</li>
+<li>NetworkPolicy rules are <strong>additive</strong> (UNION of all matching policies)</li>
+<li><strong>Ingress and Egress are independent</strong> — must configure both</li>
+<li>NetworkPolicy requires a <strong>CNI plugin</strong> that supports it (Calico, Cilium — NOT Flannel!)</li>
+<li>Policy applies to <strong>Pods selected</strong> by <code>podSelector</code>, not to Services</li>
+</ol>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-4-pod-security-admission-pipeline">🔄 Workflow 4: Pod Security Admission Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-4-pod-security-admission-pipeline" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Pod spec evaluated against Pod Security Standards</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    POD_REQ[\&quot;📨 Create Pod Request&lt;br/>spec includes:&lt;br/>securityContext:&lt;br/>  runAsNonRoot: false&lt;br/>  privileged: true\&quot;] --> NS_LABEL{\&quot;Check namespace&lt;br/>labels\&quot;}\n\n    NS_LABEL --> ENFORCE{\&quot;pod-security.kubernetes.io/&lt;br/>enforce = ?\&quot;}\n\n    ENFORCE -->|\&quot;privileged\&quot;| PRIV[\&quot;✅ ALLOW all&lt;br/>(no restrictions)&lt;br/>&lt;i>kube-system namespace typical&lt;/i>\&quot;]\n\n    ENFORCE -->|\&quot;baseline\&quot;| BASELINE_CHECK{\&quot;Pod spec&lt;br/>violates baseline?\&quot;}\n    BASELINE_CHECK -->|\&quot;privileged: true ❌\&quot;| BASELINE_DENY[\&quot;❌ REJECT Pod&lt;br/>Error: privileged containers&lt;br/>not allowed\&quot;]\n    BASELINE_CHECK -->|\&quot;No violations\&quot;| BASELINE_OK[\&quot;✅ ALLOW\&quot;]\n\n    ENFORCE -->|\&quot;restricted\&quot;| RESTRICT_CHECK{\&quot;Pod spec&lt;br/>violates restricted?\&quot;}\n    RESTRICT_CHECK -->|\&quot;runAsNonRoot: false ❌&lt;br/>privileged: true ❌&lt;br/>no seccomp profile ❌\&quot;| RESTRICT_DENY[\&quot;❌ REJECT Pod&lt;br/>Multiple violations\&quot;]\n    RESTRICT_CHECK -->|\&quot;No violations\&quot;| RESTRICT_OK[\&quot;✅ ALLOW\&quot;]\n\n    style PRIV fill:#f39c12,stroke:#d68910,color:#fff\n    style BASELINE_DENY fill:#e74c3c,stroke:#c0392b,color:#fff\n    style RESTRICT_DENY fill:#e74c3c,stroke:#c0392b,color:#fff\n    style BASELINE_OK fill:#2ecc71,stroke:#27ae60,color:#fff\n    style RESTRICT_OK fill:#2ecc71,stroke:#27ae60,color:#fff&quot;">flowchart TD
+    POD_REQ[&quot;📨 Create Pod Request&lt;br/>spec includes:&lt;br/>securityContext:&lt;br/>  runAsNonRoot: false&lt;br/>  privileged: true&quot;] --> NS_LABEL{&quot;Check namespace&lt;br/>labels&quot;}
+
+    NS_LABEL --> ENFORCE{&quot;pod-security.kubernetes.io/&lt;br/>enforce = ?&quot;}
+
+    ENFORCE -->|&quot;privileged&quot;| PRIV[&quot;✅ ALLOW all&lt;br/>(no restrictions)&lt;br/>&lt;i>kube-system namespace typical&lt;/i>&quot;]
+
+    ENFORCE -->|&quot;baseline&quot;| BASELINE_CHECK{&quot;Pod spec&lt;br/>violates baseline?&quot;}
+    BASELINE_CHECK -->|&quot;privileged: true ❌&quot;| BASELINE_DENY[&quot;❌ REJECT Pod&lt;br/>Error: privileged containers&lt;br/>not allowed&quot;]
+    BASELINE_CHECK -->|&quot;No violations&quot;| BASELINE_OK[&quot;✅ ALLOW&quot;]
+
+    ENFORCE -->|&quot;restricted&quot;| RESTRICT_CHECK{&quot;Pod spec&lt;br/>violates restricted?&quot;}
+    RESTRICT_CHECK -->|&quot;runAsNonRoot: false ❌&lt;br/>privileged: true ❌&lt;br/>no seccomp profile ❌&quot;| RESTRICT_DENY[&quot;❌ REJECT Pod&lt;br/>Multiple violations&quot;]
+    RESTRICT_CHECK -->|&quot;No violations&quot;| RESTRICT_OK[&quot;✅ ALLOW&quot;]
+
+    style PRIV fill:#f39c12,stroke:#d68910,color:#fff
+    style BASELINE_DENY fill:#e74c3c,stroke:#c0392b,color:#fff
+    style RESTRICT_DENY fill:#e74c3c,stroke:#c0392b,color:#fff
+    style BASELINE_OK fill:#2ecc71,stroke:#27ae60,color:#fff
+    style RESTRICT_OK fill:#2ecc71,stroke:#27ae60,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="pod-security-standards-levels">Pod Security Standards Levels<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pod-security-standards-levels" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph \&quot;Privileged (no restrictions)\&quot;\n        P_DESC[\&quot;Cho system workloads&lt;br/>kube-system, CNI plugins&lt;br/>Monitoring agents\&quot;]\n        P_ALLOW[\&quot;✅ privileged containers&lt;br/>✅ hostNetwork&lt;br/>✅ hostPID/IPC&lt;br/>✅ any user/group&lt;br/>✅ any volume types\&quot;]\n    end\n\n    subgraph \&quot;Baseline (minimal restrictions)\&quot;\n        B_DESC[\&quot;Cho hầu hết workloads&lt;br/>Block known privilege escalation\&quot;]\n        B_DENY[\&quot;❌ privileged containers&lt;br/>❌ hostNetwork/PID/IPC&lt;br/>❌ hostPath volumes\&quot;]\n        B_ALLOW[\&quot;✅ run as any user&lt;br/>✅ any capabilities&lt;br/>✅ no seccomp required\&quot;]\n    end\n\n    subgraph \&quot;Restricted (hardened)\&quot;\n        R_DESC[\&quot;Cho security-sensitive apps&lt;br/>Maximum restriction\&quot;]\n        R_DENY[\&quot;❌ Everything in Baseline&lt;br/>❌ run as root&lt;br/>❌ privilege escalation&lt;br/>❌ non-default capabilities\&quot;]\n        R_REQUIRE[\&quot;✅ Must run as non-root&lt;br/>✅ Must drop ALL caps&lt;br/>✅ Must have seccomp&lt;br/>✅ Read-only root FS\&quot;]\n    end\n\n    style P_DESC fill:#f39c12,stroke:#d68910,color:#fff\n    style B_DESC fill:#3498db,stroke:#2980b9,color:#fff\n    style R_DESC fill:#2ecc71,stroke:#27ae60,color:#fff\n    style P_ALLOW fill:#f39c12,stroke:#d68910,color:#333\n    style B_DENY fill:#e74c3c,stroke:#c0392b,color:#fff\n    style R_REQUIRE fill:#2ecc71,stroke:#27ae60,color:#fff&quot;">graph TD
+    subgraph &quot;Privileged (no restrictions)&quot;
+        P_DESC[&quot;Cho system workloads&lt;br/>kube-system, CNI plugins&lt;br/>Monitoring agents&quot;]
+        P_ALLOW[&quot;✅ privileged containers&lt;br/>✅ hostNetwork&lt;br/>✅ hostPID/IPC&lt;br/>✅ any user/group&lt;br/>✅ any volume types&quot;]
+    end
+
+    subgraph &quot;Baseline (minimal restrictions)&quot;
+        B_DESC[&quot;Cho hầu hết workloads&lt;br/>Block known privilege escalation&quot;]
+        B_DENY[&quot;❌ privileged containers&lt;br/>❌ hostNetwork/PID/IPC&lt;br/>❌ hostPath volumes&quot;]
+        B_ALLOW[&quot;✅ run as any user&lt;br/>✅ any capabilities&lt;br/>✅ no seccomp required&quot;]
+    end
+
+    subgraph &quot;Restricted (hardened)&quot;
+        R_DESC[&quot;Cho security-sensitive apps&lt;br/>Maximum restriction&quot;]
+        R_DENY[&quot;❌ Everything in Baseline&lt;br/>❌ run as root&lt;br/>❌ privilege escalation&lt;br/>❌ non-default capabilities&quot;]
+        R_REQUIRE[&quot;✅ Must run as non-root&lt;br/>✅ Must drop ALL caps&lt;br/>✅ Must have seccomp&lt;br/>✅ Read-only root FS&quot;]
+    end
+
+    style P_DESC fill:#f39c12,stroke:#d68910,color:#fff
+    style B_DESC fill:#3498db,stroke:#2980b9,color:#fff
+    style R_DESC fill:#2ecc71,stroke:#27ae60,color:#fff
+    style P_ALLOW fill:#f39c12,stroke:#d68910,color:#333
+    style B_DENY fill:#e74c3c,stroke:#c0392b,color:#fff
+    style R_REQUIRE fill:#2ecc71,stroke:#27ae60,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Enforcement Modes </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Namespace labels control behavior:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  labels</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    pod-security.kubernetes.io/enforce</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">restricted</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">   # Block violations</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    pod-security.kubernetes.io/warn</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">restricted</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # Warn but allow</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    pod-security.kubernetes.io/audit</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">restricted</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">      # Log but allow</span></span></code></pre></figure>
+<p><strong>Tip:</strong> Start with <code>warn</code> → fix violations → switch to <code>enforce</code></p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="-workflow-5-end-to-end-security-flow">🔄 Workflow 5: End-to-End Security Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-workflow-5-end-to-end-security-flow" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>Scenario: Complete request lifecycle qua MỌI security layer</p>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    REQ[\&quot;📨 kubectl create deployment&lt;br/>nginx --image=nginx&lt;br/>-n production\&quot;] --> TLS\n\n    subgraph \&quot;Layer 1: Transport Security\&quot;\n        TLS[\&quot;🔒 TLS/HTTPS&lt;br/>Client cert mutual auth\&quot;]\n    end\n\n    subgraph \&quot;Layer 2: Authentication\&quot;\n        TLS --> AUTHN[\&quot;🔐 AUTHENTICATION&lt;br/>Client cert: CN=minh&lt;br/>→ user=minh, groups=[dev-team]\&quot;]\n        AUTHN -->|\&quot;❌ Invalid cert\&quot;| DENY_401[\&quot;❌ 401 Unauthorized\&quot;]\n    end\n\n    subgraph \&quot;Layer 3: Authorization\&quot;\n        AUTHN -->|\&quot;✅ Identity verified\&quot;| AUTHZ[\&quot;🛡️ RBAC&lt;br/>Can minh create deployments&lt;br/>in production?\&quot;]\n        AUTHZ -->|\&quot;❌ No matching rule\&quot;| DENY_403[\&quot;❌ 403 Forbidden\&quot;]\n    end\n\n    subgraph \&quot;Layer 4: Admission Control\&quot;\n        AUTHZ -->|\&quot;✅ Allowed\&quot;| MUT[\&quot;✏️ Mutating Admission&lt;br/>• LimitRange: inject defaults&lt;br/>• ServiceAccount: set default SA&lt;br/>• Istio: inject sidecar\&quot;]\n        MUT --> VAL[\&quot;✅ Validating Admission&lt;br/>• ResourceQuota: check limits&lt;br/>• PodSecurity: check standards&lt;br/>• OPA/Gatekeeper: custom policies\&quot;]\n        VAL -->|\&quot;❌ Policy violation\&quot;| DENY_ADM[\&quot;❌ Admission Denied\&quot;]\n    end\n\n    subgraph \&quot;Layer 5: Runtime Security\&quot;\n        VAL -->|\&quot;✅ Admitted\&quot;| STORE[\&quot;💾 Store in etcd\&quot;]\n        STORE --> RUNTIME[\&quot;🏃 Pod starts with:&lt;br/>• SecurityContext enforced&lt;br/>• Non-root user&lt;br/>• Read-only rootFS&lt;br/>• Dropped capabilities\&quot;]\n    end\n\n    subgraph \&quot;Layer 6: Network Security\&quot;\n        RUNTIME --> NETPOL[\&quot;🔒 NetworkPolicy&lt;br/>• Ingress: only from frontend&lt;br/>• Egress: only to database&lt;br/>• DNS allowed\&quot;]\n    end\n\n    NETPOL --> RUNNING[\&quot;✅ Secure Pod Running&lt;br/>All 6 layers passed!\&quot;]\n\n    style DENY_401 fill:#e74c3c,stroke:#c0392b,color:#fff\n    style DENY_403 fill:#e74c3c,stroke:#c0392b,color:#fff\n    style DENY_ADM fill:#e74c3c,stroke:#c0392b,color:#fff\n    style AUTHN fill:#e74c3c,stroke:#c0392b,color:#fff\n    style AUTHZ fill:#e67e22,stroke:#d35400,color:#fff\n    style MUT fill:#f1c40f,stroke:#f39c12,color:#333\n    style VAL fill:#3498db,stroke:#2980b9,color:#fff\n    style STORE fill:#9b59b6,stroke:#8e44ad,color:#fff\n    style RUNNING fill:#2ecc71,stroke:#27ae60,color:#fff&quot;">flowchart TD
+    REQ[&quot;📨 kubectl create deployment&lt;br/>nginx --image=nginx&lt;br/>-n production&quot;] --> TLS
+
+    subgraph &quot;Layer 1: Transport Security&quot;
+        TLS[&quot;🔒 TLS/HTTPS&lt;br/>Client cert mutual auth&quot;]
+    end
+
+    subgraph &quot;Layer 2: Authentication&quot;
+        TLS --> AUTHN[&quot;🔐 AUTHENTICATION&lt;br/>Client cert: CN=minh&lt;br/>→ user=minh, groups=[dev-team]&quot;]
+        AUTHN -->|&quot;❌ Invalid cert&quot;| DENY_401[&quot;❌ 401 Unauthorized&quot;]
+    end
+
+    subgraph &quot;Layer 3: Authorization&quot;
+        AUTHN -->|&quot;✅ Identity verified&quot;| AUTHZ[&quot;🛡️ RBAC&lt;br/>Can minh create deployments&lt;br/>in production?&quot;]
+        AUTHZ -->|&quot;❌ No matching rule&quot;| DENY_403[&quot;❌ 403 Forbidden&quot;]
+    end
+
+    subgraph &quot;Layer 4: Admission Control&quot;
+        AUTHZ -->|&quot;✅ Allowed&quot;| MUT[&quot;✏️ Mutating Admission&lt;br/>• LimitRange: inject defaults&lt;br/>• ServiceAccount: set default SA&lt;br/>• Istio: inject sidecar&quot;]
+        MUT --> VAL[&quot;✅ Validating Admission&lt;br/>• ResourceQuota: check limits&lt;br/>• PodSecurity: check standards&lt;br/>• OPA/Gatekeeper: custom policies&quot;]
+        VAL -->|&quot;❌ Policy violation&quot;| DENY_ADM[&quot;❌ Admission Denied&quot;]
+    end
+
+    subgraph &quot;Layer 5: Runtime Security&quot;
+        VAL -->|&quot;✅ Admitted&quot;| STORE[&quot;💾 Store in etcd&quot;]
+        STORE --> RUNTIME[&quot;🏃 Pod starts with:&lt;br/>• SecurityContext enforced&lt;br/>• Non-root user&lt;br/>• Read-only rootFS&lt;br/>• Dropped capabilities&quot;]
+    end
+
+    subgraph &quot;Layer 6: Network Security&quot;
+        RUNTIME --> NETPOL[&quot;🔒 NetworkPolicy&lt;br/>• Ingress: only from frontend&lt;br/>• Egress: only to database&lt;br/>• DNS allowed&quot;]
+    end
+
+    NETPOL --> RUNNING[&quot;✅ Secure Pod Running&lt;br/>All 6 layers passed!&quot;]
+
+    style DENY_401 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style DENY_403 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style DENY_ADM fill:#e74c3c,stroke:#c0392b,color:#fff
+    style AUTHN fill:#e74c3c,stroke:#c0392b,color:#fff
+    style AUTHZ fill:#e67e22,stroke:#d35400,color:#fff
+    style MUT fill:#f1c40f,stroke:#f39c12,color:#333
+    style VAL fill:#3498db,stroke:#2980b9,color:#fff
+    style STORE fill:#9b59b6,stroke:#8e44ad,color:#fff
+    style RUNNING fill:#2ecc71,stroke:#27ae60,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="security-layers-summary">Security Layers Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#security-layers-summary" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph \&quot;Defense in Depth\&quot;\n        L1[\&quot;🔒 TLS&lt;br/>&lt;i>Encryption&lt;/i>\&quot;] --> L2[\&quot;🔐 AuthN&lt;br/>&lt;i>Identity&lt;/i>\&quot;]\n        L2 --> L3[\&quot;🛡️ AuthZ&lt;br/>&lt;i>Permission&lt;/i>\&quot;]\n        L3 --> L4[\&quot;📋 Admission&lt;br/>&lt;i>Policy&lt;/i>\&quot;]\n        L4 --> L5[\&quot;🏛️ Runtime&lt;br/>&lt;i>Isolation&lt;/i>\&quot;]\n        L5 --> L6[\&quot;🌐 Network&lt;br/>&lt;i>Segmentation&lt;/i>\&quot;]\n    end\n\n    style L1 fill:#e74c3c,stroke:#c0392b,color:#fff\n    style L2 fill:#e67e22,stroke:#d35400,color:#fff\n    style L3 fill:#f1c40f,stroke:#f39c12,color:#333\n    style L4 fill:#3498db,stroke:#2980b9,color:#fff\n    style L5 fill:#2ecc71,stroke:#27ae60,color:#fff\n    style L6 fill:#9b59b6,stroke:#8e44ad,color:#fff&quot;">graph LR
+    subgraph &quot;Defense in Depth&quot;
+        L1[&quot;🔒 TLS&lt;br/>&lt;i>Encryption&lt;/i>&quot;] --> L2[&quot;🔐 AuthN&lt;br/>&lt;i>Identity&lt;/i>&quot;]
+        L2 --> L3[&quot;🛡️ AuthZ&lt;br/>&lt;i>Permission&lt;/i>&quot;]
+        L3 --> L4[&quot;📋 Admission&lt;br/>&lt;i>Policy&lt;/i>&quot;]
+        L4 --> L5[&quot;🏛️ Runtime&lt;br/>&lt;i>Isolation&lt;/i>&quot;]
+        L5 --> L6[&quot;🌐 Network&lt;br/>&lt;i>Segmentation&lt;/i>&quot;]
+    end
+
+    style L1 fill:#e74c3c,stroke:#c0392b,color:#fff
+    style L2 fill:#e67e22,stroke:#d35400,color:#fff
+    style L3 fill:#f1c40f,stroke:#f39c12,color:#333
+    style L4 fill:#3498db,stroke:#2980b9,color:#fff
+    style L5 fill:#2ecc71,stroke:#27ae60,color:#fff
+    style L6 fill:#9b59b6,stroke:#8e44ad,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="-tổng-hợp-security-matrix">📊 Tổng Hợp: Security Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tổng-hợp-security-matrix" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Layer</th><th style="text-align:left;">What</th><th style="text-align:center;">Who configures</th><th style="text-align:left;">Failure =</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>TLS</strong></td><td style="text-align:left;">Encrypt all traffic</td><td style="text-align:center;">Cluster setup</td><td style="text-align:left;">Man-in-the-middle risk</td></tr><tr><td style="text-align:left;"><strong>Authentication</strong></td><td style="text-align:left;">Verify identity</td><td style="text-align:center;">Admin (certs, OIDC)</td><td style="text-align:left;">Unknown users access API</td></tr><tr><td style="text-align:left;"><strong>Authorization (RBAC)</strong></td><td style="text-align:left;">Check permissions</td><td style="text-align:center;">Admin</td><td style="text-align:left;">Unauthorized actions</td></tr><tr><td style="text-align:left;"><strong>Admission Control</strong></td><td style="text-align:left;">Enforce policies</td><td style="text-align:center;">Admin + DevSecOps</td><td style="text-align:left;">Policy violations deployed</td></tr><tr><td style="text-align:left;"><strong>Pod Security</strong></td><td style="text-align:left;">Container isolation</td><td style="text-align:center;">Namespace labels</td><td style="text-align:left;">Privilege escalation</td></tr><tr><td style="text-align:left;"><strong>NetworkPolicy</strong></td><td style="text-align:left;">Network segmentation</td><td style="text-align:center;">DevOps per app</td><td style="text-align:left;">Lateral movement</td></tr><tr><td style="text-align:left;"><strong>Secrets Management</strong></td><td style="text-align:left;">Protect credentials</td><td style="text-align:center;">Admin + Dev</td><td style="text-align:left;">Data breach</td></tr><tr><td style="text-align:left;"><strong>Image Security</strong></td><td style="text-align:left;">Trusted images</td><td style="text-align:center;">CI/CD pipeline</td><td style="text-align:left;">Malicious code deployed</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-troubleshooting-security">🔧 Troubleshooting Security<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-troubleshooting-security" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="common-issues--solutions">Common Issues &amp; Solutions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-issues--solutions" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Symptom</th><th style="text-align:left;">Likely Cause</th><th style="text-align:left;">Debug Command</th><th style="text-align:left;">Fix</th></tr></thead><tbody><tr><td style="text-align:left;"><code>403 Forbidden</code> on kubectl</td><td style="text-align:left;">Missing RBAC permission</td><td style="text-align:left;"><code>kubectl auth can-i &lt;verb> &lt;resource> --as &lt;user></code></td><td style="text-align:left;">Create Role + RoleBinding</td></tr><tr><td style="text-align:left;">SA cannot access API</td><td style="text-align:left;">No RoleBinding for ServiceAccount</td><td style="text-align:left;"><code>kubectl auth can-i --list --as=system:serviceaccount:&lt;ns>:&lt;sa></code></td><td style="text-align:left;">Create binding for SA</td></tr><tr><td style="text-align:left;">Pod rejected by admission</td><td style="text-align:left;">Pod Security Standard violation</td><td style="text-align:left;"><code>kubectl describe pod &lt;name></code> → Events</td><td style="text-align:left;">Fix securityContext (runAsNonRoot, drop caps)</td></tr><tr><td style="text-align:left;">NetworkPolicy not working</td><td style="text-align:left;">CNI doesn’t support it (Flannel)</td><td style="text-align:left;"><code>kubectl get pods -n kube-system | grep calico</code></td><td style="text-align:left;">Switch to Calico or Cilium</td></tr><tr><td style="text-align:left;">Pods can still communicate after NetworkPolicy</td><td style="text-align:left;">Selector doesn’t match target Pods</td><td style="text-align:left;"><code>kubectl describe netpol &lt;name></code></td><td style="text-align:left;">Verify label selectors match</td></tr><tr><td style="text-align:left;">Secret visible in <code>kubectl describe</code></td><td style="text-align:left;">Using env var instead of volume</td><td style="text-align:left;"><code>kubectl get pod &lt;name> -o yaml</code></td><td style="text-align:left;">Switch to volume mount</td></tr><tr><td style="text-align:left;"><code>pods/exec</code> forbidden</td><td style="text-align:left;">Missing exec sub-resource permission</td><td style="text-align:left;"><code>kubectl auth can-i create pods/exec -n &lt;ns></code></td><td style="text-align:left;">Add <code>pods/exec</code> to Role</td></tr></tbody></table></div>
+<h3 id="security-audit-commands">Security Audit Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#security-audit-commands" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># RBAC audit</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> auth</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> can-i</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --list</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --as</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> dev1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> production</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">     # All permissions for user</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> auth</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> can-i</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> delete</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> secrets</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> production</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --as</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> dev1</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Specific check</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> clusterrolebindings</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> wide</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> cluster-admin</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Who has admin?</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># ServiceAccount audit</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> sa</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                                      # All ServiceAccounts</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> rolebindings,clusterrolebindings</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> wide</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> grep</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">sa-nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># NetworkPolicy audit</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> networkpolicy</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                           # All NetPols</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> describe</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> netpol</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">n</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">s</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">                        # Rule details</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Pod Security audit</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> label</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --dry-run=server</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --overwrite</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ns</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">n</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">s</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">  pod-security.kubernetes.io/enforce=restricted</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">         # Test what would break</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Secret audit</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> secrets</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -A</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --field-selector</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> type=Opaque</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">     # All user secrets</span></span></code></pre></figure>
+<hr/>
+<h2 id="-cross-references">📎 Cross-References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-cross-references" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">Topic</th><th style="text-align:left;">Link</th></tr></thead><tbody><tr><td style="text-align:left;">Secret creation &amp; encryption</td><td style="text-align:left;"><a href="../../.././06-configuration/04-config-workflows" class="internal internal-link alias" data-slug="06-configuration/04-config-workflows">6.4. Config Workflows</a></td></tr><tr><td style="text-align:left;">NetworkPolicy &amp; Service traffic</td><td style="text-align:left;"><a href="../../.././05-networking/04-networking-workflows" class="internal internal-link alias" data-slug="05-networking/04-networking-workflows">5.4. Networking Workflows</a></td></tr><tr><td style="text-align:left;">Pod securityContext in workloads</td><td style="text-align:left;"><a href="../../.././04-workloads/06-workload-workflows" class="internal internal-link alias" data-slug="04-workloads/06-workload-workflows">4.6. Workload Workflows</a></td></tr><tr><td style="text-align:left;">Architecture: Admission controllers</td><td style="text-align:left;"><a href="../../.././02-architecture/04-component-workflows" class="internal internal-link alias" data-slug="02-architecture/04-component-workflows">2.4. Component Workflows</a></td></tr><tr><td style="text-align:left;">Resource limits &amp; namespace isolation</td><td style="text-align:left;"><a href="../../.././08-high-availability/04-ha-workflows" class="internal internal-link alias" data-slug="08-high-availability/04-ha-workflows">8.4. HA Workflows</a></td></tr><tr><td style="text-align:left;">Storage access control (PV/PVC)</td><td style="text-align:left;"><a href="../../.././07-storage/04-storage-workflows" class="internal internal-link alias" data-slug="07-storage/04-storage-workflows">7.4. Storage Workflows</a></td></tr></tbody></table></div>
+<hr/>
+<h2 id="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kiểm-tra-hiểu-biết" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="câu-1-rbac-troubleshooting">Câu 1: RBAC Troubleshooting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-1-rbac-troubleshooting" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> User <code>dev1</code> chạy <code>kubectl logs pod-1 -n staging</code> → <code>Error: forbidden</code>. Làm sao debug?</p>
+<details>
+<summary>Xem đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 1. Check permissions</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> auth</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> can-i</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pods/log</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> --as</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> dev1</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># no</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 2. Check RoleBindings in staging</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> rolebindings</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> wide</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Xem dev1 (hoặc group) có binding nào không</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 3. Check Role rules</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> describe</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> role</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">role-nam</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> staging</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Xem resources có &quot;pods/log&quot; không</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Fix: Thêm &quot;pods/log&quot; vào Role</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">rules:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> apiGroups:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">]</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">  resources:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;pods&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;pods/log&quot;]</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  # Thêm pods/log!</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">  verbs:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;get&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;list&quot;]</span></span></code></pre></figure>
+<blockquote>
+<p><code>pods/log</code> là sub-resource riêng! <code>pods</code> permission không include <code>pods/log</code>.</p>
+</blockquote>
+</details>
+<h3 id="câu-2-network-policy">Câu 2: Network Policy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-2-network-policy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> Namespace <code>production</code> có default-deny NetworkPolicy. Pod <code>api</code> cần gọi <code>database</code> Pod (port 5432) trong cùng namespace. Viết NetworkPolicy.</p>
+<details>
+<summary>Xem đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># Allow api → database on port 5432</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">networking.k8s.io/v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">NetworkPolicy</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">allow-api-to-db</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">production</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  podSelector</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    matchLabels</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      app</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">database</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">       # Apply to database Pods</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  policyTypes</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">Ingress</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  ingress</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">podSelector</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        matchLabels</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">          app</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">api</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">         # Only from api Pods</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    ports</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">protocol</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">TCP</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      port</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5432</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">           # Only port 5432</span></span></code></pre></figure>
+<blockquote>
+<p>NetworkPolicy chọn <strong>destination Pod</strong> (podSelector), rồi define <strong>allowed sources</strong> (from).</p>
+</blockquote>
+</details>
+<h3 id="câu-3-pod-security">Câu 3: Pod Security<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-3-pod-security" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Tình huống:</strong> Namespace <code>production</code> enforce <code>restricted</code> Pod Security Standard. Container image chạy dưới user root. Chuyện gì xảy ra?</p>
+<details>
+<summary>Xem đáp án</summary>
+<p>Pod bị <strong>REJECT</strong> khi creation:</p>
+<pre><code>Error: pods &quot;my-app&quot; is forbidden: violates PodSecurity &quot;restricted:latest&quot;:
+  - must run as non-root user
+  - must set securityContext.runAsNonRoot: true
+</code></pre>
+<p><strong>Fix:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  securityContext</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    runAsNonRoot</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    runAsUser</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1000</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    runAsGroup</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1000</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    fsGroup</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1000</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    seccompProfile</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">RuntimeDefault</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  containers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">app</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">    securityContext</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      allowPrivilegeEscalation</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">false</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      capabilities</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">        drop</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;ALL&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">      readOnlyRootFilesystem</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span></span></code></pre></figure>
+</details>
+<hr/>
+<h2 id="-tiếp-theo">🚀 Tiếp Theo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-tiếp-theo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Bạn đã hiểu toàn bộ security pipeline trong Kubernetes!</p>
+<p><strong>Next:</strong> <a href="../../.././10-observability-fundamentals/readme" class="internal internal-link alias" data-slug="10-observability-fundamentals/readme">Phần 10: Observability Fundamentals →</a></p>
+<hr/>
+<p><a href="../../../02---areas/k8s/09-security/03-pod-security" class="internal internal-link alias" data-slug="02---areas/k8s/09-security/03-pod-security">⬅️ 9.3. Pod Security</a> | <a href="../../.././readme" class="internal internal-link alias" data-slug="readme">🏠 Mục Lục Chính</a> | <a href="../../../readme" class="internal internal-link alias" data-slug="readme">📂 Phần 9: Security</a> | <a href="../../.././10-observability-fundamentals/readme" class="internal internal-link alias" data-slug="10-observability-fundamentals/readme">➡️ Phần 10: Observability</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-163" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#94-security-workflows---luồng-authentication-authorization--policy-enforcement" data-for="94-security-workflows---luồng-authentication-authorization--policy-enforcement">9.4. Security Workflows - Luồng Authentication, Authorization &amp; Policy Enforcement</a></li><li class="depth-1"><a href="#-mục-tiêu-học" data-for="-mục-tiêu-học">🎯 Mục Tiêu Học</a></li><li class="depth-1"><a href="#-quy-tắc-màu-sắc-diagram" data-for="-quy-tắc-màu-sắc-diagram">🎨 Quy Tắc Màu Sắc Diagram</a></li><li class="depth-1"><a href="#-workflow-1-rbac-authorization-pipeline" data-for="-workflow-1-rbac-authorization-pipeline">🔄 Workflow 1: RBAC Authorization Pipeline</a></li><li class="depth-2"><a href="#rbac-deny-flow" data-for="rbac-deny-flow">RBAC Deny Flow</a></li><li class="depth-2"><a href="#rbac-objects-relationship" data-for="rbac-objects-relationship">RBAC Objects Relationship</a></li><li class="depth-1"><a href="#-workflow-2-serviceaccount-token-flow" data-for="-workflow-2-serviceaccount-token-flow">🔄 Workflow 2: ServiceAccount Token Flow</a></li><li class="depth-2"><a href="#serviceaccount-token-lifecycle" data-for="serviceaccount-token-lifecycle">ServiceAccount Token Lifecycle</a></li><li class="depth-1"><a href="#-workflow-3-network-policy-evaluation" data-for="-workflow-3-network-policy-evaluation">🔄 Workflow 3: Network Policy Evaluation</a></li><li class="depth-2"><a href="#default-deny--allow-logic" data-for="default-deny--allow-logic">Default Deny → Allow Logic</a></li><li class="depth-2"><a href="#multi-policy-example-flow" data-for="multi-policy-example-flow">Multi-Policy Example Flow</a></li><li class="depth-1"><a href="#-workflow-4-pod-security-admission-pipeline" data-for="-workflow-4-pod-security-admission-pipeline">🔄 Workflow 4: Pod Security Admission Pipeline</a></li><li class="depth-2"><a href="#pod-security-standards-levels" data-for="pod-security-standards-levels">Pod Security Standards Levels</a></li><li class="depth-1"><a href="#-workflow-5-end-to-end-security-flow" data-for="-workflow-5-end-to-end-security-flow">🔄 Workflow 5: End-to-End Security Flow</a></li><li class="depth-2"><a href="#security-layers-summary" data-for="security-layers-summary">Security Layers Summary</a></li><li class="depth-1"><a href="#-tổng-hợp-security-matrix" data-for="-tổng-hợp-security-matrix">📊 Tổng Hợp: Security Matrix</a></li><li class="depth-1"><a href="#-troubleshooting-security" data-for="-troubleshooting-security">🔧 Troubleshooting Security</a></li><li class="depth-2"><a href="#common-issues--solutions" data-for="common-issues--solutions">Common Issues &amp; Solutions</a></li><li class="depth-2"><a href="#security-audit-commands" data-for="security-audit-commands">Security Audit Commands</a></li><li class="depth-1"><a href="#-cross-references" data-for="-cross-references">📎 Cross-References</a></li><li class="depth-1"><a href="#-kiểm-tra-hiểu-biết" data-for="-kiểm-tra-hiểu-biết">🎓 Kiểm Tra Hiểu Biết</a></li><li class="depth-2"><a href="#câu-1-rbac-troubleshooting" data-for="câu-1-rbac-troubleshooting">Câu 1: RBAC Troubleshooting</a></li><li class="depth-2"><a href="#câu-2-network-policy" data-for="câu-2-network-policy">Câu 2: Network Policy</a></li><li class="depth-2"><a href="#câu-3-pod-security" data-for="câu-3-pod-security">Câu 3: Pod Security</a></li><li class="depth-1"><a href="#-tiếp-theo" data-for="-tiếp-theo">🚀 Tiếp Theo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/k8s/09-security/readme" class="internal">Phần 9: Security &amp; Access Control</a></li><li><a href="../../../02---areas/k8s/readme" class="internal">Kubernetes Learning Guide - Hướng Dẫn Học Kubernetes Từ Đầu</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

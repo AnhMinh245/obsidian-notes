@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Lab 06 — Dashboards &amp; DQL Queries</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Lab 06 — Dashboards &amp; DQL Queries"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Lab 06 — Dashboards &amp; DQL Queries"/><meta name="twitter:description" content="Lab 06 — Dashboards &amp; DQL Queries ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 05 hoàn thành 🔗 Source: Dynatrace/easytrade 🎯 Mục Tiêu Sau lab này, bạn sẽ: Sử dụng Data Explorer để visualize metrics Viết DQL queries cho metrics, entities, và business data Tạo custom Dashboard cho EasyTrade Thêm..."/><meta property="og:description" content="Lab 06 — Dashboards &amp; DQL Queries ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 05 hoàn thành 🔗 Source: Dynatrace/easytrade 🎯 Mục Tiêu Sau lab này, bạn sẽ: Sử dụng Data Explorer để visualize metrics Viết DQL queries cho metrics, entities, và business data Tạo custom Dashboard cho EasyTrade Thêm..."/><meta property="og:image:alt" content="Lab 06 — Dashboards &amp; DQL Queries ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 05 hoàn thành 🔗 Source: Dynatrace/easytrade 🎯 Mục Tiêu Sau lab này, bạn sẽ: Sử dụng Data Explorer để visualize metrics Viết DQL queries cho metrics, entities, và business data Tạo custom Dashboard cho EasyTrade Thêm..."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/labs/06---dashboards--and--dql-queries"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/labs/06---dashboards--and--dql-queries"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Lab 06 — Dashboards &amp; DQL Queries ⏱️ Thời gian: ~45 phút 📋 Prerequisites: Lab 05 hoàn thành 🔗 Source: Dynatrace/easytrade 🎯 Mục Tiêu Sau lab này, bạn sẽ: Sử dụng Data Explorer để visualize metrics Viết DQL queries cho metrics, entities, và business data Tạo custom Dashboard cho EasyTrade Thêm..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/dynatrace/labs/06---dashboards--and--dql-queries" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-423" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-423" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/">Dynatrace</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/labs/">Labs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Lab 06 — Dashboards &amp; DQL Queries</a></div></nav><h1 class="article-title">Lab 06 — Dashboards &amp; DQL Queries</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/dynatrace" class="internal internal-link tag-link">domain/dynatrace</a><span class="note-properties-separator">, </span><a href="../../../../tags/labs" class="internal internal-link tag-link">labs</a><span class="note-properties-separator">, </span><a href="../../../../tags/dashboards" class="internal internal-link tag-link">dashboards</a><span class="note-properties-separator">, </span><a href="../../../../tags/dql" class="internal internal-link tag-link">dql</a><span class="note-properties-separator">, </span><a href="../../../../tags/data-explorer" class="internal internal-link tag-link">data-explorer</a><span class="note-properties-separator">, </span><a href="../../../../tags/hands-on" class="internal internal-link tag-link">hands-on</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-04-07T17:00:00.000Z">08 thg 4, 2026</time><span>7 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="lab-06--dashboards--dql-queries">Lab 06 — Dashboards &amp; DQL Queries<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lab-06--dashboards--dql-queries" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>⏱️ <strong>Thời gian</strong>: ~45 phút<br/>
+📋 <strong>Prerequisites</strong>: <a href="../../../../02---areas/observability/dynatrace/labs/05---problem-patterns--and--feature-flags" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/labs/05---problem-patterns--and--feature-flags">Lab 05</a> hoàn thành<br/>
+🔗 <strong>Source</strong>: <a href="https://github.com/Dynatrace/easytrade" class="external external-link">Dynatrace/easytrade<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</blockquote>
+<hr/>
+<h2 id="-mục-tiêu">🎯 Mục Tiêu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-mục-tiêu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sau lab này, bạn sẽ:</p>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Sử dụng Data Explorer để visualize metrics</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Viết DQL queries cho metrics, entities, và business data</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Tạo custom Dashboard cho EasyTrade</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Thêm các loại tiles khác nhau (chart, table, markdown, SLO)</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> So sánh: DQL vs Datadog query language</li>
+</ul>
+<hr/>
+<h2 id="-kiến-thức-nền">📚 Kiến Thức Nền<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kiến-thức-nền" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="fundamentals">Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="../../../../02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics">Ch.03 — Metrics &amp; Visualization</a><br/>
+→ Dashboard design principles, chart types, RED method visualization</li>
+<li><a href="../../../../02---areas/observability/fundamentals/08---infrastructure-context" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/08---infrastructure-context">Ch.08 — Infrastructure Metrics</a><br/>
+→ CPU, memory, disk, network metrics</li>
+</ul>
+<h3 id="dynatrace-theory">Dynatrace Theory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dynatrace-theory" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="../../../../02---areas/observability/dynatrace/associate_theory/07---data-analysis-và-tools" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/associate_theory/07---data-analysis-và-tools">Ch.07 — Data Analysis &amp; Tools</a></li>
+</ul>
+<h3 id="cách-học-lab-này">Cách học lab này<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cách-học-lab-này" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Trình tự tốt nhất là câu hỏi trước, query sau, dashboard cuối cùng </p></div>
+                  
+                </div>
+<div class="callout-content">
+<ul>
+<li>Data Explorer giúp bạn học metric model của Dynatrace; DQL giúp bạn đặt câu hỏi sâu hơn; dashboard chỉ là nơi đóng gói những gì đáng xem lặp lại.</li>
+<li>Nếu một chart trống hoặc khó hiểu, thường nguyên nhân nằm ở scope, split dimension, entity filter, hoặc time range hơn là platform không có dữ liệu.</li>
+<li>Khi viết DQL, đừng chỉ chăm chăm nhớ cú pháp. Điều quan trọng hơn là biết mình đang truy vấn loại dữ liệu nào, field nào có sẵn, và kết quả query đó sẽ hỗ trợ một quyết định vận hành cụ thể ra sao.</li>
+</ul>
+</div>
+</blockquote>
+<hr/>
+<h2 id="1-data-explorer--visual-query-builder">1. Data Explorer — Visual Query Builder<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-data-explorer--visual-query-builder" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-mở-data-explorer">1.1. Mở Data Explorer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-mở-data-explorer" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Vào <strong>Observe and explore</strong> → <strong>Explore data</strong> (hoặc <strong>Data Explorer</strong>)</li>
+</ol>
+<h3 id="12-tạo-chart-đầu-tiên">1.2. Tạo chart đầu tiên<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-tạo-chart-đầu-tiên" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Click <strong>Select metric</strong> → tìm <code>builtin:service.response.time</code></li>
+<li><strong>Split by</strong>: <code>dt.entity.service</code> (tách theo service)</li>
+<li><strong>Time range</strong>: Last 2 hours</li>
+<li>Click <strong>Run query</strong></li>
+</ol>
+<p>🔍 <strong>Quan sát</strong>: Chart hiển thị response time cho mỗi EasyTrade service.</p>
+<h3 id="13-các-metric-hữu-ích">1.3. Các metric hữu ích<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-các-metric-hữu-ích" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Metric</th><th>Mô tả</th><th>Use case</th></tr></thead><tbody><tr><td><code>builtin:service.response.time</code></td><td>Service response time</td><td>Performance overview</td></tr><tr><td><code>builtin:service.errors.total.rate</code></td><td>Service error rate (%)</td><td>Error monitoring</td></tr><tr><td><code>builtin:service.requestCount.total</code></td><td>Request throughput</td><td>Traffic monitoring</td></tr><tr><td><code>builtin:host.cpu.usage</code></td><td>Host CPU %</td><td>Infrastructure health</td></tr><tr><td><code>builtin:host.mem.usage</code></td><td>Host memory %</td><td>Capacity planning</td></tr><tr><td><code>builtin:containers.cpu.usagePercent</code></td><td>Container CPU</td><td>Per-container health</td></tr></tbody></table></div>
+<p>💡 <strong>Metric naming convention: <code>builtin:&lt;entity>.&lt;metric>.&lt;aggregation></code></strong></p>
+<ul>
+<li><code>builtin</code> = metrics tự động bởi OneAgent</li>
+<li><code>service/host/containers</code> = entity type</li>
+<li><code>response.time / errors.total</code> = metric name</li>
+<li><code>.rate / .count</code> = aggregation type</li>
+</ul>
+<h3 id="14-chart-types">1.4. Chart types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#14-chart-types" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Thử đổi chart type trong Data Explorer:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Type</th><th>Best for</th></tr></thead><tbody><tr><td><strong>Line chart</strong></td><td>Trends over time (response time)</td></tr><tr><td><strong>Bar chart</strong></td><td>Comparisons (throughput per service)</td></tr><tr><td><strong>Single value</strong></td><td>Current state (current error rate)</td></tr><tr><td><strong>Table</strong></td><td>Detailed breakdown</td></tr><tr><td><strong>Heatmap</strong></td><td>Distribution (latency percentiles)</td></tr><tr><td><strong>Pie chart</strong></td><td>Proportions (traffic share per service)</td></tr></tbody></table></div>
+<hr/>
+<h2 id="2-dql--advanced-queries">2. DQL — Advanced Queries<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-dql--advanced-queries" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-mở-notebooks">2.1. Mở Notebooks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-mở-notebooks" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Vào <strong>Observe and explore</strong> → <strong>Notebooks</strong></li>
+<li>Click <strong>New notebook</strong> → đặt tên <code>EasyTrade Analysis</code></li>
+</ol>
+<h3 id="22-dql-cho-metrics">2.2. DQL cho Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-dql-cho-metrics" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Response time tất cả services (last 1h)</span></span>
+<span data-line><span>timeseries avg(dt.service.response_time), by: {dt.entity.service}</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Error rate per service</span></span>
+<span data-line><span>timeseries avg(dt.service.errors.total.rate), by: {dt.entity.service}</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Request throughput per service (chart-ready)</span></span>
+<span data-line><span>timeseries req = sum(dt.service.request.count.total), by: {dt.entity.service}</span></span></code></pre></figure>
+<h3 id="23-dql-cho-entities">2.3. DQL cho Entities<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-dql-cho-entities" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Liệt kê tất cả services</span></span>
+<span data-line><span>fetch dt.entity.service</span></span>
+<span data-line><span>| fields entity.name, tags</span></span>
+<span data-line><span>| sort entity.name</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Liệt kê process groups</span></span>
+<span data-line><span>fetch dt.entity.process_group_instance</span></span>
+<span data-line><span>| fields entity.name, technology</span></span>
+<span data-line><span>| sort entity.name</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Liệt kê containers</span></span>
+<span data-line><span>fetch dt.entity.container_group_instance</span></span>
+<span data-line><span>| fields entity.name, container_image</span></span>
+<span data-line><span>| sort entity.name</span></span></code></pre></figure>
+<h3 id="24-dql-cho-problems">2.4. DQL cho Problems<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-dql-cho-problems" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Xem problem events gần đây</span></span>
+<span data-line><span>fetch events</span></span>
+<span data-line><span>| filter contains(toString(event.kind), &quot;DAVIS&quot;)</span></span>
+<span data-line><span>| sort timestamp desc</span></span>
+<span data-line><span>| limit 10</span></span>
+<span data-line><span>| fields timestamp, event.kind, event.name</span></span></code></pre></figure>
+<h3 id="25-dql-cho-logs--metrics-kết-hợp">2.5. DQL cho Logs + Metrics kết hợp<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#25-dql-cho-logs--metrics-kết-hợp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Đếm errors per minute (log metric)</span></span>
+<span data-line><span>fetch logs</span></span>
+<span data-line><span>| filter status == &quot;ERROR&quot;</span></span>
+<span data-line><span>| makeTimeseries count(), interval: 1m</span></span></code></pre></figure>
+<p>💡 <strong>Power of unified DQL:</strong></p>
+<p>DQL query <strong>MỌI data type</strong> bằng cùng syntax:</p>
+<ul>
+<li><code>fetch logs</code> → log data</li>
+<li><code>fetch dt.entity.service</code> → topology data</li>
+<li><code>timeseries</code> → metric data</li>
+<li><code>fetch events</code> → problems/events data</li>
+</ul>
+<p>Datadog dùng <strong>separate query languages</strong> cho mỗi loại data (metrics query, log search, trace search). DQL = 1 ngôn ngữ cho tất cả.</p>
+<blockquote>
+<p>🔗 <strong>Fundamentals</strong>: <a href="../../../../02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics" class="internal internal-link alias" data-slug="02---areas/observability/fundamentals/03---three-pillars-deep-dive---metrics">Ch.03 — Query Languages</a>. Concept query language (PromQL, LogQL, SQL) → DQL là unified alternative.</p>
+</blockquote>
+<hr/>
+<h2 id="3-tạo-custom-dashboard">3. Tạo Custom Dashboard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-tạo-custom-dashboard" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-tạo-dashboard-mới">3.1. Tạo Dashboard mới<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-tạo-dashboard-mới" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Vào <strong>Observe and explore</strong> → <strong>Dashboards</strong></li>
+<li>Click <strong>Create dashboard</strong> → đặt tên <code>EasyTrade Overview</code></li>
+</ol>
+<h3 id="32-thêm-tiles">3.2. Thêm tiles<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-thêm-tiles" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Layout đề xuất:</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│  📊 EasyTrade Overview Dashboard                         │
+├─────────────────────┬──────────────┬────────────────────┤
+│                     │              │                    │
+│  Response Time      │  Error Rate  │  Throughput        │
+│  (Timeseries)       │  (Single %)  │  (Single value)    │
+│                     │              │                    │
+├─────────────────────┴──────────────┴────────────────────┤
+│                                                          │
+│  Service Response Time by Service                        │
+│  (Timeseries, split by service)                          │
+│                                                          │
+├──────────────────────────┬───────────────────────────────┤
+│                          │                               │
+│  Host CPU &amp; Memory       │  Top Errors (Log table)       │
+│  (Timeseries)            │  (DQL)                        │
+│                          │                               │
+├──────────────────────────┴───────────────────────────────┤
+│                                                          │
+│  Active Problems (Problem feed)                          │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="33-tile-1-response-time-overview">3.3. Tile 1: Response Time Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-tile-1-response-time-overview" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Add tile → <strong>Data explorer</strong></li>
+<li>Metric: <code>builtin:service.response.time</code></li>
+<li>Aggregation: <code>Average</code></li>
+<li>Split by: <code>dt.entity.service</code></li>
+<li>Visualization: <strong>Line chart</strong></li>
+</ol>
+<h3 id="34-tile-2-current-error-rate">3.4. Tile 2: Current Error Rate<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#34-tile-2-current-error-rate" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Add tile → <strong>Data explorer</strong></li>
+<li>Metric: <code>builtin:service.errors.total.rate</code></li>
+<li>Aggregation: <code>Average</code></li>
+<li>Visualization: <strong>Single value</strong></li>
+<li>Thresholds: Green &lt; 1%, Yellow &lt; 5%, Red >= 5%</li>
+</ol>
+<h3 id="35-tile-3-request-throughput">3.5. Tile 3: Request Throughput<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#35-tile-3-request-throughput" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Add tile → <strong>Data explorer</strong></li>
+<li>Metric: <code>builtin:service.requestCount.total</code></li>
+<li>Aggregation: <code>Sum</code></li>
+<li>Visualization: <strong>Single value</strong></li>
+</ol>
+<h3 id="36-tile-4-host-metrics">3.6. Tile 4: Host Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#36-tile-4-host-metrics" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Add tile → <strong>Data explorer</strong></li>
+<li>Metric 1: <code>builtin:host.cpu.usage</code></li>
+<li>Metric 2: <code>builtin:host.mem.usage</code></li>
+<li>Visualization: <strong>Line chart</strong> (dual axis)</li>
+</ol>
+<h3 id="37-tile-5-recent-errors-dql">3.7. Tile 5: Recent Errors (DQL)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#37-tile-5-recent-errors-dql" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Add tile → <strong>DQL</strong></li>
+<li>Query:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs</span></span>
+<span data-line><span>| filter status == &quot;ERROR&quot;</span></span>
+<span data-line><span>| sort timestamp desc</span></span>
+<span data-line><span>| limit 10</span></span>
+<span data-line><span>| fields timestamp, content, dt.entity.process_group_instance</span></span></code></pre></figure>
+</li>
+<li>Visualization: <strong>Table</strong></li>
+</ol>
+<h3 id="38-tile-6-active-problems">3.8. Tile 6: Active Problems<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#38-tile-6-active-problems" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Add tile → <strong>Problems</strong></li>
+<li>Configure: Show OPEN problems</li>
+</ol>
+<h3 id="39-optional-markdown-tile">3.9. (Optional) Markdown tile<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#39-optional-markdown-tile" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Thêm tile <strong>Markdown</strong> cho context:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light github-dark"><code data-language="markdown" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;" data-token-type="punctuation">## EasyTrade Overview</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation"> **App**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">: Stock trading platform</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation"> **Services**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">: 15+ microservices</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation"> **DB**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">: MSSQL</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">-</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;" data-token-type="punctuation"> **Lab**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">: Dynatrace Observability</span></span></code></pre></figure>
+<hr/>
+<h2 id="4-dashboard-features">4. Dashboard Features<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-dashboard-features" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-time-frame-control">4.1. Time frame control<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-time-frame-control" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Dashboard-level time frame (top bar)</li>
+<li>Individual tile time override (nếu cần)</li>
+</ul>
+<h3 id="42-auto-refresh">4.2. Auto-refresh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-auto-refresh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Settings → Auto-refresh interval (30s, 1m, 5m)</li>
+<li>Hữu ích khi để dashboard trên monitor</li>
+</ul>
+<h3 id="43-variables-filtering">4.3. Variables (filtering)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-variables-filtering" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Dashboard settings → <strong>Variables</strong></li>
+<li>Add variable:
+<ul>
+<li><strong>Name</strong>: <code>service</code></li>
+<li><strong>Type</strong>: Entity selector</li>
+<li><strong>Entity type</strong>: Service</li>
+</ul>
+</li>
+<li>Apply variable lên tiles → filter by selected service</li>
+</ol>
+<h3 id="44-share--export">4.4. Share &amp; Export<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#44-share--export" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Share</strong>: Copy dashboard URL</li>
+<li><strong>Export</strong>: Download dashboard JSON</li>
+<li><strong>Import</strong>: Upload dashboard JSON (hữu ích khi rotate trial accounts!)</li>
+</ul>
+<p>💡 <strong>Account rotation tip:</strong> Export dashboards trước khi trial hết hạn → import vào account mới.</p>
+<hr/>
+<h2 id="5--dql-practice-exercises">5. 🔥 DQL Practice Exercises<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5--dql-practice-exercises" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Tự viết trước, rồi mới xem đáp án </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Mở Notebooks và thử viết DQL cho mỗi câu hỏi.</p>
+</div>
+</blockquote>
+<h3 id="exercise-1-vẽ-error-rate-timeseries-theo-service">Exercise 1: Vẽ error-rate timeseries theo service<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exercise-1-vẽ-error-rate-timeseries-theo-service" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<details>
+<summary>Đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>timeseries err = avg(dt.service.errors.total.rate),</span></span>
+<span data-line><span>  by: {dt.entity.service}</span></span></code></pre></figure>
+</details>
+<h3 id="exercise-2-đếm-log-entries-theo-level-chỉ-trong-30-phút-qua">Exercise 2: Đếm log entries theo level, chỉ trong 30 phút qua<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exercise-2-đếm-log-entries-theo-level-chỉ-trong-30-phút-qua" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<details>
+<summary>Đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs, from: now() - 30m</span></span>
+<span data-line><span>| summarize count = count(), by: {status}</span></span>
+<span data-line><span>| sort count desc</span></span></code></pre></figure>
+</details>
+<h3 id="exercise-3-tìm-error-logs-chứa-database-hoặc-connection">Exercise 3: Tìm ERROR logs chứa “database” hoặc “connection”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exercise-3-tìm-error-logs-chứa-database-hoặc-connection" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<details>
+<summary>Đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs</span></span>
+<span data-line><span>| filter status == &quot;ERROR&quot;</span></span>
+<span data-line><span>| filter contains(content, &quot;database&quot;) or contains(content, &quot;connection&quot;)</span></span>
+<span data-line><span>| sort timestamp desc</span></span>
+<span data-line><span>| limit 20</span></span></code></pre></figure>
+</details>
+<h3 id="exercise-4-tạo-timeseries-từ-logs--error-count-per-5-minutes">Exercise 4: Tạo timeseries từ logs — ERROR count per 5 minutes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exercise-4-tạo-timeseries-từ-logs--error-count-per-5-minutes" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<details>
+<summary>Đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs</span></span>
+<span data-line><span>| filter status == &quot;ERROR&quot;</span></span>
+<span data-line><span>| makeTimeseries count = count(), interval: 5m</span></span></code></pre></figure>
+</details>
+<h3 id="exercise-5-list-tất-cả-easytrade-services--technology">Exercise 5: List tất cả EasyTrade services + technology<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exercise-5-list-tất-cả-easytrade-services--technology" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<details>
+<summary>Đáp án</summary>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch dt.entity.service</span></span>
+<span data-line><span>| fields entity.name, tags</span></span>
+<span data-line><span>| sort entity.name</span></span></code></pre></figure>
+</details>
+<hr/>
+<h2 id="️-troubleshooting">⚠️ Troubleshooting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#️-troubleshooting" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="no-data-in-tiles">No data in tiles<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#no-data-in-tiles" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Kiểm tra time range — có thể quá ngắn / quá dài</li>
+<li>EasyTrade có đang chạy? <code>docker compose ps</code></li>
+<li>Metric name đúng? Thử search trong Data Explorer trước</li>
+</ul>
+<h3 id="dql-query-error">DQL query error<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dql-query-error" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Check syntax và inline field suggestions trong editor</li>
+<li>Thử query đơn giản trước (<code>fetch logs | limit 5</code>)</li>
+<li>Xem Dynatrace DQL documentation cho syntax updates</li>
+</ul>
+<hr/>
+<h2 id="-kết-nối-fundamentals">🔗 Kết Nối Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-kết-nối-fundamentals" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept (Fundamentals)</th><th>Dynatrace Implementation</th></tr></thead><tbody><tr><td><strong>Dashboard Design</strong> (Ch.03)</td><td>Custom dashboard with RED metrics + infrastructure</td></tr><tr><td><strong>Metric Visualization</strong> (Ch.03)</td><td>Data Explorer — line, bar, single value, heatmap</td></tr><tr><td><strong>Query Language</strong> (Ch.03)</td><td>DQL — unified query cho logs, metrics, entities</td></tr><tr><td><strong>Template Variables</strong> (Ch.03)</td><td>Dashboard variables — filter by service, host</td></tr></tbody></table></div>
+<hr/>
+<h2 id="-verify-checklist">✅ Verify Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-verify-checklist" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul class="contains-task-list">
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Data Explorer: visualize response time by service</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> DQL Notebook: chạy ít nhất 3 DQL queries thành công</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Dashboard tạo với ≥ 5 tiles</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> Dashboard auto-refresh hoạt động</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> (Optional) Dashboard variables configured</li>
+<li class="task-list-item" data-task=" "><input type="checkbox" class="checkbox-toggle"/> (Optional) Dashboard exported as JSON</li>
+</ul>
+<hr/>
+<p><strong>Bước tiếp theo:</strong> <a href="../../../../02---areas/observability/dynatrace/labs/07---slos,-alerting-profiles--and--management-zones" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/labs/07---slos,-alerting-profiles--and--management-zones">07 - SLOs, Alerting Profiles &amp; Management Zones</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-373" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#lab-06--dashboards--dql-queries" data-for="lab-06--dashboards--dql-queries">Lab 06 — Dashboards &amp; DQL Queries</a></li><li class="depth-1"><a href="#-mục-tiêu" data-for="-mục-tiêu">🎯 Mục Tiêu</a></li><li class="depth-1"><a href="#-kiến-thức-nền" data-for="-kiến-thức-nền">📚 Kiến Thức Nền</a></li><li class="depth-2"><a href="#fundamentals" data-for="fundamentals">Fundamentals</a></li><li class="depth-2"><a href="#dynatrace-theory" data-for="dynatrace-theory">Dynatrace Theory</a></li><li class="depth-2"><a href="#cách-học-lab-này" data-for="cách-học-lab-này">Cách học lab này</a></li><li class="depth-1"><a href="#1-data-explorer--visual-query-builder" data-for="1-data-explorer--visual-query-builder">1. Data Explorer — Visual Query Builder</a></li><li class="depth-2"><a href="#11-mở-data-explorer" data-for="11-mở-data-explorer">1.1. Mở Data Explorer</a></li><li class="depth-2"><a href="#12-tạo-chart-đầu-tiên" data-for="12-tạo-chart-đầu-tiên">1.2. Tạo chart đầu tiên</a></li><li class="depth-2"><a href="#13-các-metric-hữu-ích" data-for="13-các-metric-hữu-ích">1.3. Các metric hữu ích</a></li><li class="depth-2"><a href="#14-chart-types" data-for="14-chart-types">1.4. Chart types</a></li><li class="depth-1"><a href="#2-dql--advanced-queries" data-for="2-dql--advanced-queries">2. DQL — Advanced Queries</a></li><li class="depth-2"><a href="#21-mở-notebooks" data-for="21-mở-notebooks">2.1. Mở Notebooks</a></li><li class="depth-2"><a href="#22-dql-cho-metrics" data-for="22-dql-cho-metrics">2.2. DQL cho Metrics</a></li><li class="depth-2"><a href="#23-dql-cho-entities" data-for="23-dql-cho-entities">2.3. DQL cho Entities</a></li><li class="depth-2"><a href="#24-dql-cho-problems" data-for="24-dql-cho-problems">2.4. DQL cho Problems</a></li><li class="depth-2"><a href="#25-dql-cho-logs--metrics-kết-hợp" data-for="25-dql-cho-logs--metrics-kết-hợp">2.5. DQL cho Logs + Metrics kết hợp</a></li><li class="depth-1"><a href="#3-tạo-custom-dashboard" data-for="3-tạo-custom-dashboard">3. Tạo Custom Dashboard</a></li><li class="depth-2"><a href="#31-tạo-dashboard-mới" data-for="31-tạo-dashboard-mới">3.1. Tạo Dashboard mới</a></li><li class="depth-2"><a href="#32-thêm-tiles" data-for="32-thêm-tiles">3.2. Thêm tiles</a></li><li class="depth-2"><a href="#33-tile-1-response-time-overview" data-for="33-tile-1-response-time-overview">3.3. Tile 1: Response Time Overview</a></li><li class="depth-2"><a href="#34-tile-2-current-error-rate" data-for="34-tile-2-current-error-rate">3.4. Tile 2: Current Error Rate</a></li><li class="depth-2"><a href="#35-tile-3-request-throughput" data-for="35-tile-3-request-throughput">3.5. Tile 3: Request Throughput</a></li><li class="depth-2"><a href="#36-tile-4-host-metrics" data-for="36-tile-4-host-metrics">3.6. Tile 4: Host Metrics</a></li><li class="depth-2"><a href="#37-tile-5-recent-errors-dql" data-for="37-tile-5-recent-errors-dql">3.7. Tile 5: Recent Errors (DQL)</a></li><li class="depth-2"><a href="#38-tile-6-active-problems" data-for="38-tile-6-active-problems">3.8. Tile 6: Active Problems</a></li><li class="depth-2"><a href="#39-optional-markdown-tile" data-for="39-optional-markdown-tile">3.9. (Optional) Markdown tile</a></li><li class="depth-1"><a href="#4-dashboard-features" data-for="4-dashboard-features">4. Dashboard Features</a></li><li class="depth-2"><a href="#41-time-frame-control" data-for="41-time-frame-control">4.1. Time frame control</a></li><li class="depth-2"><a href="#42-auto-refresh" data-for="42-auto-refresh">4.2. Auto-refresh</a></li><li class="depth-2"><a href="#43-variables-filtering" data-for="43-variables-filtering">4.3. Variables (filtering)</a></li><li class="depth-2"><a href="#44-share--export" data-for="44-share--export">4.4. Share &amp; Export</a></li><li class="depth-1"><a href="#5--dql-practice-exercises" data-for="5--dql-practice-exercises">5. 🔥 DQL Practice Exercises</a></li><li class="depth-2"><a href="#exercise-1-vẽ-error-rate-timeseries-theo-service" data-for="exercise-1-vẽ-error-rate-timeseries-theo-service">Exercise 1: Vẽ error-rate timeseries theo service</a></li><li class="depth-2"><a href="#exercise-2-đếm-log-entries-theo-level-chỉ-trong-30-phút-qua" data-for="exercise-2-đếm-log-entries-theo-level-chỉ-trong-30-phút-qua">Exercise 2: Đếm log entries theo level, chỉ trong 30 phút qua</a></li><li class="depth-2"><a href="#exercise-3-tìm-error-logs-chứa-database-hoặc-connection" data-for="exercise-3-tìm-error-logs-chứa-database-hoặc-connection">Exercise 3: Tìm ERROR logs chứa “database” hoặc “connection”</a></li><li class="depth-2"><a href="#exercise-4-tạo-timeseries-từ-logs--error-count-per-5-minutes" data-for="exercise-4-tạo-timeseries-từ-logs--error-count-per-5-minutes">Exercise 4: Tạo timeseries từ logs — ERROR count per 5 minutes</a></li><li class="depth-2"><a href="#exercise-5-list-tất-cả-easytrade-services--technology" data-for="exercise-5-list-tất-cả-easytrade-services--technology">Exercise 5: List tất cả EasyTrade services + technology</a></li><li class="depth-1"><a href="#️-troubleshooting" data-for="️-troubleshooting">⚠️ Troubleshooting</a></li><li class="depth-2"><a href="#no-data-in-tiles" data-for="no-data-in-tiles">No data in tiles</a></li><li class="depth-2"><a href="#dql-query-error" data-for="dql-query-error">DQL query error</a></li><li class="depth-1"><a href="#-kết-nối-fundamentals" data-for="-kết-nối-fundamentals">🔗 Kết Nối Fundamentals</a></li><li class="depth-1"><a href="#-verify-checklist" data-for="-verify-checklist">✅ Verify Checklist</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/dynatrace/labs/05---problem-patterns--and--feature-flags" class="internal">Lab 05 — Problem Patterns &amp; Feature Flags</a></li><li><a href="../../../../02---areas/observability/dynatrace/labs/07---slos,-alerting-profiles--and--management-zones" class="internal">Lab 07 — SLOs, Alerting Profiles &amp; Management Zones</a></li><li><a href="../../../../02---areas/observability/labs/00---lab-overview--and--roadmap" class="internal">Observability Platform Labs — Tổng Quan &amp; Lộ Trình</a></li><li><a href="../../../../02---areas/observability/labs/platform-comparison-—-datadog-vs-dynatrace" class="internal">Datadog vs Dynatrace — So Sánh Chi Tiết</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

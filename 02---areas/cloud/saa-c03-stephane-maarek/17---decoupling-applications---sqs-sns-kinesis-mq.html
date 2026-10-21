@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>17 – Decoupling Applications: SQS, SNS, Kinesis, Amazon MQ</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="17 – Decoupling Applications: SQS, SNS, Kinesis, Amazon MQ"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="17 – Decoupling Applications: SQS, SNS, Kinesis, Amazon MQ"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 17 – Decoupling Applications: SQS, SNS, Kinesis, Amazon MQ Cách đọc note này: (1) Vì sao cần decouple → (2) SQS (queue) → (3) SNS (pub/sub) → (4) Kinesis (stream) → (5) Amazon MQ (legacy) → (6) So sánh &amp; chọn đáp án thi."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 17 – Decoupling Applications: SQS, SNS, Kinesis, Amazon MQ Cách đọc note này: (1) Vì sao cần decouple → (2) SQS (queue) → (3) SNS (pub/sub) → (4) Kinesis (stream) → (5) Amazon MQ (legacy) → (6) So sánh &amp; chọn đáp án thi."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 17 – Decoupling Applications: SQS, SNS, Kinesis, Amazon MQ Cách đọc note này: (1) Vì sao cần decouple → (2) SQS (queue) → (3) SNS (pub/sub) → (4) Kinesis (stream) → (5) Amazon MQ (legacy) → (6) So sánh &amp; chọn đáp án thi."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 17 – Decoupling Applications: SQS, SNS, Kinesis, Amazon MQ Cách đọc note này: (1) Vì sao cần decouple → (2) SQS (queue) → (3) SNS (pub/sub) → (4) Kinesis (stream) → (5) Amazon MQ (legacy) → (6) So sánh &amp; chọn đáp án thi."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-85" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-85" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>17 – Decoupling Applications: SQS, SNS, Kinesis, Amazon MQ</a></div></nav><h1 class="article-title">17 – Decoupling Applications: SQS, SNS, Kinesis, Amazon MQ</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Decoupling Applications</span><span class="note-properties-separator">, </span><span class="note-properties-text">SQS SNS Kinesis MQ</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon SQS</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon SNS</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon Kinesis</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon MQ</span><span class="note-properties-separator">, </span><span class="note-properties-text">ActiveMQ</span><span class="note-properties-separator">, </span><span class="note-properties-text">Amazon Data Firehose</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-07-31T17:00:00.000Z">01 thg 8, 2026</time><span>12 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="17--decoupling-applications-sqs-sns-kinesis-amazon-mq">17 – Decoupling Applications: SQS, SNS, Kinesis, Amazon MQ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#17--decoupling-applications-sqs-sns-kinesis-amazon-mq" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> (1) Vì sao cần decouple → (2) SQS (queue) → (3) SNS (pub/sub) → (4) Kinesis (stream) → (5) Amazon MQ (legacy) → (6) So sánh &amp; chọn đáp án thi.</p>
+</blockquote>
+<hr/>
+<h2 id="1-vì-sao-cần-decoupling">1. Vì sao cần decoupling?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-vì-sao-cần-decoupling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Khi có nhiều application, chúng phải giao tiếp. Có <strong>2 cách</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Pattern</th><th>Cách hoạt động</th><th>Rủi ro khi spike</th></tr></thead><tbody><tr><td><strong>Synchronous</strong></td><td>A gọi thẳng B</td><td>B quá tải → A timeout, mất request</td></tr><tr><td><strong>Asynchronous (decoupled)</strong></td><td>A ↔ B qua queue / topic / stream</td><td>Buffer được; scale A và B độc lập</td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260730174031.png" alt width="auto" height="auto"/></p>
+<p><strong>Ví dụ:</strong> Thường encode 10 video; đột nhiên <strong>1000</strong>. Gọi sync encoder → sập. Đưa job vào hàng đợi → worker xử lý dần.</p>
+<p><strong>Lợi ích:</strong> chịu spike, retry khi consumer lỗi, scale độc lập, phù hợp microservices / event-driven.</p>
+<h3 id="bản-đồ-4-dịch-vụ-nhớ-trước-chi-tiết-sau">Bản đồ 4 dịch vụ (nhớ trước, chi tiết sau)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bản-đồ-4-dịch-vụ-nhớ-trước-chi-tiết-sau" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dịch vụ</th><th>Mô hình</th><th>Consumer</th><th>Một câu nhớ</th></tr></thead><tbody><tr><td><strong>SQS</strong></td><td>Queue</td><td><strong>Pull</strong></td><td>“Hàng đợi job — làm xong thì xóa”</td></tr><tr><td><strong>SNS</strong></td><td>Pub/Sub</td><td><strong>Push</strong></td><td>“1 message → nhiều subscriber”</td></tr><tr><td><strong>Kinesis</strong></td><td>Stream</td><td>Pull / EFO push</td><td>“Luồng real-time, đọc lại được (replay)”</td></tr><tr><td><strong>Amazon MQ</strong></td><td>Broker ActiveMQ/RabbitMQ</td><td>Theo protocol cũ</td><td>“App legacy JMS/AMQP, ít đổi code”</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    Need[\&quot;Cần messaging?\&quot;] --> Legacy{\&quot;App legacy&lt;br/>JMS/AMQP/ActiveMQ?\&quot;}\n    Legacy -->|Có| MQ[\&quot;Amazon MQ\&quot;]\n    Legacy -->|Không| Stream{\&quot;Real-time stream&lt;br/>replay / analytics?\&quot;}\n    Stream -->|Có| Kin[\&quot;Kinesis&lt;br/>(Streams hoặc Firehose)\&quot;]\n    Stream -->|Không| Fan{\&quot;1 → nhiều đích?\&quot;}\n    Fan -->|Có| SNS[\&quot;SNS&lt;br/>(thường + SQS)\&quot;]\n    Fan -->|Không| SQS[\&quot;SQS\&quot;]&quot;">graph TD
+    Need[&quot;Cần messaging?&quot;] --> Legacy{&quot;App legacy&lt;br/>JMS/AMQP/ActiveMQ?&quot;}
+    Legacy -->|Có| MQ[&quot;Amazon MQ&quot;]
+    Legacy -->|Không| Stream{&quot;Real-time stream&lt;br/>replay / analytics?&quot;}
+    Stream -->|Có| Kin[&quot;Kinesis&lt;br/>(Streams hoặc Firehose)&quot;]
+    Stream -->|Không| Fan{&quot;1 → nhiều đích?&quot;}
+    Fan -->|Có| SNS[&quot;SNS&lt;br/>(thường + SQS)&quot;]
+    Fan -->|Không| SQS[&quot;SQS&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="2-amazon-sqs--hàng-đợi-job">2. Amazon SQS — hàng đợi job<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-amazon-sqs--hàng-đợi-job" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-queue-là-gì">2.1 Queue là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-queue-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Producer gửi message vào queue → consumer <strong>poll</strong> lấy ra → xử lý → <strong>delete</strong>.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260730174113.png" alt width="auto" height="auto"/></p>
+<h3 id="22-standard-queue--mặc-định-dùng-nhiều-nhất">2.2 Standard Queue — mặc định dùng nhiều nhất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-standard-queue--mặc-định-dùng-nhiều-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thuộc tính</th><th>Chi tiết</th></tr></thead><tbody><tr><td>Throughput</td><td>Gần như <strong>unlimited</strong></td></tr><tr><td>Retention</td><td>Mặc định <strong>4 ngày</strong>, tối đa <strong>14 ngày</strong></td></tr><tr><td>Latency</td><td><strong>&lt; 10 ms</strong></td></tr><tr><td>Message size</td><td>Tối đa <strong>256 KB</strong></td></tr><tr><td>Message attributes</td><td>Tối đa <strong>10</strong> attribute/message (metadata key-value, tách khỏi body)</td></tr><tr><td>Encryption</td><td><strong>SSE-SQS mặc định</strong> (AWS owned key, miễn phí) từ 2023; đổi sang <strong>SSE-KMS</strong> nếu cần key riêng để audit (tính phí theo request KMS)</td></tr><tr><td>Delivery</td><td><strong>At-least-once</strong> → có thể <strong>trùng</strong> → consumer nên <strong>idempotent</strong></td></tr><tr><td>Ordering</td><td><strong>Best-effort</strong> → có thể <strong>lộn thứ tự</strong></td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Idempotent:</strong> xử lý trùng không làm sai (ví dụ đã ghi <code>orderId</code> rồi thì bỏ qua).</p>
+</blockquote>
+<blockquote>
+<p><strong>Message > 256 KB?</strong> SQS không tăng giới hạn được — dùng pattern <strong>claim-check</strong>: lưu payload thật lên S3, chỉ gửi <em>pointer</em> (S3 key) qua SQS. SDK có sẵn <strong>Amazon SQS Extended Client Library</strong> làm tự động việc này (Java/Python).</p>
+</blockquote>
+<h3 id="23-vòng-đời-message-produce--consume--delete">2.3 Vòng đời message: Produce → Consume → Delete<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-vòng-đời-message-produce--consume--delete" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Produce</strong></p>
+<ul>
+<li>SDK: <code>SendMessage</code> / <code>SendMessageBatch</code> (batch tới <strong>10 message</strong> hoặc 256 KB/lần)</li>
+<li>Message <strong>persist</strong> đến khi bị delete</li>
+<li>Ví dụ payload: Order id, Customer id, attributes…</li>
+</ul>
+<blockquote>
+<p><strong>Mẹo tiết kiệm chi phí:</strong> SQS tính tiền theo <strong>số request</strong>. Ưu tiên <code>*Batch</code> API (<code>SendMessageBatch</code>, <code>DeleteMessageBatch</code>, <code>ReceiveMessage</code> với <code>MaxNumberOfMessages</code> tới 10) để gộp nhiều message/lần thay vì gọi lẻ từng message.</p>
+</blockquote>
+<p><img src="../../.././../../attachments/pasted-image-20260730174143.png" alt width="auto" height="auto"/></p>
+<p><strong>Consume</strong> (EC2 / server / Lambda)</p>
+<ol>
+<li>Poll — tối đa <strong>10 messages</strong> / lần</li>
+<li>Xử lý (ví dụ ghi RDS)</li>
+<li><code>DeleteMessage</code> — <strong>bắt buộc</strong>; quên xóa → message hiện lại sau visibility timeout</li>
+</ol>
+<p><img src="../../.././../../attachments/pasted-image-20260730174200.png" alt width="auto" height="auto"/></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant P as Producer\n    participant Q as SQS\n    participant C as Consumer\n\n    P->>Q: SendMessage\n    C->>Q: ReceiveMessage\n    Q->>C: Message + Visibility Timeout\n    alt OK\n        C->>Q: DeleteMessage\n    else Crash / hết giờ\n        Q->>Q: Visible lại → retry\n    end&quot;">sequenceDiagram
+    participant P as Producer
+    participant Q as SQS
+    participant C as Consumer
+
+    P->>Q: SendMessage
+    C->>Q: ReceiveMessage
+    Q->>C: Message + Visibility Timeout
+    alt OK
+        C->>Q: DeleteMessage
+    else Crash / hết giờ
+        Q->>Q: Visible lại → retry
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Lambda + SQS:</strong> Event source mapping — Lambda poll giúp bạn, scale theo backlog.</p>
+<h3 id="24-visibility-timeout--tránh-2-worker-cùng-làm-1-job">2.4 Visibility Timeout — tránh 2 worker cùng làm 1 job<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-visibility-timeout--tránh-2-worker-cùng-làm-1-job" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Poll xong → message <strong>tạm ẩn</strong>. Mặc định <strong>30 giây</strong>.</p>
+<ul>
+<li>Xử lý xong + delete trong cửa sổ này → ổn</li>
+<li>Hết giờ mà chưa delete → message hiện lại → có thể xử lý <strong>hai lần</strong></li>
+<li>Cần thêm thời gian → <code>ChangeMessageVisibility</code> (heartbeat)</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260730174428.png" alt width="auto" height="auto"/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đặt timeout</th><th>Hệ quả</th></tr></thead><tbody><tr><td><strong>Quá thấp</strong></td><td>Duplicate dù vẫn đang xử lý</td></tr><tr><td><strong>Quá cao</strong> + consumer crash</td><td>Phải chờ rất lâu mới retry</td></tr><tr><td><strong>Đúng</strong></td><td>≥ thời gian xử lý tối đa kỳ vọng</td></tr></tbody></table></div>
+<h3 id="25-long-polling--đừng-hỏi-queue-trống-liên-tục">2.5 Long Polling — đừng hỏi queue trống liên tục<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#25-long-polling--đừng-hỏi-queue-trống-liên-tục" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th>Short Polling</th><th>Long Polling (khuyến nghị)</th></tr></thead><tbody><tr><td>Hành vi</td><td>Trả về ngay (kể cả rỗng)</td><td>Đợi có message hoặc hết WaitTime</td></tr><tr><td>Wait</td><td>~0</td><td><strong>1–20 s</strong> (nên <strong>20 s</strong>)</td></tr><tr><td>API calls</td><td>Nhiều, tốn hơn</td><td>Ít hơn, hiệu quả hơn</td></tr></tbody></table></div>
+<p>Bật ở queue level hoặc API (<code>WaitTimeSeconds</code>).</p>
+<p><img src="../../.././../../attachments/pasted-image-20260730174639.png" alt width="auto" height="auto"/></p>
+<h3 id="26-delay--trì-hoãn-lúc-message-mới-vào">2.6 Delay — trì hoãn lúc message mới vào<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#26-delay--trì-hoãn-lúc-message-mới-vào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cơ chế</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><strong>DelaySeconds</strong> (từng message)</td><td>Chưa visible trong 0–15 phút</td></tr><tr><td><strong>Delay queue</strong></td><td>Mọi message vào queue đều delay mặc định</td></tr></tbody></table></div>
+<p>Dùng cho: nhắc sau N phút, backoff đơn giản.</p>
+<h3 id="27-scale--pattern-kiến-trúc">2.7 Scale &amp; pattern kiến trúc<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#27-scale--pattern-kiến-trúc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Nhiều consumer song song</strong></p>
+<p><img src="../../.././../../attachments/pasted-image-20260730174316.png" alt width="auto" height="auto"/></p>
+<ul>
+<li>At-least-once + best-effort order</li>
+<li>Scale ngang số worker → tăng throughput</li>
+</ul>
+<p><strong>SQS + Auto Scaling Group</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Metric</th><th>Ý nghĩa</th></tr></thead><tbody><tr><td><code>ApproximateNumberOfMessagesVisible</code></td><td>Đang chờ xử lý</td></tr><tr><td><code>ApproximateAgeOfOldestMessage</code></td><td>Backlog nghiêm trọng (message già)</td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260730174739.png" alt width="auto" height="auto"/></p>
+<p><strong>Decouple giữa các tier</strong> — có queue thì spike không làm mất request dễ như sync.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260730184452.png" alt width="auto" height="auto"/></p>
+<p>Không có buffer → transaction có thể <strong>mất</strong>:</p>
+<p><img src="../../.././../../attachments/pasted-image-20260730175026.png" alt width="auto" height="auto"/></p>
+<p><strong>Buffer trước khi ghi DB</strong> — queue hấp thụ spike; worker ghi RDS từ từ.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260730184437.png" alt width="auto" height="auto"/></p>
+<h3 id="28-fifo-queue--cần-thứ-tự--không-trùng">2.8 FIFO Queue — cần thứ tự &amp; không trùng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#28-fifo-queue--cần-thứ-tự--không-trùng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="../../.././../../attachments/pasted-image-20260730174657.png" alt width="auto" height="auto"/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Standard</strong></th><th><strong>FIFO</strong></th></tr></thead><tbody><tr><td>Thứ tự</td><td>Best-effort</td><td>Đúng thứ tự trong <strong>Message Group</strong></td></tr><tr><td>Duplicate</td><td>Có thể có</td><td>Dedup (ID hoặc content-based), cửa sổ <strong>5 phút</strong></td></tr><tr><td>Throughput</td><td>Unlimited</td><td><strong>300</strong>/s không batch; <strong>3.000</strong>/s có batch</td></tr><tr><td>Throughput cao hơn</td><td>—</td><td>Bật <strong>High Throughput Mode</strong> → vượt xa 3.000/s nếu traffic trải đều trên <strong>nhiều Message Group ID</strong></td></tr><tr><td>Parallel</td><td>Tự do</td><td>Khác Message Group ID → vẫn song song</td></tr><tr><td>Tên queue</td><td>Tuỳ ý</td><td><strong>Bắt buộc</strong> hậu tố <code>.fifo</code></td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    G1[\&quot;Group order-123&lt;br/>msg1 → msg2 → msg3\&quot;] --> C[\&quot;Consumers\&quot;]\n    G2[\&quot;Group order-456&lt;br/>msgA → msgB\&quot;] --> C&quot;">graph LR
+    G1[&quot;Group order-123&lt;br/>msg1 → msg2 → msg3&quot;] --> C[&quot;Consumers&quot;]
+    G2[&quot;Group order-456&lt;br/>msgA → msgB&quot;] --> C
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote>
+<p>Cùng <code>orderId</code> = Message Group → một order đúng thứ tự; nhiều order khác nhau vẫn parallel.</p>
+</blockquote>
+<h3 id="29-dead-letter-queue-dlq">2.9 Dead Letter Queue (DLQ)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#29-dead-letter-queue-dlq" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Fail quá <code>maxReceiveCount</code> lần → chuyển sang <strong>DLQ</strong> (điều tra poison message / bug).</p>
+<ul>
+<li>Standard queue → Standard DLQ; FIFO → FIFO DLQ</li>
+<li>Fix xong có thể <strong>redrive</strong> về queue gốc</li>
+</ul>
+<h3 id="210-security-sqs">2.10 Security SQS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#210-security-sqs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Lớp</th><th>Cách</th></tr></thead><tbody><tr><td>In-flight</td><td>HTTPS</td></tr><tr><td>At-rest</td><td>KMS (SSE-SQS / SSE-KMS)</td></tr><tr><td>Client-side</td><td>Tự encrypt trước khi gửi</td></tr><tr><td>IAM</td><td>Ai được gọi API</td></tr><tr><td><strong>Access Policy</strong></td><td>Cross-account; cho SNS/S3 ghi vào queue</td></tr></tbody></table></div>
+<blockquote>
+<p>Fan-out SNS→SQS hay lỗi vì quên queue policy cho <code>sns.amazonaws.com</code> + <code>SourceArn</code> topic.</p>
+</blockquote>
+<hr/>
+<h2 id="3-amazon-sns--pubsub--fan-out">3. Amazon SNS — pub/sub &amp; fan-out<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-amazon-sns--pubsub--fan-out" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-bài-toán-1-message--nhiều-người-nhận">3.1 Bài toán: 1 message → nhiều người nhận?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-bài-toán-1-message--nhiều-người-nhận" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="../../.././../../attachments/pasted-image-20260730184515.png" alt width="auto" height="auto"/></p>
+<ul>
+<li>Producer chỉ publish vào <strong>1 Topic</strong></li>
+<li>Nhiều <strong>subscription</strong> lắng nghe (có thể filter)</li>
+<li>Tới <strong>12,5 triệu</strong> subscriptions / topic; <strong>100.000</strong> topics</li>
+<li>Message size tối đa <strong>256 KB</strong> (giống SQS)</li>
+</ul>
+<blockquote>
+<p><strong>Bẫy hay thi:</strong> SNS <strong>không lưu trữ</strong> message. Nếu topic <strong>không có subscriber</strong> nào → message <strong>mất luôn</strong>, không retry, không DLQ (vì chẳng có subscription nào để gắn DLQ vào). Đây là lý do pattern SNS + SQS fan-out (§3.2) an toàn hơn gửi thẳng vào HTTP endpoint — SQS sẽ <strong>persist</strong> hộ.</p>
+</blockquote>
+<p><img src="../../.././../../attachments/pasted-image-20260730184754.png" alt width="836" height="auto"/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Subscriber</th><th>Vai trò</th></tr></thead><tbody><tr><td><strong>SQS</strong></td><td>Fan-out bền, persist + retry</td></tr><tr><td><strong>Lambda</strong></td><td>Xử lý ngay</td></tr><tr><td>HTTP/HTTPS, Email/SMS, Mobile push</td><td>Notification / webhook</td></tr><tr><td><strong>Data Firehose</strong></td><td>Đổ S3 / analytics</td></tr></tbody></table></div>
+<p>Nhiều AWS service publish thẳng vào SNS:</p>
+<p><img src="../../.././../../attachments/pasted-image-20260730184832.png" alt width="auto" height="auto"/></p>
+<p><strong>Publish:</strong> Topic Publish (SDK) hoặc Direct Publish (mobile: GCM / APNS / ADM…).</p>
+<p><strong>Security:</strong> HTTPS, KMS, IAM, <strong>SNS Access Policy</strong> (cross-account / cho S3 publish).</p>
+<h3 id="32-pattern-vàng-sns--sqs-fan-out">3.2 Pattern vàng: SNS + SQS Fan-out<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-pattern-vàng-sns--sqs-fan-out" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="../../.././../../attachments/pasted-image-20260730184911.png" alt width="auto" height="auto"/></p>
+<p>Push <strong>một lần</strong> vào SNS → mọi SQS subscriber đều nhận.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Pub[\&quot;Publisher\&quot;] --> Topic[\&quot;SNS Topic\&quot;]\n    Topic --> Q1[\&quot;SQS Billing\&quot;]\n    Topic --> Q2[\&quot;SQS Analytics\&quot;]\n    Topic --> Q3[\&quot;SQS Fraud\&quot;]&quot;">graph LR
+    Pub[&quot;Publisher&quot;] --> Topic[&quot;SNS Topic&quot;]
+    Topic --> Q1[&quot;SQS Billing&quot;]
+    Topic --> Q2[&quot;SQS Analytics&quot;]
+    Topic --> Q3[&quot;SQS Fraud&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Vì sao dùng</th><th></th></tr></thead><tbody><tr><td>Decouple</td><td>Publisher không biết danh sách consumer</td></tr><tr><td>Bền</td><td>Mỗi SQS tự persist / retry / scale</td></tr><tr><td>Mở rộng</td><td>Thêm queue mới không sửa publisher</td></tr><tr><td>Cross-region</td><td>SNS → SQS region khác được</td></tr><tr><td>Bắt buộc</td><td>SQS Access Policy cho phép SNS ghi</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Raw Message Delivery:</strong> mặc định SNS bọc message gốc trong một <strong>JSON envelope</strong> (kèm <code>MessageId</code>, <code>TopicArn</code>…) rồi mới đẩy vào SQS. Bật <strong>Raw Message Delivery</strong> trên subscription để consumer nhận đúng <strong>message gốc</strong>, khỏi tự parse envelope — cần khi hệ thống cũ đã quen định dạng message gốc hoặc cần đọc trực tiếp message attributes.</p>
+</blockquote>
+<p><strong>S3 Events → nhiều queue:</strong> cùng <code>event type + prefix</code> chỉ có <strong>1</strong> S3 Event rule → phải S3 → <strong>SNS</strong> → nhiều SQS (hoặc EventBridge).</p>
+<p><img src="../../.././../../attachments/pasted-image-20260730184939.png" alt width="auto" height="auto"/></p>
+<p><strong>SNS → Firehose → S3</strong> (lưu / analytics notification stream):</p>
+<p><img src="../../.././../../attachments/pasted-image-20260730184952.png" alt width="auto" height="auto"/></p>
+<h3 id="33-sns-fifo--filtering">3.3 SNS FIFO + filtering<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-sns-fifo--filtering" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>FIFO Topic</strong> — ordering theo Message Group ID; dedup giống SQS FIFO; subscriber có thể SQS Standard hoặc FIFO; throughput giới hạn như SQS FIFO.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260730185005.png" alt width="auto" height="auto"/></p>
+<p>Cần fan-out <strong>+</strong> order <strong>+</strong> dedup → <strong>SNS FIFO → SQS FIFO</strong>:</p>
+<p><img src="../../.././../../attachments/pasted-image-20260730185026.png" alt width="auto" height="auto"/></p>
+<p><strong>Message Filtering:</strong> JSON filter policy trên subscription — chỉ nhận message khớp; không có filter = nhận hết.</p>
+<p><img src="../../.././../../attachments/pasted-image-20260730185042.png" alt width="auto" height="auto"/></p>
+<p>Ví dụ: topic <code>orders</code> — A filter <code>status=shipped</code>, B filter <code>status=cancelled</code>.</p>
+<hr/>
+<h2 id="4-amazon-kinesis--streaming-real-time">4. Amazon Kinesis — streaming real-time<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-amazon-kinesis--streaming-real-time" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Khác queue: đây là <strong>luồng liên tục</strong>. Nhiều consumer đọc cùng data; có thể <strong>replay</strong> trong cửa sổ retention. Không “delete sau khi xử lý” như SQS.</p>
+<h3 id="41-kinesis-data-streams">4.1 Kinesis Data Streams<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-kinesis-data-streams" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="../../.././../../attachments/pasted-image-20260730185059.png" alt width="auto" height="auto"/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thuộc tính</th><th>Chi tiết</th></tr></thead><tbody><tr><td>Retention</td><td>Mặc định <strong>24 giờ</strong>, tăng tối đa <strong>365 ngày</strong> (tính phí thêm) → replay trong cửa sổ này</td></tr><tr><td>Xóa tay</td><td><strong>Không</strong> — chỉ hết hạn</td></tr><tr><td>Record</td><td>Tối đa <strong>1 MiB</strong>/record</td></tr><tr><td>Ordering</td><td>Cùng <strong>Partition Key</strong> → cùng shard → có thứ tự</td></tr><tr><td>Encryption</td><td>KMS at-rest, HTTPS in-flight</td></tr><tr><td>Lib</td><td><strong>KPL</strong> (producer — tự batch/nén/retry), <strong>KCL</strong> (consumer — checkpoint tiến độ vào <strong>DynamoDB</strong>)</td></tr></tbody></table></div>
+<blockquote>
+<p>Ghi chú số liệu: record tối đa <strong>1 MiB</strong> (không phải 10) — dễ nhầm với giới hạn 10 MB của SQS extended message.</p>
+</blockquote>
+<p><strong>Partition key</strong></p>
+<ul>
+<li>Phân tán đều giữa shards (tránh hot shard)</li>
+<li>Cần order theo entity → <code>userId</code> / <code>deviceId</code></li>
+<li>Key luôn <code>&quot;all&quot;</code> → một shard quá tải</li>
+</ul>
+<p><strong>Resharding — đổi số shard theo tải</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thao tác</th><th>Khi nào dùng</th><th>Hiệu ứng</th></tr></thead><tbody><tr><td><strong>Shard Splitting</strong></td><td>1 shard quá tải (hot shard)</td><td>Tách 1 → 2 shard, tăng capacity, tốn thêm tiền</td></tr><tr><td><strong>Shard Merging</strong></td><td>2 shard ít traffic</td><td>Gộp 2 → 1 shard, giảm chi phí</td></tr></tbody></table></div>
+<blockquote>
+<p>Ở <strong>Provisioned</strong> mode, resharding phải làm <strong>thủ công</strong> (API/Console). <strong>On-demand</strong> mode tự scale, không cần resharding tay.</p>
+</blockquote>
+<p><strong>Capacity</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Mode</th><th>Ý chính</th><th>Trả tiền</th></tr></thead><tbody><tr><td><strong>Provisioned</strong></td><td>Chọn shard: <strong>1 MB/s in</strong> (hoặc 1000 records/s), <strong>2 MB/s out</strong> shared</td><td>Shard-hour</td></tr><tr><td><strong>On-demand</strong></td><td>Auto scale; default ~<strong>4 MB/s in</strong></td><td>Stream-hour + GB</td></tr></tbody></table></div>
+<p><strong>Shared vs Enhanced Fan-Out (EFO)</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th>Shared</th><th>EFO</th></tr></thead><tbody><tr><td>Bandwidth</td><td>Consumers <strong>chia</strong> 2 MB/s out / shard</td><td>Mỗi consumer app <strong>riêng</strong> ~2 MB/s / shard</td></tr><tr><td>Mô hình</td><td>Pull</td><td>Push (HTTP/2)</td></tr><tr><td>Khi nào</td><td>Ít consumer</td><td>Nhiều consumer real-time</td></tr></tbody></table></div>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Prod[\&quot;Producers\&quot;] --> KS[\&quot;Data Streams\&quot;]\n    KS -->|\&quot;shared\&quot;| C1[\&quot;Consumer A\&quot;]\n    KS -->|\&quot;shared\&quot;| C2[\&quot;Consumer B\&quot;]\n    KS -->|\&quot;EFO\&quot;| C3[\&quot;Consumer C\&quot;]&quot;">graph LR
+    Prod[&quot;Producers&quot;] --> KS[&quot;Data Streams&quot;]
+    KS -->|&quot;shared&quot;| C1[&quot;Consumer A&quot;]
+    KS -->|&quot;shared&quot;| C2[&quot;Consumer B&quot;]
+    KS -->|&quot;EFO&quot;| C3[&quot;Consumer C&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="42-amazon-data-firehose">4.2 Amazon Data Firehose<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-amazon-data-firehose" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote>
+<p>Tên cũ: <strong>Kinesis Data Firehose</strong>.</p>
+</blockquote>
+<p><img src="../../.././../../attachments/pasted-image-20260730185136.png" alt width="auto" height="auto"/></p>
+<p>Fully managed <strong>load</strong> stream → S3 / Redshift / OpenSearch / Splunk / Datadog / HTTP endpoint…</p>
+<ul>
+<li>Near real-time (buffer theo size/time)</li>
+<li>Convert Parquet/ORC, nén, transform bằng Lambda</li>
+<li><strong>Không</strong> lưu lâu, <strong>không replay</strong></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Data Streams</strong></th><th><strong>Data Firehose</strong></th></tr></thead><tbody><tr><td>Vai trò</td><td>Thu thập + tự xử lý</td><td>Load vào đích</td></tr><tr><td>Latency</td><td>Real-time</td><td>Near real-time</td></tr><tr><td>Replay</td><td>✔</td><td>❌</td></tr><tr><td>Code consumer</td><td>Tự viết</td><td>Managed</td></tr></tbody></table></div>
+<p><strong>Pattern:</strong> Streams (xử lý real-time) + Firehose (archive S3) chạy song song.</p>
+<hr/>
+<h2 id="5-amazon-mq--broker-cho-app-legacy">5. Amazon MQ — broker cho app legacy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-amazon-mq--broker-cho-app-legacy" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>SQS/SNS dùng protocol <strong>proprietary</strong> AWS. App on-prem hay dùng <strong>JMS, AMQP, MQTT, STOMP, OpenWire, WSS</strong>.</p>
+<p>Không muốn viết lại → <strong>Amazon MQ</strong> (managed <strong>ActiveMQ</strong> / <strong>RabbitMQ</strong>): có queue (~SQS) và topic (~SNS), chạy trên <strong>broker instance</strong> (không phải serverless).</p>
+<ul>
+<li><strong>Scale:</strong> chạy trên 1 server, hoặc <strong>active/standby</strong> 2 AZ cho HA — <strong>không</strong> tự scale ngang như SQS/SNS; muốn tăng throughput phải tăng size instance (hoặc cluster nếu RabbitMQ).</li>
+<li><strong>Multi-AZ:</strong> bật active/standby → failover tự động khi broker chính chết.</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260730185342.png" alt width="auto" height="auto"/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th>SQS / SNS</th><th>Amazon MQ</th></tr></thead><tbody><tr><td>Protocol</td><td>AWS SDK</td><td>Industry standard</td></tr><tr><td>Scale</td><td>Gần unlimited (SQS Standard)</td><td>Theo instance</td></tr><tr><td>Migrate</td><td>Đổi code</td><td><strong>Minimal change</strong></td></tr><tr><td>App mới trên AWS</td><td>✔ Ưu tiên</td><td>Chỉ khi bắt buộc legacy</td></tr></tbody></table></div>
+<hr/>
+<h2 id="6-so-sánh--chọn-đáp-án">6. So sánh &amp; chọn đáp án<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-so-sánh--chọn-đáp-án" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-sqs-vs-sns-vs-kinesis">6.1 SQS vs SNS vs Kinesis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-sqs-vs-sns-vs-kinesis" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th><strong>SQS</strong></th><th><strong>SNS</strong></th><th><strong>Kinesis</strong></th></tr></thead><tbody><tr><td>Mô hình</td><td>Pull queue</td><td>Push pub/sub</td><td>Stream (pull / EFO)</td></tr><tr><td>Sau khi đọc</td><td>Delete → hết</td><td>Không phải job queue</td><td>Còn đến hết retention → <strong>replay</strong></td></tr><tr><td>Ordering</td><td>FIFO + Message Group</td><td>FIFO topic</td><td>Theo shard / partition key</td></tr><tr><td>Delay / DLQ</td><td>DelaySeconds, DLQ</td><td>Filter; DLQ tùy subscription</td><td>Không giống SQS</td></tr><tr><td>Use case</td><td>Job / worker / buffer DB</td><td>Notification / fan-out</td><td>Real-time analytics, IoT, ETL</td></tr></tbody></table></div>
+<h3 id="62-chọn-nhanh-theo-nhu-cầu">6.2 Chọn nhanh theo nhu cầu<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-chọn-nhanh-theo-nhu-cầu" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Nhu cầu</th><th>Chọn</th></tr></thead><tbody><tr><td>Decouple tier / job / buffer DB</td><td><strong>SQS</strong></td></tr><tr><td>Order + exactly-once</td><td><strong>SQS FIFO</strong></td></tr><tr><td>Poison message</td><td><strong>DLQ</strong></td></tr><tr><td>Trì hoãn vài phút</td><td><strong>DelaySeconds</strong></td></tr><tr><td>1 → nhiều</td><td><strong>SNS</strong> (± SQS fan-out)</td></tr><tr><td>S3 cùng event/prefix → nhiều queue</td><td>S3 → <strong>SNS</strong> → SQS</td></tr><tr><td>Subset subscriber</td><td>SNS <strong>filter</strong></td></tr><tr><td>Stream + replay</td><td><strong>Kinesis Data Streams</strong></td></tr><tr><td>Nhiều consumer không giành bandwidth</td><td><strong>EFO</strong></td></tr><tr><td>Chỉ đổ vào S3/Redshift</td><td><strong>Data Firehose</strong></td></tr><tr><td>JMS/ActiveMQ ít đổi code</td><td><strong>Amazon MQ</strong></td></tr></tbody></table></div>
+<h3 id="63-tình-huống-thi">6.3 Tình huống thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#63-tình-huống-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Đề bài (rút gọn)</th><th>Đáp án</th></tr></thead><tbody><tr><td>Web nhận order, worker encode, scale theo backlog</td><td><strong>SQS</strong> + ASG</td></tr><tr><td>Thanh toán đúng thứ tự từng user, không trùng</td><td><strong>SQS FIFO</strong> (Group = user/order)</td></tr><tr><td>Message lỗi mãi làm worker stuck</td><td><strong>DLQ</strong></td></tr><tr><td>1 event → billing + analytics + fraud</td><td><strong>SNS → nhiều SQS</strong></td></tr><tr><td>S3 <code>images/</code> ObjectCreated → 3 queue</td><td>S3 → <strong>SNS</strong> → 3 SQS</td></tr><tr><td>Chỉ notify khi <code>severity=high</code></td><td>SNS + <strong>filter</strong></td></tr><tr><td>Clickstream, replay 7 ngày</td><td><strong>Kinesis Data Streams</strong></td></tr><tr><td>IoT → S3, không tự viết consumer</td><td><strong>Data Firehose</strong></td></tr><tr><td>Lift ActiveMQ/JMS</td><td><strong>Amazon MQ</strong></td></tr><tr><td>RDS quá tải vì spike write</td><td>App → <strong>SQS</strong> → worker → RDS</td></tr><tr><td>Hệ thống cũ cần nhận message gốc từ SQS (không muốn envelope SNS)</td><td>Bật <strong>Raw Message Delivery</strong></td></tr><tr><td>1 shard Kinesis bị hot, còn lại rảnh</td><td><strong>Shard Splitting</strong></td></tr><tr><td>Message > 256 KB (video, file lớn) qua SQS</td><td>Claim-check: SQS <strong>Extended Client Library</strong> + S3</td></tr></tbody></table></div>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Decouple khi sync không chịu nổi spike.</li>
+<li>SQS: <strong>DeleteMessage</strong> bắt buộc; Visibility <strong>30s</strong> mặc định; Long Poll <strong>20s</strong>; Standard vs FIFO; <strong>DLQ</strong>; DelaySeconds.</li>
+<li>SQS mã hoá <strong>SSE-SQS mặc định</strong> (từ 2023, miễn phí); message > 256 KB → claim-check qua S3 (Extended Client Library).</li>
+<li>FIFO <strong>High Throughput Mode</strong>: gần như unlimited nếu trải đều nhiều Message Group ID; tên queue luôn có hậu tố <code>.fifo</code>.</li>
+<li>SNS fan-out → SQS: nhớ <strong>Access Policy</strong>; S3 1 rule/event+prefix → qua SNS.</li>
+<li>SNS filter = JSON policy trên subscription.</li>
+<li>SNS <strong>không lưu trữ</strong>: không subscriber = mất message; bật <strong>Raw Message Delivery</strong> khi cần message gốc qua SQS.</li>
+<li>Kinesis ≠ SQS: stream + replay; partition key; record tối đa <strong>1 MiB</strong> (dễ nhầm với 10); retention mặc định <strong>24h</strong>, tối đa 365 ngày.</li>
+<li>Kinesis <strong>resharding</strong>: Split (tăng, tốn thêm) / Merge (giảm, tiết kiệm); KCL checkpoint vào <strong>DynamoDB</strong>.</li>
+<li>Provisioned vs On-demand; Shared vs EFO.</li>
+<li>Firehose = delivery near real-time, <strong>không replay</strong>.</li>
+<li>Amazon MQ chỉ khi <strong>protocol legacy / minimal refactor</strong>; scale bằng tăng size instance, không auto-scale ngang.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Học theo mạch: <strong>queue (SQS) → pub/sub (SNS) → stream (Kinesis) → legacy (MQ)</strong>.</li>
+<li>Combo thi nhiều nhất: <strong>SNS + SQS fan-out</strong> và <strong>SQS mechanics</strong> (visibility / DLQ / FIFO group).</li>
+<li>Đừng gọi Kinesis là “SQS xịn” — khác mô hình hoàn toàn.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>SQS Visibility Timeout + ChangeMessageVisibility</li>
+<li>SQS Long Polling vs Short Polling</li>
+<li>SQS Standard vs FIFO (Message Group + Dedup + High Throughput Mode)</li>
+<li>SQS DLQ + Redrive</li>
+<li>SQS Extended Client Library (claim-check pattern qua S3)</li>
+<li>SNS + SQS Fan-out và giới hạn S3 Events</li>
+<li>SNS Message Filtering</li>
+<li>SNS Raw Message Delivery</li>
+<li>Kinesis partition key + Enhanced Fan-Out</li>
+<li>Kinesis Resharding (Shard Splitting vs Merging)</li>
+<li>Data Streams vs Data Firehose</li>
+<li>Amazon MQ vs SQS/SNS</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-85" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#17--decoupling-applications-sqs-sns-kinesis-amazon-mq" data-for="17--decoupling-applications-sqs-sns-kinesis-amazon-mq">17 – Decoupling Applications: SQS, SNS, Kinesis, Amazon MQ</a></li><li class="depth-1"><a href="#1-vì-sao-cần-decoupling" data-for="1-vì-sao-cần-decoupling">1. Vì sao cần decoupling?</a></li><li class="depth-2"><a href="#bản-đồ-4-dịch-vụ-nhớ-trước-chi-tiết-sau" data-for="bản-đồ-4-dịch-vụ-nhớ-trước-chi-tiết-sau">Bản đồ 4 dịch vụ (nhớ trước, chi tiết sau)</a></li><li class="depth-1"><a href="#2-amazon-sqs--hàng-đợi-job" data-for="2-amazon-sqs--hàng-đợi-job">2. Amazon SQS — hàng đợi job</a></li><li class="depth-2"><a href="#21-queue-là-gì" data-for="21-queue-là-gì">2.1 Queue là gì?</a></li><li class="depth-2"><a href="#22-standard-queue--mặc-định-dùng-nhiều-nhất" data-for="22-standard-queue--mặc-định-dùng-nhiều-nhất">2.2 Standard Queue — mặc định dùng nhiều nhất</a></li><li class="depth-2"><a href="#23-vòng-đời-message-produce--consume--delete" data-for="23-vòng-đời-message-produce--consume--delete">2.3 Vòng đời message: Produce → Consume → Delete</a></li><li class="depth-2"><a href="#24-visibility-timeout--tránh-2-worker-cùng-làm-1-job" data-for="24-visibility-timeout--tránh-2-worker-cùng-làm-1-job">2.4 Visibility Timeout — tránh 2 worker cùng làm 1 job</a></li><li class="depth-2"><a href="#25-long-polling--đừng-hỏi-queue-trống-liên-tục" data-for="25-long-polling--đừng-hỏi-queue-trống-liên-tục">2.5 Long Polling — đừng hỏi queue trống liên tục</a></li><li class="depth-2"><a href="#26-delay--trì-hoãn-lúc-message-mới-vào" data-for="26-delay--trì-hoãn-lúc-message-mới-vào">2.6 Delay — trì hoãn lúc message mới vào</a></li><li class="depth-2"><a href="#27-scale--pattern-kiến-trúc" data-for="27-scale--pattern-kiến-trúc">2.7 Scale &amp; pattern kiến trúc</a></li><li class="depth-2"><a href="#28-fifo-queue--cần-thứ-tự--không-trùng" data-for="28-fifo-queue--cần-thứ-tự--không-trùng">2.8 FIFO Queue — cần thứ tự &amp; không trùng</a></li><li class="depth-2"><a href="#29-dead-letter-queue-dlq" data-for="29-dead-letter-queue-dlq">2.9 Dead Letter Queue (DLQ)</a></li><li class="depth-2"><a href="#210-security-sqs" data-for="210-security-sqs">2.10 Security SQS</a></li><li class="depth-1"><a href="#3-amazon-sns--pubsub--fan-out" data-for="3-amazon-sns--pubsub--fan-out">3. Amazon SNS — pub/sub &amp; fan-out</a></li><li class="depth-2"><a href="#31-bài-toán-1-message--nhiều-người-nhận" data-for="31-bài-toán-1-message--nhiều-người-nhận">3.1 Bài toán: 1 message → nhiều người nhận?</a></li><li class="depth-2"><a href="#32-pattern-vàng-sns--sqs-fan-out" data-for="32-pattern-vàng-sns--sqs-fan-out">3.2 Pattern vàng: SNS + SQS Fan-out</a></li><li class="depth-2"><a href="#33-sns-fifo--filtering" data-for="33-sns-fifo--filtering">3.3 SNS FIFO + filtering</a></li><li class="depth-1"><a href="#4-amazon-kinesis--streaming-real-time" data-for="4-amazon-kinesis--streaming-real-time">4. Amazon Kinesis — streaming real-time</a></li><li class="depth-2"><a href="#41-kinesis-data-streams" data-for="41-kinesis-data-streams">4.1 Kinesis Data Streams</a></li><li class="depth-2"><a href="#42-amazon-data-firehose" data-for="42-amazon-data-firehose">4.2 Amazon Data Firehose</a></li><li class="depth-1"><a href="#5-amazon-mq--broker-cho-app-legacy" data-for="5-amazon-mq--broker-cho-app-legacy">5. Amazon MQ — broker cho app legacy</a></li><li class="depth-1"><a href="#6-so-sánh--chọn-đáp-án" data-for="6-so-sánh--chọn-đáp-án">6. So sánh &amp; chọn đáp án</a></li><li class="depth-2"><a href="#61-sqs-vs-sns-vs-kinesis" data-for="61-sqs-vs-sns-vs-kinesis">6.1 SQS vs SNS vs Kinesis</a></li><li class="depth-2"><a href="#62-chọn-nhanh-theo-nhu-cầu" data-for="62-chọn-nhanh-theo-nhu-cầu">6.2 Chọn nhanh theo nhu cầu</a></li><li class="depth-2"><a href="#63-tình-huống-thi" data-for="63-tình-huống-thi">6.3 Tình huống thi</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/11---classic-solutions-architecture" class="internal">11. Classic Solutions Architecture</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/20---serverless-solution-architecture" class="internal">20 – Serverless Solution Architecture: 4 case study kiến trúc</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/22---data--and--analytics" class="internal">22 – Data &amp; Analytics: Athena, Redshift, OpenSearch, EMR, Glue, MSK</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/24---aws-monitoring,-audit--and--performance" class="internal">24 – AWS Monitoring, Audit &amp; Performance: CloudWatch, CloudTrail &amp; Config</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/27---amazon-vpc" class="internal">27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/29---more-solutions-architecture" class="internal">29 – More Solutions Architecture: Lambda+SNS+SQS pattern, HPC, HA EC2 với ASG</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway"/><meta name="twitter:description" content="← SAA-C03 Stephane Maarek — Overview 27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway Cách đọc note này: đây là section lớn nhất của cả khoá (gần 80 trang slide), và cũng là nền tảng cho cả domain Secure lẫn High-Performing."/><meta property="og:description" content="← SAA-C03 Stephane Maarek — Overview 27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway Cách đọc note này: đây là section lớn nhất của cả khoá (gần 80 trang slide), và cũng là nền tảng cho cả domain Secure lẫn High-Performing."/><meta property="og:image:alt" content="← SAA-C03 Stephane Maarek — Overview 27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway Cách đọc note này: đây là section lớn nhất của cả khoá (gần 80 trang slide), và cũng là nền tảng cho cả domain Secure lẫn High-Performing."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/27---amazon-vpc"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/cloud/saa-c03-stephane-maarek/27---amazon-vpc"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="← SAA-C03 Stephane Maarek — Overview 27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway Cách đọc note này: đây là section lớn nhất của cả khoá (gần 80 trang slide), và cũng là nền tảng cho cả domain Secure lẫn High-Performing."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/cloud/saa-c03-stephane-maarek/27---amazon-vpc" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-95" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-95" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/">Cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/">SAA-C03 Stephane Maarek</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway</a></div></nav><h1 class="article-title">27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/literature" class="internal internal-link tag-link">status/literature</a><span class="note-properties-separator">, </span><a href="../../../tags/type/course" class="internal internal-link tag-link">type/course</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/aws" class="internal internal-link tag-link">domain/aws</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/networking" class="internal internal-link tag-link">domain/networking</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Amazon VPC</span><span class="note-properties-separator">, </span><span class="note-properties-text">VPC Peering</span><span class="note-properties-separator">, </span><span class="note-properties-text">VPC Endpoints</span><span class="note-properties-separator">, </span><span class="note-properties-text">Direct Connect</span><span class="note-properties-separator">, </span><span class="note-properties-text">Transit Gateway</span><span class="note-properties-separator">, </span><span class="note-properties-text">VPC Flow Logs</span><span class="note-properties-separator">, </span><span class="note-properties-text">NACL vs Security Group</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-10-07T17:00:00.000Z">08 thg 10, 2026</time><span>47 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview">← SAA-C03 Stephane Maarek — Overview</a></p>
+<h1 id="27--amazon-vpc-cidr-subnet-nat-nacl-vs-sg-peering-endpoints-direct-connect-transit-gateway">27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#27--amazon-vpc-cidr-subnet-nat-nacl-vs-sg-peering-endpoints-direct-connect-transit-gateway" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Cách đọc note này:</strong> đây là section <strong>lớn nhất</strong> của cả khoá (gần 80 trang slide), và cũng là nền tảng cho cả domain Secure lẫn High-Performing. Đọc theo mạch: (1) Bức tranh tổng thể → (2) Khái niệm nền: CIDR/Subnet/Default VPC → (3) Kết nối ra Internet: IGW/NAT/Bastion → (4) Kiểm soát traffic: NACL vs Security Group (câu hỏi thi kinh điển) → (5) Kết nối VPC-to-VPC &amp; on-premise: Peering/Endpoints/VPN/Direct Connect/Transit Gateway → (6) Quan sát: Flow Logs/Traffic Mirroring → (7) IPv4 vs IPv6 → (8) AWS Network Firewall — tường lửa cấp VPC, bước nâng cao sau khi đã nắm NACL/SG. Note này viết theo trình tự <strong>logic để học</strong>, không theo đúng thứ tự slide gốc (slide có nhiều trang diagram lộn xộn).</p>
+</blockquote>
+<hr/>
+<h2 id="1-bức-tranh-tổng-thể--kiến-trúc-vpc-đầy-đủ">1. Bức tranh tổng thể — kiến trúc VPC đầy đủ<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-bức-tranh-tổng-thể--kiến-trúc-vpc-đầy-đủ" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Trước khi vào chi tiết từng mảnh, đây là sơ đồ tổng hợp toàn bộ thành phần sẽ xuất hiện trong note này — cứ quay lại đây mỗi khi lạc:</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    Internet((\&quot;Internet\&quot;))\n    OnPrem[\&quot;Data Center on-premise\&quot;]\n    PeerVPC[\&quot;VPC khác\&quot;]\n    S3DDB[\&quot;Amazon S3 / DynamoDB\&quot;]\n\n    IGW[\&quot;Internet Gateway\&quot;]\n    VGW[\&quot;Virtual Private Gateway\&quot;]\n    TGW[\&quot;Transit Gateway\&quot;]\n\n    subgraph VPCBox[\&quot;VPC 10.0.0.0/16\&quot;]\n        Bastion[\&quot;Bastion Host&lt;br/>(Public Subnet)\&quot;]\n        NATGW[\&quot;NAT Gateway&lt;br/>(Public Subnet)\&quot;]\n        EC2[\&quot;EC2&lt;br/>(Private Subnet)\&quot;]\n        GWEP[\&quot;Gateway Endpoint\&quot;]\n    end\n\n    Internet &lt;--> IGW\n    IGW &lt;--> Bastion\n    IGW &lt;--> NATGW\n    Bastion -.->|\&quot;SSH jump\&quot;| EC2\n    EC2 --> NATGW\n    EC2 --> GWEP --> S3DDB\n    OnPrem -->|\&quot;Site-to-Site VPN\&quot;| VGW --> EC2\n    OnPrem -->|\&quot;Direct Connect\&quot;| TGW --> EC2\n    EC2 -.->|\&quot;VPC Peering, non-transitive\&quot;| PeerVPC\n    TGW -.->|\&quot;Transitive\&quot;| PeerVPC&quot;">graph LR
+    Internet((&quot;Internet&quot;))
+    OnPrem[&quot;Data Center on-premise&quot;]
+    PeerVPC[&quot;VPC khác&quot;]
+    S3DDB[&quot;Amazon S3 / DynamoDB&quot;]
+
+    IGW[&quot;Internet Gateway&quot;]
+    VGW[&quot;Virtual Private Gateway&quot;]
+    TGW[&quot;Transit Gateway&quot;]
+
+    subgraph VPCBox[&quot;VPC 10.0.0.0/16&quot;]
+        Bastion[&quot;Bastion Host&lt;br/>(Public Subnet)&quot;]
+        NATGW[&quot;NAT Gateway&lt;br/>(Public Subnet)&quot;]
+        EC2[&quot;EC2&lt;br/>(Private Subnet)&quot;]
+        GWEP[&quot;Gateway Endpoint&quot;]
+    end
+
+    Internet &lt;--> IGW
+    IGW &lt;--> Bastion
+    IGW &lt;--> NATGW
+    Bastion -.->|&quot;SSH jump&quot;| EC2
+    EC2 --> NATGW
+    EC2 --> GWEP --> S3DDB
+    OnPrem -->|&quot;Site-to-Site VPN&quot;| VGW --> EC2
+    OnPrem -->|&quot;Direct Connect&quot;| TGW --> EC2
+    EC2 -.->|&quot;VPC Peering, non-transitive&quot;| PeerVPC
+    TGW -.->|&quot;Transitive&quot;| PeerVPC
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Thành phần</th><th>Vai trò một câu</th></tr></thead><tbody><tr><td><strong>Internet Gateway (IGW)</strong></td><td>Cổng ra/vào Internet, gắn ở cấp <strong>VPC</strong>, chỉ 1 IGW/VPC</td></tr><tr><td><strong>Bastion Host</strong></td><td>EC2 “trạm gác” trong public subnet, SSH nhảy vào EC2 private subnet</td></tr><tr><td><strong>NAT Gateway</strong></td><td>Cho EC2 private subnet ra Internet <strong>một chiều</strong> (outbound-initiated only)</td></tr><tr><td><strong>Gateway Endpoint</strong></td><td>Đường riêng <strong>miễn phí</strong> tới S3/DynamoDB, không qua Internet</td></tr><tr><td><strong>Virtual Private Gateway (VGW)</strong></td><td>Đầu cắm VPN phía AWS cho Site-to-Site VPN</td></tr><tr><td><strong>Transit Gateway (TGW)</strong></td><td>Router trung tâm, nối hàng nghìn VPC + VPN + Direct Connect, <strong>transitive</strong></td></tr><tr><td><strong>VPC Peering</strong></td><td>Nối 1-1 giữa 2 VPC, <strong>non-transitive</strong></td></tr></tbody></table></div>
+<p><em>Sơ đồ gốc từ slide Stephane Maarek — cùng nội dung, đầy đủ thành phần hơn:</em></p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173846.png" alt width="auto" height="auto"/></p>
+<hr/>
+<h2 id="2-khái-niệm-nền--cidr-subnet-default-vpc">2. Khái niệm nền — CIDR, Subnet, Default VPC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-khái-niệm-nền--cidr-subnet-default-vpc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-cidr-là-gì">2.1 CIDR là gì?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-cidr-là-gì" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>CIDR (Classless Inter-Domain Routing)</strong> = cách biểu diễn một <strong>dải địa chỉ IP</strong>, dùng khắp nơi trong AWS networking (Security Group rules, VPC CIDR, route table…).</p>
+<p>Một CIDR gồm 2 phần: <code>&lt;Base IP>/&lt;Subnet Mask></code></p>
+<ul>
+<li><strong>Base IP</strong>: IP đại diện cho dải (vd <code>10.0.0.0</code>, <code>192.168.0.0</code>)</li>
+<li><strong>Subnet Mask</strong>: số bit <strong>cố định</strong>, phần còn lại được phép thay đổi → quyết định dải rộng bao nhiêu</li>
+</ul>
+<blockquote>
+<p>Đã quen thuộc: <code>WW.XX.YY.ZZ/32</code> = đúng 1 IP; <code>0.0.0.0/0</code> = tất cả IP trên Internet.</p>
+</blockquote>
+<h3 id="22-bảng-cidr-nhanh--thuộc-lòng-số-ip-theo-prefix">2.2 Bảng CIDR nhanh — thuộc lòng số IP theo prefix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-bảng-cidr-nhanh--thuộc-lòng-số-ip-theo-prefix" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>CIDR</th><th>Subnet mask tương đương</th><th>Số IP</th><th>Ghi chú</th></tr></thead><tbody><tr><td>/32</td><td>255.255.255.255</td><td>1</td><td>Một IP duy nhất</td></tr><tr><td>/30</td><td>255.255.255.252</td><td>4</td><td></td></tr><tr><td>/28</td><td>255.255.255.240</td><td>16</td><td>Kích thước <strong>subnet nhỏ nhất</strong> AWS cho phép</td></tr><tr><td>/27</td><td>255.255.255.224</td><td>32</td><td></td></tr><tr><td>/26</td><td>255.255.255.192</td><td>64</td><td></td></tr><tr><td>/25</td><td>255.255.255.128</td><td>128</td><td></td></tr><tr><td>/24</td><td>255.255.255.0</td><td>256</td><td>Kích thước phổ biến nhất cho 1 subnet</td></tr><tr><td>/16</td><td>255.255.0.0</td><td>65.536</td><td>Kích thước <strong>VPC lớn nhất</strong> AWS cho phép</td></tr><tr><td>/0</td><td>0.0.0.0</td><td>Tất cả</td><td>Toàn bộ không gian địa chỉ (0.0.0.0 – 255.255.255.255)</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Mẹo đọc nhanh:</strong> số sau dấu <code>/</code> giảm 1 → số IP nhân đôi (<code>/25</code> = 128 IP, <code>/24</code> = 256 IP). <code>/24</code> = octet cuối đổi được; <code>/16</code> = 2 octet cuối đổi được; <code>/8</code> = 3 octet cuối đổi được. Khi phân vân → tra <a href="https://www.ipaddressguide.com/cidr" class="external external-link">ipaddressguide.com/cidr<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+</blockquote>
+<p><strong>Bảng IANA — dải IP private (RFC 1918):</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dải private</th><th>CIDR</th><th>Ghi chú</th></tr></thead><tbody><tr><td>10.0.0.0 – 10.255.255.255</td><td><code>10.0.0.0/8</code></td><td>Mạng lớn, doanh nghiệp</td></tr><tr><td>172.16.0.0 – 172.31.255.255</td><td><code>172.16.0.0/12</code></td><td><strong>AWS default VPC</strong> dùng dải này</td></tr><tr><td>192.168.0.0 – 192.168.255.255</td><td><code>192.168.0.0/16</code></td><td>Mạng gia đình / văn phòng nhỏ</td></tr></tbody></table></div>
+<p>Toàn bộ IP còn lại trên Internet là <strong>public</strong>.</p>
+<h3 id="23-subnet--5-ip-bị-aws-giữ-lại">2.3 Subnet — 5 IP bị AWS giữ lại<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-subnet--5-ip-bị-aws-giữ-lại" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Subnet <strong>gắn cố định vào 1 AZ</strong>, không vắt ngang qua 2 AZ được.</li>
+<li>Mỗi subnet, AWS giữ lại <strong>5 IP</strong> không cấp cho instance: 4 IP đầu + 1 IP cuối.</li>
+</ul>
+<p>Ví dụ CIDR <code>10.0.0.0/24</code>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>IP</th><th>Lý do bị giữ</th></tr></thead><tbody><tr><td>10.0.0.0</td><td>Network Address</td></tr><tr><td>10.0.0.1</td><td>VPC router</td></tr><tr><td>10.0.0.2</td><td>DNS (Amazon-provided)</td></tr><tr><td>10.0.0.3</td><td>Dự phòng tương lai</td></tr><tr><td>10.0.0.255</td><td>Network Broadcast (VPC không hỗ trợ broadcast nhưng vẫn giữ)</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Exam tip:</strong> cần 29 IP cho EC2 instance → <strong>không</strong> chọn <code>/27</code> (32 IP, 32-5=27 &lt; 29, thiếu!) → phải chọn <code>/26</code> (64 IP, 64-5=59 ≥ 29).</p>
+</blockquote>
+<p><strong>Giới hạn VPC (soft limit, request tăng được):</strong></p>
+<ul>
+<li>Tối đa <strong>5 VPC/region</strong>/account.</li>
+<li>Tối đa <strong>5 CIDR/VPC</strong>; mỗi CIDR: nhỏ nhất <code>/28</code> (16 IP), lớn nhất <code>/16</code> (65.536 IP).</li>
+<li>Vì VPC là mạng <strong>private</strong>, chỉ được dùng 3 dải IANA ở §2.2 — và <strong>không được trùng CIDR</strong> với mạng khác (corporate DC, VPC sẽ peering…) — lý do sẽ rõ ở §5.1 (VPC Peering).</li>
+</ul>
+<h3 id="24-default-vpc">2.4 Default VPC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#24-default-vpc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Mọi account AWS mới đều có sẵn <strong>1 Default VPC</strong> mỗi region.</li>
+<li>EC2 launch không chỉ định subnet → rơi vào Default VPC.</li>
+<li>Default VPC có sẵn <strong>Internet connectivity</strong>, mọi EC2 trong đó có <strong>public IPv4</strong> + DNS name public/private.</li>
+<li>Default VPC nằm trong dải <code>172.16.0.0/12</code>.</li>
+</ul>
+<hr/>
+<h2 id="3-kết-nối-ra-internet--igw-nat-bastion-host">3. Kết nối ra Internet — IGW, NAT, Bastion Host<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-kết-nối-ra-internet--igw-nat-bastion-host" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-internet-gateway-igw">3.1 Internet Gateway (IGW)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-internet-gateway-igw" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Cho phép resource trong VPC kết nối Internet.</li>
+<li><strong>Horizontally scaled</strong>, HA, redundant — không phải lo bottleneck, không tốn phí duy trì riêng.</li>
+<li>Tạo <strong>tách biệt</strong> với VPC rồi mới attach; <strong>1 VPC chỉ gắn được 1 IGW</strong> và ngược lại.</li>
+<li><strong>IGW một mình không đủ</strong> — phải sửa <strong>Route Table</strong> trỏ <code>0.0.0.0/0 → igw-id</code> thì subnet mới thật sự “public”.</li>
+</ul>
+<h3 id="32-bastion-host">3.2 Bastion Host<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-bastion-host" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bài toán: cần SSH vào EC2 nằm ở private subnet (không có public IP) mà không expose nó ra Internet.</p>
+<ul>
+<li><strong>Bastion Host</strong> = EC2 đặt ở <strong>public subnet</strong>, đóng vai trò “trạm gác”: user SSH vào Bastion, từ Bastion SSH tiếp vào EC2 private subnet.</li>
+<li>Security Group của Bastion: chỉ cho inbound port 22 từ <strong>CIDR giới hạn</strong> (vd IP công ty), không mở <code>0.0.0.0/0</code>.</li>
+<li>Security Group của EC2 private: chỉ cho phép inbound từ <strong>Security Group của Bastion</strong> (hoặc private IP của nó) — không từ Internet.</li>
+</ul>
+<blockquote>
+<p><strong>Thay thế hiện đại hơn:</strong> <strong>AWS Systems Manager Session Manager</strong> — không cần mở port 22/3389, không cần quản lý SSH key, EC2 chỉ cần SSM Agent + kết nối tới SSM service (qua Internet hoặc VPC Interface Endpoint). Slide này vẫn dạy Bastion vì hay ra thi, nhưng thực tế nên ưu tiên SSM.</p>
+</blockquote>
+<h3 id="33-nat-instance-vs-nat-gateway">3.3 NAT Instance vs NAT Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-nat-instance-vs-nat-gateway" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Cả hai đều cho EC2 ở <strong>private subnet</strong> ra Internet (vd tải update) mà <strong>không</strong> cho Internet chủ động kết nối vào — khác IGW (2 chiều).</p>
+<p><strong>NAT Instance (outdated, nhưng vẫn ra thi):</strong></p>
+<ul>
+<li>EC2 thường được cấu hình làm router NAT; AMI Amazon Linux dựng sẵn (hết hỗ trợ chính thức từ 31/12/2020).</li>
+<li>Phải đặt ở <strong>public subnet</strong>, có <strong>Elastic IP</strong>.</li>
+<li>Bắt buộc <strong>disable Source/Destination Check</strong> — nếu không EC2 sẽ từ chối route hộ traffic không phải của chính nó.</li>
+<li>Route table của private subnet phải trỏ traffic ra NAT Instance.</li>
+<li><strong>Không HA sẵn</strong> — tự dựng ASG multi-AZ + user-data script failover.</li>
+<li>Băng thông phụ thuộc <strong>loại instance</strong>.</li>
+<li>Tự quản lý Security Group: inbound cho phép HTTP/HTTPS từ private subnet + SSH từ mạng nhà (qua IGW); outbound cho phép HTTP/HTTPS ra Internet.</li>
+</ul>
+<p><strong>NAT Gateway (khuyến nghị, AWS managed):</strong></p>
+<ul>
+<li>AWS quản lý hoàn toàn, băng thông cao hơn, tự scale, không cần administration.</li>
+<li>Tạo trong <strong>1 AZ cụ thể</strong>, cần <strong>Elastic IP</strong>.</li>
+<li><strong>Yêu cầu IGW</strong>: luồng đi <code>Private Subnet → NAT Gateway → IGW</code>.</li>
+<li><strong>Không dùng được cho instance trong CÙNG subnet</strong> với nó — chỉ phục vụ instance ở subnet khác (private subnet).</li>
+<li><strong>Không có Security Group</strong> để quản lý.</li>
+<li>Băng thông <strong>5 Gbps</strong>, tự động scale tới <strong>100 Gbps</strong>.</li>
+<li><strong>Chỉ HA trong 1 AZ</strong> — muốn full HA phải tạo <strong>1 NAT Gateway/AZ</strong>, không có failover chéo AZ (và cũng không cần, vì AZ sập thì AZ đó vốn đã không cần NAT nữa).</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>NAT Gateway</th><th>NAT Instance</th></tr></thead><tbody><tr><td>Availability</td><td>HA trong 1 AZ (tạo thêm ở AZ khác để full HA)</td><td>Tự dựng bằng ASG + script failover</td></tr><tr><td>Bandwidth</td><td>Tới 100 Gbps (tự scale)</td><td>Tuỳ loại/size instance</td></tr><tr><td>Maintenance</td><td>AWS quản lý hoàn toàn</td><td>Tự vá OS, phần mềm</td></tr><tr><td>Cost</td><td>Theo giờ + theo GB dữ liệu đi qua</td><td>Theo giờ + loại instance + network</td></tr><tr><td>Security Group</td><td>Không có / không cần</td><td>Phải tự quản lý</td></tr><tr><td>Dùng làm Bastion Host?</td><td>Không</td><td>Có thể (nhưng không nên gộp vai trò)</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Ghi chú thêm:</strong> AWS còn có <strong>Regional NAT Gateway (RNAT)</strong> — một NAT Gateway HA gắn ở cấp <strong>VPC</strong> (không phải từng AZ riêng lẻ), có route table riêng, không cần tạo public subnet để host, tự phát hiện resource ở AZ mới và mở rộng theo. Không phổ biến bằng NAT Gateway truyền thống nhưng có thể gặp trong đề thi mới.</p>
+</blockquote>
+<hr/>
+<h2 id="4-kiểm-soát-traffic--nacl-vs-security-group">4. Kiểm soát traffic — NACL vs Security Group<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-kiểm-soát-traffic--nacl-vs-security-group" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Đây là <strong>cặp khái niệm ra thi nhiều nhất</strong> của cả section VPC.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th><strong>Security Group</strong></th><th><strong>NACL (Network ACL)</strong></th></tr></thead><tbody><tr><td>Phạm vi</td><td>Cấp <strong>instance</strong> (thực ra là ENI)</td><td>Cấp <strong>subnet</strong></td></tr><tr><td>Loại rule</td><td>Chỉ <strong>ALLOW</strong></td><td>Cả <strong>ALLOW</strong> và <strong>DENY</strong></td></tr><tr><td>Trạng thái</td><td><strong>Stateful</strong> — traffic phản hồi tự động được cho phép, bất kể rule outbound</td><td><strong>Stateless</strong> — traffic phản hồi phải được <strong>khai báo rule tường minh</strong> (chú ý Ephemeral Port)</td></tr><tr><td>Cách đánh giá rule</td><td><strong>Toàn bộ</strong> rule được xét trước khi quyết định</td><td>Theo <strong>thứ tự số hiệu</strong> (thấp → cao), <strong>rule khớp đầu tiên thắng</strong></td></tr><tr><td>Áp dụng</td><td>Chỉ áp dụng cho instance được <strong>gắn tường minh</strong></td><td><strong>Tự động</strong> áp dụng cho mọi instance trong subnet nó gắn</td></tr><tr><td>Default khi tạo mới</td><td>Chặn hết Inbound, cho phép hết Outbound</td><td>Chặn hết cả Inbound và Outbound</td></tr><tr><td>Default NACL (có sẵn của VPC)</td><td>—</td><td>Cho phép hết Inbound và Outbound (khác với custom NACL mới tạo)</td></tr></tbody></table></div>
+<p><strong>Chi tiết NACL:</strong></p>
+<ul>
+<li>Mỗi subnet chỉ gắn <strong>1 NACL</strong>; subnet mới tự động gắn Default NACL.</li>
+<li>Rule có số 1–32766, số càng thấp càng ưu tiên; ví dụ rule #100 ALLOW và #200 DENY cùng match 1 IP → <strong>#100 thắng</strong>.</li>
+<li>Rule cuối luôn là <code>*</code> (asterisk) → DENY nếu không có rule nào match.</li>
+<li>AWS khuyến nghị đánh số cách nhau <strong>100</strong> để dễ chèn rule sau này.</li>
+<li>Không nên sửa Default NACL — <strong>tạo Custom NACL riêng</strong>.</li>
+</ul>
+<p><strong>Ephemeral Ports — lý do NACL hay bị cấu hình sai:</strong></p>
+<p>Vì NACL stateless, khi client bên ngoài gọi vào server qua port cố định (vd 443), server trả lời qua <strong>port ngẫu nhiên</strong> (ephemeral, thường 1024–65535, IANA/Windows dùng 49152–65535). NACL Outbound của subnet server <strong>phải cho phép dải ephemeral này</strong> thì response mới đi ra được.</p>
+<p>Ví dụ kinh điển — Web subnet (public) gọi DB subnet (private) qua port 3306:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>NACL</th><th>Inbound</th><th>Outbound</th></tr></thead><tbody><tr><td><strong>DB-NACL</strong></td><td>Allow TCP 3306 từ Web Subnet CIDR</td><td>Allow TCP 1024–65535 tới Web Subnet CIDR</td></tr><tr><td><strong>Web-NACL</strong></td><td>Allow TCP 1024–65535 từ DB Subnet CIDR</td><td>Allow TCP 3306 tới DB Subnet CIDR</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Bẫy hay thi:</strong> thấy log VPC Flow Logs <code>REJECT</code> ở chiều <strong>response</strong> (server → client, port nguồn = port dịch vụ, port đích = ephemeral) → gần như chắc chắn là <strong>NACL Outbound</strong> thiếu dải ephemeral, không phải Security Group (SG không bao giờ chặn return traffic vì stateful).</p>
+</blockquote>
+<hr/>
+<h2 id="5-kết-nối-vpc-to-vpc--on-premise">5. Kết nối VPC-to-VPC &amp; on-premise<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-kết-nối-vpc-to-vpc--on-premise" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-vpc-peering">5.1 VPC Peering<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-vpc-peering" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Kết nối <strong>riêng tư</strong> 2 VPC qua mạng nội bộ AWS, hai VPC hoạt động như <strong>cùng 1 network</strong>.</li>
+<li><strong>CIDR không được trùng nhau</strong> — đây là lý do §2.3 nhắc VPC CIDR không nên trùng network khác.</li>
+<li><strong>Non-transitive</strong>: A peer B, B peer C → <strong>A không tự nói chuyện được với C</strong>, phải tạo riêng peering A–C.</li>
+<li>Phải <strong>sửa route table</strong> ở từng subnet liên quan trong mỗi VPC để traffic đi qua được.</li>
+<li>Peering được <strong>cross-account, cross-region</strong>.</li>
+<li>Có thể <strong>reference Security Group</strong> của VPC peer trong rule (chỉ khi cross-account <strong>cùng region</strong>).</li>
+</ul>
+<p><img src="../../.././../../attachments/pasted-image-20260902173849.png" alt width="auto" height="auto"/></p>
+<h3 id="52-vpc-endpoints--gateway-vs-interface-privatelink">5.2 VPC Endpoints — Gateway vs Interface (PrivateLink)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-vpc-endpoints--gateway-vs-interface-privatelink" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Mọi AWS service đều có endpoint <strong>public</strong> (URL public). <strong>VPC Endpoint</strong> cho phép gọi service đó qua <strong>mạng private</strong> thay vì Internet — loại bỏ nhu cầu IGW/NAT Gateway chỉ để gọi AWS service. Endpoint <strong>redundant, scale ngang</strong> sẵn.</p>
+<p><strong>Gateway Endpoint:</strong></p>
+<ul>
+<li>Tạo một <strong>gateway</strong>, dùng làm <strong>target trong route table</strong> — không có ENI, không cần Security Group.</li>
+<li><strong>Chỉ hỗ trợ 2 service: S3 và DynamoDB.</strong></li>
+<li><strong>Miễn phí.</strong></li>
+</ul>
+<p><strong>Interface Endpoint (powered by AWS PrivateLink):</strong></p>
+<ul>
+<li>Tạo một <strong>ENI</strong> (private IP) làm entry point trong subnet — phải gắn <strong>Security Group</strong>.</li>
+<li>Hỗ trợ <strong>hầu hết</strong> AWS service (SNS, SQS, KMS, SSM… và cả S3).</li>
+<li>Tính phí <strong><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">i</span><span class="mord">ờ</span><span class="mord">+</span></span></span></span>/GB</strong> dữ liệu xử lý.</li>
+</ul>
+<p><strong>Chọn cái nào?</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tình huống</th><th>Chọn</th></tr></thead><tbody><tr><td>Truy cập S3/DynamoDB từ trong VPC, muốn tiết kiệm</td><td><strong>Gateway Endpoint</strong> (miễn phí, ưu tiên mặc định)</td></tr><tr><td>Cần truy cập từ <strong>on-premises</strong> qua Site-to-Site VPN/Direct Connect</td><td><strong>Interface Endpoint</strong> (có IP cụ thể để route tới)</td></tr><tr><td>Cần truy cập từ <strong>VPC khác</strong> hoặc <strong>region khác</strong></td><td><strong>Interface Endpoint</strong></td></tr></tbody></table></div>
+<p><img src="../../.././../../attachments/pasted-image-20260902173852.png" alt width="auto" height="auto"/><br/>
+| Service không phải S3/DynamoDB | <strong>Interface Endpoint</strong> (bắt buộc — Gateway không hỗ trợ) |</p>
+<blockquote>
+<p><strong>Case study kinh điển:</strong> Lambda trong VPC cần gọi DynamoDB. Cách 1 (tốn kém): Lambda → NAT Gateway → IGW → Internet → DynamoDB. Cách 2 (tốt hơn &amp; miễn phí): tạo <strong>VPC Gateway Endpoint cho DynamoDB</strong> + sửa route table — traffic đi thẳng, không cần NAT/IGW.</p>
+</blockquote>
+<h3 id="53-aws-privatelink--vpc-endpoint-service--chiều-ngược-lại">5.3 AWS PrivateLink / VPC Endpoint Service — chiều ngược lại<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-aws-privatelink--vpc-endpoint-service--chiều-ngược-lại" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dễ nhầm với §5.2 nên tách riêng: VPC Endpoint (§5.2) là khi <strong>bạn là consumer</strong>, gọi một AWS service. <strong>VPC Endpoint Service</strong> là khi <strong>bạn là provider</strong> — muốn expose ứng dụng tự viết của mình cho VPC khác dùng riêng tư.</p>
+<ul>
+<li>Đứng sau <strong>Network Load Balancer</strong> ở VPC của bạn (service VPC), publish thành Endpoint Service.</li>
+<li>Bên tiêu thụ tạo <strong>Interface Endpoint</strong> (ENI) trỏ vào service đó.</li>
+<li><strong>Không cần</strong> VPC Peering, không qua Internet công cộng, không cần NAT Gateway hay sửa route table phức tạp.</li>
+<li>Giải quyết được cả trường hợp 2 VPC <strong>CIDR trùng nhau</strong> (Peering sẽ fail trong tình huống này, PrivateLink thì không sao vì không cần peering).</li>
+</ul>
+<h3 id="54-site-to-site-vpn">5.4 Site-to-Site VPN<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#54-site-to-site-vpn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Kết nối mã hoá (IPsec) qua <strong>Internet công cộng</strong> giữa on-premises và VPC.</p>
+<ul>
+<li><strong>Virtual Private Gateway (VGW)</strong>: VPN concentrator phía AWS, tạo và attach vào VPC muốn kết nối; có thể tuỳ chỉnh <strong>ASN</strong> (Autonomous System Number).</li>
+<li><strong>Customer Gateway (CGW)</strong>: thiết bị/phần mềm phía khách hàng; cần <strong>public IP</strong> (hoặc public IP của thiết bị NAT nếu CGW nằm sau NAT hỗ trợ NAT-T).</li>
+<li>Bước hay bị quên: bật <strong>Route Propagation</strong> cho VGW trong route table gắn với các subnet liên quan — thiếu bước này thì VPN “up” nhưng traffic không route được.</li>
+<li>Muốn ping EC2 từ on-premises → nhớ mở <strong>ICMP</strong> inbound trên Security Group.</li>
+</ul>
+<p><strong>AWS VPN CloudHub</strong> — mô hình <strong>hub-and-spoke chi phí thấp</strong> khi có nhiều site cần kết nối: gắn nhiều VPN connection vào <strong>cùng 1 VGW</strong>, cấu hình dynamic routing + route table. Vẫn đi qua Internet công cộng (chỉ là VPN, không phải Direct Connect).</p>
+<h3 id="55-aws-direct-connect-dx">5.5 AWS Direct Connect (DX)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#55-aws-direct-connect-dx" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Đường kết nối <strong>vật lý riêng</strong> (không qua Internet) từ on-premises tới AWS Direct Connect Location.</p>
+<ul>
+<li><strong>Dedicated Connection</strong>: 1 Gbps – 400 Gbps, cổng ethernet vật lý dành riêng, đặt request với AWS rồi được <strong>AWS Direct Connect Partner</strong> hoàn tất.</li>
+<li><strong>Hosted Connection</strong>: 50 Mbps – 25 Gbps, đặt qua Direct Connect Partner, tăng/giảm capacity theo nhu cầu.</li>
+<li>Lead time thiết lập thường <strong>> 1 tháng</strong>.</li>
+<li><strong>Không mã hoá mặc định</strong> — cần bảo mật thêm thì dùng <strong>VPN over Direct Connect</strong> (IPsec chồng lên), phức tạp hơn một chút.</li>
+<li>Có thể dùng <strong>Site-to-Site VPN làm backup</strong> khi Direct Connect fail (rẻ hơn so với dựng 1 Direct Connect thứ 2 để backup).</li>
+<li><strong>Resiliency:</strong> <em>High resiliency</em> = 1 connection tại nhiều location; <em>Maximum resiliency</em> = nhiều connection riêng, kết cuối ở thiết bị riêng, tại nhiều location riêng.</li>
+</ul>
+<p><strong>Virtual Interfaces (VIF)</strong> — 1 sợi cáp vật lý, chia bằng VLAN thành nhiều loại kết nối logic:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>VIF</th><th>Dùng để</th></tr></thead><tbody><tr><td><strong>Private VIF</strong></td><td>Truy cập VPC (qua VGW)</td></tr><tr><td><strong>Public VIF</strong></td><td>Truy cập AWS public service (S3, Glacier…) bằng public IP nhưng qua đường riêng, không qua Internet</td></tr><tr><td><strong>Transit VIF</strong></td><td>Bắt buộc nếu muốn cắm Direct Connect vào <strong>Transit Gateway</strong></td></tr></tbody></table></div>
+<p><strong>Direct Connect Gateway</strong>: cần khi muốn 1 Direct Connect connection kết nối tới <strong>nhiều VPC ở nhiều region khác nhau</strong> (cùng account).</p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173855.png" alt width="auto" height="auto"/></p>
+<h3 id="56-transit-gateway">5.6 Transit Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#56-transit-gateway" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Giải pháp <strong>hub-and-spoke</strong> cho mạng lưới hàng nghìn VPC + on-premises — tránh phải tạo “mạng nhện” VPC Peering từng cặp.</p>
+<ul>
+<li><strong>Có tính transitive</strong> (khác VPC Peering) — mọi thứ gắn vào TGW đều có thể nói chuyện qua route table của TGW.</li>
+<li>Là resource <strong>regional</strong>, nhưng <strong>peer được cross-region</strong> giữa các Transit Gateway.</li>
+<li><strong>Share cross-account</strong> bằng <strong>AWS Resource Access Manager (RAM)</strong>.</li>
+<li>Route table riêng của TGW <strong>giới hạn VPC nào nói được với VPC nào</strong> (không phải mặc định tất cả thấy nhau).</li>
+<li>Kết nối được với <strong>Direct Connect Gateway</strong> và <strong>VPN connections</strong>, không chỉ VPC.</li>
+</ul>
+<p><em>Ví dụ: nhiều account share chung 1 Direct Connect qua Transit Gateway (dùng AWS RAM):</em></p>
+<p><img src="../../.././../../attachments/pasted-image-20260902173859.png" alt width="auto" height="auto"/></p>
+<ul>
+<li><strong>Hỗ trợ IP Multicast</strong> — tính năng duy nhất TGW có mà service AWS khác không có.</li>
+</ul>
+<p><strong>ECMP (Equal-Cost Multi-Path)</strong> — dùng để <strong>gộp băng thông</strong> nhiều VPN connection:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Kịch bản</th><th>Băng thông</th></tr></thead><tbody><tr><td>VPN → <strong>VGW</strong> (không ECMP), 1 connection/2 tunnel</td><td>1 tunnel active ≈ <strong>1,25 Gbps</strong></td></tr><tr><td>VPN → <strong>Transit Gateway</strong> (ECMP), 1 connection/2 tunnel</td><td>Cả 2 tunnel active ≈ <strong>2,5 Gbps</strong></td></tr><tr><td>VPN → TGW, 2 connections (4 tunnel), ECMP</td><td>≈ <strong>5 Gbps</strong></td></tr><tr><td>VPN → TGW, 3 connections (6 tunnel), ECMP</td><td>≈ <strong>7,5 Gbps</strong></td></tr></tbody></table></div>
+<p>→ Cần tăng băng thông VPN lên AWS mà không có Direct Connect: dựng <strong>nhiều Site-to-Site VPN connection cắm vào Transit Gateway</strong>, bật ECMP.</p>
+<h3 id="57-bảng-so-sánh-nhanh">5.7 Bảng so sánh nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#57-bảng-so-sánh-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>VPC Peering vs Transit Gateway:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>VPC Peering</th><th>Transit Gateway</th></tr></thead><tbody><tr><td>Mô hình</td><td>Point-to-point (1–1)</td><td>Hub-and-spoke</td></tr><tr><td>Transitive</td><td>Không</td><td>Có</td></tr><tr><td>Nhiều VPC (chục/trăm cái)</td><td>Mạng nhện phức tạp, khó quản lý</td><td>Gọn — mỗi VPC chỉ 1 attachment</td></tr><tr><td>CIDR trùng</td><td>Không được trùng</td><td>Route table TGW kiểm soát ai nói với ai</td></tr><tr><td>Kết nối on-premises</td><td>Không trực tiếp (chỉ VPC-VPC)</td><td>Có — qua VPN, Direct Connect Gateway</td></tr><tr><td>Reference Security Group của bên kia</td><td>Có (cross-account, cùng region)</td><td>Không áp dụng theo cách đó</td></tr><tr><td>Đặc biệt</td><td>Đơn giản, rẻ khi ít VPC</td><td>IP Multicast, ECMP, share qua RAM</td></tr></tbody></table></div>
+<p><strong>Site-to-Site VPN vs Direct Connect:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tiêu chí</th><th>Site-to-Site VPN</th><th>Direct Connect</th></tr></thead><tbody><tr><td>Đường truyền</td><td>Qua Internet công cộng (IPsec)</td><td>Cáp quang riêng, không qua Internet</td></tr><tr><td>Thời gian setup</td><td>Vài phút</td><td>Có thể > 1 tháng</td></tr><tr><td>Băng thông</td><td>~1,25 Gbps/tunnel (2 tunnel/connection); gộp bằng ECMP qua TGW</td><td>50 Mbps – 400 Gbps</td></tr><tr><td>Mã hoá</td><td>Có (IPsec) mặc định</td><td><strong>Không</strong> mặc định — cần VPN over DX nếu cần</td></tr><tr><td>Chi phí</td><td>Thấp, trả theo connection-hour</td><td>Cao hơn, nhưng rẻ hơn cho data transfer lớn dài hạn</td></tr><tr><td>Dùng làm backup cho nhau</td><td>S2S VPN thường làm <strong>backup rẻ</strong> cho DX</td><td>Ít khi ngược lại</td></tr></tbody></table></div>
+<hr/>
+<h2 id="6-quan-sát--vpc-flow-logs--traffic-mirroring">6. Quan sát — VPC Flow Logs &amp; Traffic Mirroring<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-quan-sát--vpc-flow-logs--traffic-mirroring" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-vpc-flow-logs">6.1 VPC Flow Logs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-vpc-flow-logs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Ghi lại thông tin <strong>IP traffic</strong> đi vào/ra các interface, bật ở <strong>3 cấp</strong>: VPC, Subnet, hoặc <strong>ENI</strong>.</li>
+<li>Giúp <strong>monitor &amp; troubleshoot</strong> connectivity — không chỉ EC2, còn capture cả traffic của interface do AWS quản lý: <strong>ELB, RDS, ElastiCache, Redshift, WorkSpaces, NAT Gateway, Transit Gateway…</strong></li>
+<li>Log gửi tới <strong>S3</strong>, <strong>CloudWatch Logs</strong>, hoặc <strong>Kinesis Data Firehose</strong>.</li>
+<li>Query log bằng <strong>Athena</strong> (khi lưu ở S3) hoặc <strong>CloudWatch Logs Insights</strong> (khi lưu ở CloudWatch Logs) — dùng cho phân tích usage pattern hoặc hành vi độc hại.</li>
+<li>Nếu đích là CloudWatch Logs, IAM Service Role gắn với Flow Logs cần quyền <code>logs:CreateLogGroup</code>, <code>logs:CreateLogStream</code>, <code>logs:PutLogEvents</code>.</li>
+</ul>
+<p><strong>Format bản ghi (rút gọn):</strong> <code>version | account-id | interface-id | srcaddr | dstaddr | srcport | dstport | protocol | packets | bytes | start | end | action | log-status</code></p>
+<ul>
+<li><code>srcaddr</code>/<code>dstaddr</code> → xác định IP có vấn đề.</li>
+<li><code>srcport</code>/<code>dstport</code> → xác định port có vấn đề.</li>
+<li><code>action</code> = <strong>ACCEPT</strong> hoặc <strong>REJECT</strong> — cho biết request thành công hay bị chặn bởi Security Group/NACL.</li>
+</ul>
+<p><strong>Đọc field <code>action</code> để tìm ai chặn — bảng suy luận kinh điển:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Log quan sát được</th><th>Kết luận</th></tr></thead><tbody><tr><td>Inbound <strong>REJECT</strong></td><td>NACL hoặc Security Group đang chặn</td></tr><tr><td>Outbound <strong>REJECT</strong></td><td>NACL hoặc Security Group đang chặn</td></tr><tr><td>Inbound <strong>ACCEPT</strong>, nhưng Outbound (response) <strong>REJECT</strong></td><td>Chỉ có thể là <strong>NACL</strong> (SG không bao giờ chặn response vì stateful)</td></tr><tr><td>Outbound <strong>ACCEPT</strong>, nhưng Inbound (response) <strong>REJECT</strong></td><td>Chỉ có thể là <strong>NACL</strong></td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Lưu ý quan trọng:</strong> Flow Logs chỉ ghi <strong>metadata</strong> (IP, port, action, byte count…), <strong>không capture nội dung gói tin (payload)</strong>. Muốn xem payload thật → phải dùng <strong>Traffic Mirroring</strong> (§6.2).</p>
+</blockquote>
+<p><strong>Kiến trúc phổ biến với Flow Logs:</strong></p>
+<ul>
+<li>Flow Logs → CloudWatch Logs → <strong>CloudWatch Contributor Insights</strong> → top-10 IP gây nhiều traffic nhất.</li>
+<li>Flow Logs → CloudWatch Logs → <strong>Metric Filter</strong> (vd phát hiện SSH/RDP bất thường) → <strong>CloudWatch Alarm</strong> → SNS cảnh báo.</li>
+<li>Flow Logs → S3 → <strong>Athena</strong> → <strong>QuickSight</strong> dashboard phân tích.</li>
+</ul>
+<h3 id="62-traffic-mirroring">6.2 Traffic Mirroring<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-traffic-mirroring" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Cho phép <strong>capture và inspect</strong> traffic mạng thật (bao gồm payload) trong VPC, khác hẳn Flow Logs (chỉ metadata).</li>
+<li><strong>Source</strong>: một hoặc nhiều <strong>ENI</strong>.</li>
+<li><strong>Target</strong>: một <strong>ENI</strong> khác hoặc một <strong>Network Load Balancer</strong> (thường đứng trước ASG các EC2 chạy security appliance).</li>
+<li>Có thể capture <strong>toàn bộ</strong> hoặc <strong>filter</strong> theo tiêu chí quan tâm, tuỳ chọn <strong>truncate</strong> gói tin để giảm dung lượng.</li>
+<li>Source và Target có thể ở <strong>cùng VPC hoặc khác VPC</strong> (qua VPC Peering).</li>
+<li><strong>Use case</strong>: content inspection, threat monitoring, troubleshooting sâu (deep packet inspection).</li>
+</ul>
+<hr/>
+<h2 id="7-ipv4-vs-ipv6-trong-vpc">7. IPv4 vs IPv6 trong VPC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-ipv4-vs-ipv6-trong-vpc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>IPv4 chỉ có ~<strong>4,3 tỷ</strong> địa chỉ (đang cạn dần). IPv6 thiết kế cho <strong>3,4 × 10³⁸</strong> địa chỉ — gần như vô hạn.</li>
+<li>Format IPv6: 8 nhóm hex phân tách bằng <code>:</code> (vd <code>2001:db8:3333:4444:5555:6666:7777:8888</code>); nhóm toàn số 0 liên tiếp có thể rút gọn thành <code>::</code>.</li>
+<li><strong>Mọi IPv6 trong AWS đều là public và internet-routable</strong> — <strong>không có dải private</strong> cho IPv6 (khác hẳn IPv4 ở §2.2).</li>
+<li><strong>IPv4 không thể tắt</strong> cho VPC/subnet. Có thể <strong>bật thêm IPv6</strong> để chạy <strong>dual-stack</strong>: EC2 nhận được ít nhất 1 private IPv4 + 1 public IPv6, giao tiếp Internet qua cả 2 giao thức thông qua cùng 1 IGW.</li>
+<li><strong>Egress-only Internet Gateway (EIGW)</strong> — tương đương NAT Gateway nhưng <strong>dành riêng cho IPv6</strong>: cho phép instance <strong>chủ động kết nối ra ngoài (outbound)</strong>, nhưng <strong>chặn Internet chủ động kết nối vào (inbound)</strong>. Phải cập nhật route table trỏ <code>::/0 → eigw-id</code>.</li>
+</ul>
+<blockquote>
+<p><strong>Bẫy hay thi:</strong> không launch được EC2 trong subnet → <strong>không phải</strong> vì “hết địa chỉ IPv6” (không gian IPv6 quá lớn để cạn), mà <strong>luôn là do hết IPv4</strong> trong subnet đó. Giải pháp: thêm <strong>secondary IPv4 CIDR</strong> cho VPC/subnet.</p>
+</blockquote>
+<hr/>
+<h2 id="8-aws-network-firewall--bảo-vệ-toàn-bộ-vpc-ở-mức-sâu-hơn">8. AWS Network Firewall — bảo vệ toàn bộ VPC ở mức sâu hơn<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-aws-network-firewall--bảo-vệ-toàn-bộ-vpc-ở-mức-sâu-hơn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>NACL, Security Group (§4), WAF, Shield, Firewall Manager đều đã học — nhưng chưa cái nào bảo vệ <strong>toàn bộ VPC</strong> theo cách tinh vi (sophisticated). Đó là lý do có <strong>AWS Network Firewall</strong>.</p>
+<ul>
+<li>Bảo vệ <strong>cả VPC</strong>, từ <strong>Layer 3 đến Layer 7</strong> — không chỉ IP/port như NACL/SG.</li>
+<li>Kiểm soát được <strong>mọi chiều traffic</strong>: VPC-to-VPC, outbound ra Internet, inbound từ Internet, và cả traffic qua <strong>Direct Connect</strong> hay <strong>Site-to-Site VPN</strong>.</li>
+<li>Vận hành nội bộ dựa trên <strong>AWS Gateway Load Balancer</strong> (giống Gateway Load Balancer, nhưng do AWS quản lý toàn bộ).</li>
+<li>Rule quản lý tập trung, đa tài khoản qua <strong>AWS Firewall Manager</strong> — áp dụng cho nhiều VPC cùng lúc.</li>
+<li>Hỗ trợ hàng nghìn rule: filter theo <strong>IP &amp; port</strong> (hàng chục nghìn IP), theo <strong>protocol</strong> (vd chặn SMB outbound), <strong>stateful domain list</strong> (chỉ cho phép outbound tới <code>*.mycorp.com</code>), và cả <strong>regex pattern matching</strong>.</li>
+<li>Traffic action: <strong>Allow / Drop / Alert</strong>; có <strong>active flow inspection</strong> kiểu intrusion-prevention (giống Gateway Load Balancer nhưng AWS quản lý hộ).</li>
+<li>Gửi log rule-match tới <strong>S3, CloudWatch Logs, Kinesis Data Firehose</strong>.</li>
+</ul>
+<blockquote>
+<p><strong>Phân biệt nhanh:</strong> Security Group/NACL = lọc theo IP/port ở cấp instance/subnet (rẻ, đơn giản). <strong>AWS Network Firewall</strong> = tường lửa Layer 3-7 cho <strong>cả VPC</strong>, có deep packet inspection, domain filtering, regex — chọn khi đề bài nhắc “bảo vệ toàn bộ VPC”, “filter theo domain name”, hoặc “intrusion prevention”.</p>
+</blockquote>
+<hr/>
+<h2 id="9-câu-hỏi-ôn-tập">9. Câu hỏi ôn tập<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-câu-hỏi-ôn-tập" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>23 câu hỏi thực hành, bám sát CIDR/Subnet, NACL vs Security Group, Internet/NAT Gateway, VPC Peering, Endpoints, Flow Logs, Direct Connect, Site-to-Site VPN, Transit Gateway, IPv6, Bastion Host và AWS Network Firewall.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>#</th><th>Chủ đề</th><th>Đáp án đúng</th></tr></thead><tbody><tr><td>1</td><td>CIDR <code>10.0.4.0/28</code> tương ứng dải IP nào?</td><td><strong>10.0.4.0 → 10.0.4.15</strong> (16 IP)</td></tr><tr><td>2</td><td>VPC CIDR nào dùng được nếu sau này nối với <code>10.0.0.0/8</code> và <code>192.168.0.0/16</code></td><td><strong>172.16.0.0/16</strong> (không trùng, và không vượt max <code>/16</code>)</td></tr><tr><td>3</td><td>Subnet chứa ít nhất 28 EC2 instance: size nhỏ nhất</td><td><strong>/26</strong> (64 IP, trừ 5 còn 59)</td></tr><tr><td>4</td><td>Security Group và NACL hoạt động ở cấp nào?</td><td><strong>EC2 instance, Subnet</strong></td></tr><tr><td>5</td><td>Đã gắn IGW nhưng EC2 vẫn không ra Internet — đâu <strong>KHÔNG</strong> phải nguyên nhân</td><td><strong>Security Group không cho traffic vào</strong> (SG stateful)</td></tr><tr><td>6</td><td>Internet cho EC2 private subnet (IPv4), ít quản trị, scale mượt</td><td><strong>NAT Gateway</strong></td></tr><tr><td>7</td><td>Peering đã bật, đã sửa route table VPC A nhưng vẫn không thông</td><td><strong>Route Tables của VPC B</strong> (phải sửa cả hai phía)</td></tr><tr><td>8</td><td>Direct Connect tới VPC A, cần thêm VPC B ở region khác</td><td><strong>Direct Connect Gateway</strong></td></tr><tr><td>9</td><td>Hai service có Gateway Endpoint</td><td><strong>S3 &amp; DynamoDB</strong></td></tr><tr><td>10</td><td>IP KHÔNG bị giữ trong <code>10.0.0.0/24</code></td><td><strong>10.0.0.4</strong></td></tr><tr><td>11</td><td>Peering giữa cả 3 VPC A, B, C</td><td><strong>3 connection</strong> (A-B, A-C, B-C) — Peering non-transitive</td></tr><tr><td>12</td><td>Capture thông tin IP traffic trong VPC</td><td><strong>VPC Flow Logs</strong></td></tr><tr><td>13</td><td>Direct Connect 500 Mbps</td><td><strong>Hosted</strong></td></tr><tr><td>14</td><td>Hai thành phần chính của Site-to-Site VPN</td><td><strong>Virtual Private Gateway + Customer Gateway</strong></td></tr><tr><td>15</td><td>Backup qua public Internet cho nhiều site on-premises</td><td><strong>AWS VPN CloudHub</strong></td></tr><tr><td>16</td><td>Kết nối chuyên dụng, private, ổn định, không qua Internet</td><td><strong>AWS Direct Connect</strong></td></tr><tr><td>17</td><td>Direct Connect truy cập được cả public và private resource?</td><td><strong>True</strong> (Public VIF + Private VIF)</td></tr><tr><td>18</td><td>Scale Site-to-Site VPN vượt 1.25 Gbps/tunnel</td><td><strong>Transit Gateway</strong> (ECMP)</td></tr><tr><td>19</td><td>VPC dual-stack hết IPv4, không launch được EC2</td><td><strong>Thêm IPv4 CIDR</strong> cho VPC</td></tr><tr><td>20</td><td>Security Group an toàn nhất cho Bastion Host</td><td><strong>Port 22 từ public CIDR của công ty</strong></td></tr><tr><td>21</td><td>Backup rẻ và an toàn cho Direct Connect</td><td><strong>Site-to-Site VPN</strong></td></tr><tr><td>22</td><td>Bảo vệ/kiểm soát traffic VPC Layer 3–7</td><td><strong>AWS Network Firewall</strong></td></tr><tr><td>23</td><td>Chỉ cho ALB truy cập EC2 port 80</td><td><strong>Inbound port 80, source = Security Group của ALB</strong></td></tr></tbody></table></div>
+<h3 id="câu-1--cidr-1004028-tương-ứng-dải-ip-nào">Câu 1 — CIDR <code>10.0.4.0/28</code> tương ứng dải IP nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-1--cidr-1004028-tương-ứng-dải-ip-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>What does this CIDR <code>10.0.4.0/28</code> correspond to?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li><code>10.0.4.0</code> to <code>10.0.4.15</code></li>
+<li><code>10.0.4.0</code> to <code>10.0.32.0</code></li>
+<li><code>10.0.4.0</code> to <code>10.0.4.28</code></li>
+<li><code>10.0.0.0</code> to <code>10.0.16.0</code></li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — <code>10.0.4.0</code> → <code>10.0.4.15</code></strong></td><td><strong>Đúng</strong></td><td><code>/28</code> → còn lại 32 − 28 = 4 bit host → 2⁴ = <strong>16 IP</strong>. Chỉ octet cuối thay đổi: từ <code>.0</code> đến <code>.15</code> (0 + 16 − 1)</td></tr><tr><td>2 — <code>10.0.4.0</code> → <code>10.0.32.0</code></td><td><strong>Sai</strong></td><td>Dải này trải qua nhiều octet thứ 3 (từ <code>.4</code> đến <code>.32</code>), tương ứng một CIDR lớn hơn nhiều (khoảng <code>/19</code> trở lên) — không phải 16 IP</td></tr><tr><td>3 — <code>10.0.4.0</code> → <code>10.0.4.28</code></td><td><strong>Sai</strong></td><td>Bẫy <strong>nhầm số sau dấu <code>/</code> với số IP/địa chỉ cuối</strong>. <code>/28</code> là số bit của <strong>mask</strong>, không phải giá trị octet cuối</td></tr><tr><td>4 — <code>10.0.0.0</code> → <code>10.0.16.0</code></td><td><strong>Sai</strong></td><td>Base IP phải là <code>10.0.4.0</code> như đề bài, và dải này quá rộng so với <code>/28</code></td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — <code>10.0.4.0</code> đến <code>10.0.4.15</code>.</strong></p>
+<blockquote>
+<p>Áp dụng công thức ở §2.2: <strong>số IP = 2^(32 − prefix)</strong>. <code>/28</code> = 16 IP — chính là kích thước <strong>subnet nhỏ nhất</strong> AWS cho phép. Vì 16 IP chỉ nằm gọn trong octet cuối nên 3 octet đầu giữ nguyên <code>10.0.4</code>. Mẹo nhanh: block size = 16 → các dải bắt đầu ở bội số của 16 (<code>.0</code>, <code>.16</code>, <code>.32</code>…).</p>
+</blockquote>
+<h3 id="câu-2--cidr-nào-chấp-nhận-được-cho-aws-vpc-khi-sau-này-muốn-nối-các-mạng-với-nhau">Câu 2 — CIDR nào chấp nhận được cho AWS VPC khi sau này muốn nối các mạng với nhau?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-2--cidr-nào-chấp-nhận-được-cho-aws-vpc-khi-sau-này-muốn-nối-các-mạng-với-nhau" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have a corporate network of size <code>10.0.0.0/8</code> and a satellite office of size <code>192.168.0.0/16</code>. Which CIDR is acceptable for your AWS VPC if you plan on connecting your networks later on?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li><code>172.16.0.0/12</code></li>
+<li><code>172.16.0.0/16</code></li>
+<li><code>10.0.16.0/16</code></li>
+<li><code>192.168.4.0/18</code></li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — <code>172.16.0.0/12</code></td><td><strong>Sai</strong></td><td>Không trùng với 2 mạng kia (dải <code>172.16.0.0 – 172.31.255.255</code>), nhưng <code>/12</code> <strong>lớn hơn max <code>/16</code></strong> của VPC trong AWS (§2.3) → không tạo được. Đây là CIDR của <strong>Default VPC range</strong> theo IANA, không phải kích thước VPC hợp lệ</td></tr><tr><td><strong>2 — <code>172.16.0.0/16</code></strong></td><td><strong>Đúng</strong></td><td>Nằm trong dải private <code>172.16.0.0/12</code>, <strong>không overlap</strong> với <code>10.0.0.0/8</code> lẫn <code>192.168.0.0/16</code>, và đúng giới hạn <strong><code>/16</code> (max)</strong></td></tr><tr><td>3 — <code>10.0.16.0/16</code></td><td><strong>Sai</strong></td><td><code>10.0.16.0/16</code> nằm <strong>bên trong</strong> <code>10.0.0.0/8</code> của corporate network → <strong>overlap</strong></td></tr><tr><td>4 — <code>192.168.4.0/18</code></td><td><strong>Sai</strong></td><td>Nằm <strong>bên trong</strong> <code>192.168.0.0/16</code> của satellite office → <strong>overlap</strong></td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — <code>172.16.0.0/16</code>.</strong></p>
+<blockquote>
+<p>Hai quy tắc cùng lúc ở §2.3: (1) VPC CIDR <strong>không được trùng</strong> với mạng sẽ kết nối sau này (Peering/VPN/Direct Connect/Transit Gateway đều yêu cầu, xem §5.1), (2) VPC chỉ từ <code>/28</code> đến <strong><code>/16</code></strong>. Bẫy ở phương án 1: đúng về chuyện không trùng nhưng <strong>vi phạm giới hạn kích thước</strong> — loại bỏ cả 3 phương án còn lại bằng “overlap”, riêng phương án 1 phải loại bằng “quá lớn”.</p>
+</blockquote>
+<h3 id="câu-3--subnet-chứa-ít-nhất-28-ec2-instance-size-nhỏ-nhất">Câu 3 — Subnet chứa ít nhất 28 EC2 instance: size nhỏ nhất?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-3--subnet-chứa-ít-nhất-28-ec2-instance-size-nhỏ-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You plan on creating a subnet and want it to have at least capacity for 28 EC2 instances. What’s the minimum size you need to have for your subnet?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li><code>/28</code></li>
+<li><code>/27</code></li>
+<li><code>/26</code></li>
+<li><code>/25</code></li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Số IP</th><th>IP dùng được (trừ 5)</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — <code>/28</code></td><td>16</td><td>11</td><td><strong>Sai</strong></td><td>11 &lt; 28</td></tr><tr><td>2 — <code>/27</code></td><td>32</td><td>27</td><td><strong>Sai</strong></td><td>27 &lt; 28 — <strong>thiếu đúng 1 IP</strong>. Đây là bẫy chính: 32 ≥ 28 nhưng quên AWS giữ 5 IP</td></tr><tr><td><strong>3 — <code>/26</code></strong></td><td>64</td><td>59</td><td><strong>Đúng</strong></td><td>59 ≥ 28 và là size <strong>nhỏ nhất</strong> thoả mãn</td></tr><tr><td>4 — <code>/25</code></td><td>128</td><td>123</td><td><strong>Sai</strong></td><td>Đủ chỗ nhưng <strong>không phải nhỏ nhất</strong> (đề hỏi minimum)</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — <code>/26</code>.</strong></p>
+<blockquote>
+<p>Cùng mẫu với exam tip ở §2.3 (bài 29 IP → <code>/26</code>): <strong>mỗi subnet bị AWS giữ 5 IP</strong> (network, VPC router, DNS, dự phòng, broadcast) nên luôn phải lấy <strong>số instance + 5</strong> rồi mới làm tròn lên luỹ thừa của 2. Ở đây 28 + 5 = 33 > 32 → vượt <code>/27</code> → buộc chọn <code>/26</code>.</p>
+</blockquote>
+<h3 id="câu-4--security-group-và-nacl-hoạt-động-ở-cấp-nào">Câu 4 — Security Group và NACL hoạt động ở cấp nào?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-4--security-group-và-nacl-hoạt-động-ở-cấp-nào" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Security Groups operate at the … level while NACLs operate at the … level.</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>EC2 instance, Subnet</li>
+<li>Subnet, EC2 instance</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — EC2 instance, Subnet</strong></td><td><strong>Đúng</strong></td><td>Đúng bảng so sánh §4: <strong>Security Group</strong> áp dụng cấp <strong>instance</strong> (chính xác hơn là ENI), chỉ cho instance được gắn tường minh; <strong>NACL</strong> áp dụng cấp <strong>subnet</strong>, tự động cho mọi instance trong subnet</td></tr><tr><td>2 — Subnet, EC2 instance</td><td><strong>Sai</strong></td><td>Ngược lại hoàn toàn — nhầm 2 khái niệm</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — EC2 instance, Subnet.</strong></p>
+<blockquote>
+<p>Mẹo nhớ: <strong>NACL = cổng khu phố (subnet)</strong> — chặn/cho cả khu, có cả allow lẫn deny, stateless; <strong>Security Group = khoá cửa từng nhà (instance)</strong> — chỉ allow, stateful. Traffic đi vào subnet gặp NACL trước, rồi mới tới Security Group của instance.</p>
+</blockquote>
+<h3 id="câu-5--đã-gắn-internet-gateway-nhưng-ec2-vẫn-không-ra-internet-đâu-không-phải-nguyên-nhân">Câu 5 — Đã gắn Internet Gateway nhưng EC2 vẫn không ra Internet: đâu KHÔNG phải nguyên nhân?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-5--đã-gắn-internet-gateway-nhưng-ec2-vẫn-không-ra-internet-đâu-không-phải-nguyên-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have attached an Internet Gateway to your VPC, but your EC2 instances still don’t have access to the internet. What is NOT a possible issue?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Route Tables are missing entries</li>
+<li>The EC2 instances don’t have public IPs</li>
+<li>The Security Group does not allow traffic in</li>
+<li>The NACL does not allow network traffic out</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Có thể là nguyên nhân?</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Route Tables thiếu entry</td><td><strong>Có</strong></td><td>§3.1: IGW một mình không đủ, phải có route <code>0.0.0.0/0 → igw-id</code> thì subnet mới thật sự “public”</td></tr><tr><td>2 — EC2 không có public IP</td><td><strong>Có</strong></td><td>Không có public IPv4 (hoặc Elastic IP) thì không thể đi ra/vào Internet qua IGW</td></tr><tr><td><strong>3 — Security Group không cho traffic vào</strong></td><td><strong>KHÔNG</strong></td><td><strong>Security Group là stateful</strong>: chỉ cần outbound được phép (mặc định allow hết) thì traffic phản hồi <strong>tự động được vào lại</strong>, không cần rule inbound cho phản hồi. Muốn <strong>chủ động ra Internet</strong> không cần inbound rule</td></tr><tr><td>4 — NACL không cho traffic ra</td><td><strong>Có</strong></td><td>NACL <strong>stateless</strong> và áp dụng cấp subnet — chặn outbound thì request không rời được subnet</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — The Security Group does not allow traffic in.</strong></p>
+<blockquote>
+<p>Đề hỏi <strong>NOT</strong> — dễ chọn nhầm vì thấy cả 4 đều “nghe có lý”. Chìa khoá nằm ở bảng §4: SG <strong>stateful</strong> (traffic ra → phản hồi vào tự động), còn NACL <strong>stateless</strong> nên mới cần cấu hình cả hai chiều (và Ephemeral Ports). Checklist khi EC2 không ra Internet: <strong>IGW gắn VPC → Route Table → public IP → NACL (2 chiều) → SG outbound</strong>.</p>
+</blockquote>
+<h3 id="câu-6--internet-access-cho-ec2-ở-private-subnet-ipv4-ít-quản-trị-nhất-và-scale-mượt">Câu 6 — Internet access cho EC2 ở private subnet (IPv4), ít quản trị nhất và scale mượt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-6--internet-access-cho-ec2-ở-private-subnet-ipv4-ít-quản-trị-nhất-và-scale-mượt" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You would like to provide Internet access to your EC2 instances in private subnets with IPv4 while making sure this solution requires the least amount of administration and scales seamlessly. What should you use?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>NAT Instances with Source/Destination Check flag off</li>
+<li>Egress Only Internet Gateway</li>
+<li>NAT Gateway</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — NAT Instance (tắt Source/Dest Check)</td><td><strong>Sai</strong></td><td>Dùng được về mặt kỹ thuật nhưng <strong>tự quản lý hoàn toàn</strong>: tự patch, tự tắt Source/Dest Check, không HA sẵn, băng thông phụ thuộc instance type → đi ngược yêu cầu “ít quản trị” và “scale mượt” (§3.3)</td></tr><tr><td>2 — Egress Only Internet Gateway</td><td><strong>Sai</strong></td><td>Đây là “NAT Gateway của <strong>IPv6</strong>” (§7) — đề bài nói rõ <strong>IPv4</strong></td></tr><tr><td><strong>3 — NAT Gateway</strong></td><td><strong>Đúng</strong></td><td>AWS <strong>managed</strong>, HA trong AZ, tự scale băng thông, không cần quản lý instance hay Security Group (§3.3)</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — NAT Gateway.</strong></p>
+<blockquote>
+<p>Từ khoá “least administration” + “scales seamlessly” + “IPv4” → <strong>NAT Gateway</strong>. Nếu đề đổi sang <strong>IPv6</strong> thì mới là Egress-only IGW. Nhớ: NAT Gateway nằm ở <strong>public subnet</strong> (cần IGW) và đa AZ thì tạo mỗi AZ một cái.</p>
+</blockquote>
+<h3 id="câu-7--vpc-peering-đã-bật-đã-sửa-route-table-vpc-a-nhưng-ec2-vẫn-không-giao-tiếp-được">Câu 7 — VPC Peering đã bật, đã sửa route table VPC A nhưng EC2 vẫn không giao tiếp được<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-7--vpc-peering-đã-bật-đã-sửa-route-table-vpc-a-nhưng-ec2-vẫn-không-giao-tiếp-được" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>VPC Peering has been enabled between VPC A and VPC B, and the route tables have been updated for VPC A. But, the EC2 instances cannot communicate. What is the likely issue?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Check the NACL</li>
+<li>Check the Route Tables in VPC B</li>
+<li>Check the EC2 instance attached Security Groups</li>
+<li>Check if DNS Resolution is enabled</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Kiểm tra NACL</td><td><strong>Sai</strong></td><td>NACL có thể là nguyên nhân nói chung, nhưng đề đưa <strong>manh mối cụ thể</strong>: route table mới chỉ cập nhật cho VPC A — phần thiếu rõ ràng hơn nằm ở VPC B</td></tr><tr><td><strong>2 — Route Tables của VPC B</strong></td><td><strong>Đúng</strong></td><td>Peering yêu cầu <strong>sửa route table ở cả hai phía</strong> (§5.1): VPC A cần route tới CIDR của B, và VPC B cần route về CIDR của A. Thiếu một chiều thì gói tin đến được nhưng <strong>không có đường trả về</strong></td></tr><tr><td>3 — Security Groups của EC2</td><td><strong>Sai</strong></td><td>Cũng có thể gây lỗi, nhưng không phải thiếu sót mà đề bài chỉ ra</td></tr><tr><td>4 — DNS Resolution</td><td><strong>Sai</strong></td><td>DNS Resolution chỉ ảnh hưởng việc phân giải <strong>tên</strong> (public DNS → private IP) qua peering, không ảnh hưởng kết nối bằng <strong>IP</strong></td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — Check the Route Tables in VPC B.</strong></p>
+<blockquote>
+<p>Đề cố tình nói “route tables have been updated for <strong>VPC A</strong>” để gợi ý phía còn lại bị quên. Quy tắc §5.1: Peering <strong>không tự thêm route</strong> — phải sửa route table <strong>cả hai bên</strong>, ngoài ra CIDR không được trùng và Peering là non-transitive.</p>
+</blockquote>
+<h3 id="câu-8--direct-connect-tới-vpc-a-cần-truy-cập-thêm-vpc-b-ở-region-khác">Câu 8 — Direct Connect tới VPC A, cần truy cập thêm VPC B ở region khác<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-8--direct-connect-tới-vpc-a-cần-truy-cập-thêm-vpc-b-ở-region-khác" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have set up a Direct Connect connection between your corporate data center and your VPC A in your AWS account. You need to access VPC B in another AWS region from your corporate datacenter as well. What should you do?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Enable VPC Peering</li>
+<li>Use a Customer Gateway</li>
+<li>Use a Direct Connect Gateway</li>
+<li>Set up a NAT Gateway</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — VPC Peering</td><td><strong>Sai</strong></td><td>Peering là <strong>non-transitive</strong>: on-premise → VPC A → (peering) → VPC B <strong>không đi qua được</strong></td></tr><tr><td>2 — Customer Gateway</td><td><strong>Sai</strong></td><td>CGW là thiết bị phía khách hàng của <strong>Site-to-Site VPN</strong> (§5.4), không phải giải pháp mở rộng Direct Connect</td></tr><tr><td><strong>3 — Direct Connect Gateway</strong></td><td><strong>Đúng</strong></td><td>Đúng use case ở §5.5: <strong>Direct Connect Gateway</strong> cho phép một kết nối DX tới <strong>nhiều VPC ở nhiều region</strong> (cùng hoặc khác account)</td></tr><tr><td>4 — NAT Gateway</td><td><strong>Sai</strong></td><td>NAT Gateway chỉ cho private subnet ra Internet, không liên quan routing on-premise ↔ VPC</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — Direct Connect Gateway.</strong></p>
+<blockquote>
+<p>“Direct Connect + nhiều VPC / nhiều region” → <strong>Direct Connect Gateway</strong> (kết hợp Private VIF). Nếu cần nối rất nhiều VPC với routing linh hoạt thì lên <strong>Transit Gateway</strong> (dùng Transit VIF).</p>
+</blockquote>
+<h3 id="câu-9--hai-aws-service-có-gateway-endpoint">Câu 9 — Hai AWS service có Gateway Endpoint<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-9--hai-aws-service-có-gateway-endpoint" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>When using VPC Endpoints, what are the only two AWS services that have a Gateway Endpoint available?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Amazon S3 &amp; Amazon SQS</li>
+<li>Amazon SQS &amp; DynamoDB</li>
+<li>Amazon S3 &amp; DynamoDB</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — S3 &amp; SQS</td><td><strong>Sai</strong></td><td>SQS chỉ có <strong>Interface Endpoint</strong> (PrivateLink), không có Gateway Endpoint</td></tr><tr><td>2 — SQS &amp; DynamoDB</td><td><strong>Sai</strong></td><td>Cùng lý do — SQS không thuộc nhóm Gateway</td></tr><tr><td><strong>3 — S3 &amp; DynamoDB</strong></td><td><strong>Đúng</strong></td><td>Đúng §5.2: <strong>Gateway Endpoint chỉ dành cho S3 và DynamoDB</strong>, miễn phí, cấu hình qua target trong route table</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — Amazon S3 &amp; DynamoDB.</strong></p>
+<blockquote>
+<p>Câu thuộc lòng: <strong>Gateway = S3 + DynamoDB</strong> (miễn phí, route table); <strong>Interface (PrivateLink)</strong> = hầu hết service còn lại (ENI + Security Group, có phí).</p>
+</blockquote>
+<h3 id="câu-10--ip-nào-không-bị-aws-giữ-trong-subnet-1000024">Câu 10 — IP nào KHÔNG bị AWS giữ trong subnet <code>10.0.0.0/24</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-10--ip-nào-không-bị-aws-giữ-trong-subnet-1000024" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>AWS reserves 5 IP addresses each time you create a new subnet in a VPC. When you create a subnet with CIDR <code>10.0.0.0/24</code>, the following IP addresses are reserved, EXCEPT …</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li><code>10.0.0.1</code></li>
+<li><code>10.0.0.2</code></li>
+<li><code>10.0.0.3</code></li>
+<li><code>10.0.0.4</code></li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Bị giữ?</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — <code>10.0.0.1</code></td><td>Có</td><td><strong>VPC router</strong></td></tr><tr><td>2 — <code>10.0.0.2</code></td><td>Có</td><td><strong>DNS</strong> (Amazon-provided)</td></tr><tr><td>3 — <code>10.0.0.3</code></td><td>Có</td><td>Dự phòng tương lai</td></tr><tr><td><strong>4 — <code>10.0.0.4</code></strong></td><td><strong>Không</strong></td><td>Đây là IP <strong>đầu tiên dùng được</strong> cho instance</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 4 — <code>10.0.0.4</code>.</strong></p>
+<blockquote>
+<p>Theo bảng §2.3, 5 IP bị giữ gồm: <code>10.0.0.0</code> (network), <code>.1</code>, <code>.2</code>, <code>.3</code> và <code>10.0.0.255</code> (broadcast). Quy tắc nhớ: <strong>4 IP đầu + 1 IP cuối</strong>. Đề hỏi EXCEPT nên phải chọn IP <strong>không</strong> nằm trong danh sách này.</p>
+</blockquote>
+<h3 id="câu-11--peering-giữa-cả-3-vpc-a-b-c">Câu 11 — Peering giữa cả 3 VPC A, B, C<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-11--peering-giữa-cả-3-vpc-a-b-c" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have 3 VPCs A, B, and C. You want to establish a VPC Peering connection between all the 3 VPCs. What should you do?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>As VPC Peering supports Transitive Peering, so you need to establish 2 VPC Peering connections (A-B, B-C)</li>
+<li>Establish 3 VPC Peering connections (A-B, A-C, B-C)</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Transitive Peering, chỉ cần 2 connection</td><td><strong>Sai</strong></td><td>Tiền đề sai: VPC Peering <strong>không hỗ trợ transitive</strong> (§5.1). Chỉ có A-B và B-C thì A <strong>không</strong> nói chuyện được với C qua B</td></tr><tr><td><strong>2 — 3 connection (A-B, A-C, B-C)</strong></td><td><strong>Đúng</strong></td><td>Vì non-transitive nên <strong>mỗi cặp VPC</strong> cần một Peering connection riêng → full mesh</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — 3 VPC Peering connections.</strong></p>
+<blockquote>
+<p>Full mesh cần <strong>n(n−1)/2</strong> connection: 3 VPC = 3, 10 VPC = 45 — chính vì vậy VPC nhiều thì chuyển sang <strong>Transit Gateway</strong> (transitive, hub-and-spoke, §5.6). Đừng quên sửa <strong>route table</strong> ở các VPC cho từng connection.</p>
+</blockquote>
+<h3 id="câu-12--capture-thông-tin-về-ip-traffic-trong-vpc">Câu 12 — Capture thông tin về IP traffic trong VPC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-12--capture-thông-tin-về-ip-traffic-trong-vpc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>How can you capture information about IP traffic inside your VPCs?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Enable VPC Flow Logs</li>
+<li>Enable VPC Traffic Mirroring</li>
+<li>Enable CloudWatch Traffic Logs</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — VPC Flow Logs</strong></td><td><strong>Đúng</strong></td><td>Đúng chức năng §6.1: ghi <strong>metadata</strong> về IP traffic (source/destination IP, port, protocol, ACCEPT/REJECT…) ở cấp VPC/Subnet/ENI, gửi tới S3/CloudWatch Logs/Kinesis Firehose</td></tr><tr><td>2 — VPC Traffic Mirroring</td><td><strong>Sai</strong></td><td>Traffic Mirroring capture <strong>cả payload</strong> để phân tích sâu/inspect (§6.2) — quá mức so với yêu cầu “thông tin về IP traffic”</td></tr><tr><td>3 — CloudWatch Traffic Logs</td><td><strong>Sai</strong></td><td><strong>Không tồn tại</strong> dịch vụ/tính năng tên này — CloudWatch Logs chỉ là <strong>đích</strong> nhận Flow Logs</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — Enable VPC Flow Logs.</strong></p>
+<blockquote>
+<p>Phân biệt: <strong>Flow Logs = metadata</strong> (ai nói chuyện với ai, accept/reject); <strong>Traffic Mirroring = bản sao gói tin, gồm payload</strong>. Đề chỉ hỏi “thông tin IP traffic” → Flow Logs; nếu đề nhắc “inspect nội dung gói tin” → Traffic Mirroring.</p>
+</blockquote>
+<h3 id="câu-13--direct-connect-500-mbps-dedicated-hay-hosted">Câu 13 — Direct Connect 500 Mbps: Dedicated hay Hosted?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-13--direct-connect-500-mbps-dedicated-hay-hosted" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>If you want a 500 Mbps Direct Connect connection between your corporate datacenter to AWS, you would choose a … connection.</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Dedicated</li>
+<li>Hosted</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Dedicated</td><td><strong>Sai</strong></td><td>Dedicated chỉ có các port <strong>vật lý cố định lớn</strong> (1 / 10 / 100 Gbps), không có mức 500 Mbps (§5.5)</td></tr><tr><td><strong>2 — Hosted</strong></td><td><strong>Đúng</strong></td><td>Hosted connection do <strong>AWS Direct Connect Partner</strong> cung cấp với băng thông linh hoạt, từ <strong>50 Mbps đến 25 Gbps</strong> — 500 Mbps nằm trong khoảng này</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — Hosted.</strong></p>
+<blockquote>
+<p>Quy tắc: băng thông <strong>dưới 1 Gbps</strong> → <strong>Hosted</strong> (qua partner); <strong>≥ 1 Gbps</strong> với port vật lý riêng → <strong>Dedicated</strong>. Lưu ý cả hai đều cần thời gian setup dài (thường > 1 tháng).</p>
+</blockquote>
+<h3 id="câu-14--hai-thành-phần-chính-của-site-to-site-vpn">Câu 14 — Hai thành phần chính của Site-to-Site VPN<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-14--hai-thành-phần-chính-của-site-to-site-vpn" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>When you set up an AWS Site-to-Site VPN connection between your corporate on-premises datacenter and VPCs in AWS Cloud, what are the two major components you want to configure for this connection?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Customer Gateway and NAT Gateway</li>
+<li>Internet Gateway and Customer Gateway</li>
+<li>Virtual Private Gateway and Internet Gateway</li>
+<li>Virtual Private Gateway and Customer Gateway</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — CGW + NAT Gateway</td><td><strong>Sai</strong></td><td>NAT Gateway chỉ cho private subnet ra Internet, không thuộc VPN</td></tr><tr><td>2 — IGW + CGW</td><td><strong>Sai</strong></td><td>IGW là cổng Internet của VPC, không phải đầu AWS của VPN tunnel</td></tr><tr><td>3 — VGW + IGW</td><td><strong>Sai</strong></td><td>Thiếu <strong>Customer Gateway</strong> ở phía on-premise; IGW không phải thành phần VPN</td></tr><tr><td><strong>4 — VGW + CGW</strong></td><td><strong>Đúng</strong></td><td>Đúng §5.4: <strong>Virtual Private Gateway (VGW)</strong> là đầu VPN phía <strong>AWS</strong> (gắn vào VPC), <strong>Customer Gateway (CGW)</strong> là đầu phía <strong>khách hàng</strong> (thiết bị/phần mềm on-premise)</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 4 — Virtual Private Gateway and Customer Gateway.</strong></p>
+<blockquote>
+<p>Nhớ cặp <strong>VGW (AWS) ↔ CGW (on-premise)</strong>, và bật <strong>Route Propagation</strong> trên route table của subnet. CGW cần public IP (hoặc IP public của thiết bị NAT hỗ trợ NAT-T).</p>
+</blockquote>
+<h3 id="câu-15--backup-qua-internet-công-cộng-cho-nhiều-site-on-premises">Câu 15 — Backup qua Internet công cộng cho nhiều site on-premises<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-15--backup-qua-internet-công-cộng-cho-nhiều-site-on-premises" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Your company has several on-premises sites across the USA. These sites are currently linked using private connections, but your private connections provider has been recently quite unstable, making your IT architecture partially offline. You would like to create a backup connection that will use the public Internet to link your on-premises sites, that you can failover in case of issues with your provider. What do you recommend?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>VPC Peering</li>
+<li>AWS VPN CloudHub</li>
+<li>Direct Connect</li>
+<li>AWS PrivateLink</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — VPC Peering</td><td><strong>Sai</strong></td><td>Chỉ nối <strong>VPC với VPC</strong>, không liên quan tới các site on-premises</td></tr><tr><td><strong>2 — AWS VPN CloudHub</strong></td><td><strong>Đúng</strong></td><td>Hub-and-spoke dựa trên nhiều Site-to-Site VPN qua <strong>public Internet</strong>, cho phép <strong>các site on-premises giao tiếp với nhau</strong> thông qua VGW (§5.4). Rẻ, dựng nhanh — hợp làm đường dự phòng</td></tr><tr><td>3 — Direct Connect</td><td><strong>Sai</strong></td><td>Là đường <strong>riêng, không qua Internet</strong> — đề yêu cầu backup đi qua public Internet</td></tr><tr><td>4 — AWS PrivateLink</td><td><strong>Sai</strong></td><td>Expose service riêng giữa VPC (§5.3), không nối các site on-premises với nhau</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — AWS VPN CloudHub.</strong></p>
+<blockquote>
+<p>Từ khoá: “nhiều site on-premises” + “public Internet” + “backup/failover” → <strong>VPN CloudHub</strong>. Ghi chú: câu này ảnh chỉ hiện lựa chọn CloudHub được tick, chưa có xác nhận đúng/sai từ hệ thống — đáp án được suy ra từ nội dung §5.4.</p>
+</blockquote>
+<h3 id="câu-16--kết-nối-chuyên-dụng-on-premises--aws-private-ổn-định-không-đi-qua-internet">Câu 16 — Kết nối chuyên dụng on-premises ↔ AWS: private, ổn định, không đi qua Internet<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-16--kết-nối-chuyên-dụng-on-premises--aws-private-ổn-định-không-đi-qua-internet" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You need to set up a dedicated connection between your on-premises corporate datacenter and AWS Cloud. This connection must be private, consistent, and traffic must not travel through the Internet. Which AWS service should you use?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Site-to-Site VPN</li>
+<li>AWS PrivateLink</li>
+<li>AWS Direct Connect</li>
+<li>Amazon EventBridge</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Site-to-Site VPN</td><td><strong>Sai</strong></td><td>VPN <strong>mã hoá nhưng đi qua public Internet</strong> → băng thông/độ trễ không ổn định, vi phạm “không qua Internet” và “consistent” (§5.4)</td></tr><tr><td>2 — AWS PrivateLink</td><td><strong>Sai</strong></td><td>Expose service riêng giữa các VPC (§5.3), không phải đường nối datacenter ↔ AWS</td></tr><tr><td><strong>3 — AWS Direct Connect</strong></td><td><strong>Đúng</strong></td><td>Đường <strong>vật lý riêng</strong> từ datacenter tới AWS: private, băng thông/độ trễ nhất quán, <strong>không qua Internet</strong> (§5.5)</td></tr><tr><td>4 — Amazon EventBridge</td><td><strong>Sai</strong></td><td>Dịch vụ event bus, không liên quan tới kết nối mạng</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — AWS Direct Connect.</strong></p>
+<blockquote>
+<p>Bộ từ khoá “dedicated + private + consistent + not through Internet” → <strong>Direct Connect</strong>. Đổi thành “nhanh, rẻ, dựng trong vài phút” thì mới là Site-to-Site VPN.</p>
+</blockquote>
+<h3 id="câu-17--direct-connect-truy-cập-được-cả-public-và-private-aws-resources">Câu 17 — Direct Connect truy cập được cả public và private AWS resources?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-17--direct-connect-truy-cập-được-cả-public-và-private-aws-resources" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Using a Direct Connect connection, you can access both public and private AWS resources.</p>
+</blockquote>
+<p><strong>Đáp án:</strong> True / False</p>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>True</strong></td><td><strong>Đúng</strong></td><td>Trên cùng một Direct Connect, tạo <strong>Public VIF</strong> để truy cập AWS public service (S3, Glacier…) và <strong>Private VIF</strong> để truy cập resource trong VPC (§5.5)</td></tr><tr><td>False</td><td><strong>Sai</strong></td><td>Sai vì tưởng Direct Connect chỉ vào được VPC; thực tế còn có Public VIF cho public service <strong>mà không qua Internet</strong></td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: True.</strong></p>
+<blockquote>
+<p>Nhớ 3 loại VIF: <strong>Public</strong> (AWS public service), <strong>Private</strong> (VPC), <strong>Transit</strong> (Transit Gateway). Một kết nối vật lý có thể chạy nhiều VIF.</p>
+</blockquote>
+<h3 id="câu-18--scale-băng-thông-site-to-site-vpn-vượt-125-gbps-của-một-tunnel">Câu 18 — Scale băng thông Site-to-Site VPN vượt 1.25 Gbps của một tunnel<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-18--scale-băng-thông-site-to-site-vpn-vượt-125-gbps-của-một-tunnel" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You want to scale up an AWS Site-to-Site VPN connection throughput, established between your on-premises data and AWS Cloud, beyond a single IPsec tunnel’s maximum limit of 1.25 Gbps. What should you do?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Use 2 Virtual Private Gateways</li>
+<li>Use Direct Connect Gateway</li>
+<li>Use Transit Gateway</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — 2 Virtual Private Gateways</td><td><strong>Sai</strong></td><td>Một VPC chỉ gắn được <strong>1 VGW</strong>, và VGW không có ECMP để cộng gộp băng thông nhiều tunnel</td></tr><tr><td>2 — Direct Connect Gateway</td><td><strong>Sai</strong></td><td>Dùng cho <strong>Direct Connect</strong> (nối nhiều VPC/region), không giúp tăng throughput của VPN</td></tr><tr><td><strong>3 — Transit Gateway</strong></td><td><strong>Đúng</strong></td><td>Hỗ trợ <strong>ECMP (Equal-Cost Multi-Path)</strong>: tạo <strong>nhiều VPN connection</strong> và <strong>cộng gộp băng thông</strong> vượt giới hạn 1.25 Gbps của một tunnel (§5.6)</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — Transit Gateway.</strong></p>
+<blockquote>
+<p>“Scale VPN throughput” → <strong>Transit Gateway + ECMP</strong>. Đây là điểm khác biệt quan trọng so với VGW thường. Lưu ý băng thông gộp còn bị tính phí data transfer trên mỗi connection.</p>
+</blockquote>
+<h3 id="câu-19--vpc-dual-stack-hết-ipv4-không-launch-được-ec2">Câu 19 — VPC dual-stack hết IPv4, không launch được EC2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-19--vpc-dual-stack-hết-ipv4-không-launch-được-ec2" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>You have a VPC in your AWS account that runs in a dual-stack mode. You are continuously trying to launch an EC2 instance, but it fails. After further investigation, you have found that you are no longer have IPv4 addresses available. What should you do?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Modify your VPC to run in IPv6 mode only</li>
+<li>Modify your VPC to run in IPv4 mode only</li>
+<li>Add an additional IPv4 CIDR to your VPC</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Chuyển VPC sang IPv6 only</td><td><strong>Sai</strong></td><td>VPC <strong>không có chế độ IPv6-only</strong>; IPv4 <strong>không thể tắt</strong> (§7)</td></tr><tr><td>2 — Chuyển sang IPv4 only</td><td><strong>Sai</strong></td><td>Không giải quyết vấn đề — vấn đề chính là <strong>hết IPv4</strong></td></tr><tr><td><strong>3 — Thêm IPv4 CIDR phụ</strong></td><td><strong>Đúng</strong></td><td>Đúng “bẫy hay thi” ở §7: EC2 không launch được <strong>luôn do hết IPv4</strong> (không gian IPv6 quá lớn để cạn) → thêm <strong>secondary IPv4 CIDR</strong> cho VPC (tối đa 5 CIDR/VPC, §2.3) rồi tạo subnet mới</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — Add an additional IPv4 CIDR to your VPC.</strong></p>
+<blockquote>
+<p>Quy tắc: <strong>IPv4 không thể tắt</strong>, hết chỗ launch EC2 = hết IPv4 → thêm CIDR IPv4. Nhớ CIDR mới không được trùng với mạng khác đang/ sẽ kết nối.</p>
+</blockquote>
+<h3 id="câu-20--cấu-hình-security-group-an-toàn-nhất-cho-bastion-host">Câu 20 — Cấu hình Security Group an toàn nhất cho Bastion Host<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-20--cấu-hình-security-group-an-toàn-nhất-cho-bastion-host" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>A web application backend is hosted on EC2 instances in private subnets fronted by an Application Load Balancer in public subnets. There is a requirement to give some of the developers access to the backend EC2 instances but without exposing the backend EC2 instances to the Internet. You have created a bastion host EC2 instance in the public subnet and configured the backend EC2 instances Security Group to allow traffic from the bastion host. Which of the following is the best configuration for bastion host Security Group to make it secure?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Allow traffic only on port 80 from the company’s public CIDR</li>
+<li>Allow traffic only on port 22 from the company’s public CIDR</li>
+<li>Allow traffic only on port 22 from the company’s private CIDR</li>
+<li>Allow traffic only on port 80 from the company’s private CIDR</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Port 80, public CIDR</td><td><strong>Sai</strong></td><td>Port 80 là <strong>HTTP</strong>; bastion phục vụ <strong>SSH (22)</strong></td></tr><tr><td><strong>2 — Port 22, public CIDR</strong></td><td><strong>Đúng</strong></td><td>SSH dùng port <strong>22</strong>, và vì bastion nằm ở <strong>public subnet</strong> được truy cập qua <strong>Internet</strong>, nên nguồn hợp lệ là <strong>dải public IP của công ty</strong> — chặt chẽ hơn <code>0.0.0.0/0</code> (§3.2)</td></tr><tr><td>3 — Port 22, private CIDR</td><td><strong>Sai</strong></td><td>Developer kết nối từ Internet tới bastion, traffic đến mang <strong>public IP</strong> nguồn, không phải private CIDR — sẽ không match</td></tr><tr><td>4 — Port 80, private CIDR</td><td><strong>Sai</strong></td><td>Sai cả port lẫn loại CIDR</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 2 — port 22 từ public CIDR của công ty.</strong></p>
+<blockquote>
+<p>Đúng mô hình §3.2: Bastion SG chỉ mở <strong>22</strong> từ <strong>CIDR giới hạn</strong> (IP công ty), không mở <code>0.0.0.0/0</code>; Security Group của EC2 private chỉ cho traffic từ <strong>Security Group của Bastion</strong>. Phương án hiện đại hơn là <strong>SSM Session Manager</strong> — không cần mở port nào.</p>
+</blockquote>
+<h3 id="câu-21--backup-tiết-kiệm-và-an-toàn-cho-direct-connect">Câu 21 — Backup tiết kiệm và an toàn cho Direct Connect<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-21--backup-tiết-kiệm-và-an-toàn-cho-direct-connect" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>A company has set up a Direct Connect connection between their corporate data center to AWS. There is a requirement to prepare a cost-effective secure backup connection in case there are issues with this Direct Connect connection. What is the most cost effective and secure solution you recommend?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Setup another Direct Connect connection to the same AWS region</li>
+<li>Setup another Direct Connect connection to a different AWS region</li>
+<li>Setup a Site-to-Site VPN connection as a backup</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Thêm Direct Connect cùng region</td><td><strong>Sai</strong></td><td>An toàn nhưng <strong>đắt</strong> (thêm port vật lý, phí hàng tháng, setup lâu) — không “cost-effective”</td></tr><tr><td>2 — Thêm Direct Connect khác region</td><td><strong>Sai</strong></td><td>Còn đắt hơn và không cần thiết cho mục tiêu backup</td></tr><tr><td><strong>3 — Site-to-Site VPN làm backup</strong></td><td><strong>Đúng</strong></td><td>Đúng §5.5: backup rẻ nhất cho Direct Connect là <strong>Site-to-Site VPN</strong> — dựng nhanh, chi phí thấp, và <strong>được mã hoá IPsec</strong> nên vẫn <strong>secure</strong> dù đi qua Internet</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — Site-to-Site VPN làm backup.</strong></p>
+<blockquote>
+<p>“Cost-effective + secure backup cho Direct Connect” → <strong>VPN</strong>. Chú ý Direct Connect <strong>không mã hoá mặc định</strong>, còn VPN thì có — nếu cần resiliency tối đa (không quan tâm chi phí) mới dùng 2 Direct Connect ở nhiều location.</p>
+</blockquote>
+<h3 id="câu-22--bảo-vệ-và-kiểm-soát-traffic-vpc-từ-layer-3-đến-layer-7">Câu 22 — Bảo vệ và kiểm soát traffic VPC từ Layer 3 đến Layer 7<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-22--bảo-vệ-và-kiểm-soát-traffic-vpc-từ-layer-3-đến-layer-7" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>Which AWS service allows you to protect and control traffic in your VPC from layer 3 to layer 7?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>AWS Network Firewall</li>
+<li>Amazon Guard Duty</li>
+<li>Amazon Inspector</li>
+<li>Amazon Shield</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td><strong>1 — AWS Network Firewall</strong></td><td><strong>Đúng</strong></td><td>Đúng §8: tường lửa <strong>Layer 3–7</strong> cho <strong>cả VPC</strong>, lọc theo IP/port/protocol/domain/regex, có active flow inspection (IPS)</td></tr><tr><td>2 — Amazon GuardDuty</td><td><strong>Sai</strong></td><td>Dịch vụ <strong>phát hiện</strong> mối đe doạ bằng phân tích log (VPC Flow Logs, DNS, CloudTrail…), không <strong>kiểm soát/chặn</strong> traffic</td></tr><tr><td>3 — Amazon Inspector</td><td><strong>Sai</strong></td><td>Quét <strong>lỗ hổng</strong> trên EC2/ECR/Lambda, không phải tường lửa</td></tr><tr><td>4 — AWS Shield</td><td><strong>Sai</strong></td><td>Chống <strong>DDoS</strong> (chủ yếu Layer 3/4/7 ở edge), không điều khiển rule traffic trong VPC</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 1 — AWS Network Firewall.</strong></p>
+<blockquote>
+<p>Từ khoá “protect <strong>and control</strong> traffic in VPC” + “layer 3 to 7” → <strong>Network Firewall</strong>. GuardDuty/Inspector chỉ <strong>phát hiện/quét</strong>, không enforce rule.</p>
+</blockquote>
+<h3 id="câu-23--chỉ-cho-alb-truy-cập-ec2-trên-port-80">Câu 23 — Chỉ cho ALB truy cập EC2 trên port 80<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#câu-23--chỉ-cho-alb-truy-cập-ec2-trên-port-80" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Đề bài:</strong></p>
+<blockquote>
+<p>A web application hosted on a fleet of EC2 instances managed by an Auto Scaling Group. You are exposing this application through an Application Load Balancer. Both the EC2 instances and the ALB are deployed on a VPC with the following CIDR <code>192.168.0.0/18</code>. How do you configure the EC2 instances’ security group to ensure only the ALB can access them on port <code>80</code>?</p>
+</blockquote>
+<p><strong>Đáp án:</strong></p>
+<ol>
+<li>Add an Inbound Rule with port <code>80</code> and <code>0.0.0.0/0</code> as the source</li>
+<li>Add an Inbound Rule with port <code>80</code> and <code>192.168.0.0/18</code> as the source</li>
+<li>Add an Inbound Rule with port <code>80</code> and ALB’s Security Group as the source</li>
+<li>Load an SSL certificate on the ALB</li>
+</ol>
+<p><strong>Phân tích:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Phương án</th><th>Đúng/Sai</th><th>Vì sao</th></tr></thead><tbody><tr><td>1 — Port 80 từ <code>0.0.0.0/0</code></td><td><strong>Sai</strong></td><td>Mở cho <strong>toàn Internet</strong> — ai cũng gọi thẳng được vào EC2</td></tr><tr><td>2 — Port 80 từ CIDR của VPC</td><td><strong>Sai</strong></td><td>Cho phép <strong>mọi resource trong VPC</strong> (không riêng ALB) truy cập — quá rộng</td></tr><tr><td><strong>3 — Port 80, source là SG của ALB</strong></td><td><strong>Đúng</strong></td><td><strong>Security Group reference</strong>: chỉ traffic từ resource <strong>gắn SG của ALB</strong> mới vào được. Không phụ thuộc IP, tự đúng khi ALB/ASG scale hay đổi IP (§4)</td></tr><tr><td>4 — SSL certificate trên ALB</td><td><strong>Sai</strong></td><td>Liên quan <strong>mã hoá in-transit</strong>, không giới hạn <strong>ai</strong> truy cập được EC2</td></tr></tbody></table></div>
+<p><strong>Đáp án đúng: phương án 3 — Inbound Rule port 80, source là Security Group của ALB.</strong></p>
+<blockquote>
+<p>Pattern kinh điển: <strong>ALB SG</strong> mở 80/443 cho Internet → <strong>EC2 SG</strong> chỉ mở 80 với source = <strong>ALB SG</strong>. Đây là lợi thế của Security Group so với NACL (NACL chỉ nhận CIDR, không tham chiếu SG).</p>
+</blockquote>
+<hr/>
+<h2 id="điểm-hay-ra-thi">Điểm hay ra thi<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#điểm-hay-ra-thi" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>CIDR:</strong> số sau <code>/</code> giảm 1 = số IP nhân đôi; VPC min <code>/28</code> – max <code>/16</code>; đủ 29 IP thì cần <code>/26</code> không phải <code>/27</code> (trừ 5 IP AWS giữ).</li>
+<li><strong>Default VPC</strong> nằm trong <code>172.16.0.0/12</code>, mọi EC2 mặc định có public IPv4.</li>
+<li><strong>IGW</strong>: chỉ 1/VPC, cần sửa route table <code>0.0.0.0/0 → igw-id</code> mới có Internet thật.</li>
+<li><strong>Bastion Host</strong>: SG chỉ mở 22 từ IP giới hạn; private EC2 chỉ nhận traffic từ SG của Bastion. SSM Session Manager là lựa chọn hiện đại hơn, không cần mở port.</li>
+<li><strong>NAT Instance vs NAT Gateway</strong>: Instance = tự quản lý, phải disable Source/Dest Check, không HA sẵn; Gateway = AWS managed, HA trong 1 AZ (tạo nhiều AZ để full HA), không SG, cần IGW.</li>
+<li><strong>NACL vs Security Group</strong> — bảng ở §4 phải thuộc lòng: SG stateful/instance/chỉ allow; NACL stateless/subnet/allow+deny/theo thứ tự rule number. NACL stateless → nhớ <strong>Ephemeral Ports</strong>.</li>
+<li><strong>VPC Peering</strong>: non-transitive, CIDR không trùng, phải sửa route table mỗi bên, reference được SG bên kia (cross-account cùng region).</li>
+<li><strong>VPC Endpoint</strong>: Gateway = chỉ S3/DynamoDB, miễn phí, route table target; Interface (PrivateLink) = hầu hết service, có phí, ENI + SG, bắt buộc khi cần truy cập từ on-premises/VPC khác/region khác.</li>
+<li><strong>VPC Endpoint Service (PrivateLink ngược)</strong>: expose app riêng qua NLB, giải quyết được cả case CIDR trùng nhau (peering sẽ fail).</li>
+<li><strong>VPC Flow Logs</strong>: 3 cấp (VPC/Subnet/ENI), chỉ metadata (không payload), gửi S3/CloudWatch Logs/Kinesis Firehose; Inbound ACCEPT + Outbound REJECT (hoặc ngược lại) → chắc chắn là <strong>NACL</strong>.</li>
+<li><strong>Traffic Mirroring</strong>: capture cả payload, target là ENI hoặc NLB — dùng khi Flow Logs không đủ (cần xem nội dung gói tin).</li>
+<li><strong>Site-to-Site VPN</strong>: VGW (AWS) + CGW (khách hàng), nhớ bật <strong>Route Propagation</strong>; VPN CloudHub = hub-and-spoke rẻ cho nhiều site.</li>
+<li><strong>Direct Connect</strong>: Dedicated (1–400 Gbps) vs Hosted (50 Mbps–25 Gbps); <strong>không mã hoá mặc định</strong>; Direct Connect Gateway cho multi-region; VIF: Public (AWS public service) / Private (VPC) / Transit (bắt buộc để nối Transit Gateway); backup bằng Site-to-Site VPN.</li>
+<li><strong>Transit Gateway</strong>: transitive (khác Peering), hub-and-spoke, cross-region peering, share qua RAM, hỗ trợ IP Multicast, ECMP gộp băng thông nhiều VPN connection.</li>
+<li><strong>IPv6</strong>: luôn public, không có dải private; dual-stack, không tắt được IPv4; Egress-only IGW = “NAT Gateway của IPv6”.</li>
+</ul>
+<h2 id="takeaway-cá-nhân">Takeaway cá nhân<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#takeaway-cá-nhân" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Đây là section dài nhất nhưng thực ra chỉ có <strong>3 câu chuyện lớn</strong>: (1) đánh địa chỉ — CIDR/subnet, (2) kiểm soát ai được nói chuyện với ai — NACL/SG/route table, (3) nối VPC với thế giới bên ngoài — Peering/Endpoint/VPN/Direct Connect/Transit Gateway. Flow Logs và Traffic Mirroring chỉ là lớp quan sát nằm trên cả 3.</li>
+<li>Combo hay ra thi nhất theo kinh nghiệm cá nhân: <strong>NACL vs SG</strong> (gần như câu nào cũng có), <strong>Gateway vs Interface Endpoint</strong>, <strong>Peering non-transitive vs Transit Gateway transitive</strong>, và bẫy <strong>Ephemeral Ports</strong> trong NACL.</li>
+<li>Ba chi tiết “bẫy” đáng khoanh đỏ: Direct Connect <strong>không mã hoá mặc định</strong>, Flow Logs <strong>không có payload</strong> (khác Traffic Mirroring), và IPv6 <strong>không thể tắt IPv4</strong> (thiếu IP luôn là do hết IPv4, không phải IPv6).</li>
+<li>Đối chiếu với 2 note domain đã có trong vault để không học lệch: <a href="../../../02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.3---vpc-security---sg,-nacl,-nat" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-1---secure-architectures/1.3---vpc-security---sg,-nacl,-nat">1.3 - VPC Security - SG, NACL, NAT</a> (góc nhìn Secure Architectures, có thêm AWS Network Firewall và các case study troubleshooting TCP) và <a href="../../../02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.5---networking---vpc,-route-53,-direct-connect" class="internal internal-link alias" data-slug="02---areas/cloud/aws-saa-c03/domain-3---high-performing-architectures/3.5---networking---vpc,-route-53,-direct-connect">3.5 - Networking - VPC, Route 53, Direct Connect</a> (góc nhìn High-Performing, có thêm Route 53 routing policies và case study Transit Gateway hub-and-spoke với Network Firewall).</li>
+<li>Liên hệ ngược: VPC Flow Logs phân tích bằng Athena → xem lại <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/22---data--and--analytics" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/22---data--and--analytics">§22</a>; SNS cảnh báo từ CloudWatch Alarm → xem lại <a href="../../../02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq" class="internal internal-link alias" data-slug="02---areas/cloud/saa-c03-stephane-maarek/17---decoupling-applications---sqs-sns-kinesis-mq">§17</a>.</li>
+</ul>
+<h2 id="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic-notes-sinh-ra-từ-đây" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>CIDR &amp; Subnet Mask (công thức tính số IP theo prefix)</li>
+<li>Default VPC &amp; dải IP private theo IANA</li>
+<li>Internet Gateway vs NAT Gateway vs NAT Instance</li>
+<li>Bastion Host và AWS Systems Manager Session Manager (thay thế hiện đại)</li>
+<li>NACL vs Security Group (stateless vs stateful, bảng so sánh)</li>
+<li>Ephemeral Ports trong NACL</li>
+<li>AWS Network Firewall — Layer 3-7 firewall cho toàn bộ VPC</li>
+<li>VPC Peering (non-transitive, không trùng CIDR)</li>
+<li>VPC Endpoint: Gateway vs Interface (AWS PrivateLink)</li>
+<li>AWS PrivateLink / VPC Endpoint Service (expose service riêng qua NLB)</li>
+<li>VPC Flow Logs — cấu trúc log và cách suy luận NACL/SG từ action ACCEPT/REJECT</li>
+<li>Traffic Mirroring (capture payload, khác Flow Logs)</li>
+<li>Site-to-Site VPN (VGW + CGW) &amp; AWS VPN CloudHub</li>
+<li>AWS Direct Connect (VIF types, Direct Connect Gateway, resiliency, backup bằng VPN)</li>
+<li>Transit Gateway (hub-and-spoke, transitive, ECMP)</li>
+<li>VPC Peering vs Transit Gateway (khi nào chọn cái nào)</li>
+<li>IPv4 vs IPv6 trong VPC &amp; Egress-only Internet Gateway</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-95" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#27--amazon-vpc-cidr-subnet-nat-nacl-vs-sg-peering-endpoints-direct-connect-transit-gateway" data-for="27--amazon-vpc-cidr-subnet-nat-nacl-vs-sg-peering-endpoints-direct-connect-transit-gateway">27 – Amazon VPC: CIDR, Subnet, NAT, NACL vs SG, Peering, Endpoints, Direct Connect, Transit Gateway</a></li><li class="depth-1"><a href="#1-bức-tranh-tổng-thể--kiến-trúc-vpc-đầy-đủ" data-for="1-bức-tranh-tổng-thể--kiến-trúc-vpc-đầy-đủ">1. Bức tranh tổng thể — kiến trúc VPC đầy đủ</a></li><li class="depth-1"><a href="#2-khái-niệm-nền--cidr-subnet-default-vpc" data-for="2-khái-niệm-nền--cidr-subnet-default-vpc">2. Khái niệm nền — CIDR, Subnet, Default VPC</a></li><li class="depth-2"><a href="#21-cidr-là-gì" data-for="21-cidr-là-gì">2.1 CIDR là gì?</a></li><li class="depth-2"><a href="#22-bảng-cidr-nhanh--thuộc-lòng-số-ip-theo-prefix" data-for="22-bảng-cidr-nhanh--thuộc-lòng-số-ip-theo-prefix">2.2 Bảng CIDR nhanh — thuộc lòng số IP theo prefix</a></li><li class="depth-2"><a href="#23-subnet--5-ip-bị-aws-giữ-lại" data-for="23-subnet--5-ip-bị-aws-giữ-lại">2.3 Subnet — 5 IP bị AWS giữ lại</a></li><li class="depth-2"><a href="#24-default-vpc" data-for="24-default-vpc">2.4 Default VPC</a></li><li class="depth-1"><a href="#3-kết-nối-ra-internet--igw-nat-bastion-host" data-for="3-kết-nối-ra-internet--igw-nat-bastion-host">3. Kết nối ra Internet — IGW, NAT, Bastion Host</a></li><li class="depth-2"><a href="#31-internet-gateway-igw" data-for="31-internet-gateway-igw">3.1 Internet Gateway (IGW)</a></li><li class="depth-2"><a href="#32-bastion-host" data-for="32-bastion-host">3.2 Bastion Host</a></li><li class="depth-2"><a href="#33-nat-instance-vs-nat-gateway" data-for="33-nat-instance-vs-nat-gateway">3.3 NAT Instance vs NAT Gateway</a></li><li class="depth-1"><a href="#4-kiểm-soát-traffic--nacl-vs-security-group" data-for="4-kiểm-soát-traffic--nacl-vs-security-group">4. Kiểm soát traffic — NACL vs Security Group</a></li><li class="depth-1"><a href="#5-kết-nối-vpc-to-vpc--on-premise" data-for="5-kết-nối-vpc-to-vpc--on-premise">5. Kết nối VPC-to-VPC &amp; on-premise</a></li><li class="depth-2"><a href="#51-vpc-peering" data-for="51-vpc-peering">5.1 VPC Peering</a></li><li class="depth-2"><a href="#52-vpc-endpoints--gateway-vs-interface-privatelink" data-for="52-vpc-endpoints--gateway-vs-interface-privatelink">5.2 VPC Endpoints — Gateway vs Interface (PrivateLink)</a></li><li class="depth-2"><a href="#53-aws-privatelink--vpc-endpoint-service--chiều-ngược-lại" data-for="53-aws-privatelink--vpc-endpoint-service--chiều-ngược-lại">5.3 AWS PrivateLink / VPC Endpoint Service — chiều ngược lại</a></li><li class="depth-2"><a href="#54-site-to-site-vpn" data-for="54-site-to-site-vpn">5.4 Site-to-Site VPN</a></li><li class="depth-2"><a href="#55-aws-direct-connect-dx" data-for="55-aws-direct-connect-dx">5.5 AWS Direct Connect (DX)</a></li><li class="depth-2"><a href="#56-transit-gateway" data-for="56-transit-gateway">5.6 Transit Gateway</a></li><li class="depth-2"><a href="#57-bảng-so-sánh-nhanh" data-for="57-bảng-so-sánh-nhanh">5.7 Bảng so sánh nhanh</a></li><li class="depth-1"><a href="#6-quan-sát--vpc-flow-logs--traffic-mirroring" data-for="6-quan-sát--vpc-flow-logs--traffic-mirroring">6. Quan sát — VPC Flow Logs &amp; Traffic Mirroring</a></li><li class="depth-2"><a href="#61-vpc-flow-logs" data-for="61-vpc-flow-logs">6.1 VPC Flow Logs</a></li><li class="depth-2"><a href="#62-traffic-mirroring" data-for="62-traffic-mirroring">6.2 Traffic Mirroring</a></li><li class="depth-1"><a href="#7-ipv4-vs-ipv6-trong-vpc" data-for="7-ipv4-vs-ipv6-trong-vpc">7. IPv4 vs IPv6 trong VPC</a></li><li class="depth-1"><a href="#8-aws-network-firewall--bảo-vệ-toàn-bộ-vpc-ở-mức-sâu-hơn" data-for="8-aws-network-firewall--bảo-vệ-toàn-bộ-vpc-ở-mức-sâu-hơn">8. AWS Network Firewall — bảo vệ toàn bộ VPC ở mức sâu hơn</a></li><li class="depth-1"><a href="#9-câu-hỏi-ôn-tập" data-for="9-câu-hỏi-ôn-tập">9. Câu hỏi ôn tập</a></li><li class="depth-2"><a href="#câu-1--cidr-1004028-tương-ứng-dải-ip-nào" data-for="câu-1--cidr-1004028-tương-ứng-dải-ip-nào">Câu 1 — CIDR 10.0.4.0/28 tương ứng dải IP nào?</a></li><li class="depth-2"><a href="#câu-2--cidr-nào-chấp-nhận-được-cho-aws-vpc-khi-sau-này-muốn-nối-các-mạng-với-nhau" data-for="câu-2--cidr-nào-chấp-nhận-được-cho-aws-vpc-khi-sau-này-muốn-nối-các-mạng-với-nhau">Câu 2 — CIDR nào chấp nhận được cho AWS VPC khi sau này muốn nối các mạng với nhau?</a></li><li class="depth-2"><a href="#câu-3--subnet-chứa-ít-nhất-28-ec2-instance-size-nhỏ-nhất" data-for="câu-3--subnet-chứa-ít-nhất-28-ec2-instance-size-nhỏ-nhất">Câu 3 — Subnet chứa ít nhất 28 EC2 instance: size nhỏ nhất?</a></li><li class="depth-2"><a href="#câu-4--security-group-và-nacl-hoạt-động-ở-cấp-nào" data-for="câu-4--security-group-và-nacl-hoạt-động-ở-cấp-nào">Câu 4 — Security Group và NACL hoạt động ở cấp nào?</a></li><li class="depth-2"><a href="#câu-5--đã-gắn-internet-gateway-nhưng-ec2-vẫn-không-ra-internet-đâu-không-phải-nguyên-nhân" data-for="câu-5--đã-gắn-internet-gateway-nhưng-ec2-vẫn-không-ra-internet-đâu-không-phải-nguyên-nhân">Câu 5 — Đã gắn Internet Gateway nhưng EC2 vẫn không ra Internet: đâu KHÔNG phải nguyên nhân?</a></li><li class="depth-2"><a href="#câu-6--internet-access-cho-ec2-ở-private-subnet-ipv4-ít-quản-trị-nhất-và-scale-mượt" data-for="câu-6--internet-access-cho-ec2-ở-private-subnet-ipv4-ít-quản-trị-nhất-và-scale-mượt">Câu 6 — Internet access cho EC2 ở private subnet (IPv4), ít quản trị nhất và scale mượt</a></li><li class="depth-2"><a href="#câu-7--vpc-peering-đã-bật-đã-sửa-route-table-vpc-a-nhưng-ec2-vẫn-không-giao-tiếp-được" data-for="câu-7--vpc-peering-đã-bật-đã-sửa-route-table-vpc-a-nhưng-ec2-vẫn-không-giao-tiếp-được">Câu 7 — VPC Peering đã bật, đã sửa route table VPC A nhưng EC2 vẫn không giao tiếp được</a></li><li class="depth-2"><a href="#câu-8--direct-connect-tới-vpc-a-cần-truy-cập-thêm-vpc-b-ở-region-khác" data-for="câu-8--direct-connect-tới-vpc-a-cần-truy-cập-thêm-vpc-b-ở-region-khác">Câu 8 — Direct Connect tới VPC A, cần truy cập thêm VPC B ở region khác</a></li><li class="depth-2"><a href="#câu-9--hai-aws-service-có-gateway-endpoint" data-for="câu-9--hai-aws-service-có-gateway-endpoint">Câu 9 — Hai AWS service có Gateway Endpoint</a></li><li class="depth-2"><a href="#câu-10--ip-nào-không-bị-aws-giữ-trong-subnet-1000024" data-for="câu-10--ip-nào-không-bị-aws-giữ-trong-subnet-1000024">Câu 10 — IP nào KHÔNG bị AWS giữ trong subnet 10.0.0.0/24</a></li><li class="depth-2"><a href="#câu-11--peering-giữa-cả-3-vpc-a-b-c" data-for="câu-11--peering-giữa-cả-3-vpc-a-b-c">Câu 11 — Peering giữa cả 3 VPC A, B, C</a></li><li class="depth-2"><a href="#câu-12--capture-thông-tin-về-ip-traffic-trong-vpc" data-for="câu-12--capture-thông-tin-về-ip-traffic-trong-vpc">Câu 12 — Capture thông tin về IP traffic trong VPC</a></li><li class="depth-2"><a href="#câu-13--direct-connect-500-mbps-dedicated-hay-hosted" data-for="câu-13--direct-connect-500-mbps-dedicated-hay-hosted">Câu 13 — Direct Connect 500 Mbps: Dedicated hay Hosted?</a></li><li class="depth-2"><a href="#câu-14--hai-thành-phần-chính-của-site-to-site-vpn" data-for="câu-14--hai-thành-phần-chính-của-site-to-site-vpn">Câu 14 — Hai thành phần chính của Site-to-Site VPN</a></li><li class="depth-2"><a href="#câu-15--backup-qua-internet-công-cộng-cho-nhiều-site-on-premises" data-for="câu-15--backup-qua-internet-công-cộng-cho-nhiều-site-on-premises">Câu 15 — Backup qua Internet công cộng cho nhiều site on-premises</a></li><li class="depth-2"><a href="#câu-16--kết-nối-chuyên-dụng-on-premises--aws-private-ổn-định-không-đi-qua-internet" data-for="câu-16--kết-nối-chuyên-dụng-on-premises--aws-private-ổn-định-không-đi-qua-internet">Câu 16 — Kết nối chuyên dụng on-premises ↔ AWS: private, ổn định, không đi qua Internet</a></li><li class="depth-2"><a href="#câu-17--direct-connect-truy-cập-được-cả-public-và-private-aws-resources" data-for="câu-17--direct-connect-truy-cập-được-cả-public-và-private-aws-resources">Câu 17 — Direct Connect truy cập được cả public và private AWS resources?</a></li><li class="depth-2"><a href="#câu-18--scale-băng-thông-site-to-site-vpn-vượt-125-gbps-của-một-tunnel" data-for="câu-18--scale-băng-thông-site-to-site-vpn-vượt-125-gbps-của-một-tunnel">Câu 18 — Scale băng thông Site-to-Site VPN vượt 1.25 Gbps của một tunnel</a></li><li class="depth-2"><a href="#câu-19--vpc-dual-stack-hết-ipv4-không-launch-được-ec2" data-for="câu-19--vpc-dual-stack-hết-ipv4-không-launch-được-ec2">Câu 19 — VPC dual-stack hết IPv4, không launch được EC2</a></li><li class="depth-2"><a href="#câu-20--cấu-hình-security-group-an-toàn-nhất-cho-bastion-host" data-for="câu-20--cấu-hình-security-group-an-toàn-nhất-cho-bastion-host">Câu 20 — Cấu hình Security Group an toàn nhất cho Bastion Host</a></li><li class="depth-2"><a href="#câu-21--backup-tiết-kiệm-và-an-toàn-cho-direct-connect" data-for="câu-21--backup-tiết-kiệm-và-an-toàn-cho-direct-connect">Câu 21 — Backup tiết kiệm và an toàn cho Direct Connect</a></li><li class="depth-2"><a href="#câu-22--bảo-vệ-và-kiểm-soát-traffic-vpc-từ-layer-3-đến-layer-7" data-for="câu-22--bảo-vệ-và-kiểm-soát-traffic-vpc-từ-layer-3-đến-layer-7">Câu 22 — Bảo vệ và kiểm soát traffic VPC từ Layer 3 đến Layer 7</a></li><li class="depth-2"><a href="#câu-23--chỉ-cho-alb-truy-cập-ec2-trên-port-80" data-for="câu-23--chỉ-cho-alb-truy-cập-ec2-trên-port-80">Câu 23 — Chỉ cho ALB truy cập EC2 trên port 80</a></li><li class="depth-1"><a href="#điểm-hay-ra-thi" data-for="điểm-hay-ra-thi">Điểm hay ra thi</a></li><li class="depth-1"><a href="#takeaway-cá-nhân" data-for="takeaway-cá-nhân">Takeaway cá nhân</a></li><li class="depth-1"><a href="#atomic-notes-sinh-ra-từ-đây" data-for="atomic-notes-sinh-ra-từ-đây">Atomic notes sinh ra từ đây</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/cloud/aws-saa-c03/02---aws-saa-c03---in-scope-services-reference" class="internal">AWS SAA-C03 - In-Scope Services Reference</a></li><li><a href="../../../02---areas/cloud/saa-c03-stephane-maarek/00---saa-c03-stephane-maarek---overview" class="internal">SAA-C03 Stephane Maarek - Overview</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

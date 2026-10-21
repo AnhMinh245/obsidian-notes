@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>Distributed Tracing và APM — Dynatrace vs Datadog</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="Distributed Tracing và APM — Dynatrace vs Datadog"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Distributed Tracing và APM — Dynatrace vs Datadog"/><meta name="twitter:description" content="Distributed Tracing và APM 1."/><meta property="og:description" content="Distributed Tracing và APM 1."/><meta property="og:image:alt" content="Distributed Tracing và APM 1."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace-vs-datadog/07---distributed-tracing-và-apm"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace-vs-datadog/07---distributed-tracing-và-apm"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Distributed Tracing và APM 1."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/dynatrace-vs-datadog/07---distributed-tracing-và-apm" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-324" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-324" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../02---areas/observability/dynatrace-vs-datadog/">Dynatrace vs Datadog</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Distributed Tracing và APM — Dynatrace vs Datadog</a></div></nav><h1 class="article-title">Distributed Tracing và APM — Dynatrace vs Datadog</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">2</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/dynatrace" class="internal internal-link tag-link">domain/dynatrace</a><span class="note-properties-separator">, </span><a href="../../../tags/domain/datadog" class="internal internal-link tag-link">domain/datadog</a></span></td></tr><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">aliases</td><td class="note-properties-value metadata-property-value"><span class="note-properties-list"><span class="note-properties-text">Tracing Comparison</span><span class="note-properties-separator">, </span><span class="note-properties-text">APM Comparison</span></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-06-11T17:00:00.000Z">12 thg 6, 2026</time><span>6 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="distributed-tracing-và-apm">Distributed Tracing và APM<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#distributed-tracing-và-apm" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="1-tổng-quan-distributed-tracing">1. Tổng quan Distributed Tracing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-tổng-quan-distributed-tracing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Cả 2 nền tảng đều implement distributed tracing theo cùng nguyên lý:</p>
+<pre><code>Request vào → Trace ID được tạo → propagate qua HTTP headers → mỗi service tạo Span → tree of Spans = 1 Trace
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khái niệm</th><th>Dynatrace</th><th>Datadog</th></tr></thead><tbody><tr><td><strong>Distributed trace</strong></td><td><strong>PurePath</strong></td><td><strong>Trace</strong></td></tr><tr><td><strong>Một đơn vị công việc</strong></td><td><strong>Span</strong> (node trong PurePath)</td><td><strong>Span</strong></td></tr><tr><td><strong>Visualization</strong></td><td>PurePath waterfall + Smartscape</td><td><strong>Flame Graph</strong> (waterfall ngang)</td></tr><tr><td><strong>Dependency map</strong></td><td><strong>Smartscape</strong> (auto-discovered topology)</td><td><strong>Service Map</strong> (auto-generated từ traces)</td></tr><tr><td><strong>Context propagation</strong></td><td><code>x-dynatrace</code> + W3C <code>traceparent</code> (auto)</td><td><code>X-Datadog-Trace-Id</code> + <code>X-Datadog-Parent-Id</code> (auto)</td></tr></tbody></table></div>
+<h2 id="2-purepath-vs-flame-graph">2. PurePath vs Flame Graph<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-purepath-vs-flame-graph" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dynatrace-purepath">Dynatrace PurePath<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dynatrace-purepath" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Browser (RUM) → API Gateway → Order Service → Payment Service → Bank API
+    │                              │                │
+    └── User Action               └── DB Call      └── External Call
+</code></pre>
+<ul>
+<li><strong>End-to-end</strong>: từ browser (RUM) đến backend đến DB</li>
+<li>Tự động — OneAgent inject context, không cần code changes</li>
+<li>Mỗi node = 1 Span, bao gồm:
+<ul>
+<li>Method-level code profiling (Full-Stack mode)</li>
+<li>SQL query text</li>
+<li>HTTP request/response headers</li>
+<li>Exception stack traces</li>
+</ul>
+</li>
+<li><strong>PurePath detail retention</strong>: 10 ngày (Grail có thể extend). PurePath nay backed bởi <strong>Grail</strong> → spans queryable trực tiếp qua DQL</li>
+</ul>
+<h3 id="datadog-flame-graph">Datadog Flame Graph<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#datadog-flame-graph" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────── Gateway (950ms) ──────────────────────────────────┐
+│  ┌────────────────────────────── Order Service (900ms) ──────────────────────────────┐│
+│  │  ┌──── DB Query (50ms) ───┐  ┌──────── Payment Service (500ms) ─────────────────┐││
+│  │  └────────────────────────┘  │  ┌────────── Bank API Call (450ms) ──────────────┐│││
+│  │                              │  └──────────────────────────────────────────────────┘│││
+│  │                              └────────────────────────────────────────────────────────┘││
+│  └──────────────────────────────────────────────────────────────────────────────────────────┘│
+└──────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>Horizontal bars</strong>: mỗi bar = 1 span, width = duration</li>
+<li>Bar càng rộng = càng tốn thời gian = <strong>bottleneck</strong></li>
+<li>Xem ngay: Bank API Call (450ms) là bottleneck!</li>
+<li>Cần <code>ddtrace</code> library trong app (auto-instrument frameworks)</li>
+</ul>
+
+<h3 id="datadog-ssi-single-step-instrumentation">Datadog SSI (Single Step Instrumentation)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#datadog-ssi-single-step-instrumentation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Zero-code APM</strong>: auto-inject tracing SDK vào application qua Datadog Agent — KHÔNG cần thêm <code>ddtrace</code> library thủ công</li>
+<li>Hỗ trợ: Java, Python, Ruby, Node.js, .NET, PHP</li>
+<li>SSI ≠ USM:
+<ul>
+<li><strong>SSI</strong> = in-process deep tracing (code-level spans, method profiling)</li>
+<li><strong>USM</strong> (Universal Service Monitoring) = network-level service health (eBPF-based, KHÔNG có code-level visibility)</li>
+</ul>
+</li>
+</ul>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Exam: SSI vs USM vs ddtrace </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>SSI = zero-code, deep tracing (giống OneAgent auto-inject). USM = network-level only. <code>ddtrace</code> = manual library integration.</p>
+</div>
+</blockquote>
+<h3 id="so-sánh-trực-quan">So sánh trực quan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh-trực-quan" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Dynatrace PurePath</th><th>Datadog Flame Graph</th></tr></thead><tbody><tr><td><strong>View style</strong></td><td>Vertical waterfall (tree)</td><td>Horizontal flame graph (timeline)</td></tr><tr><td><strong>Depth</strong></td><td>Code-level (method profiling)</td><td>Framework-level (HTTP, DB calls)</td></tr><tr><td><strong>RUM correlation</strong></td><td>✅ Auto-link User Action → PurePath</td><td>Cần RUM SDK setup</td></tr><tr><td><strong>DB queries</strong></td><td>Captured + analyzed</td><td>Captured (need DBM for deep analysis)</td></tr><tr><td><strong>Setup</strong></td><td>Zero-config (OneAgent)</td><td>Add ddtrace library</td></tr></tbody></table></div>
+<h2 id="3-context-propagation">3. Context Propagation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-context-propagation" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="headers-so-sánh">Headers so sánh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#headers-so-sánh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Header</th><th>Standard</th><th>Dynatrace</th><th>Datadog</th></tr></thead><tbody><tr><td><strong>Proprietary</strong></td><td>—</td><td><code>x-dynatrace</code></td><td><code>X-Datadog-Trace-Id</code>, <code>X-Datadog-Parent-Id</code>, <code>X-Datadog-Sampling-Priority</code></td></tr><tr><td><strong>W3C</strong></td><td>✅ Standard</td><td><code>traceparent</code>, <code>tracestate</code></td><td>Supported (configurable)</td></tr><tr><td><strong>B3</strong></td><td>Zipkin legacy</td><td>Supported</td><td>Supported</td></tr></tbody></table></div>
+<p>Cả 2 đều hỗ trợ <strong>W3C Trace Context</strong> — standard cho interoperability. Trong practice:</p>
+<ul>
+<li>Dynatrace mặc định dùng <code>x-dynatrace</code> + W3C</li>
+<li>Datadog mặc định dùng proprietary headers, W3C cần bật</li>
+</ul>
+<h2 id="4-sampling-strategies">4. Sampling Strategies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-sampling-strategies" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dynatrace--adaptive-traffic-management">Dynatrace — Adaptive Traffic Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dynatrace--adaptive-traffic-management" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Approach</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Adaptive</strong></td><td>Dynatrace tự quyết định sampling rate dựa trên traffic volume</td></tr><tr><td><strong>Always capture</strong></td><td>Errors và slow requests luôn được capture</td></tr><tr><td><strong>PurePath</strong></td><td>Tối đa số lượng PurePath per interval, ưu tiên diverse paths</td></tr></tbody></table></div>
+<ul>
+<li>Không cần config sampling thủ công</li>
+<li>Davis AI tự điều chỉnh</li>
+</ul>
+<h3 id="datadog--ingestion-controls">Datadog — Ingestion Controls<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#datadog--ingestion-controls" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Approach</th><th>Mô tả</th></tr></thead><tbody><tr><td><strong>Head-based sampling</strong></td><td>Quyết định tại entry point (agent-side)</td></tr><tr><td><strong>Default rate</strong></td><td>Agent tự tính target rate</td></tr><tr><td><strong>Retention Filters</strong></td><td>Server-side: <strong>Intelligent Retention Filter</strong> (auto, default) + <strong>custom tag-based filters</strong> cho high-priority traces</td></tr><tr><td><strong>Custom rules</strong></td><td>Per-service sampling rates</td></tr></tbody></table></div>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># datadog.yaml - custom sampling</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">apm_config</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;" data-token-type="tag">  max_traces_per_second</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">10</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    # head-based limit</span></span></code></pre></figure>
+<h3 id="so-sánh-sampling">So sánh sampling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh-sampling" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Khía cạnh</th><th>Dynatrace</th><th>Datadog</th></tr></thead><tbody><tr><td><strong>Default</strong></td><td>Adaptive (tự động)</td><td>Agent tự tính rate</td></tr><tr><td><strong>Errors</strong></td><td>Luôn capture</td><td>Luôn capture (Error tracking)</td></tr><tr><td><strong>Config</strong></td><td>Minimal — Dynatrace quyết định</td><td>Granular — per-service rules</td></tr><tr><td><strong>Server-side</strong></td><td>OpenPipeline filtering</td><td>Retention Filters</td></tr><tr><td><strong>Philosophy</strong></td><td>”Trust the platform&quot;</td><td>&quot;Give me control”</td></tr></tbody></table></div>
+<h2 id="5-service-detection--topology">5. Service Detection &amp; Topology<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-service-detection--topology" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dynatrace--smartscape">Dynatrace — Smartscape<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dynatrace--smartscape" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TB\n    subgraph \&quot;5 Layers\&quot;\n        DC[\&quot;Data Centers\&quot;]\n        H[\&quot;Hosts\&quot;]\n        P[\&quot;Processes\&quot;]\n        S[\&quot;Services\&quot;]\n        A[\&quot;Applications\&quot;]\n    end\n    DC --> H --> P --> S --> A&quot;">graph TB
+    subgraph &quot;5 Layers&quot;
+        DC[&quot;Data Centers&quot;]
+        H[&quot;Hosts&quot;]
+        P[&quot;Processes&quot;]
+        S[&quot;Services&quot;]
+        A[&quot;Applications&quot;]
+    end
+    DC --> H --> P --> S --> A
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>Auto-discovered</strong> — OneAgent scan processes, detect requests, build topology</li>
+<li><strong>Real-time</strong> — cập nhật liên tục</li>
+<li>Entity IDs: <code>HOST-xxx</code>, <code>SERVICE-xxx</code>, <code>PROCESS_GROUP-xxx</code></li>
+<li><strong>Smartscape timeframe</strong>: 72 giờ</li>
+<li>Service identified by: <strong>context root + web server name + web application ID</strong></li>
+</ul>
+<h3 id="datadog--service-map">Datadog — Service Map<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#datadog--service-map" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph LR\n    subgraph \&quot;Auto-generated from traces\&quot;\n        GW[\&quot;API Gateway\&quot;] --> OS[\&quot;Order Service\&quot;]\n        OS --> PS[\&quot;Payment Service\&quot;]\n        OS --> DB[\&quot;PostgreSQL\&quot;]\n        PS --> BANK[\&quot;Bank API\&quot;]\n    end&quot;">graph LR
+    subgraph &quot;Auto-generated from traces&quot;
+        GW[&quot;API Gateway&quot;] --> OS[&quot;Order Service&quot;]
+        OS --> PS[&quot;Payment Service&quot;]
+        OS --> DB[&quot;PostgreSQL&quot;]
+        PS --> BANK[&quot;Bank API&quot;]
+    end
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li>Auto-generated <strong>từ traces</strong> (cần có traces để build map)</li>
+<li>Annotations: request rate, error rate, latency per edge</li>
+<li>Depends on <strong>Unified Service Tagging</strong> (<code>service</code> tag) cho accurate mapping</li>
+<li>Không có concept “layers” như Smartscape</li>
+</ul>
+<h3 id="so-sánh-topology">So sánh topology<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#so-sánh-topology" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>Dynatrace Smartscape</th><th>Datadog Service Map</th></tr></thead><tbody><tr><td><strong>Source</strong></td><td>OneAgent discovery (process scan)</td><td>Traces (APM data)</td></tr><tr><td><strong>Layers</strong></td><td>5 layers (DC-H-P-S-A)</td><td>Flat service graph</td></tr><tr><td><strong>Infrastructure</strong></td><td>✅ Host, Process, DC layers</td><td>❌ Service-level only</td></tr><tr><td><strong>Real-time</strong></td><td>✅ Live topology</td><td>Near real-time (from traces)</td></tr><tr><td><strong>No traffic = no data?</strong></td><td>❌ Smartscape shows topology even without requests</td><td>✅ Service Map only shows services with traces</td></tr><tr><td><strong>Depth</strong></td><td>Process Group → Process Group Instance</td><td>Service → Resources (endpoints)</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Smartscape vs Service Map </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Smartscape phát hiện topology từ <strong>process scan</strong> — thấy dependencies ngay cả khi KHÔNG có traffic.<br/>
+Service Map build từ <strong>traces</strong> — cần có requests đi qua services mới thấy dependencies.</p>
+</div>
+</blockquote>
+<h2 id="6-apm-features--so-sánh">6. APM Features — So sánh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-apm-features--so-sánh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>Dynatrace</th><th>Datadog</th></tr></thead><tbody><tr><td><strong>Response time</strong></td><td>Service → Response time (p50, p90, p95)</td><td>APM → Latency (p50, p75, p90, p95, p99)</td></tr><tr><td><strong>Error tracking</strong></td><td>Problem card → error analysis</td><td>Error Tracking → group similar errors</td></tr><tr><td><strong>Database monitoring</strong></td><td>Service → Database calls (from caller)</td><td><strong>DBM</strong> — Database Monitoring (dedicated feature)</td></tr><tr><td><strong>Profiling</strong></td><td>Code-level profiling (Full-Stack)</td><td><strong>Continuous Profiler</strong> (separate product)</td></tr><tr><td><strong>Deployment tracking</strong></td><td>❌ Không native</td><td>✅ Deployment Tracking (version comparison)</td></tr></tbody></table></div>
+<h3 id="opaque-services-dynatrace-specific">Opaque Services (Dynatrace-specific)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opaque-services-dynatrace-specific" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dynatrace concept: <strong>Opaque Service</strong> = service được phát hiện nhưng KHÔNG có code-level visibility (ví dụ: 3rd-party API, service chưa cài OneAgent).</p>
+<p>Datadog không có concept tương tự — external services hiện trong Service Map nếu có traces gọi đến chúng.</p>
+<h3 id="database-monitoring--khác-biệt-approach">Database Monitoring — Khác biệt approach<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#database-monitoring--khác-biệt-approach" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Dynatrace</th><th>Datadog</th></tr></thead><tbody><tr><td><strong>Approach</strong></td><td>Monitor DB từ <strong>caller side</strong> (app server)</td><td><strong>DBM</strong> — monitor từ DB side (dedicated integration)</td></tr><tr><td><strong>Data</strong></td><td>SQL queries, execution time từ app’s perspective</td><td>Query plans, wait events, DB-side metrics</td></tr><tr><td><strong>Setup</strong></td><td>OneAgent on app server (auto)</td><td>DBM integration config on DB host</td></tr><tr><td><strong>Full visibility</strong></td><td>OneAgent app + Extension on DB</td><td>Agent + ddtrace (app) + DBM integration (DB)</td></tr></tbody></table></div>
+<h2 id="7-apdex-score--dynatrace-specific">7. Apdex Score — Dynatrace-specific<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-apdex-score--dynatrace-specific" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Dynatrace dùng <strong>Apdex</strong> (Application Performance Index) cho RUM:</p>
+<pre><code>Apdex = (Satisfied + 0.5 × Tolerating) / Total
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Range</th><th>Label</th></tr></thead><tbody><tr><td>Response &lt; T</td><td>Satisfied</td></tr><tr><td>T ≤ Response &lt; 4T</td><td>Tolerating</td></tr><tr><td>Response ≥ 4T</td><td>Frustrated</td></tr></tbody></table></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Score</th><th>Rating</th></tr></thead><tbody><tr><td>0.94-1.00</td><td>Excellent</td></tr><tr><td>0.85-0.93</td><td>Good</td></tr><tr><td>0.70-0.84</td><td>Fair</td></tr><tr><td>0.50-0.69</td><td>Poor</td></tr><tr><td>0.00-0.49</td><td>Unacceptable</td></tr></tbody></table></div>
+<p>Datadog: không dùng Apdex — focus vào <strong>Core Web Vitals</strong> (LCP, FID, CLS) và percentile latency.</p>
+<h2 id="mapping-nhanh">Mapping nhanh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mapping-nhanh" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dynatrace</th><th>→</th><th>Datadog</th></tr></thead><tbody><tr><td>PurePath</td><td>→</td><td>Trace (Flame Graph)</td></tr><tr><td>Span (PurePath node)</td><td>→</td><td>Span</td></tr><tr><td>Smartscape</td><td>→</td><td>Service Map</td></tr><tr><td><code>x-dynatrace</code> header</td><td>→</td><td><code>X-Datadog-Trace-Id</code> header</td></tr><tr><td>Adaptive Traffic Management</td><td>→</td><td>Ingestion Controls</td></tr><tr><td>Service detection (auto)</td><td>→</td><td>Service (from <code>service</code> tag in traces)</td></tr><tr><td>Opaque Service</td><td>→</td><td>External service (in Service Map)</td></tr><tr><td>Process Group</td><td>→</td><td>❌ Không có concept tương đương</td></tr><tr><td>Apdex score</td><td>→</td><td>Core Web Vitals + percentile latency</td></tr><tr><td>Code-level profiling</td><td>→</td><td>Continuous Profiler (separate)</td></tr><tr><td>❌</td><td>→</td><td>Deployment Tracking (version comparison)</td></tr><tr><td>OneAgent auto-inject</td><td>→</td><td><strong>SSI (Single Step Instrumentation)</strong> — zero-code APM</td></tr><tr><td>❌</td><td>→</td><td><strong>USM</strong> (Universal Service Monitoring — network-level)</td></tr><tr><td>DB monitoring (from caller)</td><td>→</td><td>DBM (dedicated DB integration)</td></tr></tbody></table></div>
+<hr/>
+<p><strong>Prev</strong>: <a href="../../../02---areas/observability/dynatrace-vs-datadog/06---log-management" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace-vs-datadog/06---log-management">06 - Log Management</a> | <strong>Next</strong>: <a href="../../../02---areas/observability/dynatrace-vs-datadog/08---ai-và-anomaly-detection" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace-vs-datadog/08---ai-và-anomaly-detection">08 - AI và Anomaly Detection</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-274" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#distributed-tracing-và-apm" data-for="distributed-tracing-và-apm">Distributed Tracing và APM</a></li><li class="depth-1"><a href="#1-tổng-quan-distributed-tracing" data-for="1-tổng-quan-distributed-tracing">1. Tổng quan Distributed Tracing</a></li><li class="depth-1"><a href="#2-purepath-vs-flame-graph" data-for="2-purepath-vs-flame-graph">2. PurePath vs Flame Graph</a></li><li class="depth-2"><a href="#dynatrace-purepath" data-for="dynatrace-purepath">Dynatrace PurePath</a></li><li class="depth-2"><a href="#datadog-flame-graph" data-for="datadog-flame-graph">Datadog Flame Graph</a></li><li class="depth-2"><a href="#datadog-ssi-single-step-instrumentation" data-for="datadog-ssi-single-step-instrumentation">Datadog SSI (Single Step Instrumentation)</a></li><li class="depth-2"><a href="#so-sánh-trực-quan" data-for="so-sánh-trực-quan">So sánh trực quan</a></li><li class="depth-1"><a href="#3-context-propagation" data-for="3-context-propagation">3. Context Propagation</a></li><li class="depth-2"><a href="#headers-so-sánh" data-for="headers-so-sánh">Headers so sánh</a></li><li class="depth-1"><a href="#4-sampling-strategies" data-for="4-sampling-strategies">4. Sampling Strategies</a></li><li class="depth-2"><a href="#dynatrace--adaptive-traffic-management" data-for="dynatrace--adaptive-traffic-management">Dynatrace — Adaptive Traffic Management</a></li><li class="depth-2"><a href="#datadog--ingestion-controls" data-for="datadog--ingestion-controls">Datadog — Ingestion Controls</a></li><li class="depth-2"><a href="#so-sánh-sampling" data-for="so-sánh-sampling">So sánh sampling</a></li><li class="depth-1"><a href="#5-service-detection--topology" data-for="5-service-detection--topology">5. Service Detection &amp; Topology</a></li><li class="depth-2"><a href="#dynatrace--smartscape" data-for="dynatrace--smartscape">Dynatrace — Smartscape</a></li><li class="depth-2"><a href="#datadog--service-map" data-for="datadog--service-map">Datadog — Service Map</a></li><li class="depth-2"><a href="#so-sánh-topology" data-for="so-sánh-topology">So sánh topology</a></li><li class="depth-1"><a href="#6-apm-features--so-sánh" data-for="6-apm-features--so-sánh">6. APM Features — So sánh</a></li><li class="depth-2"><a href="#opaque-services-dynatrace-specific" data-for="opaque-services-dynatrace-specific">Opaque Services (Dynatrace-specific)</a></li><li class="depth-2"><a href="#database-monitoring--khác-biệt-approach" data-for="database-monitoring--khác-biệt-approach">Database Monitoring — Khác biệt approach</a></li><li class="depth-1"><a href="#7-apdex-score--dynatrace-specific" data-for="7-apdex-score--dynatrace-specific">7. Apdex Score — Dynatrace-specific</a></li><li class="depth-1"><a href="#mapping-nhanh" data-for="mapping-nhanh">Mapping nhanh</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../02---areas/observability/dynatrace-vs-datadog/00---tổng-quan-và-mục-lục" class="internal">Dynatrace vs Datadog — Tổng quan và Mục lục</a></li><li><a href="../../../02---areas/observability/dynatrace-vs-datadog/06---log-management" class="internal">Log Management — Dynatrace vs Datadog</a></li><li><a href="../../../02---areas/observability/dynatrace-vs-datadog/08---ai-và-anomaly-detection" class="internal">AI và Anomaly Detection — Dynatrace vs Datadog</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

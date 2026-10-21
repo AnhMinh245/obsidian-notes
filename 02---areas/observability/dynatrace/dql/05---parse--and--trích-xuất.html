@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr"><head><title>DQL parse command</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Minh Notes"/><meta property="og:title" content="DQL parse command"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="DQL parse command"/><meta name="twitter:description" content="DQL — Parse &amp; Trích xuất dữ liệu từ Text Mức độ: Trung cấp Mục tiêu: Biết cách trích xuất dữ liệu có cấu trúc từ log message dạng text thô, JSON, key-value pairs bằng lệnh parse và Dynatrace Pattern Language (DPL)."/><meta property="og:description" content="DQL — Parse &amp; Trích xuất dữ liệu từ Text Mức độ: Trung cấp Mục tiêu: Biết cách trích xuất dữ liệu có cấu trúc từ log message dạng text thô, JSON, key-value pairs bằng lệnh parse và Dynatrace Pattern Language (DPL)."/><meta property="og:image:alt" content="DQL — Parse &amp; Trích xuất dữ liệu từ Text Mức độ: Trung cấp Mục tiêu: Biết cách trích xuất dữ liệu có cấu trúc từ log message dạng text thô, JSON, key-value pairs bằng lệnh parse và Dynatrace Pattern Language (DPL)."/><meta property="og:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:url" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta name="twitter:image" content="https://anhminh245.github.io/obsidian-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="anhminh245.github.io/obsidian-notes"/><meta property="og:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/dql/05---parse--and--trích-xuất"/><meta property="twitter:url" content="https://anhminh245.github.io/obsidian-notes/02---areas/observability/dynatrace/dql/05---parse--and--trích-xuất"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="DQL — Parse &amp; Trích xuất dữ liệu từ Text Mức độ: Trung cấp Mục tiêu: Biết cách trích xuất dữ liệu có cấu trúc từ log message dạng text thô, JSON, key-value pairs bằng lệnh parse và Dynatrace Pattern Language (DPL)."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-11d41004.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-26a99b87.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/></head><body data-slug="02---areas/observability/dynatrace/dql/05---parse--and--trích-xuất" data-basepath="/obsidian-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Minh Notes</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="Tìm" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Tìm</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Tìm kiếm thông tin" placeholder="Tìm kiếm thông tin"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="Chế độ tối"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Chế độ tối"><title>Chế độ tối</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Chế độ sáng"><title>Chế độ sáng</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="Chế độ đọc"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Chế độ đọc"><title>Chế độ đọc</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-394" aria-label="Nội dung"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Nội dung</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-394" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/">02 - Areas</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/">Observability</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/">Dynatrace</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../02---areas/observability/dynatrace/dql/">DQL</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>DQL parse command</a></div></nav><h1 class="article-title">DQL parse command</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">tags</td><td class="note-properties-value metadata-property-value"><span class="note-properties-tags"><a href="../../../../tags/status/evergreen" class="internal internal-link tag-link">status/evergreen</a><span class="note-properties-separator">, </span><a href="../../../../tags/progress/done" class="internal internal-link tag-link">progress/done</a><span class="note-properties-separator">, </span><a href="../../../../tags/type/note" class="internal internal-link tag-link">type/note</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/observability" class="internal internal-link tag-link">domain/observability</a><span class="note-properties-separator">, </span><a href="../../../../tags/domain/dynatrace" class="internal internal-link tag-link">domain/dynatrace</a><span class="note-properties-separator">, </span><a href="../../../../tags/dql" class="internal internal-link tag-link">dql</a><span class="note-properties-separator">, </span><a href="../../../../tags/parse" class="internal internal-link tag-link">parse</a><span class="note-properties-separator">, </span><a href="../../../../tags/dpl" class="internal internal-link tag-link">dpl</a><span class="note-properties-separator">, </span><a href="../../../../tags/intermediate" class="internal internal-link tag-link">intermediate</a></span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-09-11T17:00:00.000Z">12 thg 9, 2026</time><span>6 phút đọc</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="dql--parse--trích-xuất-dữ-liệu-từ-text">DQL — Parse &amp; Trích xuất dữ liệu từ Text<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dql--parse--trích-xuất-dữ-liệu-từ-text" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Mức độ:</strong> Trung cấp<br/>
+<strong>Mục tiêu:</strong> Biết cách trích xuất dữ liệu có cấu trúc từ log message dạng text thô, JSON, key-value pairs bằng lệnh <code>parse</code> và Dynatrace Pattern Language (DPL).</p>
+</blockquote>
+<hr/>
+<h2 id="1-tại-sao-cần-parse">1. Tại sao cần <code>parse</code>?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-tại-sao-cần-parse" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Log thường là text thô như thế này:</p>
+<pre><code>2026-04-01 10:23:45 ERROR [web-01] user=alice action=login status=failed ip=192.168.1.100
+</code></pre>
+<p>Bạn muốn trích xuất: <code>timestamp</code>, <code>level</code>, <code>user</code>, <code>action</code>, <code>status</code>, <code>ip</code> thành các field riêng để filter, aggregate được. Đây là nhiệm vụ của <code>parse</code>.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    RAW[\&quot;Text thô\&quot;] \n    RAW -->|\&quot;parse content\&quot;| PARSED[\&quot;Structured Fields\&quot;]\n    \n    subgraph PARSED[\&quot;Kết quả parse\&quot;]\n        direction TB\n        F1[\&quot;level: ERROR\&quot;]\n        F2[\&quot;user: alice\&quot;]\n        F3[\&quot;action: login\&quot;]\n        F4[\&quot;ip: 192.168.1.100\&quot;]\n    end\n\n    style RAW fill:#e53e3e,stroke:#c53030,color:#fff\n    style PARSED fill:#38a169,stroke:#276749,color:#fff&quot;">flowchart LR
+    RAW[&quot;Text thô&quot;] 
+    RAW -->|&quot;parse content&quot;| PARSED[&quot;Structured Fields&quot;]
+    
+    subgraph PARSED[&quot;Kết quả parse&quot;]
+        direction TB
+        F1[&quot;level: ERROR&quot;]
+        F2[&quot;user: alice&quot;]
+        F3[&quot;action: login&quot;]
+        F4[&quot;ip: 192.168.1.100&quot;]
+    end
+
+    style RAW fill:#e53e3e,stroke:#c53030,color:#fff
+    style PARSED fill:#38a169,stroke:#276749,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="các-loại-parse-phổ-biến">Các loại parse phổ biến:<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#các-loại-parse-phổ-biến" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    PARSE[\&quot;parse command\&quot;]\n    PARSE --> DPL[\&quot;DPL Pattern\&quot;] \n    PARSE --> JSON[\&quot;JSON\&quot;]\n    PARSE --> KVP[\&quot;KVP\&quot;]\n\n    style PARSE fill:#4fd1c5,stroke:#2c7a7b,color:#000\n    style DPL fill:#3182ce,stroke:#2b6cb0,color:#fff\n    style JSON fill:#805ad5,stroke:#553c9a,color:#fff\n    style KVP fill:#d69e2e,stroke:#975a16,color:#fff&quot;">flowchart TD
+    PARSE[&quot;parse command&quot;]
+    PARSE --> DPL[&quot;DPL Pattern&quot;] 
+    PARSE --> JSON[&quot;JSON&quot;]
+    PARSE --> KVP[&quot;KVP&quot;]
+
+    style PARSE fill:#4fd1c5,stroke:#2c7a7b,color:#000
+    style DPL fill:#3182ce,stroke:#2b6cb0,color:#fff
+    style JSON fill:#805ad5,stroke:#553c9a,color:#fff
+    style KVP fill:#d69e2e,stroke:#975a16,color:#fff
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="2-cú-pháp-lệnh-parse">2. Cú pháp lệnh <code>parse</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-cú-pháp-lệnh-parse" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>| parse &lt;field>, &quot;&lt;pattern>&quot;</span></span></code></pre></figure>
+<ul>
+<li><code>field</code>: field chứa text cần parse (thường là <code>content</code>)</li>
+<li><code>pattern</code>: mẫu parse viết bằng <strong>Dynatrace Pattern Language (DPL)</strong></li>
+</ul>
+<hr/>
+<h2 id="3-dpl--dynatrace-pattern-language">3. DPL — Dynatrace Pattern Language<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-dpl--dynatrace-pattern-language" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>DPL là ngôn ngữ mô tả <strong>cấu trúc</strong> của text để trích xuất dữ liệu. Học DPL = biết cách “mô tả” log line.</p>
+<h3 id="31-matchers--mô-tả-đoạn-text">3.1 Matchers — Mô tả đoạn text<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-matchers--mô-tả-đoạn-text" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Matcher</th><th>Mô tả</th><th>Ví dụ match</th></tr></thead><tbody><tr><td><code>WORD</code></td><td>Một từ (chữ cái, số, _)</td><td><code>hello</code>, <code>user123</code></td></tr><tr><td><code>NSPACE</code></td><td>Text không có khoảng trắng</td><td><code>web-server-01</code></td></tr><tr><td><code>DATA</code></td><td>Bất kỳ text nào</td><td>Bất kỳ</td></tr><tr><td><code>LD</code></td><td>”Lazy data” — bất kỳ, dừng khi gặp pattern tiếp</td><td>Linh hoạt</td></tr><tr><td><code>INT</code></td><td>Số nguyên</td><td><code>42</code>, <code>-5</code></td></tr><tr><td><code>LONG</code></td><td>Số nguyên dài</td><td><code>9876543210</code></td></tr><tr><td><code>DOUBLE</code></td><td>Số thực</td><td><code>3.14</code>, <code>-0.5</code></td></tr><tr><td><code>IPADDR</code></td><td>Địa chỉ IP</td><td><code>192.168.1.1</code></td></tr><tr><td><code>IPV4</code></td><td>IPv4</td><td><code>10.0.0.1</code></td></tr><tr><td><code>TIMESTAMP</code></td><td>Timestamp</td><td><code>2026-04-01T10:00:00</code></td></tr><tr><td><code>HTTPDATE</code></td><td>HTTP date format</td><td><code>14/Mar/2026:23:34:25 +0200</code></td></tr><tr><td><code>DQS</code></td><td>Double-quoted string</td><td><code>&quot;hello world&quot;</code></td></tr><tr><td><code>SPACE</code></td><td>Một hoặc nhiều khoảng trắng</td><td><code> </code></td></tr></tbody></table></div>
+<h3 id="32-cú-pháp-trích-xuất-matchertên_field">3.2 Cú pháp trích xuất: <code>MATCHER:tên_field</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-cú-pháp-trích-xuất-matchertên_field" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Pattern: MATCHER:field_name</span></span>
+<span data-line><span>parse content, &quot;IPADDR:client_ip LD INT:status_code&quot;</span></span>
+<span data-line><span>//              ↑ trích xuất IP   ↑bỏ qua  ↑ trích xuất số</span></span></code></pre></figure>
+<h3 id="33-text-cố-định-trong-pattern">3.3 Text cố định trong pattern<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-text-cố-định-trong-pattern" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>parse content, &quot;WORD:level ' ' '[' WORD:service ']'&quot;</span></span>
+<span data-line><span>//                         ↑ space   ↑ dấu [   ↑ dấu ]</span></span>
+<span data-line><span>// Khớp với: &quot;INFO [myservice]&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="4-ví-dụ-từng-bước">4. Ví dụ từng bước<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-ví-dụ-từng-bước" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-parse-log-đơn-giản">4.1 Parse log đơn giản<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-parse-log-đơn-giản" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Log mẫu:</strong></p>
+<pre><code>ERROR [web-01] User alice login failed
+</code></pre>
+<p><strong>Query:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>data record(content=&quot;ERROR [web-01] User alice login failed&quot;)</span></span>
+<span data-line><span>| parse content, &quot;WORD:level ' [' NSPACE:host '] User ' WORD:user ' ' LD:action&quot;</span></span>
+<span data-line><span>| fields level, host, user, action</span></span></code></pre></figure>
+<p><strong>Kết quả:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>level</th><th>host</th><th>user</th><th>action</th></tr></thead><tbody><tr><td>ERROR</td><td>web-01</td><td>alice</td><td>login failed</td></tr></tbody></table></div>
+<h3 id="42-parse-apache-access-log">4.2 Parse Apache Access Log<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-parse-apache-access-log" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Log mẫu:</strong></p>
+<pre><code>117.16.75.9 - - [14/Mar/2026:23:34:25 +0200] &quot;GET /index.html HTTP/1.1&quot; 200 1234
+</code></pre>
+<p><strong>Query:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>data record(content=`117.16.75.9 - - [14/Mar/2026:23:34:25 +0200] &quot;GET /index.html HTTP/1.1&quot; 200 1234`)</span></span>
+<span data-line><span>| parse content, &quot;IPADDR:client_ip LD '[' HTTPDATE:req_time ']' ' \&quot;' WORD:method ' ' NSPACE:uri ' ' LD '\&quot; ' LONG:status SPACE LONG:bytes&quot;</span></span>
+<span data-line><span>| fields client_ip, req_time, method, uri, status, bytes</span></span></code></pre></figure>
+<p><strong>Kết quả:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>client_ip</th><th>method</th><th>uri</th><th>status</th><th>bytes</th></tr></thead><tbody><tr><td>117.16.75.9</td><td>GET</td><td>/index.html</td><td>200</td><td>1234</td></tr></tbody></table></div>
+<hr/>
+<h2 id="5-parse-json--trích-xuất-từ-json-string">5. Parse JSON — Trích xuất từ JSON string<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-parse-json--trích-xuất-từ-json-string" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Khi log content chứa JSON, dùng pattern <code>JSON</code>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// Log mẫu: {&quot;level&quot;:&quot;ERROR&quot;,&quot;service&quot;:&quot;payment&quot;,&quot;message&quot;:&quot;Transaction failed&quot;,&quot;amount&quot;:150.5}</span></span>
+<span data-line> </span>
+<span data-line><span>fetch logs, from:now()-1h</span></span>
+<span data-line><span>| filter contains(content, &quot;{\&quot;level\&quot;&quot;)   // chỉ lấy logs dạng JSON</span></span>
+<span data-line><span>| parse content, &quot;JSON:parsed&quot;             // parse toàn bộ JSON vào field &quot;parsed&quot;</span></span>
+<span data-line><span>| fieldsAdd</span></span>
+<span data-line><span>    log_level = parsed[level],             // truy cập key &quot;level&quot;</span></span>
+<span data-line><span>    service   = parsed[service],           // truy cập key &quot;service&quot;</span></span>
+<span data-line><span>    message   = parsed[message]</span></span>
+<span data-line><span>| fields timestamp, log_level, service, message</span></span></code></pre></figure>
+<p><strong>Hoặc dùng <code>fieldsFlatten</code> để tự động tách tất cả key:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs, from:now()-1h</span></span>
+<span data-line><span>| filter contains(content, &quot;{&quot;)</span></span>
+<span data-line><span>| parse content, &quot;JSON:parsed&quot;</span></span>
+<span data-line><span>| fieldsFlatten parsed           // parsed.level, parsed.service, ... thành field riêng</span></span></code></pre></figure>
+<p><strong>Truy cập JSON lồng nhau:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// JSON: {&quot;user&quot;: {&quot;name&quot;: &quot;alice&quot;, &quot;role&quot;: &quot;admin&quot;}, &quot;action&quot;: &quot;delete&quot;}</span></span>
+<span data-line><span>| parse content, &quot;JSON:j&quot;</span></span>
+<span data-line><span>| fieldsAdd</span></span>
+<span data-line><span>    user_name = j[user][name],    // JSON lồng 2 cấp</span></span>
+<span data-line><span>    user_role = j[user][role],</span></span>
+<span data-line><span>    action    = j[action]</span></span></code></pre></figure>
+<hr/>
+<h2 id="6-parse-key-value-pairs-kvp">6. Parse Key-Value Pairs (KVP)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-parse-key-value-pairs-kvp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Dùng <code>KVP</code> khi log có dạng <code>key=value key=value ...</code>:</p>
+<p><strong>Log mẫu:</strong></p>
+<pre><code>user=alice action=login status=success duration=234ms
+</code></pre>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>data record(content=&quot;user=alice action=login status=success duration=234ms&quot;)</span></span>
+<span data-line><span>| parse content, &quot;KVP{WORD:key '=' NSPACE:value (' ' | EOS)}:attrs&quot;</span></span>
+<span data-line><span>| fieldsAdd</span></span>
+<span data-line><span>    user     = attrs[user],</span></span>
+<span data-line><span>    action   = attrs[action],</span></span>
+<span data-line><span>    status   = attrs[status],</span></span>
+<span data-line><span>    duration = attrs[duration]</span></span></code></pre></figure>
+<p><strong>Giải thích KVP pattern:</strong></p>
+<pre><code>KVP{                        ← bắt đầu key-value pairs
+    WORD:key                ← key là một WORD
+    '='                     ← separator là dấu =
+    NSPACE:value            ← value là text không có space
+    (' ' | EOS)             ← tiếp theo là space hoặc End Of String
+}:attrs                     ← kết quả lưu vào field &quot;attrs&quot; (là một Record)
+</code></pre>
+<hr/>
+<h2 id="7-preservefieldsonfailure--khi-parse-thất-bại">7. <code>preserveFieldsOnFailure</code> — Khi parse thất bại<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-preservefieldsonfailure--khi-parse-thất-bại" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Mặc định, nếu parse thất bại, record bị xóa khỏi kết quả. Để giữ lại record dù parse thất bại:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs, from:now()-1h</span></span>
+<span data-line><span>| parse content, &quot;WORD:level LD&quot;, preserveFieldsOnFailure:true</span></span>
+<span data-line><span>// Record không match pattern vẫn được giữ, fields extracted = null</span></span></code></pre></figure>
+<hr/>
+<h2 id="8-parsingprerequisite--chỉ-parse-khi-thỏa-điều-kiện">8. <code>parsingPrerequisite</code> — Chỉ parse khi thỏa điều kiện<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-parsingprerequisite--chỉ-parse-khi-thỏa-điều-kiện" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs, from:now()-1h</span></span>
+<span data-line><span>| parse content, &quot;IPADDR:client_ip LD&quot;,</span></span>
+<span data-line><span>    parsingPrerequisite: contains(content, &quot;.&quot;)</span></span>
+<span data-line><span>// Chỉ parse những log có dấu &quot;.&quot; trong content (có thể là IP)</span></span></code></pre></figure>
+<hr/>
+<h2 id="9-ký-hiệu-ld-vs-data--khác-nhau-quan-trọng">9. Ký hiệu <code>LD</code> vs <code>DATA</code> — Khác nhau quan trọng<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-ký-hiệu-ld-vs-data--khác-nhau-quan-trọng" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><code>LD</code> (Lazy Data)</th><th><code>DATA</code></th></tr></thead><tbody><tr><td><strong>Cách match</strong></td><td>Dừng khi gặp pattern tiếp theo</td><td>Match tất cả còn lại</td></tr><tr><td><strong>Dùng khi</strong></td><td>Có pattern phía sau cần match</td><td>Pattern cuối cùng</td></tr></tbody></table></div>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>// LD dừng khi gặp &quot; [&quot; tiếp theo:</span></span>
+<span data-line><span>parse content, &quot;LD:prefix ' [' WORD:service ']'&quot;</span></span>
+<span data-line><span>// Với &quot;hello world [myservice] info&quot;:</span></span>
+<span data-line><span>// prefix = &quot;hello world&quot;</span></span>
+<span data-line><span>// service = &quot;myservice&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="10-ví-dụ-thực-hành-trên-playground">10. Ví dụ thực hành trên Playground<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-ví-dụ-thực-hành-trên-playground" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="bài-1--parse-log-đơn-giản-nhất">Bài 1 — Parse log đơn giản nhất<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-1--parse-log-đơn-giản-nhất" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>data record(content=&quot;2026-04-01 10:23:45 ERROR Connection timeout&quot;),</span></span>
+<span data-line><span>     record(content=&quot;2026-04-01 10:23:46 INFO Request processed&quot;),</span></span>
+<span data-line><span>     record(content=&quot;2026-04-01 10:23:47 WARN High memory usage&quot;)</span></span>
+<span data-line><span>| parse content, &quot;TIMESTAMP:log_time ' ' WORD:level LD:message&quot;</span></span>
+<span data-line><span>| fields log_time, level, message</span></span></code></pre></figure>
+<h3 id="bài-2--parse-json-log">Bài 2 — Parse JSON log<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-2--parse-json-log" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>data</span></span>
+<span data-line><span>    record(content=`{&quot;level&quot;:&quot;ERROR&quot;,&quot;service&quot;:&quot;api&quot;,&quot;code&quot;:500,&quot;msg&quot;:&quot;Internal error&quot;}`),</span></span>
+<span data-line><span>    record(content=`{&quot;level&quot;:&quot;INFO&quot;,&quot;service&quot;:&quot;web&quot;,&quot;code&quot;:200,&quot;msg&quot;:&quot;OK&quot;}`)</span></span>
+<span data-line><span>| parse content, &quot;JSON:j&quot;</span></span>
+<span data-line><span>| fieldsAdd level=j[level], service=j[service], code=j[code], msg=j[msg]</span></span>
+<span data-line><span>| fields level, service, code, msg</span></span></code></pre></figure>
+<h3 id="bài-3--parse-kvp">Bài 3 — Parse KVP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-3--parse-kvp" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>data</span></span>
+<span data-line><span>    record(content=&quot;method=GET path=/api/users status=200 duration=45ms&quot;),</span></span>
+<span data-line><span>    record(content=&quot;method=POST path=/api/orders status=503 duration=3021ms&quot;)</span></span>
+<span data-line><span>| parse content, &quot;KVP{WORD:key '=' NSPACE:value (' ' | EOS)}:kv&quot;</span></span>
+<span data-line><span>| fieldsAdd</span></span>
+<span data-line><span>    method   = kv[method],</span></span>
+<span data-line><span>    path     = kv[path],</span></span>
+<span data-line><span>    status   = toLong(kv[status]),</span></span>
+<span data-line><span>    duration = kv[duration]</span></span>
+<span data-line><span>| filter status >= 500</span></span></code></pre></figure>
+<h3 id="bài-4--parse-logs-thực-tế-trên-playground">Bài 4 — Parse logs thực tế trên Playground<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-4--parse-logs-thực-tế-trên-playground" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs, from:now()-1h</span></span>
+<span data-line><span>| filter isNotNull(content)</span></span>
+<span data-line><span>| parse content, &quot;LD:first_word&quot;, preserveFieldsOnFailure:true</span></span>
+<span data-line><span>| fieldsAdd has_content = isNotNull(first_word)</span></span>
+<span data-line><span>| summarize count(), by:{has_content}</span></span></code></pre></figure>
+<h3 id="bài-5--parse-ip-từ-log">Bài 5 — Parse IP từ log<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bài-5--parse-ip-từ-log" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dql" data-theme="github-light github-dark"><code data-language="dql" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>fetch logs, from:now()-1h</span></span>
+<span data-line><span>| filter content ~ &quot;*.*.*.*&quot;          // có thể chứa IP</span></span>
+<span data-line><span>| parse content, &quot;LD IPADDR:client_ip LD&quot;, preserveFieldsOnFailure:true</span></span>
+<span data-line><span>| filter isNotNull(client_ip)</span></span>
+<span data-line><span>| summarize count(), by:{client_ip}</span></span>
+<span data-line><span>| sort count desc</span></span>
+<span data-line><span>| limit 10</span></span></code></pre></figure>
+<hr/>
+<h2 id="11-tóm-tắt">11. Tóm tắt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-tóm-tắt" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tình huống</th><th>Pattern/Cách làm</th></tr></thead><tbody><tr><td>Parse JSON</td><td><code>parse field, &quot;JSON:result&quot;</code></td></tr><tr><td>Parse key=value</td><td><code>parse field, &quot;KVP{WORD:key '=' NSPACE:value ...}:result&quot;</code></td></tr><tr><td>Parse IP address</td><td><code>IPADDR:field_name</code></td></tr><tr><td>Parse số nguyên</td><td><code>LONG:field_name</code> hoặc <code>INT:field_name</code></td></tr><tr><td>Bỏ qua đoạn text</td><td><code>LD</code> (dừng trước pattern tiếp) hoặc <code>DATA</code> (lấy hết)</td></tr><tr><td>Text cố định</td><td><code>'text cố định'</code> trong nháy đơn</td></tr><tr><td>Giữ record dù parse fail</td><td><code>preserveFieldsOnFailure:true</code></td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>TIP</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Khi không chắc pattern, dùng <code>data record(content=&quot;...&quot;)</code> để test offline trước khi chạy trên log thật.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="tài-liệu-tham-khảo">Tài liệu tham khảo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tài-liệu-tham-khảo" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-query-language/commands/extraction-and-parsing-commands" class="external external-link">DQL parse command<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-pattern-language" class="external external-link">Dynatrace Pattern Language (DPL)<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-pattern-language/log-processing-key-value-pairs" class="external external-link">DPL Key-Value Pairs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><strong>Tiếp theo:</strong> <a href="../../../../02---areas/observability/dynatrace/dql/06---tổng-hợp--and--timeseries" class="internal internal-link alias" data-slug="02---areas/observability/dynatrace/dql/06---tổng-hợp--and--timeseries">06 - Tổng hợp &amp; Timeseries</a></li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Sơ đồ</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-344" aria-expanded="true"><h3>Mục lục</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#dql--parse--trích-xuất-dữ-liệu-từ-text" data-for="dql--parse--trích-xuất-dữ-liệu-từ-text">DQL — Parse &amp; Trích xuất dữ liệu từ Text</a></li><li class="depth-1"><a href="#1-tại-sao-cần-parse" data-for="1-tại-sao-cần-parse">1. Tại sao cần parse?</a></li><li class="depth-2"><a href="#các-loại-parse-phổ-biến" data-for="các-loại-parse-phổ-biến">Các loại parse phổ biến:</a></li><li class="depth-1"><a href="#2-cú-pháp-lệnh-parse" data-for="2-cú-pháp-lệnh-parse">2. Cú pháp lệnh parse</a></li><li class="depth-1"><a href="#3-dpl--dynatrace-pattern-language" data-for="3-dpl--dynatrace-pattern-language">3. DPL — Dynatrace Pattern Language</a></li><li class="depth-2"><a href="#31-matchers--mô-tả-đoạn-text" data-for="31-matchers--mô-tả-đoạn-text">3.1 Matchers — Mô tả đoạn text</a></li><li class="depth-2"><a href="#32-cú-pháp-trích-xuất-matchertên_field" data-for="32-cú-pháp-trích-xuất-matchertên_field">3.2 Cú pháp trích xuất: MATCHER:tên_field</a></li><li class="depth-2"><a href="#33-text-cố-định-trong-pattern" data-for="33-text-cố-định-trong-pattern">3.3 Text cố định trong pattern</a></li><li class="depth-1"><a href="#4-ví-dụ-từng-bước" data-for="4-ví-dụ-từng-bước">4. Ví dụ từng bước</a></li><li class="depth-2"><a href="#41-parse-log-đơn-giản" data-for="41-parse-log-đơn-giản">4.1 Parse log đơn giản</a></li><li class="depth-2"><a href="#42-parse-apache-access-log" data-for="42-parse-apache-access-log">4.2 Parse Apache Access Log</a></li><li class="depth-1"><a href="#5-parse-json--trích-xuất-từ-json-string" data-for="5-parse-json--trích-xuất-từ-json-string">5. Parse JSON — Trích xuất từ JSON string</a></li><li class="depth-1"><a href="#6-parse-key-value-pairs-kvp" data-for="6-parse-key-value-pairs-kvp">6. Parse Key-Value Pairs (KVP)</a></li><li class="depth-1"><a href="#7-preservefieldsonfailure--khi-parse-thất-bại" data-for="7-preservefieldsonfailure--khi-parse-thất-bại">7. preserveFieldsOnFailure — Khi parse thất bại</a></li><li class="depth-1"><a href="#8-parsingprerequisite--chỉ-parse-khi-thỏa-điều-kiện" data-for="8-parsingprerequisite--chỉ-parse-khi-thỏa-điều-kiện">8. parsingPrerequisite — Chỉ parse khi thỏa điều kiện</a></li><li class="depth-1"><a href="#9-ký-hiệu-ld-vs-data--khác-nhau-quan-trọng" data-for="9-ký-hiệu-ld-vs-data--khác-nhau-quan-trọng">9. Ký hiệu LD vs DATA — Khác nhau quan trọng</a></li><li class="depth-1"><a href="#10-ví-dụ-thực-hành-trên-playground" data-for="10-ví-dụ-thực-hành-trên-playground">10. Ví dụ thực hành trên Playground</a></li><li class="depth-2"><a href="#bài-1--parse-log-đơn-giản-nhất" data-for="bài-1--parse-log-đơn-giản-nhất">Bài 1 — Parse log đơn giản nhất</a></li><li class="depth-2"><a href="#bài-2--parse-json-log" data-for="bài-2--parse-json-log">Bài 2 — Parse JSON log</a></li><li class="depth-2"><a href="#bài-3--parse-kvp" data-for="bài-3--parse-kvp">Bài 3 — Parse KVP</a></li><li class="depth-2"><a href="#bài-4--parse-logs-thực-tế-trên-playground" data-for="bài-4--parse-logs-thực-tế-trên-playground">Bài 4 — Parse logs thực tế trên Playground</a></li><li class="depth-2"><a href="#bài-5--parse-ip-từ-log" data-for="bài-5--parse-ip-từ-log">Bài 5 — Parse IP từ log</a></li><li class="depth-1"><a href="#11-tóm-tắt" data-for="11-tóm-tắt">11. Tóm tắt</a></li><li class="depth-1"><a href="#tài-liệu-tham-khảo" data-for="tài-liệu-tham-khảo">Tài liệu tham khảo</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liên kết ngược</h3><ul id="list-0" class="overflow"><li><a href="../../../../02---areas/observability/dynatrace/associate_theory/00---mục-lục--and--hướng-dẫn" class="internal">Tài Liệu Lý Thuyết — Dynatrace Associate Certification</a></li><li><a href="../../../../02---areas/observability/dynatrace/dql/00---dql-index" class="internal">DQL Dynatrace</a></li><li><a href="../../../../02---areas/observability/dynatrace/dql/04---fields---chọn--and--biến-đổi" class="internal">DQL fields commands</a></li><li><a href="../../../../02---areas/observability/dynatrace/dql/12---playground-guide" class="internal">Dynatrace Playground Guide</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Được tạo bằng <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>
